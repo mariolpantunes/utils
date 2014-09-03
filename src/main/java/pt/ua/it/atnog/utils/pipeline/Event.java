@@ -1,7 +1,17 @@
 package pt.ua.it.atnog.utils.pipeline;
 
-/**
- * Created by mantunes on 9/2/14.
- */
 public class Event {
+    private boolean endOfStream;
+
+    public Event(boolean endOfStream) {
+        this.endOfStream = endOfStream;
+    }
+
+    public Event() {
+        endOfStream = false;
+    }
+
+    public boolean endOfStream() {
+        return endOfStream;
+    }
 }

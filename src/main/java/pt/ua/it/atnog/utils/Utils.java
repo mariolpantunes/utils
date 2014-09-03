@@ -1,4 +1,4 @@
-package pt.ua.it.atnog.ml.utils;
+package pt.ua.it.atnog.utils;
 
 public class Utils {
 
