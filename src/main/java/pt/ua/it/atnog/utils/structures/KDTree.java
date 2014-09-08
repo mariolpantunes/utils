@@ -1,21 +1,25 @@
 package pt.ua.it.atnog.utils.structures;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class KDTree<T extends Point> {
-    private int maxDim, size;
+    private int size;
     private KDNode<T> root;
 
     public KDTree(int maxDim) {
-        this(null, maxDim, 0);
+        this(null, 0);
     }
 
-    private KDTree(KDNode<T> root, int maxDim, int size) {
+    private KDTree(KDNode<T> root, int size) {
         this.root = root;
-        this.maxDim = maxDim;
         this.size = size;
+    }
+
+    public int dim() {
+        return root.data.dim();
     }
 
     public int size() {
@@ -42,9 +46,9 @@ public class KDTree<T extends Point> {
         else if (node.data.equals(target))
             System.err.println("error! duplicate");
         else if (target.coor(cd) < node.data.coor(cd))
-            node.left = add(target, node.left, (cd + 1) % maxDim);
+            node.left = add(target, node.left, (cd + 1) % dim());
         else
-            node.right = add(target, node.right, (cd + 1) % maxDim);
+            node.right = add(target, node.right, (cd + 1) % dim());
         return node;
     }
 
@@ -57,19 +61,19 @@ public class KDTree<T extends Point> {
         if (node != null) {
             if (node.data.equals(p)) {
                 if (node.right != null) {
-                    node.data = findMin(node.right, cd, (cd + 1) % maxDim).data;
+                    node.data = findMin(node.right, cd, (cd + 1) % dim()).data;
                     node.right = remove(node.data, node.right, (cd + 1)
-                            % maxDim);
+                            % dim());
                 } else if (node.left != null) {
-                    node.data = findMin(node.left, cd, (cd + 1) % maxDim).data;
-                    node.right = remove(node.data, node.left, (cd + 1) % maxDim);
+                    node.data = findMin(node.left, cd, (cd + 1) % dim()).data;
+                    node.right = remove(node.data, node.left, (cd + 1) % dim());
                     node.left = null;
                 } else
                     node = null;
             } else if (p.coor(cd) < node.data.coor(cd))
-                node.left = remove(p, node.left, (cd + 1) % maxDim);
+                node.left = remove(p, node.left, (cd + 1) % dim());
             else
-                node.right = remove(p, node.right, (cd + 1) % maxDim);
+                node.right = remove(p, node.right, (cd + 1) % dim());
         }
 
         return node;
@@ -87,12 +91,12 @@ public class KDTree<T extends Point> {
             if (node.left == null)
                 return node;
             else
-                return parent(p, node.left, (cd + 1) % maxDim);
+                return parent(p, node.left, (cd + 1) % dim());
         } else {
             if (node.right == null)
                 return node;
             else
-                return parent(p, node.right, (cd + 1) % maxDim);
+                return parent(p, node.right, (cd + 1) % dim());
         }
     }
 
@@ -109,12 +113,12 @@ public class KDTree<T extends Point> {
                 list.add(node.data);
             double dp = Math.abs(node.data.coor(cd) - target.coor(cd));
             if (dp < dist) {
-                closer(node.left, target, dist, list, (cd + 1) % maxDim);
-                closer(node.right, target, dist, list, (cd + 1) % maxDim);
+                closer(node.left, target, dist, list, (cd + 1) % dim());
+                closer(node.right, target, dist, list, (cd + 1) % dim());
             } else if (target.coor(cd) < node.data.coor(cd))
-                closer(node.left, target, dist, list, (cd + 1) % maxDim);
+                closer(node.left, target, dist, list, (cd + 1) % dim());
             else
-                closer(node.right, target, dist, list, (cd + 1) % maxDim);
+                closer(node.right, target, dist, list, (cd + 1) % dim());
         }
     }
 
@@ -145,12 +149,12 @@ public class KDTree<T extends Point> {
             double dp = Math.abs(node.data.coor(cd) - target.coor(cd));
             if (dp < dist) {
                 KDNode<T> temp = null;
-                temp = nearest(node.left, dist, target, (cd + 1) % maxDim);
+                temp = nearest(node.left, dist, target, (cd + 1) % dim());
                 if(temp != null) {
                     result = temp;
                     dist = target.distance(result.data);
                 }
-                temp = nearest(node.right, dist, target, (cd + 1) % maxDim);
+                temp = nearest(node.right, dist, target, (cd + 1) % dim());
                 if (temp != null ) {
                     result = temp;
                     dist = target.distance(result.data);
@@ -158,10 +162,10 @@ public class KDTree<T extends Point> {
             } else {
                 if (target.coor(cd) < node.data.coor(cd)) {
                     if (node.left != null)
-                        result = nearest(node.left, dist, target, (cd + 1)% maxDim);
+                        result = nearest(node.left, dist, target, (cd + 1)%dim());
                 } else {
                     if (node.right != null)
-                        result = nearest(node.right, dist, target, (cd + 1)% maxDim);
+                        result = nearest(node.right, dist, target, (cd + 1)%dim());
                 }
             }
         }
@@ -177,11 +181,11 @@ public class KDTree<T extends Point> {
 
         if (node != null) {
             if (cd == dim) {
-                result = minimim(findMin(node.left, dim, (cd + 1) % maxDim),
+                result = minimim(findMin(node.left, dim, (cd + 1) % dim()),
                         node, dim);
             } else {
-                result = minimum(findMin(node.left, dim, (cd + 1) % maxDim),
-                        findMin(node.right, dim, (cd + 1) % maxDim), node, dim);
+                result = minimum(findMin(node.left, dim, (cd + 1) % dim()),
+                        findMin(node.right, dim, (cd + 1) % dim()), node, dim);
             }
         }
         return result;
@@ -242,9 +246,9 @@ public class KDTree<T extends Point> {
             if (node.data.equals(target))
                 rv = true;
             else if (target.coor(cd) < node.data.coor(cd)) {
-                rv = contains(node.left, target, (cd + 1) % maxDim);
+                rv = contains(node.left, target, (cd + 1) % dim());
             } else {
-                rv = contains(node.right, target, (cd + 1) % maxDim);
+                rv = contains(node.right, target, (cd + 1) % dim());
             }
         }
 
@@ -269,7 +273,7 @@ public class KDTree<T extends Point> {
         return t1.compareTo(t2);
     }
 
-    public static <T extends Point> KDTree<T> build(List<T> points) {
+    /*public static <T extends Point> KDTree<T> build(List<T> points) {
         return new KDTree<T>(build(points, 0, 2), 2, points.size());
     }
 
@@ -295,5 +299,15 @@ public class KDTree<T extends Point> {
         int mid = elements.size() / 2, split = mid;
         for (; split > 0 && elements.get(split-1).coor(cd) == elements.get(mid).coor(cd); split--);
         return split;
+    }*/
+
+    public static <T extends Point> KDTree<T> build(List<T> points) {
+        return build((T[]) points.toArray());
+    }
+
+    public static <T extends Point> KDTree<T> build(T[] points) {
+        KDNode root = null;
+
+        return new KDTree<T>(root, points.length);
     }
 }

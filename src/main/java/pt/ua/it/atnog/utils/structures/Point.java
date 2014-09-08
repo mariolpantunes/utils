@@ -15,6 +15,10 @@ public abstract class Point {
 
     public abstract double distance(Point e);
 
+    public int dim() {
+        return maxDim;
+    }
+
     public boolean equals(Object o) {
         boolean rv = false;
         if (o != null && o instanceof Point) {
