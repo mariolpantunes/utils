@@ -105,7 +105,7 @@ public class Utils {
         return rv;
     }
 
-    public static <T> T qselect(T[] array, int left, int right, int n, Comparator<T> comparator) {
+    private static <T> T qselect(T[] array, int left, int right, int n, Comparator<T> comparator) {
         T rv = null;
         if(left < right) {
             int pivot = left + (int)Math.floor(Math.random() * (right - left + 1));
@@ -139,7 +139,7 @@ public class Utils {
         return rv;
     }
 
-    public static <T extends Comparable<T>> T qselect(T[] array, int left, int right, int n) {
+    private static <T extends Comparable<T>> T qselect(T[] array, int left, int right, int n) {
         T rv = null;
         if(left < right) {
             int pivot = left + (int)Math.floor(Math.random() * (right - left + 1));
