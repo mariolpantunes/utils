@@ -97,13 +97,13 @@ public class KDTree<T extends Point> {
     private KDNode<T> remove(T p, KDNode<T> node, int cd) {
         if (node != null) {
             if (node.data.equals(p)) {
-                if (node.right != null) {
-                    node.data = findMax(node.right, cd, (cd + 1) % dim());
-                    node.right = remove(node.data, node.right, (cd + 1) % dim());
-                } else if (node.left != null) {
+                if (node.left != null) {
                     node.data = findMax(node.left, cd, (cd + 1) % dim());
-                    node.right = remove(node.data, node.left, (cd + 1) % dim());
-                    node.left = null;
+                    node.left = remove(node.data, node.left, (cd + 1) % dim());
+                } else if (node.right != null) {
+                    node.data = findMax(node.right, cd, (cd + 1) % dim());
+                    node.left = remove(node.data, node.right, (cd + 1) % dim());
+                    node.right = null;
                 } else
                     node = null;
             } else if (p.coor(cd) <= node.data.coor(cd))
@@ -207,72 +207,40 @@ public class KDTree<T extends Point> {
         return result;
     }
 
-
-    //TODO Finish find max
     public T findMax(int dim) {
         return findMax(root, dim, 0);
     }
 
     private T findMax(KDNode<T> node, int dim, int cd) {
-        return null;
-    }
-
-    public KDNode<T> findMin(int dim) {
-        return findMin(root, dim, 0);
-    }
-
-    private KDNode<T> findMin(KDNode<T> node, int dim, int cd) {
-        KDNode<T> result = null;
-
+        T result = null;
         if (node != null) {
             if (cd == dim) {
-                result = minimim(findMin(node.left, dim, (cd + 1) % dim()),
-                        node, dim);
+                result = Point.max(findMax(node.right, dim, (cd + 1) % dim()),
+                        node.data, dim);
             } else {
-                result = minimum(findMin(node.left, dim, (cd + 1) % dim()),
-                        findMin(node.right, dim, (cd + 1) % dim()), node, dim);
+                result = Point.max(findMax(node.left, dim, (cd + 1) % dim()),
+                        findMax(node.right, dim, (cd + 1) % dim()), node.data, dim);
             }
         }
         return result;
     }
 
-    private KDNode<T> minimim(KDNode<T> a, KDNode<T> b, int dim) {
-        KDNode<T> min = null;
-
-        if (a == null)
-            min = b;
-        else {
-            if (b.data.coor(dim) < a.data.coor(dim))
-                min = b;
-            else
-                min = a;
-        }
-
-        return min;
+    public T findMin(int dim) {
+        return findMin(root, dim, 0);
     }
 
-    private KDNode<T> minimum(KDNode<T> a, KDNode<T> b, KDNode<T> c, int dim) {
-        KDNode<T> min = null;
-
-        if (a == null)
-            min = b;
-        else if (b == null)
-            min = a;
-        else {
-            if (a.data.coor(dim) < b.data.coor(dim))
-                min = a;
-            else
-                min = b;
+    private T findMin(KDNode<T> node, int dim, int cd) {
+        T result = null;
+        if (node != null) {
+            if (cd == dim) {
+                result = Point.min(findMin(node.left, dim, (cd + 1) % dim()),
+                        node.data, dim);
+            } else {
+                result = Point.min(findMin(node.left, dim, (cd + 1) % dim()),
+                        findMin(node.right, dim, (cd + 1) % dim()), node.data, dim);
+            }
         }
-
-        if (min == null)
-            min = c;
-        else {
-            if (c.data.coor(dim) < min.data.coor(dim))
-                min = c;
-        }
-
-        return min;
+        return result;
     }
 
     public boolean contains(Point target) {

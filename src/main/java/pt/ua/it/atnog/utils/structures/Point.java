@@ -11,6 +11,34 @@ public abstract class Point {
         coor = new double[dim];
     }
 
+    public static <T extends Point> T min(T a, T b, int cd) {
+        T rv = a;
+        if (a != null && b != null) {
+            if (Double.compare(b.coor[cd], rv.coor[cd]) < 0)
+                rv = b;
+        } else if (b != null)
+            rv = b;
+        return rv;
+    }
+
+    public static <T extends Point> T min(T a, T b, T c, int cd) {
+        return min(min(a, b, cd), c, cd);
+    }
+
+    public static <T extends Point> T max(T a, T b, int cd) {
+        T rv = a;
+        if (a != null && b != null) {
+            if (Double.compare(b.coor[cd], rv.coor[cd]) > 0)
+                rv = b;
+        } else if (b != null)
+            rv = b;
+        return rv;
+    }
+
+    public static <T extends Point> T max(T a, T b, T c, int cd) {
+        return max(max(a, b, cd), c, cd);
+    }
+
     public int dim() {
         return coor.length;
     }
