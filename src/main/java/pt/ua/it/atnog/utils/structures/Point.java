@@ -55,4 +55,13 @@ public abstract class Point {
         }
         return rv;
     }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        for (int i = 0; i < coor.length - 1; i++)
+            sb.append(coor[i] + "; ");
+        sb.append(coor[coor.length - 1] + ")");
+        return sb.toString();
+    }
 }
