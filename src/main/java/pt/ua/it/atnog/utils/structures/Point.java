@@ -55,10 +55,14 @@ public abstract class Point {
     //throw new IllegalArgumentException(msg);
     public double minkowskiDistance(Point po, int p) {
         double sum = 0.0;
-        for (int i = 0; i < coor.length; i++) {
-            double absDiff = Math.abs(coor[i] - po.coor[i]);
-            sum += java.lang.Math.pow(absDiff, p);
-        }
+        if (coor.length == po.coor.length)
+            for (int i = 0; i < coor.length; i++) {
+                double absDiff = Math.abs(coor[i] - po.coor[i]);
+                sum += java.lang.Math.pow(absDiff, p);
+            }
+        else
+            throw new IllegalArgumentException("The points do not have the same number of dimensions");
+
         return java.lang.Math.pow(sum, 1.0 / p);
     }
 
