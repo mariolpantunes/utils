@@ -1,6 +1,6 @@
 package pt.ua.it.atnog.utils.structures;
 
-public abstract class Point {
+public class Point {
     protected final double[] coor;
 
     public Point(double[] coor) {
