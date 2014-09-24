@@ -81,7 +81,7 @@ public class KDTree<T extends Point> {
         if (node == null)
             node = new KDNode<T>(target);
         else if (node.data.equals(target))
-            System.err.println("error! duplicate");
+            throw new IllegalArgumentException("Already in the kdtree.");
         else if (target.coor(cd) <= node.data.coor(cd))
             node.left = add(target, node.left, (cd + 1) % dim());
         else
@@ -140,16 +140,31 @@ public class KDTree<T extends Point> {
         T rv = null;
 
         if (root != null) {
-            KDNode<T> parent = parent(target, root, 0);
-            double dist[] = {target.euclideanDistance(parent.data)};
-            KDNode<T> bestOne = nearest(root, dist, target, 0);
-            if (bestOne != null)
-                rv = bestOne.data;
-            else
-                rv = parent.data;
+            KDNode<T> nn[] = new KDNode[1];
+            nn[0] = parent(target, root, 0);
+            nearest(root, nn, target, 0);
+            rv = nn[0].data;
         }
 
         return rv;
+    }
+
+    private void nearest(KDNode<T> node, KDNode<T> nn[],
+                         Point target, int cd) {
+        if (node != null) {
+            if (target.euclideanDistance(node.data) < target.euclideanDistance(nn[0].data))
+                nn[0] = node;
+            double dp = Math.abs(node.data.coor(cd) - target.coor(cd));
+            if (dp < target.euclideanDistance(nn[0].data)) {
+                nearest(node.left, nn, target, (cd + 1) % dim());
+                nearest(node.right, nn, target, (cd + 1) % dim());
+            } else {
+                if (target.coor(cd) <= node.data.coor(cd))
+                    nearest(node.left, nn, target, (cd + 1) % dim());
+                else
+                    nearest(node.right, nn, target, (cd + 1) % dim());
+            }
+        }
     }
 
     private KDNode<T> parent(Point p, KDNode<T> node, int cd) {
@@ -164,40 +179,6 @@ public class KDTree<T extends Point> {
             else
                 return parent(p, node.right, (cd + 1) % dim());
         }
-    }
-
-    private KDNode<T> nearest(KDNode<T> node, double[] dist,
-                              Point target, int cd) {
-        KDNode<T> result = null;
-        if (node != null) {
-            if (target.euclideanDistance(node.data) < dist[0]) {
-                result = node;
-                dist[0] = target.euclideanDistance(result.data);
-            }
-            double dp = Math.abs(node.data.coor(cd) - target.coor(cd));
-            if (dp < dist[0]) {
-                KDNode<T> temp = null;
-                temp = nearest(node.left, dist, target, (cd + 1) % dim());
-                if (temp != null) {
-                    result = temp;
-                    dist[0] = target.euclideanDistance(result.data);
-                }
-                temp = nearest(node.right, dist, target, (cd + 1) % dim());
-                if (temp != null) {
-                    result = temp;
-                    dist[0] = target.euclideanDistance(result.data);
-                }
-            } else {
-                if (target.coor(cd) <= node.data.coor(cd)) {
-                    if (node.left != null)
-                        result = nearest(node.left, dist, target, (cd + 1) % dim());
-                } else {
-                    if (node.right != null)
-                        result = nearest(node.right, dist, target, (cd + 1) % dim());
-                }
-            }
-        }
-        return result;
     }
 
     public T findMax(int dim) {
