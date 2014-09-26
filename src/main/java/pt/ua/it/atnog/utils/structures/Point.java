@@ -51,8 +51,6 @@ public class Point {
         return coor[i];
     }
 
-    //TODO add exception
-    //throw new IllegalArgumentException(msg);
     public double minkowskiDistance(Point po, int p) {
         double sum = 0.0;
         if (coor.length == po.coor.length)

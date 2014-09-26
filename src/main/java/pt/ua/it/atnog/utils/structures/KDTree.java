@@ -19,7 +19,7 @@ public class KDTree<T extends Point> {
     }
 
     public static <T extends Point> KDTree<T> build(List<T> points) {
-        T[] array = (T[]) new Point[5];
+        T[] array = (T[]) new Point[points.size()];
         array = points.toArray(array);
         return build(array);
     }
@@ -51,7 +51,7 @@ public class KDTree<T extends Point> {
 
     private static <T extends Point> int pivot(T[] points, int left, int right, int cd) {
         int mid = left + ((right - left) / 2), pivot = mid;
-        for (; pivot <= right && points[pivot + 1].coor(cd) == points[mid].coor(cd); pivot++) ;
+        for (; pivot < right && points[pivot + 1].coor(cd) == points[mid].coor(cd); pivot++) ;
         return pivot;
     }
 
@@ -150,7 +150,7 @@ public class KDTree<T extends Point> {
     }
 
     private void nearest(KDNode<T> node, KDNode<T> nn[],
-                         Point target, int cd) {
+                         T target, int cd) {
         if (node != null) {
             if (target.euclideanDistance(node.data) < target.euclideanDistance(nn[0].data))
                 nn[0] = node;
@@ -167,7 +167,7 @@ public class KDTree<T extends Point> {
         }
     }
 
-    private KDNode<T> parent(Point p, KDNode<T> node, int cd) {
+    private KDNode<T> parent(T p, KDNode<T> node, int cd) {
         if (p.coor(cd) <= node.data.coor(cd)) {
             if (node.left == null)
                 return node;
@@ -217,14 +217,14 @@ public class KDTree<T extends Point> {
         return result;
     }
 
-    public boolean contains(Point target) {
+    public boolean contains(T target) {
         boolean rv = false;
         if (root != null)
             rv = contains(root, target, 0);
         return rv;
     }
 
-    private boolean contains(KDNode<T> node, Point target, int cd) {
+    private boolean contains(KDNode<T> node, T target, int cd) {
         boolean rv = false;
         if (node != null) {
             if (node.data.equals(target))
