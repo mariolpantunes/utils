@@ -1,30 +1,20 @@
 package pt.ua.it.atnog.utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Comparator;
 
 public class Utils {
-
     @SuppressWarnings("unchecked")
     public static <T> T cast(Object o) {
         return (T) o;
     }
 
-    public static void shuffle(int array[]) {
+    public static <T> void shuffle(T array[]) {
         if (array.length > 1) {
             for (int i = array.length - 1; i > 1; i--) {
                 int j = randomBetween(0, i);
-                int t = array[j];
-                array[j] = array[i];
-                array[i] = t;
-            }
-        }
-    }
-
-    public static void shuffle(byte array[]) {
-        if (array.length > 1) {
-            for (int i = array.length - 1; i > 1; i--) {
-                int j = randomBetween(0, i);
-                byte t = array[j];
+                T t = array[j];
                 array[j] = array[i];
                 array[i] = t;
             }
@@ -167,5 +157,12 @@ public class Utils {
     }
     public static <T> void printArray(T[] array) {
         printArray(array, 0, array.length-1);
+    }
+
+    public static String stackTrace(Exception e) {
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw, true);
+        e.printStackTrace(pw);
+        return sw.getBuffer().toString();
     }
 }
