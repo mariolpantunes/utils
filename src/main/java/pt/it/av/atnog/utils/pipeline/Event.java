@@ -1,4 +1,4 @@
-package pt.ua.it.atnog.utils.pipeline;
+package pt.it.av.atnog.utils.pipeline;
 
 public class Event {
     private boolean endOfStream;

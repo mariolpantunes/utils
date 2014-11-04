@@ -1,4 +1,4 @@
-package pt.ua.it.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures;
 
 public class Point {
     protected final double[] coor;
@@ -56,12 +56,12 @@ public class Point {
         if (coor.length == po.coor.length)
             for (int i = 0; i < coor.length; i++) {
                 double absDiff = Math.abs(coor[i] - po.coor[i]);
-                sum += java.lang.Math.pow(absDiff, p);
+                sum += Math.pow(absDiff, p);
             }
         else
             throw new IllegalArgumentException("The points do not have the same number of dimensions");
 
-        return java.lang.Math.pow(sum, 1.0 / p);
+        return Math.pow(sum, 1.0 / p);
     }
 
     public double euclideanDistance(Point p) {

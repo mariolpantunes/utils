@@ -1,6 +1,6 @@
-package pt.ua.it.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures;
 
-import pt.ua.it.atnog.utils.Utils;
+import pt.it.av.atnog.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

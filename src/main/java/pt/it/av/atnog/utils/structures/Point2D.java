@@ -1,4 +1,4 @@
-package pt.ua.it.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures;
 
 public class Point2D extends Point {
     public Point2D(int x, int y) {

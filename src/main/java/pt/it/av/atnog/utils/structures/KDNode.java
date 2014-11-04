@@ -1,4 +1,4 @@
-package pt.ua.it.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures;
 
 public class KDNode <T extends Point>{
     public T data;

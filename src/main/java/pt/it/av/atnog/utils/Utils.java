@@ -1,4 +1,4 @@
-package pt.ua.it.atnog.utils;
+package pt.it.av.atnog.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
