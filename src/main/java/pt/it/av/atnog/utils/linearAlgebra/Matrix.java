@@ -39,4 +39,38 @@ public class Matrix {
         }
         return a;
     }
+
+    public Matrix add(Matrix A) {
+        Matrix B = new Matrix(rows, columns);
+        for (int n = 0, total = data.length; n < total; n++)
+            B.data[n] = data[n] + A.data[n];
+        return B;
+    }
+
+    public Matrix sub(Matrix A) {
+        Matrix B = new Matrix(rows, columns);
+        for (int n = 0, total = data.length; n < total; n++)
+            B.data[n] = data[n] - A.data[n];
+        return B;
+    }
+
+    public boolean equals(Object o) {
+        boolean rv = false;
+        if (o != null) {
+            if (o == this)
+                rv = true;
+            else if (o instanceof Matrix) {
+                Matrix A = (Matrix) o;
+                int rows = A.rows(), columns = A.columns();
+                if (rows == A.rows() && columns == A.columns()) {
+                    rv = true;
+                    for (int i = 0; i < rows && rv == true; i++)
+                        for (int j = 0; j < columns && rv == true; j++)
+                            if (Double.compare(data[i * columns + j], A.data[i * columns + j]) != 0)
+                                rv = false;
+                }
+            }
+        }
+        return rv;
+    }
 }
