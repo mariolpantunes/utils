@@ -40,18 +40,27 @@ public class Matrix {
         return a;
     }
 
-    public Matrix add(Matrix A) {
-        Matrix B = new Matrix(rows, columns);
+    public Matrix add(Matrix B) {
+        Matrix C = new Matrix(rows, columns);
         for (int n = 0, total = data.length; n < total; n++)
-            B.data[n] = data[n] + A.data[n];
-        return B;
+            C.data[n] = data[n] + B.data[n];
+        return C;
     }
 
-    public Matrix sub(Matrix A) {
-        Matrix B = new Matrix(rows, columns);
+    public Matrix sub(Matrix B) {
+        Matrix C = new Matrix(rows, columns);
         for (int n = 0, total = data.length; n < total; n++)
-            B.data[n] = data[n] - A.data[n];
-        return B;
+            C.data[n] = data[n] - B.data[n];
+        return C;
+    }
+
+    public Matrix mul(Matrix B) {
+        Matrix C = new Matrix(rows, B.columns);
+        for (int i = 0; i < C.rows; i++)
+            for (int k = 0; k < B.rows; k++)
+                for (int j = 0; j < C.columns; j++)
+                    C.data[i * C.columns + j] += data[i * columns + k] * B.data[k * B.columns + j];
+        return C;
     }
 
     public boolean equals(Object o) {
@@ -72,5 +81,18 @@ public class Matrix {
             }
         }
         return rv;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                sb.append(String.format("%4.2f ", data[r * columns + c]));
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 }
