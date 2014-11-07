@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.pipeline;
+package pt.it.av.atnog.utils.parallel;
 
 import java.util.ArrayList;
 import java.util.List;

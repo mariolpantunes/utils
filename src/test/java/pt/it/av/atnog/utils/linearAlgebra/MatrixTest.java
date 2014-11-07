@@ -78,4 +78,12 @@ public class MatrixTest {
     public void test_mul() {
         assertTrue(AAt.equals(A.mul(At)));
     }
+
+    @Test
+    public void test_block_mul() {
+        Matrix A = Matrix.rand(1024, 1024);
+        Matrix B = Matrix.rand(1024, 1024);
+        Matrix C = A.mul(B);
+        assertTrue(C.equals(A.block_mul(B, 64)));
+    }
 }
