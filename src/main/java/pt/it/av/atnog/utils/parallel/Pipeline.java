@@ -8,20 +8,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Pipeline {
     private AtomicBoolean running;
-    private BlockingQueue<Event> sink, source;
+    private BlockingQueue<Object> sink, source;
     private List<Filter> filters;
-    private List<BlockingQueue<Event>> queues;
+    private List<BlockingQueue<Object>> queues;
 
     public Pipeline() {
-        this(new LinkedBlockingQueue<Event>(), new LinkedBlockingQueue<Event>());
-    }
-
-    public Pipeline(BlockingQueue<Event> sink, BlockingQueue<Event> source) {
         running = new AtomicBoolean(false);
         filters = new ArrayList<Filter>();
-        queues = new ArrayList<BlockingQueue<Event>>();
-        this.sink = sink;
-        this.source = source;
+        queues = new ArrayList<BlockingQueue<Object>>();
+        sink = new LinkedBlockingQueue<Object>();
+        source = new LinkedBlockingQueue<Object>();
     }
 
     public void add(Filter filter) {
@@ -30,11 +26,11 @@ public class Pipeline {
         }
     }
 
-    public BlockingQueue<Event> sink() {
+    public BlockingQueue<Object> sink() {
         return sink;
     }
 
-    public BlockingQueue<Event> source() {
+    public BlockingQueue<Object> source() {
         return source;
     }
 
@@ -43,7 +39,7 @@ public class Pipeline {
             if (queues.size() != filters.size() - 1) {
                 queues.clear();
                 for (int i = 0; i < filters.size() - 1; i++)
-                    queues.add(new LinkedBlockingQueue<Event>());
+                    queues.add(new LinkedBlockingQueue<Object>());
             }
 
             if (filters.size() > 1) {
@@ -71,9 +67,17 @@ public class Pipeline {
         }
     }
 
-    public void stop() {
+    public void stop() throws InterruptedException {
         if (running.get())
+            sink.put(new Stop());
+    }
+
+    public void stopJoin() throws InterruptedException {
+        if (running.get()) {
+            sink.put(new Stop());
             for (Filter f : filters)
-                f.stop();
+                f.join();
+            running.set(false);
+        }
     }
 }

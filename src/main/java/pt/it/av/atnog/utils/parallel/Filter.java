@@ -5,19 +5,20 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class Filter implements Runnable {
+public class Filter implements Runnable {
+    private Task t;
     private AtomicBoolean running;
-    private BlockingQueue<Event> in, out;
+    private BlockingQueue<Object> qIn, qOut;
     private Thread thread;
 
     public Filter() {
         running = new AtomicBoolean(false);
     }
 
-    public void connect(BlockingQueue<Event> in, BlockingQueue<Event> out) {
+    public void connect(BlockingQueue<Object> in, BlockingQueue<Object> out) {
         if (!running.get()) {
-            this.in = in;
-            this.out = out;
+            this.qIn = in;
+            this.qOut = out;
         }
     }
 
@@ -30,24 +31,35 @@ public abstract class Filter implements Runnable {
 
     public void run() {
         boolean done = false;
-        List<Event> eOut = new ArrayList<Event>();
+        List<Object> out = new ArrayList<Object>();
         while (!done) {
+            Object in = null;
             try {
-                Event eIn = in.take();
-                if (!eIn.endOfStream()) {
-                    processEvent(eIn, eOut);
-                    if (eOut.size() > 0) {
-                        for (Event e : eOut)
-                            out.put(e);
-                        eOut.clear();
-                    }
-                } else {
-                    out.put(new Event(true));
-                    done = true;
-                }
+                in = qIn.take();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            if (!(in instanceof Stop)) {
+                t.process(in, out);
+                if (out.size() > 0) {
+                    try {
+                        for (Object o : out)
+                            qOut.put(o);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    out.clear();
+                }
+            } else {
+                try {
+                    qOut.put(in);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    done = true;
+                }
+            }
+
         }
     }
 
@@ -63,10 +75,4 @@ public abstract class Filter implements Runnable {
             }
         }
     }
-
-    public void stop() {
-        in.add(new Event(true));
-    }
-
-    protected abstract void processEvent(Event eIn, List<Event> eOut);
 }
