@@ -55,9 +55,7 @@ public class MatrixTest {
         AAt.set(2, 0, 17);
         AAt.set(2, 1, 39);
         AAt.set(2, 2, 61);
-
     }
-
 
     @Test
     public void test_transpose() {
@@ -80,17 +78,9 @@ public class MatrixTest {
     }
 
     @Test
-    public void test_transpose_mul() {
-        Matrix A = Matrix.rand(1024, 1024);
-        Matrix B = Matrix.rand(1024, 1024);
-        Matrix C = A.mul(B);
-        assertTrue(C.equals(A.transpose_mul(B)));
-    }
-
-    @Test
     public void test_parallel_mul() {
-        Matrix A = Matrix.rand(1024, 1024);
-        Matrix B = Matrix.rand(1024, 1024);
+        Matrix A = Matrix.rand(512, 256);
+        Matrix B = Matrix.rand(256, 512);
         Matrix C = A.mul(B);
         assertTrue(C.equals(A.parallel_mul2(B)));
     }

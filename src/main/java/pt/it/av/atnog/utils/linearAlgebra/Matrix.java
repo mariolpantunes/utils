@@ -44,14 +44,12 @@ public class Matrix {
     }
 
     public Matrix transpose() {
-        Matrix a = new Matrix(rows, columns);
+        Matrix C = new Matrix(columns, rows);
         for (int n = 0, total = data.length; n < total; n++) {
-            int r = n / columns;
-            int c = n % columns;
-            //a.set(c,r,data[n]);
-            a.data[c * rows + r] = data[n];
+            int r = n / columns, c = n % columns;
+            C.data[c * C.columns + r] = data[n];
         }
-        return a;
+        return C;
     }
 
     public Matrix add(Matrix B) {
@@ -69,20 +67,17 @@ public class Matrix {
     }
 
     public Matrix mul(Matrix B) {
-        Matrix C = new Matrix(rows, B.columns);
-        for (int i = 0; i < C.rows; i++)
-            for (int k = 0; k < B.rows; k++)
-                for (int j = 0; j < C.columns; j++)
-                    C.data[i * C.columns + j] += data[i * columns + k] * B.data[k * B.columns + j];
-        return C;
-    }
-
-    public Matrix transpose_mul(Matrix B) {
         Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
-        for (int i = 0; i < C.rows; i++)
-            for (int j = 0; j < C.columns; j++)
+        for (int i = 0; i < C.rows; i++) {
+            int ic = i * columns;
+            for (int j = 0; j < C.columns; j++) {
+                int jc = j * BT.columns;
+                double cij = 0.0;
                 for (int k = 0; k < B.rows; k++)
-                    C.data[i * C.columns + j] += data[i * columns + k] * BT.data[j * B.columns + k];
+                    cij += data[ic + k] * BT.data[jc + k];
+                C.data[i * C.columns + j] = cij;
+            }
+        }
         return C;
     }
 
@@ -127,11 +122,16 @@ public class Matrix {
         Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
         int I = C.rows, J = C.columns, K = columns;
         ThreadPool tp = new ThreadPool((Object o, List<Object> l) -> {
-            int i = (Integer) o;
-            for (int j = 0; j < J; j++)
-                for (int k = 0; k < K; k++)
-                    C.data[i * C.columns + j] += data[i * columns + k] * BT.data[j * B.columns + k];
+            int i = (Integer) o, ic = i * columns;
+            for (int j = 0; j < C.columns; j++) {
+                int jc = j * BT.columns;
+                double cij = 0.0;
+                for (int k = 0; k < B.rows; k++)
+                    cij += data[ic + k] * BT.data[jc + k];
+                C.data[i * C.columns + j] = cij;
+            }
         });
+
         try {
             for (int i = 0; i < I; i++)
                 tp.add(new Integer(i));
@@ -150,8 +150,7 @@ public class Matrix {
                 rv = true;
             else if (o instanceof Matrix) {
                 Matrix A = (Matrix) o;
-                int rows = A.rows(), columns = A.columns();
-                if (rows == A.rows() && columns == A.columns()) {
+                if (rows == A.rows && columns == A.columns) {
                     rv = true;
                     for (int i = 0; i < rows && rv == true; i++)
                         for (int j = 0; j < columns && rv == true; j++)
