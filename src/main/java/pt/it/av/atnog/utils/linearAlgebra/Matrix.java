@@ -1,6 +1,9 @@
 package pt.it.av.atnog.utils.linearAlgebra;
 
 import pt.it.av.atnog.utils.Utils;
+import pt.it.av.atnog.utils.parallel.ThreadPool;
+
+import java.util.List;
 
 /**
  * Created by mantunes on 11/3/14.
@@ -74,32 +77,17 @@ public class Matrix {
         return C;
     }
 
-    public Matrix block_mul(Matrix B, int bsize) {
-        int n = rows;
-        Matrix C = new Matrix(n, n);
-
-        int en = bsize * (n / bsize);
-
-        for (int kk = 0; kk < en; kk += bsize) {
-            for (int jj = 0; jj < en; jj += bsize) {
-                for (int i = 0; i < n; i++) {
-                    for (int j = jj; j < jj + bsize; j++) {
-                        double sum = C.data[i * n + j];
-                        for (int k = kk; k < kk + bsize; k++) {
-                            sum += data[i * n + k] * B.data[k * n + j];
-                        }
-                        C.data[i * n + j] = sum;
-                    }
-                }
-            }
-        }
-
+    public Matrix transpose_mul(Matrix B) {
+        Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
+        for (int i = 0; i < C.rows; i++)
+            for (int j = 0; j < C.columns; j++)
+                for (int k = 0; k < B.rows; k++)
+                    C.data[i * C.columns + j] += data[i * columns + k] * BT.data[j * B.columns + k];
         return C;
     }
 
     public Matrix parallel_mul(Matrix B) {
-        Matrix C = new Matrix(rows, B.columns);
-
+        Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
         int I = C.rows, J = C.columns, K = columns;
         final int nThreads = Runtime.getRuntime().availableProcessors();
         final int blockSize = I / nThreads;
@@ -112,9 +100,9 @@ public class Matrix {
                     final int endIndex = (finalN == (nThreads - 1)) ?
                             I : (finalN + 1) * blockSize;
                     for (int i = beginIndex; i < endIndex; i++) {
-                        for (int k = 0; k < K; k++) {
-                            for (int j = 0; j < J; j++) {
-                                C.data[i * C.columns + j] += data[i * columns + k] * B.data[k * B.columns + j];
+                        for (int j = 0; j < J; j++) {
+                            for (int k = 0; k < K; k++) {
+                                C.data[i * C.columns + j] += data[i * columns + k] * BT.data[j * B.columns + k];
                             }
                         }
                     }
@@ -130,6 +118,26 @@ public class Matrix {
                 System.exit(-1);
 
             }
+        }
+
+        return C;
+    }
+
+    public Matrix parallel_mul2(Matrix B) {
+        Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
+        int I = C.rows, J = C.columns, K = columns;
+        ThreadPool tp = new ThreadPool((Object o, List<Object> l) -> {
+            int i = (Integer) o;
+            for (int j = 0; j < J; j++)
+                for (int k = 0; k < K; k++)
+                    C.data[i * C.columns + j] += data[i * columns + k] * BT.data[j * B.columns + k];
+        });
+        try {
+            for (int i = 0; i < I; i++)
+                tp.add(new Integer(i));
+            tp.done();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return C;
@@ -157,23 +165,12 @@ public class Matrix {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < columns; c++) {
                 sb.append(String.format("%3.0f ", data[r * columns + c]));
             }
             sb.append("\n");
         }
-
         return sb.toString();
-    }
-
-    private void dotProduct(double c[], double a[], double b[], int cCol, int aCol, int bCol, int i, int j, int k, int bSize) {
-        System.out.println("Block");
-        for (int _i = i; _i < bSize; _i++)
-            for (int _j = j; _j < bSize; _j++)
-                for (int _k = k; _k < bSize; _k++)
-                    c[_i * cCol + _j] += a[_i * aCol + _k] * b[_k * bCol + _j];
-
     }
 }

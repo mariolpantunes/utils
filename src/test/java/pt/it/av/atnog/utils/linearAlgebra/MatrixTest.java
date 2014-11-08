@@ -80,10 +80,18 @@ public class MatrixTest {
     }
 
     @Test
-    public void test_block_mul() {
+    public void test_transpose_mul() {
         Matrix A = Matrix.rand(1024, 1024);
         Matrix B = Matrix.rand(1024, 1024);
         Matrix C = A.mul(B);
-        assertTrue(C.equals(A.block_mul(B, 64)));
+        assertTrue(C.equals(A.transpose_mul(B)));
+    }
+
+    @Test
+    public void test_parallel_mul() {
+        Matrix A = Matrix.rand(1024, 1024);
+        Matrix B = Matrix.rand(1024, 1024);
+        Matrix C = A.mul(B);
+        assertTrue(C.equals(A.parallel_mul2(B)));
     }
 }

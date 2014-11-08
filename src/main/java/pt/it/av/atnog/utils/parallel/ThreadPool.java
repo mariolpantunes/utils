@@ -17,6 +17,10 @@ public class ThreadPool {
 
     public ThreadPool(Task t) {
         this.t = t;
+        for (int i = 0; i < nCores; i++) {
+            workers[i] = new Thread(new Worker());
+            workers[i].start();
+        }
     }
 
     public void add(Object o) throws Exception {
@@ -25,6 +29,7 @@ public class ThreadPool {
 
     public void done() throws InterruptedException {
         Stop stop = new Stop();
+
         for (int i = 0; i < nCores; i++)
             qIn.put(stop);
 
