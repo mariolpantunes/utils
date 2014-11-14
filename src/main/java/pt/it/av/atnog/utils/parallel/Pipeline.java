@@ -9,18 +9,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Pipeline {
     private AtomicBoolean running;
     private BlockingQueue<Object> sink, source;
-    private List<Filter> filters;
+    private List<Worker> filters;
     private List<BlockingQueue<Object>> queues;
 
     public Pipeline() {
         running = new AtomicBoolean(false);
-        filters = new ArrayList<Filter>();
+        filters = new ArrayList<Worker>();
         queues = new ArrayList<BlockingQueue<Object>>();
         sink = new LinkedBlockingQueue<Object>();
         source = new LinkedBlockingQueue<Object>();
     }
 
-    public void add(Filter filter) {
+    public void add(Worker filter) {
         if (!running.get() && filter != null) {
             filters.add(filter);
         }
@@ -54,14 +54,14 @@ public class Pipeline {
                 filters.get(0).connect(sink, source);
             }
 
-            for (Filter f : filters)
+            for (Worker f : filters)
                 f.start();
         }
     }
 
     public void join() throws InterruptedException {
         if (running.get()) {
-            for (Filter f : filters)
+            for (Worker f : filters)
                 f.join();
             running.set(false);
         }
@@ -75,7 +75,7 @@ public class Pipeline {
     public void stopJoin() throws InterruptedException {
         if (running.get()) {
             sink.put(new Stop());
-            for (Filter f : filters)
+            for (Worker f : filters)
                 f.join();
             running.set(false);
         }
