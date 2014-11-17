@@ -8,21 +8,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Pipeline {
     private AtomicBoolean running;
-    private BlockingQueue<Object> sink, source;
-    private List<Worker> filters;
+    private BlockingQueue<Object> sink = new LinkedBlockingQueue<Object>(), source = new LinkedBlockingQueue<Object>();
+    private List<Worker> filters = new ArrayList<Worker>();
     private List<BlockingQueue<Object>> queues;
 
     public Pipeline() {
         running = new AtomicBoolean(false);
-        filters = new ArrayList<Worker>();
         queues = new ArrayList<BlockingQueue<Object>>();
-        sink = new LinkedBlockingQueue<Object>();
-        source = new LinkedBlockingQueue<Object>();
     }
 
-    public void add(Worker filter) {
-        if (!running.get() && filter != null) {
-            filters.add(filter);
+    public void add(Task task) {
+        if (!running.get() && task != null) {
+            filters.add(new Worker(task));
         }
     }
 

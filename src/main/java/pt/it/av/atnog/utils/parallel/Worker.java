@@ -6,7 +6,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class Worker implements Runnable {
     private Task t;
-    private BlockingQueue<Object> qIn, qOut;
+    private BlockingQueue<Object> sink, source;
     private Thread thread;
 
     public Worker(Task t) {
@@ -15,18 +15,22 @@ public class Worker implements Runnable {
 
     public Worker(Task t, BlockingQueue<Object> qIn, BlockingQueue<Object> qOut) {
         this.t = t;
-        this.qIn = qIn;
-        this.qOut = qOut;
+        this.sink = qIn;
+        this.source = qOut;
     }
 
-    public void connect(BlockingQueue<Object> in, BlockingQueue<Object> out) {
-        this.qIn = in;
-        this.qOut = out;
+    public void connect(BlockingQueue<Object> sink, BlockingQueue<Object> source) {
+        this.sink = sink;
+        this.source = source;
     }
 
     public void start() {
         thread = new Thread(this);
         thread.start();
+    }
+
+    public void join() throws InterruptedException {
+        thread.join();
     }
 
     public void run() {
@@ -35,7 +39,7 @@ public class Worker implements Runnable {
         while (!done) {
             Object in = null;
             try {
-                in = qIn.take();
+                in = sink.take();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -44,7 +48,7 @@ public class Worker implements Runnable {
                 if (out.size() > 0) {
                     try {
                         for (Object o : out)
-                            qOut.put(o);
+                            source.put(o);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -53,9 +57,5 @@ public class Worker implements Runnable {
             } else
                 done = true;
         }
-    }
-
-    public void join() throws InterruptedException {
-        thread.join();
     }
 }

@@ -2,35 +2,41 @@ package pt.it.av.atnog.utils.parallel;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by mantunes on 11/6/14.
  */
 public class ThreadPool {
+    private AtomicBoolean running;
     private int nCores = Runtime.getRuntime().availableProcessors();
     private Worker workers[] = new Worker[nCores];
-    private BlockingQueue qIn = new LinkedBlockingQueue<Object>();
-    private BlockingQueue qOut = new LinkedBlockingQueue<Object>();
+    private BlockingQueue<Object> sink = new LinkedBlockingQueue<Object>(), source = new LinkedBlockingQueue<Object>();
     private Task t;
 
     public ThreadPool(Task t) {
         this.t = t;
+    }
+
+    public void start() {
         for (int i = 0; i < nCores; i++) {
-            workers[i] = new Worker(t, qIn, qOut);
+            workers[i] = new Worker(t, sink, source);
             workers[i].start();
         }
     }
 
-    public void add(Object o) throws Exception {
-        qIn.put(o);
+    public BlockingQueue<Object> sink() {
+        return sink;
     }
 
-    public void done() throws InterruptedException {
+    public BlockingQueue<Object> source() {
+        return source;
+    }
+
+    public void join() throws InterruptedException {
         Stop stop = new Stop();
-
         for (int i = 0; i < nCores; i++)
-            qIn.put(stop);
-
+            sink.put(stop);
         for (Worker worker : workers)
             worker.join();
     }

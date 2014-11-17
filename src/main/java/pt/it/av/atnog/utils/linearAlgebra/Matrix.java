@@ -4,6 +4,7 @@ import pt.it.av.atnog.utils.Utils;
 import pt.it.av.atnog.utils.parallel.ThreadPool;
 
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by mantunes on 11/3/14.
@@ -132,10 +133,13 @@ public class Matrix {
             }
         });
 
+        BlockingQueue<Object> sink = tp.sink();
+        tp.start();
+
         try {
             for (int i = 0; i < I; i++)
-                tp.add(new Integer(i));
-            tp.done();
+                sink.add(new Integer(i));
+            tp.join();
         } catch (Exception e) {
             e.printStackTrace();
         }
