@@ -35,7 +35,7 @@ public class Worker implements Runnable {
 
     public void run() {
         boolean done = false;
-        List<Object> out = new ArrayList<Object>();
+        List<Object> out = new ArrayList<>();
         while (!done) {
             Object in = null;
             try {

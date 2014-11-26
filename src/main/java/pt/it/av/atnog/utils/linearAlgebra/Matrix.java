@@ -19,12 +19,17 @@ public class Matrix {
         this.columns = columns;
     }
 
+    public static Matrix identity(int size) {
+        Matrix C = new Matrix(size, size);
+        for (int i = 0; i < size; i++)
+            C.data[i * C.columns + i] = 1.0;
+        return C;
+    }
+
     public static Matrix rand(int rows, int columns) {
         Matrix C = new Matrix(rows, columns);
-
         for (int n = 0; n < rows * columns; n++)
             C.data[n] = Utils.randomBetween(0, 10);
-
         return C;
     }
 
@@ -36,8 +41,13 @@ public class Matrix {
         return columns;
     }
 
-    public void set(int r, int c, double v) {
-        data[r * columns + c] = v;
+    public void set(int r, int c, double scalar) {
+        data[r * columns + c] = scalar;
+    }
+
+    public void set(double scalar) {
+        for (int i = 0; i < data.length; i++)
+            data[i] = scalar;
     }
 
     public double get(int r, int c) {
@@ -153,13 +163,12 @@ public class Matrix {
             if (o == this)
                 rv = true;
             else if (o instanceof Matrix) {
-                Matrix A = (Matrix) o;
-                if (rows == A.rows && columns == A.columns) {
+                Matrix B = (Matrix) o;
+                if (rows == B.rows && columns == B.columns) {
                     rv = true;
-                    for (int i = 0; i < rows && rv == true; i++)
-                        for (int j = 0; j < columns && rv == true; j++)
-                            if (Double.compare(data[i * columns + j], A.data[i * columns + j]) != 0)
-                                rv = false;
+                    for (int i = 0; i < data.length && rv == true; i++)
+                        if (Double.compare(data[i], B.data[i]) != 0)
+                            rv = false;
                 }
             }
         }

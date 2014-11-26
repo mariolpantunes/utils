@@ -11,7 +11,7 @@ public class ThreadPool {
     private AtomicBoolean running;
     private int nCores = Runtime.getRuntime().availableProcessors();
     private Worker workers[] = new Worker[nCores];
-    private BlockingQueue<Object> sink = new LinkedBlockingQueue<Object>(), source = new LinkedBlockingQueue<Object>();
+    private BlockingQueue<Object> sink = new LinkedBlockingQueue<>(), source = new LinkedBlockingQueue<>();
     private Task t;
 
     public ThreadPool(Task t) {

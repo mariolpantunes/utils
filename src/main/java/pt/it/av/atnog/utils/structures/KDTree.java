@@ -28,22 +28,20 @@ public class KDTree<T extends Point> {
         KDTree<T> rv = null;
         if (points == null || points.length == 0)
             rv = new KDTree<T>();
-        else {
-            KDComparator<T> comp = new KDComparator();
-            rv = new KDTree<T>(build(points, 0, points.length - 1, 0, points[0].dim(), comp), points.length);
-        }
+        else
+            rv = new KDTree<T>(build(points, 0, points.length - 1, 0, points[0].dim()), points.length);
         return rv;
     }
 
-    private static <T extends Point> KDNode<T> build(T[] points, int left, int right, int cd, int maxDim, KDComparator<T> comp) {
+    private static <T extends Point> KDNode<T> build(T[] points, int left, int right, int cd, int maxDim) {
         KDNode<T> node = null;
         if (left < right) {
-            comp.dim(cd);
-            Utils.qselect(points, left, right, left + ((right - left) / 2), comp);
+
+            Utils.qselect(points, left, right, left + ((right - left) / 2), (T e1, T e2) -> Double.compare(e1.coor(cd), e2.coor(cd)));
             int pivot = pivot(points, left, right, cd);
             node = new KDNode<T>(points[pivot]);
-            node.left = build(points, left, pivot - 1, (cd + 1) % maxDim, maxDim, comp);
-            node.right = build(points, pivot + 1, right, (cd + 1) % maxDim, maxDim, comp);
+            node.left = build(points, left, pivot - 1, (cd + 1) % maxDim, maxDim);
+            node.right = build(points, pivot + 1, right, (cd + 1) % maxDim, maxDim);
         } else if (left == right)
             node = new KDNode<T>(points[left]);
         return node;
@@ -258,5 +256,20 @@ public class KDTree<T extends Point> {
         StringBuilder sb = new StringBuilder();
         print(root, sb, 0);
         return sb.toString();
+    }
+
+    private static class KDNode<T extends Point> {
+        public T data;
+        public KDNode<T> left, right;
+
+        public KDNode(T data) {
+            this.data = data;
+            left = null;
+            right = null;
+        }
+
+        public String toString() {
+            return data.toString();
+        }
     }
 }
