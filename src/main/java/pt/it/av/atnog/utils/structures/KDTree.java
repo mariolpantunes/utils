@@ -1,13 +1,15 @@
 package pt.it.av.atnog.utils.structures;
 
 import pt.it.av.atnog.utils.Utils;
+import pt.it.av.atnog.utils.linearAlgebra.Vector;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public class KDTree<T extends Point> {
-    private int size;
+public class KDTree<T extends Vector> {
     private KDNode<T> root;
+    private int size;
 
     public KDTree() {
         this(null, 0);
@@ -18,26 +20,26 @@ public class KDTree<T extends Point> {
         this.size = size;
     }
 
-    public static <T extends Point> KDTree<T> build(List<T> points) {
-        T[] array = (T[]) new Point[points.size()];
+    public static <T extends Vector> KDTree<T> build(List<T> points) {
+        T[] array = (T[]) new Vector[points.size()];
         array = points.toArray(array);
         return build(array);
     }
 
-    public static <T extends Point> KDTree<T> build(T[] points) {
+    public static <T extends Vector> KDTree<T> build(T[] points) {
         KDTree<T> rv = null;
         if (points == null || points.length == 0)
             rv = new KDTree<T>();
         else
-            rv = new KDTree<T>(build(points, 0, points.length - 1, 0, points[0].dim()), points.length);
+            rv = new KDTree<T>(build(points, 0, points.length - 1, 0, points[0].size()), points.length);
         return rv;
     }
 
-    private static <T extends Point> KDNode<T> build(T[] points, int left, int right, int cd, int maxDim) {
+    private static <T extends Vector> KDNode<T> build(T[] points, int left, int right, int cd, int maxDim) {
         KDNode<T> node = null;
         if (left < right) {
 
-            Utils.qselect(points, left, right, left + ((right - left) / 2), (T e1, T e2) -> Double.compare(e1.coor(cd), e2.coor(cd)));
+            Utils.qselect(points, left, right, left + ((right - left) / 2), (T e1, T e2) -> Double.compare(e1.get(cd), e2.get(cd)));
             int pivot = pivot(points, left, right, cd);
             node = new KDNode<T>(points[pivot]);
             node.left = build(points, left, pivot - 1, (cd + 1) % maxDim, maxDim);
@@ -47,14 +49,14 @@ public class KDTree<T extends Point> {
         return node;
     }
 
-    private static <T extends Point> int pivot(T[] points, int left, int right, int cd) {
+    private static <T extends Vector> int pivot(T[] points, int left, int right, int cd) {
         int mid = left + ((right - left) / 2), pivot = mid;
-        for (; pivot < right && points[pivot + 1].coor(cd) == points[mid].coor(cd); pivot++) ;
+        for (; pivot < right && points[pivot + 1].get(cd) == points[mid].get(cd); pivot++) ;
         return pivot;
     }
 
     public int dim() {
-        return root.data.dim();
+        return root.data.size();
     }
 
     public int size() {
@@ -80,7 +82,7 @@ public class KDTree<T extends Point> {
             node = new KDNode<T>(target);
         else if (node.data.equals(target))
             throw new IllegalArgumentException("Already in the kdtree.");
-        else if (target.coor(cd) <= node.data.coor(cd))
+        else if (target.get(cd) <= node.data.get(cd))
             node.left = add(target, node.left, (cd + 1) % dim());
         else
             node.right = add(target, node.right, (cd + 1) % dim());
@@ -104,7 +106,7 @@ public class KDTree<T extends Point> {
                     node.right = null;
                 } else
                     node = null;
-            } else if (p.coor(cd) <= node.data.coor(cd))
+            } else if (p.get(cd) <= node.data.get(cd))
                 node.left = remove(p, node.left, (cd + 1) % dim());
             else
                 node.right = remove(p, node.right, (cd + 1) % dim());
@@ -119,15 +121,15 @@ public class KDTree<T extends Point> {
     }
 
     private void atMaxDist(KDNode<T> node, T target, double dist, List<T> list,
-                        int cd) {
+                           int cd) {
         if (node != null) {
             if (target.euclideanDistance(node.data) < dist)
                 list.add(node.data);
-            double dp = Math.abs(node.data.coor(cd) - target.coor(cd));
+            double dp = Math.abs(node.data.get(cd) - target.get(cd));
             if (dp < dist) {
                 atMaxDist(node.left, target, dist, list, (cd + 1) % dim());
                 atMaxDist(node.right, target, dist, list, (cd + 1) % dim());
-            } else if (target.coor(cd) <= node.data.coor(cd))
+            } else if (target.get(cd) <= node.data.get(cd))
                 atMaxDist(node.left, target, dist, list, (cd + 1) % dim());
             else
                 atMaxDist(node.right, target, dist, list, (cd + 1) % dim());
@@ -152,12 +154,12 @@ public class KDTree<T extends Point> {
         if (node != null) {
             if (target.euclideanDistance(node.data) < target.euclideanDistance(nn[0].data))
                 nn[0] = node;
-            double dp = Math.abs(node.data.coor(cd) - target.coor(cd));
+            double dp = Math.abs(node.data.get(cd) - target.get(cd));
             if (dp < target.euclideanDistance(nn[0].data)) {
                 nearest(node.left, nn, target, (cd + 1) % dim());
                 nearest(node.right, nn, target, (cd + 1) % dim());
             } else {
-                if (target.coor(cd) <= node.data.coor(cd))
+                if (target.get(cd) <= node.data.get(cd))
                     nearest(node.left, nn, target, (cd + 1) % dim());
                 else
                     nearest(node.right, nn, target, (cd + 1) % dim());
@@ -166,7 +168,7 @@ public class KDTree<T extends Point> {
     }
 
     private KDNode<T> parent(T p, KDNode<T> node, int cd) {
-        if (p.coor(cd) <= node.data.coor(cd)) {
+        if (p.get(cd) <= node.data.get(cd)) {
             if (node.left == null)
                 return node;
             else
@@ -186,13 +188,13 @@ public class KDTree<T extends Point> {
     private T findMax(KDNode<T> node, int dim, int cd) {
         T result = null;
         if (node != null) {
-            if (cd == dim) {
-                result = Point.max(findMax(node.right, dim, (cd + 1) % dim()),
-                        node.data, dim);
-            } else {
-                result = Point.max(findMax(node.left, dim, (cd + 1) % dim()),
-                        findMax(node.right, dim, (cd + 1) % dim()), node.data, dim);
-            }
+            Comparator<T> c = (T a, T b) -> (Double.compare(a.get(dim), b.get(dim)));
+            if (cd == dim)
+                result = Utils.max(findMax(node.right, dim, (cd + 1) % dim()),
+                        node.data, c);
+            else
+                result = Utils.max(Utils.max(findMax(node.left, dim, (cd + 1) % dim()),
+                        findMax(node.right, dim, (cd + 1) % dim()), c), node.data, c);
         }
         return result;
     }
@@ -204,13 +206,12 @@ public class KDTree<T extends Point> {
     private T findMin(KDNode<T> node, int dim, int cd) {
         T result = null;
         if (node != null) {
-            if (cd == dim) {
-                result = Point.min(findMin(node.left, dim, (cd + 1) % dim()),
-                        node.data, dim);
-            } else {
-                result = Point.min(findMin(node.left, dim, (cd + 1) % dim()),
-                        findMin(node.right, dim, (cd + 1) % dim()), node.data, dim);
-            }
+            Comparator<T> c = (T a, T b) -> (Double.compare(a.get(dim), b.get(dim)));
+            if (cd == dim)
+                result = Utils.min(findMin(node.left, dim, (cd + 1) % dim()), node.data, c);
+            else
+                result = Utils.min(Utils.min(findMin(node.left, dim, (cd + 1) % dim()),
+                        findMin(node.right, dim, (cd + 1) % dim()), c), node.data, c);
         }
         return result;
     }
@@ -227,11 +228,10 @@ public class KDTree<T extends Point> {
         if (node != null) {
             if (node.data.equals(target))
                 rv = true;
-            else if (target.coor(cd) <= node.data.coor(cd)) {
+            else if (target.get(cd) <= node.data.get(cd))
                 rv = contains(node.left, target, (cd + 1) % dim());
-            } else {
+            else
                 rv = contains(node.right, target, (cd + 1) % dim());
-            }
         }
         return rv;
     }
@@ -258,7 +258,7 @@ public class KDTree<T extends Point> {
         return sb.toString();
     }
 
-    private static class KDNode<T extends Point> {
+    private static class KDNode<T extends Vector> {
         public T data;
         public KDNode<T> left, right;
 

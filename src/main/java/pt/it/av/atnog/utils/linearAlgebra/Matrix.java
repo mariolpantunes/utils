@@ -77,6 +77,10 @@ public class Matrix {
         return C;
     }
 
+    /*public Matrix mul(Matrix B) {
+
+    }*/
+
     public Matrix mul(Matrix B) {
         Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
         for (int i = 0; i < C.rows; i++) {
@@ -93,43 +97,6 @@ public class Matrix {
     }
 
     public Matrix parallel_mul(Matrix B) {
-        Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
-        int I = C.rows, J = C.columns, K = columns;
-        final int nThreads = Runtime.getRuntime().availableProcessors();
-        final int blockSize = I / nThreads;
-        Thread[] threads = new Thread[nThreads];
-        for (int n = 0; n < nThreads; n++) {
-            final int finalN = n;
-            threads[n] = new Thread() {
-                public void run() {
-                    final int beginIndex = finalN * blockSize;
-                    final int endIndex = (finalN == (nThreads - 1)) ?
-                            I : (finalN + 1) * blockSize;
-                    for (int i = beginIndex; i < endIndex; i++) {
-                        for (int j = 0; j < J; j++) {
-                            for (int k = 0; k < K; k++) {
-                                C.data[i * C.columns + j] += data[i * columns + k] * BT.data[j * B.columns + k];
-                            }
-                        }
-                    }
-                }
-            };
-            threads[n].start();
-        }
-
-        for (int n = 0; n < nThreads; n++) {
-            try {
-                threads[n].join();
-            } catch (InterruptedException e) {
-                System.exit(-1);
-
-            }
-        }
-
-        return C;
-    }
-
-    public Matrix parallel_mul2(Matrix B) {
         Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
         int I = C.rows, J = C.columns, K = columns;
         ThreadPool tp = new ThreadPool((Object o, List<Object> l) -> {

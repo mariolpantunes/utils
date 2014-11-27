@@ -82,6 +82,6 @@ public class MatrixTest {
         Matrix A = Matrix.rand(512, 256);
         Matrix B = Matrix.rand(256, 512);
         Matrix C = A.mul(B);
-        assertTrue(C.equals(A.parallel_mul2(B)));
+        assertTrue(C.equals(A.parallel_mul(B)));
     }
 }

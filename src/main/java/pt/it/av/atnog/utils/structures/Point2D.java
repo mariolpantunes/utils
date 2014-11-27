@@ -1,17 +1,19 @@
 package pt.it.av.atnog.utils.structures;
 
-public class Point2D extends Point {
+import pt.it.av.atnog.utils.linearAlgebra.Vector;
+
+public class Point2D extends Vector {
     public Point2D(int x, int y) {
         super(2);
-        coor[0] = x;
-        coor[1] = y;
+        data[0] = x;
+        data[1] = y;
     }
 
     public double x() {
-        return coor[0];
+        return data[0];
     }
 
     public double y() {
-        return coor[1];
+        return data[1];
     }
 }

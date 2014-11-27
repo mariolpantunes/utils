@@ -6,6 +6,10 @@ package pt.it.av.atnog.utils.linearAlgebra;
 public class Vector {
     protected double data[];
 
+    public Vector(double array[]) {
+        this.data = array;
+    }
+
     public Vector(int size) {
         data = new double[size];
     }
@@ -20,13 +24,17 @@ public class Vector {
         return data.length;
     }
 
-    public void set(int idx, double scalar) {
-        data[idx] = scalar;
+    public void set(int i, double scalar) {
+        data[i] = scalar;
     }
 
     public void set(double scalar) {
         for (int i = 0; i < data.length; i++)
             data[i] = scalar;
+    }
+
+    public double get(int i) {
+        return data[i];
     }
 
     public Vector add(double scalar) {
@@ -43,18 +51,46 @@ public class Vector {
         return c;
     }
 
-    public Vector rem(double scalar) {
+    public Vector sub(double scalar) {
         Vector c = new Vector(data.length);
         for (int i = 0; i < data.length; i++)
             c.data[i] = data[i] - scalar;
         return c;
     }
 
-    public Vector rem(Vector b) {
+    public Vector sub(Vector b) {
         Vector c = new Vector(data.length);
         for (int i = 0; i < data.length; i++)
             c.data[i] = data[i] - b.data[i];
         return c;
+    }
+
+    public Vector mul(double scalar) {
+        Vector c = new Vector(data.length);
+        for (int i = 0; i < data.length; i++)
+            c.data[i] = data[i] * scalar;
+        return c;
+    }
+
+    public double minkowskiDistance(Vector po, int p) {
+        double sum = 0.0;
+        if (data.length == po.data.length)
+            for (int i = 0; i < data.length; i++) {
+                double absDiff = Math.abs(data[i] - po.data[i]);
+                sum += Math.pow(absDiff, p);
+            }
+        else
+            throw new IllegalArgumentException("The points do not have the same number of dimensions");
+
+        return Math.pow(sum, 1.0 / p);
+    }
+
+    public double euclideanDistance(Vector p) {
+        return minkowskiDistance(p, 2);
+    }
+
+    public double manhattanDistance(Vector p) {
+        return minkowskiDistance(p, 1);
     }
 
     public boolean equals(Object o) {
@@ -73,5 +109,14 @@ public class Vector {
             }
         }
         return rv;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        for (int i = 0; i < data.length; i++)
+            sb.append(data[i] + ";");
+        sb.append("}");
+        return sb.toString();
     }
 }

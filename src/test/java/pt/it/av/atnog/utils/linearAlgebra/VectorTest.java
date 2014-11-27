@@ -31,14 +31,14 @@ public class VectorTest {
     }
 
     @Test
-    public void test_rem_scalar() {
-        Vector C = Aplus1.rem(1.0);
+    public void test_sub_scalar() {
+        Vector C = Aplus1.sub(1.0);
         assertTrue(C.equals(A));
     }
 
     @Test
-    public void test_rem_vector() {
-        Vector C = Aplus1.rem(A);
+    public void test_sub_vector() {
+        Vector C = Aplus1.sub(A);
         assertTrue(C.equals(A));
     }
 }

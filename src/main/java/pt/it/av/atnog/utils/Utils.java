@@ -81,12 +81,40 @@ public class Utils {
         array[j] = tmp;
     }
 
-    private static <T> int partition(T[] array, int left, int right, int pivot, Comparator<T> comparator) {
+    public static <T extends Comparable<T>> T min(T a, T b) {
+        T rv = b;
+        if (a.compareTo(b) < 0)
+            rv = a;
+        return rv;
+    }
+
+    public static <T> T min(T a, T b, Comparator<T> c) {
+        T rv = b;
+        if (c.compare(a, b) < 0)
+            rv = a;
+        return rv;
+    }
+
+    public static <T extends Comparable<T>> T max(T a, T b) {
+        T rv = b;
+        if (a.compareTo(b) > 0)
+            rv = a;
+        return rv;
+    }
+
+    public static <T> T max(T a, T b, Comparator<T> c) {
+        T rv = b;
+        if (c.compare(a, b) > 0)
+            rv = a;
+        return rv;
+    }
+
+    private static <T> int partition(T[] array, int left, int right, int pivot, Comparator<T> c) {
         int rv = left;
         T pivotValue = array[pivot];
         swap(array, pivot, right);
         for(int i = left; i < right; i++) {
-            if(comparator.compare(array[i], pivotValue) <= 0) {
+            if (c.compare(array[i], pivotValue) <= 0) {
                 swap(array, rv, i);
                 rv++;
             }
@@ -95,24 +123,24 @@ public class Utils {
         return rv;
     }
 
-    public static <T> T qselect(T[] array, int left, int right, int n, Comparator<T> comparator) {
+    public static <T> T qselect(T[] array, int left, int right, int n, Comparator<T> c) {
         T rv = null;
         if(left < right) {
             int pivot = left + (int)Math.floor(Math.random() * (right - left + 1));
-            pivot = partition(array, left, right, pivot, comparator);
+            pivot = partition(array, left, right, pivot, c);
             if(n == pivot)
                 rv = array[n];
             else if(n < pivot)
-                rv = qselect(array, left, pivot-1, n, comparator);
+                rv = qselect(array, left, pivot - 1, n, c);
             else
-                rv = qselect(array, pivot+1, right, n, comparator);
+                rv = qselect(array, pivot + 1, right, n, c);
 
         }
         return rv;
     }
 
-    public static <T> T qselect(T[] array, int n, Comparator<T> comparator) {
-        return  qselect(array, 0, array.length-1, n, comparator);
+    public static <T> T qselect(T[] array, int n, Comparator<T> c) {
+        return qselect(array, 0, array.length - 1, n, c);
     }
 
     private static <T extends Comparable<T>> int partition(T[] array, int left, int right, int pivot) {
