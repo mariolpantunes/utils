@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.linearAlgebra;
+package pt.it.av.atnog.utils.bla;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -77,11 +77,11 @@ public class MatrixTest {
         assertTrue(AAt.equals(A.mul(At)));
     }
 
-    @Test
+    /*@Test
     public void test_parallel_mul() {
         Matrix A = Matrix.rand(512, 256);
         Matrix B = Matrix.rand(256, 512);
         Matrix C = A.mul(B);
         assertTrue(C.equals(A.parallel_mul(B)));
-    }
+    }*/
 }

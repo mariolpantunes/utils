@@ -1,6 +1,6 @@
 package pt.it.av.atnog.utils.structures;
 
-import pt.it.av.atnog.utils.linearAlgebra.Vector;
+import pt.it.av.atnog.utils.bla.Vector;
 
 public class Point2D extends Vector {
     public Point2D(int x, int y) {

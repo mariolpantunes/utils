@@ -1,7 +1,7 @@
 package pt.it.av.atnog.utils.structures;
 
 import pt.it.av.atnog.utils.Utils;
-import pt.it.av.atnog.utils.linearAlgebra.Vector;
+import pt.it.av.atnog.utils.bla.Vector;
 
 import java.util.ArrayList;
 import java.util.Comparator;

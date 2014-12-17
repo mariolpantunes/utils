@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.linearAlgebra;
+package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.Utils;
 import pt.it.av.atnog.utils.parallel.ThreadPool;
@@ -7,16 +7,23 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Created by mantunes on 11/3/14.
+ *
+ * @author Mário Antunes
  */
 public class Matrix {
     protected double data[];
     protected int rows, columns;
 
     public Matrix(int rows, int columns) {
-        this.data = new double[rows * columns];
         this.rows = rows;
         this.columns = columns;
+        this.data = new double[rows * columns];
+    }
+
+    public Matrix(int rows, int columns, double data[]) {
+        this.rows = rows;
+        this.columns = columns;
+        this.data = data;
     }
 
     public static Matrix identity(int size) {
@@ -77,12 +84,31 @@ public class Matrix {
         return C;
     }
 
-    /*public Matrix mul(Matrix B) {
+    public Matrix sub(double b) {
+        Matrix C = new Matrix(rows, columns);
+        for (int n = 0, total = data.length; n < total; n++)
+            C.data[n] = data[n] - b;
+        return C;
+    }
 
-    }*/
+    public void uSub(int row, int column, Vector b) {
+        for (int i = 0; i < columns - column; i++)
+            data[row * columns + i + column] -= b.data[i];
+    }
+
+    public Matrix mul(double scalar) {
+        Matrix C = new Matrix(rows, columns);
+        for (int n = 0, total = data.length; n < total; n++)
+            C.data[n] = data[n] * scalar;
+        return C;
+    }
 
     public Matrix mul(Matrix B) {
-        Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
+        return mul_seq(B);
+    }
+
+    public Matrix mul_seq(Matrix B) {
+        Matrix C = new Matrix(rows, B.columns), BT = B.transpose();
         for (int i = 0; i < C.rows; i++) {
             int ic = i * columns;
             for (int j = 0; j < C.columns; j++) {
@@ -96,8 +122,8 @@ public class Matrix {
         return C;
     }
 
-    public Matrix parallel_mul(Matrix B) {
-        Matrix BT = B.transpose(), C = new Matrix(rows, B.columns);
+    public Matrix mul_par(Matrix B) {
+        Matrix C = new Matrix(rows, B.columns), BT = B.transpose();
         int I = C.rows, J = C.columns, K = columns;
         ThreadPool tp = new ThreadPool((Object o, List<Object> l) -> {
             int i = (Integer) o, ic = i * columns;
@@ -124,6 +150,48 @@ public class Matrix {
         return C;
     }
 
+    public Vector vector(int row, int column) {
+        Vector v = new Vector(columns - column);
+        for (int i = 0; i < columns - column; i++)
+            v.data[i] = data[row * columns + i + column];
+        return v;
+    }
+
+    public void zeros(int row, int column) {
+        for (int i = column; i < columns; i++)
+            data[row * columns + i] = 0.0;
+    }
+
+    /**
+     * @return
+     */
+    public Matrix triangular() {
+        Matrix C = transpose();
+        for (int k = 0; k < rows - 1; k++) {
+            Vector v = C.vector(k, k);
+            double d = v.norm(2);
+            if (d > 0) {
+                if (v.data[0] > 0)
+                    d = -d;
+                v.data[0] = v.data[0] - d;
+                double f1 = Math.sqrt(-2 * v.data[0] * d);
+                v.uDiv(f1);
+
+                // Refelction matrix
+                //Matrix H = Matrix.identity(rows-k).sub(v.outerProduct(v).mul(2.0));
+
+                C.zeros(k, k);
+                C.data[k * C.columns + k] = d;
+                // Apply householder for the remaining columns
+                for (int i = k + 1; i < columns; i++) {
+                    double f = 2.0 * v.innerProduct(C.vector(i, k));
+                    C.uSub(i, k, v.mul(f));
+                }
+            }
+        }
+        return C.transpose();
+    }
+
     public boolean equals(Object o) {
         boolean rv = false;
         if (o != null) {
@@ -145,9 +213,8 @@ public class Matrix {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < columns; c++) {
-                sb.append(String.format("%3.0f ", data[r * columns + c]));
-            }
+            for (int c = 0; c < columns; c++)
+                sb.append(String.format("%.2f ", data[r * columns + c]));
             sb.append("\n");
         }
         return sb.toString();

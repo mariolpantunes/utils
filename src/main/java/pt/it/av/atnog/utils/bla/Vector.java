@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.linearAlgebra;
+package pt.it.av.atnog.utils.bla;
 
 /**
  * Created by mantunes on 11/26/14.
@@ -18,6 +18,10 @@ public class Vector {
         Vector c = new Vector(size);
         c.set(1.0);
         return c;
+    }
+
+    private static double norm(double x, double y, int p) {
+        return Math.pow(Math.pow(x, p) + Math.pow(y, p), 1.0 / p);
     }
 
     public int size() {
@@ -72,6 +76,38 @@ public class Vector {
         return c;
     }
 
+    public double innerProduct(Vector b) {
+        double c = 0.0;
+        for (int i = 0; i < data.length; i++)
+            c += b.data[i] * data[i];
+        return c;
+    }
+
+    //TODO: Remove the matrix wrapping
+    public Matrix outerProduct(Vector b) {
+        Matrix A = new Matrix(data.length, 1, data), B = new Matrix(1, b.data.length, b.data);
+        return A.mul(B);
+    }
+
+    public Vector div(double scalar) {
+        Vector c = new Vector(data.length);
+        for (int i = 0; i < data.length; i++)
+            c.data[i] = data[i] / scalar;
+        return c;
+    }
+
+    public void uDiv(double scalar) {
+        for (int i = 0; i < data.length; i++)
+            data[i] /= scalar;
+    }
+
+    public double norm(int p) {
+        double norm = 0.0;
+        for (int i = 0; i < data.length; i++)
+            norm = norm(norm, data[i], p);
+        return norm;
+    }
+
     public double minkowskiDistance(Vector po, int p) {
         double sum = 0.0;
         if (data.length == po.data.length)
@@ -113,10 +149,10 @@ public class Vector {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        for (int i = 0; i < data.length; i++)
-            sb.append(data[i] + ";");
-        sb.append("}");
+        sb.append("[");
+        for (int i = 0; i < data.length - 1; i++)
+            sb.append(data[i] + ", ");
+        sb.append(data[data.length - 1] + "]");
         return sb.toString();
     }
 }

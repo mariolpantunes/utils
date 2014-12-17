@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.linearAlgebra;
+package pt.it.av.atnog.utils.bla;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
