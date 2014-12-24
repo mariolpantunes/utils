@@ -193,4 +193,8 @@ public class Utils {
         e.printStackTrace(pw);
         return sw.getBuffer().toString();
     }
+
+    public static double norm(double x, double y, int p) {
+        return Math.pow(Math.pow(x, p) + Math.pow(y, p), 1.0 / p);
+    }
 }

@@ -1,5 +1,7 @@
 package pt.it.av.atnog.utils.bla;
 
+import pt.it.av.atnog.utils.Utils;
+
 /**
  * Created by mantunes on 11/26/14.
  */
@@ -18,10 +20,6 @@ public class Vector {
         Vector c = new Vector(size);
         c.set(1.0);
         return c;
-    }
-
-    private static double norm(double x, double y, int p) {
-        return Math.pow(Math.pow(x, p) + Math.pow(y, p), 1.0 / p);
     }
 
     public int size() {
@@ -104,7 +102,7 @@ public class Vector {
     public double norm(int p) {
         double norm = 0.0;
         for (int i = 0; i < data.length; i++)
-            norm = norm(norm, data[i], p);
+            norm = Utils.norm(norm, data[i], p);
         return norm;
     }
 

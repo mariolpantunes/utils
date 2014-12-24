@@ -150,17 +150,7 @@ public class Matrix {
         return C;
     }
 
-    public Vector vector(int row, int column) {
-        Vector v = new Vector(columns - column);
-        for (int i = 0; i < columns - column; i++)
-            v.data[i] = data[row * columns + i + column];
-        return v;
-    }
 
-    public void zeros(int row, int column) {
-        for (int i = column; i < columns; i++)
-            data[row * columns + i] = 0.0;
-    }
 
     /**
      * @return
@@ -168,8 +158,10 @@ public class Matrix {
     public Matrix triangular() {
         Matrix C = transpose();
         for (int k = 0; k < rows - 1; k++) {
-            Vector v = C.vector(k, k);
-            double d = v.norm(2);
+            //Vector v = C.vector(k, k);
+            //double d = v.norm(2);
+            Vector v = new Vector(rows - k);
+            double d = C.normAndVector(k, k, v);
             if (d > 0) {
                 if (v.data[0] > 0)
                     d = -d;
@@ -177,7 +169,7 @@ public class Matrix {
                 double f1 = Math.sqrt(-2 * v.data[0] * d);
                 v.uDiv(f1);
 
-                // Refelction matrix
+                // Reflection matrix
                 //Matrix H = Matrix.identity(rows-k).sub(v.outerProduct(v).mul(2.0));
 
                 C.zeros(k, k);
@@ -190,6 +182,64 @@ public class Matrix {
             }
         }
         return C.transpose();
+    }
+
+    public Matrix[] QR() {
+        Matrix QR[] = new Matrix[2];
+
+        QR[0] = Matrix.identity(rows);
+        QR[1] = transpose();
+
+        for (int k = 0; k < rows - 1; k++) {
+            Vector v = new Vector(rows - k);
+            double d = QR[1].normAndVector(k, k, v);
+            if (d > 0) {
+                if (v.data[0] > 0)
+                    d = -d;
+                v.data[0] = v.data[0] - d;
+                double f1 = Math.sqrt(-2 * v.data[0] * d);
+                v.uDiv(f1);
+
+                // Reflection matrix
+                //Matrix H = Matrix.identity(rows-k).sub(v.outerProduct(v).mul(2.0));
+
+                QR[1].zeros(k, k);
+                QR[1].data[k * QR[1].columns + k] = d;
+                // Apply householder for the remaining columns
+                for (int i = k + 1; i < columns; i++) {
+                    double f = 2.0 * v.innerProduct(QR[1].vector(i, k));
+                    QR[1].uSub(i, k, v.mul(f));
+                }
+
+                for (int i = k; i < rows; i++) {
+                    double fq = 2.0 * v.innerProduct(QR[0].vector(i, k));
+                    QR[0].uSub(i, k, v.mul(fq));
+                }
+            }
+        }
+        QR[1] = QR[1].transpose();
+        return QR;
+    }
+
+    private double normAndVector(int row, int column, Vector v) {
+        double norm = 0.0;
+        for (int i = 0; i < columns - column; i++) {
+            v.data[i] = data[row * columns + i + column];
+            norm = Utils.norm(norm, data[row * columns + i + column], 2);
+        }
+        return norm;
+    }
+
+    private Vector vector(int row, int column) {
+        Vector v = new Vector(columns - column);
+        for (int i = 0; i < columns - column; i++)
+            v.data[i] = data[row * columns + i + column];
+        return v;
+    }
+
+    private void zeros(int row, int column) {
+        for (int i = column; i < columns; i++)
+            data[row * columns + i] = 0.0;
     }
 
     public boolean equals(Object o) {
@@ -214,7 +264,7 @@ public class Matrix {
         StringBuilder sb = new StringBuilder();
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < columns; c++)
-                sb.append(String.format("%.2f ", data[r * columns + c]));
+                sb.append(String.format("%.5f ", data[r * columns + c]));
             sb.append("\n");
         }
         return sb.toString();
