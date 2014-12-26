@@ -6,106 +6,121 @@ import pt.it.av.atnog.utils.Utils;
  * Created by mantunes on 11/26/14.
  */
 public class Vector {
+    protected int bIdx, length;
     protected double data[];
 
-    public Vector(double array[]) {
-        this.data = array;
+    public Vector(double data[], int bIdx, int length) {
+        this.data = data;
+        this.bIdx = bIdx;
+        this.length = length;
     }
 
-    public Vector(int size) {
-        data = new double[size];
+    public Vector(double data[]) {
+        this(data, 0, data.length);
     }
 
-    public static Vector ones(int size) {
-        Vector c = new Vector(size);
+    public Vector(int length) {
+        this(new double[length], 0, length);
+    }
+
+    public static Vector ones(int length) {
+        Vector c = new Vector(length);
         c.set(1.0);
         return c;
     }
 
     public int size() {
-        return data.length;
+        return length;
     }
 
     public void set(int i, double scalar) {
-        data[i] = scalar;
+        data[bIdx + i] = scalar;
     }
 
     public void set(double scalar) {
-        for (int i = 0; i < data.length; i++)
-            data[i] = scalar;
+        for (int i = 0; i < length; i++)
+            data[bIdx + i] = scalar;
     }
 
     public double get(int i) {
-        return data[i];
+        return data[bIdx + i];
     }
 
     public Vector add(double scalar) {
-        Vector c = new Vector(data.length);
-        for (int i = 0; i < data.length; i++)
-            c.data[i] = data[i] + scalar;
+        Vector c = new Vector(length);
+        for (int i = 0; i < length; i++)
+            c.data[c.bIdx + i] = data[bIdx + i] + scalar;
         return c;
     }
 
     public Vector add(Vector b) {
-        Vector c = new Vector(data.length);
-        for (int i = 0; i < data.length; i++)
-            c.data[i] = data[i] + b.data[i];
+        Vector c = new Vector(length);
+        for (int i = 0; i < length; i++)
+            c.data[c.bIdx + i] = data[bIdx + i] + b.data[b.bIdx + i];
         return c;
     }
 
     public Vector sub(double scalar) {
-        Vector c = new Vector(data.length);
-        for (int i = 0; i < data.length; i++)
-            c.data[i] = data[i] - scalar;
+        Vector c = new Vector(length);
+        for (int i = 0; i < length; i++)
+            c.data[c.bIdx + i] = data[bIdx + i] - scalar;
         return c;
     }
 
     public Vector sub(Vector b) {
-        Vector c = new Vector(data.length);
-        for (int i = 0; i < data.length; i++)
-            c.data[i] = data[i] - b.data[i];
+        Vector c = new Vector(length);
+        for (int i = 0; i < length; i++)
+            c.data[c.bIdx + i] = data[bIdx + i] - b.data[b.bIdx + i];
         return c;
     }
 
     public Vector mul(double scalar) {
-        Vector c = new Vector(data.length);
-        for (int i = 0; i < data.length; i++)
-            c.data[i] = data[i] * scalar;
+        Vector c = new Vector(length);
+        for (int i = 0; i < length; i++)
+            c.data[c.bIdx + i] = data[bIdx + i] * scalar;
         return c;
     }
 
     public double innerProduct(Vector b) {
         double c = 0.0;
-        for (int i = 0; i < data.length; i++)
-            c += b.data[i] * data[i];
+        for (int i = 0; i < length; i++)
+            c += data[bIdx + i] * b.data[b.bIdx + i];
         return c;
     }
 
-    //TODO: Remove the matrix wrapping
     public Matrix outerProduct(Vector b) {
-        Matrix A = new Matrix(data.length, 1, data), B = new Matrix(1, b.data.length, b.data);
-        return A.mul(B);
+        Matrix C = new Matrix(length, b.length);
+
+        int k = 0;
+        for (int i = 0; i < length; i++)
+            for (int j = 0; j < b.length; j++) {
+                C.data[k] = data[bIdx + i] * b.data[b.bIdx + j];
+                k++;
+            }
+
+        return C;
     }
 
     public Vector div(double scalar) {
-        Vector c = new Vector(data.length);
-        for (int i = 0; i < data.length; i++)
-            c.data[i] = data[i] / scalar;
+        Vector c = new Vector(length);
+        for (int i = 0; i < length; i++)
+            c.data[c.bIdx + i] = data[bIdx + i] / scalar;
         return c;
     }
 
     public void uDiv(double scalar) {
-        for (int i = 0; i < data.length; i++)
-            data[i] /= scalar;
+        for (int i = 0; i < length; i++)
+            data[bIdx + i] /= scalar;
     }
 
     public double norm(int p) {
         double norm = 0.0;
-        for (int i = 0; i < data.length; i++)
-            norm = Utils.norm(norm, data[i], p);
+        for (int i = 0; i < length; i++)
+            norm = Utils.norm(norm, data[bIdx + i], p);
         return norm;
     }
 
+    // TODO: review this methods
     public double minkowskiDistance(Vector po, int p) {
         double sum = 0.0;
         if (data.length == po.data.length)
@@ -133,11 +148,11 @@ public class Vector {
             if (o == this)
                 rv = true;
             else if (o instanceof Vector) {
-                Vector B = (Vector) o;
-                if (data.length == B.data.length) {
+                Vector b = (Vector) o;
+                if (length == b.length) {
                     rv = true;
-                    for (int i = 0; i < data.length && rv == true; i++)
-                        if (Double.compare(data[i], B.data[i]) != 0)
+                    for (int i = 0; i < length && rv == true; i++)
+                        if (Double.compare(data[bIdx + i], b.data[b.bIdx + i]) != 0)
                             rv = false;
                 }
             }
@@ -148,9 +163,9 @@ public class Vector {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (int i = 0; i < data.length - 1; i++)
-            sb.append(data[i] + ", ");
-        sb.append(data[data.length - 1] + "]");
+        for (int i = 0; i < length - 1; i++)
+            sb.append(data[bIdx + i] + ", ");
+        sb.append(data[length - 1] + "]");
         return sb.toString();
     }
 }
