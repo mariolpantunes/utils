@@ -165,7 +165,7 @@ public class Vector {
         sb.append("[");
         for (int i = 0; i < length - 1; i++)
             sb.append(data[bIdx + i] + ", ");
-        sb.append(data[length - 1] + "]");
+        sb.append(data[bIdx + length - 1] + "]");
         return sb.toString();
     }
 }

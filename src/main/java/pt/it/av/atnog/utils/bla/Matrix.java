@@ -206,15 +206,11 @@ public class Matrix {
                 QR[1].zeros(k, k);
                 QR[1].data[k * QR[1].columns + k] = d;
                 // Apply householder for the remaining columns
-                for (int i = k + 1; i < columns; i++) {
-                    double f = 2.0 * v.innerProduct(QR[1].vector(i, k));
-                    QR[1].uSub(i, k, v.mul(f));
-                }
+                for (int i = k + 1; i < columns; i++)
+                    QR[1].uSub(i, k, v.mul(2.0 * v.innerProduct(QR[1].vector(i, k))));
 
-                for (int i = k; i < rows; i++) {
-                    double fq = 2.0 * v.innerProduct(QR[0].vector(i, k));
-                    QR[0].uSub(i, k, v.mul(fq));
-                }
+                for (int i = 0; i < rows; i++)
+                    QR[0].uSub(i, k, v.mul(2.0 * v.innerProduct(QR[0].vector(i, k))));
             }
         }
         QR[1] = QR[1].transpose();
@@ -230,11 +226,8 @@ public class Matrix {
         return norm;
     }
 
-    private Vector vector(int row, int column) {
-        Vector v = new Vector(columns - column);
-        for (int i = 0; i < columns - column; i++)
-            v.data[i] = data[row * columns + i + column];
-        return v;
+    public Vector vector(int row, int column) {
+        return new Vector(data, row * columns + column, columns - column);
     }
 
     private void zeros(int row, int column) {
