@@ -226,6 +226,18 @@ public class Matrix {
         return norm;
     }
 
+    public double det() {
+        Matrix B = triangular();
+        double rv = 1.0;
+
+        for (int i = 0; i < B.rows; i++)
+            rv *= B.data[i * B.columns + i];
+
+        rv *= Math.pow(-1.0, B.rows - 1);
+
+        return rv;
+    }
+
     public Vector vector(int row, int column) {
         return new Vector(data, row * columns + column, columns - column);
     }
