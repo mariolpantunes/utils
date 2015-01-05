@@ -162,10 +162,10 @@ public class Matrix {
             //double d = v.norm(2);
             Vector v = new Vector(rows - k);
             double d = C.normAndVector(k, k, v);
-            if (d > 0) {
+            if (d != v.data[0]) {
                 if (v.data[0] > 0)
                     d = -d;
-                v.data[0] = v.data[0] - d;
+                v.data[0] -= d;
                 double f1 = Math.sqrt(-2 * v.data[0] * d);
                 v.uDiv(f1);
 
@@ -193,7 +193,7 @@ public class Matrix {
         for (int k = 0; k < rows - 1; k++) {
             Vector v = new Vector(rows - k);
             double d = QR[1].normAndVector(k, k, v);
-            if (d > 0) {
+            if (d != v.data[0]) {
                 if (v.data[0] > 0)
                     d = -d;
                 v.data[0] = v.data[0] - d;
