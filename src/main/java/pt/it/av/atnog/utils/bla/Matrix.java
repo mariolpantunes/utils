@@ -150,37 +150,12 @@ public class Matrix {
         return C;
     }
 
-
-
     /**
      * @return
      */
     public Matrix triangular() {
         Matrix C = transpose();
-        for (int k = 0; k < rows - 1; k++) {
-            //Vector v = C.vector(k, k);
-            //double d = v.norm(2);
-            Vector v = new Vector(rows - k);
-            double d = C.normAndVector(k, k, v);
-            if (d != v.data[0]) {
-                if (v.data[0] > 0)
-                    d = -d;
-                v.data[0] -= d;
-                double f1 = Math.sqrt(-2 * v.data[0] * d);
-                v.uDiv(f1);
-
-                // Reflection matrix
-                //Matrix H = Matrix.identity(rows-k).sub(v.outerProduct(v).mul(2.0));
-
-                C.zeros(k, k);
-                C.data[k * C.columns + k] = d;
-                // Apply householder for the remaining columns
-                for (int i = k + 1; i < columns; i++) {
-                    double f = 2.0 * v.innerProduct(C.vector(i, k));
-                    C.uSub(i, k, v.mul(f));
-                }
-            }
-        }
+        triangular(C);
         return C.transpose();
     }
 
@@ -200,21 +175,45 @@ public class Matrix {
                 double f1 = Math.sqrt(-2 * v.data[0] * d);
                 v.uDiv(f1);
 
-                // Reflection matrix
-                //Matrix H = Matrix.identity(rows-k).sub(v.outerProduct(v).mul(2.0));
-
                 QR[1].zeros(k, k);
                 QR[1].data[k * QR[1].columns + k] = d;
                 // Apply householder for the remaining columns
                 for (int i = k + 1; i < columns; i++)
                     QR[1].uSub(i, k, v.mul(2.0 * v.innerProduct(QR[1].vector(i, k))));
-
                 for (int i = 0; i < rows; i++)
                     QR[0].uSub(i, k, v.mul(2.0 * v.innerProduct(QR[0].vector(i, k))));
             }
         }
         QR[1] = QR[1].transpose();
         return QR;
+    }
+
+    private int triangular(Matrix T) {
+        int rv = 0;
+        for (int k = 0; k < rows - 1; k++) {
+            Vector v = new Vector(rows - k);
+            double d = T.normAndVector(k, k, v);
+            if (d != v.data[0]) {
+                rv++;
+                if (v.data[0] > 0)
+                    d = -d;
+                v.data[0] -= d;
+                double f1 = Math.sqrt(-2 * v.data[0] * d);
+                v.uDiv(f1);
+
+                // Reflection matrix
+                //Matrix H = Matrix.identity(rows-k).sub(v.outerProduct(v).mul(2.0));
+
+                T.zeros(k, k);
+                T.data[k * T.columns + k] = d;
+                // Apply householder for the remaining columns
+                for (int i = k + 1; i < columns; i++) {
+                    double f = 2.0 * v.innerProduct(T.vector(i, k));
+                    T.uSub(i, k, v.mul(f));
+                }
+            }
+        }
+        return rv;
     }
 
     private double normAndVector(int row, int column, Vector v) {
@@ -227,14 +226,43 @@ public class Matrix {
     }
 
     public double det() {
-        Matrix B = triangular();
-        double rv = 1.0;
+        double rv = 0.0;
+        if (columns == 1 && rows == 1)
+            rv = data[0];
+        else if (columns == 2 && rows == 2)
+            rv = data[0] * data[3] - data[2] * data[1];
+        else {
+            Matrix T = transpose();
+            int k = triangular(T);
+            rv = 1.0;
+            for (int i = 0; i < T.rows; i++)
+                rv *= T.data[i * T.columns + i];
+            rv *= Math.pow(-1.0, k);
+        }
+        return rv;
+    }
 
-        for (int i = 0; i < B.rows; i++)
-            rv *= B.data[i * B.columns + i];
-
-        rv *= Math.pow(-1.0, B.rows - 1);
-
+    public double det_slow() {
+        double rv = 0.0;
+        if (columns == 1 && rows == 1)
+            rv = data[0];
+        else if (columns == 2 && rows == 2)
+            rv = data[0] * data[3] - data[2] * data[1];
+        else {
+            for (int j1 = 0; j1 < rows; j1++) {
+                Matrix M = new Matrix(rows - 1, columns - 1);
+                for (int i = 1; i < rows; i++) {
+                    int j2 = 0;
+                    for (int j = 0; j < rows; j++) {
+                        if (j == j1)
+                            continue;
+                        M.data[(i - 1) * M.columns + j2] = data[i * columns + j];
+                        j2++;
+                    }
+                }
+                rv += Math.pow(-1.0, 1.0 + j1 + 1.0) * data[0 * columns + j1] * M.det_slow();
+            }
+        }
         return rv;
     }
 
