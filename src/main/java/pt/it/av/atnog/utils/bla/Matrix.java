@@ -226,7 +226,7 @@ public class Matrix {
     }
 
     public double det() {
-        double rv = 0.0;
+        double rv = 1.0;
         if (columns == 1 && rows == 1)
             rv = data[0];
         else if (columns == 2 && rows == 2)

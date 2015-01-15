@@ -197,4 +197,8 @@ public class Utils {
     public static double norm(double x, double y, int p) {
         return Math.pow(Math.pow(x, p) + Math.pow(y, p), 1.0 / p);
     }
+
+    public static boolean equals(double a, double b, double eps) {
+        return Math.abs(a - b) < eps;
+    }
 }
