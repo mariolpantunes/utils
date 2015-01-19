@@ -2,13 +2,11 @@ package pt.it.av.atnog.utils.parallel;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by mantunes on 11/6/14.
  */
 public class ThreadPool {
-    private AtomicBoolean running;
     private int nCores = Runtime.getRuntime().availableProcessors();
     private Worker workers[] = new Worker[nCores];
     private BlockingQueue<Object> sink = new LinkedBlockingQueue<>(), source = new LinkedBlockingQueue<>();

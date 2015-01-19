@@ -4,23 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Pipeline {
-    private AtomicBoolean running;
     private BlockingQueue<Object> sink = new LinkedBlockingQueue<Object>(), source = new LinkedBlockingQueue<Object>();
-    private List<Worker> filters = new ArrayList<Worker>();
+    private List<Worker> workers = new ArrayList<Worker>();
     private List<BlockingQueue<Object>> queues;
 
     public Pipeline() {
-        running = new AtomicBoolean(false);
         queues = new ArrayList<BlockingQueue<Object>>();
     }
 
     public void add(Task task) {
-        if (!running.get() && task != null) {
-            filters.add(new Worker(task));
-        }
+        workers.add(new Worker(task));
     }
 
     public BlockingQueue<Object> sink() {
@@ -32,49 +27,33 @@ public class Pipeline {
     }
 
     public void start() {
-        if (filters.size() > 0 && !running.getAndSet(true)) {
-            if (queues.size() != filters.size() - 1) {
+        if (workers.size() > 0) {
+            if (queues.size() != workers.size() - 1) {
                 queues.clear();
-                for (int i = 0; i < filters.size() - 1; i++)
+                for (int i = 0; i < workers.size() - 1; i++)
                     queues.add(new LinkedBlockingQueue<Object>());
             }
 
-            if (filters.size() > 1) {
-                filters.get(0).connect(sink, queues.get(0));
+            if (workers.size() > 1) {
+                workers.get(0).connect(sink, queues.get(0));
 
-                for (int i = 1; i < filters.size() - 1; i++)
-                    filters.get(i).connect(queues.get(i - 1), queues.get(i));
+                for (int i = 1; i < workers.size() - 1; i++)
+                    workers.get(i).connect(queues.get(i - 1), queues.get(i));
 
-                filters.get(filters.size() - 1).connect(
+                workers.get(workers.size() - 1).connect(
                         queues.get(queues.size() - 1), source);
             } else {
-                filters.get(0).connect(sink, source);
+                workers.get(0).connect(sink, source);
             }
 
-            for (Worker f : filters)
-                f.start();
+            for (Worker w : workers)
+                w.start();
         }
     }
 
     public void join() throws InterruptedException {
-        if (running.get()) {
-            for (Worker f : filters)
-                f.join();
-            running.set(false);
-        }
-    }
-
-    public void stop() throws InterruptedException {
-        if (running.get())
-            sink.put(new Stop());
-    }
-
-    public void stopJoin() throws InterruptedException {
-        if (running.get()) {
-            sink.put(new Stop());
-            for (Worker f : filters)
-                f.join();
-            running.set(false);
-        }
+        sink.put(new Stop());
+        for (Worker w : workers)
+            w.join();
     }
 }
