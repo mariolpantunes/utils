@@ -61,13 +61,36 @@ public class Matrix {
         return data[r * columns + c];
     }
 
-    public Matrix transpose() {
+    /*public Matrix transpose() {
         Matrix C = new Matrix(columns, rows);
         for (int n = 0, total = data.length; n < total; n++) {
             int r = n / columns, c = n % columns;
             C.data[c * C.columns + r] = data[n];
         }
         return C;
+    }*/
+
+    public Matrix transpose() {
+        Matrix C = new Matrix(columns, rows);
+        cachetranpose(0, rows, 0, columns, C);
+        return C;
+    }
+
+    public void cachetranpose(int rb, int re, int cb, int ce, Matrix T) {
+        int r = re - rb, c = ce - cb;
+        if (r <= 16 && c <= 16) {
+            for (int i = rb; i < re; i++) {
+                for (int j = cb; j < ce; j++) {
+                    T.data[j * T.columns + i] = data[i * columns + j];
+                }
+            }
+        } else if (r >= c) {
+            cachetranpose(rb, rb + (r / 2), cb, ce, T);
+            cachetranpose(rb + (r / 2), re, cb, ce, T);
+        } else {
+            cachetranpose(rb, re, cb, cb + (c / 2), T);
+            cachetranpose(rb, re, cb + (c / 2), re, T);
+        }
     }
 
     public Matrix add(Matrix B) {
