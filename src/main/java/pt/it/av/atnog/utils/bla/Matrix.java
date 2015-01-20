@@ -2,7 +2,10 @@ package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.Utils;
 import pt.it.av.atnog.utils.parallel.ThreadPool;
+import pt.it.av.atnog.utils.structures.tuple.Quad;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
@@ -40,6 +43,27 @@ public class Matrix {
         return C;
     }
 
+    private static void transpose(double data[], double tdata[], int rows, int columns) {
+        int blk = 32;
+        Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
+        stack.push(new Quad(0, rows, 0, columns));
+        while (!stack.isEmpty()) {
+            Quad<Integer, Integer, Integer, Integer> q = stack.pop();
+            int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
+            if (r <= blk && c <= blk) {
+                for (int i = rb; i < re; i++)
+                    for (int j = cb; j < ce; j++)
+                        tdata[j * rows + i] = data[i * columns + j];
+            } else if (r >= c) {
+                stack.push(new Quad(rb, rb + (r / 2), cb, ce));
+                stack.push(new Quad(rb + (r / 2), re, cb, ce));
+            } else {
+                stack.push(new Quad(rb, re, cb, cb + (c / 2)));
+                stack.push(new Quad(rb, re, cb + (c / 2), ce));
+            }
+        }
+    }
+
     public int rows() {
         return rows;
     }
@@ -61,36 +85,28 @@ public class Matrix {
         return data[r * columns + c];
     }
 
-    /*public Matrix transpose() {
+    public Matrix naive_transpose() {
         Matrix C = new Matrix(columns, rows);
         for (int n = 0, total = data.length; n < total; n++) {
             int r = n / columns, c = n % columns;
             C.data[c * C.columns + r] = data[n];
         }
         return C;
-    }*/
-
-    public Matrix transpose() {
-        Matrix C = new Matrix(columns, rows);
-        cachetranpose(0, rows, 0, columns, C);
-        return C;
     }
 
-    public void cachetranpose(int rb, int re, int cb, int ce, Matrix T) {
-        int r = re - rb, c = ce - cb;
-        if (r <= 16 && c <= 16) {
-            for (int i = rb; i < re; i++) {
-                for (int j = cb; j < ce; j++) {
-                    T.data[j * T.columns + i] = data[i * columns + j];
-                }
-            }
-        } else if (r >= c) {
-            cachetranpose(rb, rb + (r / 2), cb, ce, T);
-            cachetranpose(rb + (r / 2), re, cb, ce, T);
-        } else {
-            cachetranpose(rb, re, cb, cb + (c / 2), T);
-            cachetranpose(rb, re, cb + (c / 2), re, T);
-        }
+    public Matrix transpose() {
+        Matrix T = new Matrix(columns, rows);
+        transpose(data, T.data, rows, columns);
+        return T;
+    }
+
+    public void utranspose() {
+        double buffer[] = new double[rows * columns];
+        transpose(data, buffer, rows, columns);
+        this.data = buffer;
+        int t = rows;
+        this.rows = columns;
+        this.columns = t;
     }
 
     public Matrix add(Matrix B) {

@@ -60,6 +60,9 @@ public class MatrixTest {
     @Test
     public void test_transpose() {
         assertTrue(At.equals(A.transpose()));
+        Matrix T = A.transpose();
+        T.utranspose();
+        assertTrue(T.equals(A));
     }
 
     @Test
