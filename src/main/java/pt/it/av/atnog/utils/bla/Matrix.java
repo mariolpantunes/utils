@@ -64,6 +64,24 @@ public class Matrix {
         }
     }
 
+    public static void householder(Matrix M, Matrix H, int row, int column) {
+        Vector v = M.vector(row, column);
+        double d = v.norm(2);
+        if (d != v.data[0]) {
+            if (v.data[0] > 0)
+                d = -d;
+            v.data[0] -= d;
+            double f1 = Math.sqrt(-2 * v.data[0] * d);
+            v = v.div(f1);
+            M.zeros(row, column);
+            M.data[row * M.columns + column] = d;
+            for (int i = row + 1; i < M.rows; i++)
+                M.uSub(i, column, v.mul(2.0 * v.innerProduct(M.vector(i, column))));
+            for (int i = 0; i < H.rows; i++)
+                H.uSub(i, column, v.mul(2.0 * v.innerProduct(H.vector(i, column))));
+        }
+    }
+
     public int rows() {
         return rows;
     }
@@ -253,6 +271,12 @@ public class Matrix {
             }
         }
         return rv;
+    }
+
+    public Matrix[] bidiagonal() {
+        Matrix UBV[] = new Matrix[3];
+
+        return UBV;
     }
 
     private double normAndVector(int row, int column, Vector v) {
