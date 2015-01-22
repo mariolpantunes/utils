@@ -234,7 +234,16 @@ public class Matrix {
 
     public Matrix[] bidiagonal() {
         Matrix UBV[] = new Matrix[3];
-
+        UBV[0] = Matrix.identity(rows);
+        UBV[1] = transpose();
+        UBV[2] = Matrix.identity(columns);
+        for (int k = 0; k < rows - 1; k++) {
+            householder(UBV[1], UBV[0], k, k);
+            UBV[1].utranspose();
+            householder(UBV[1], UBV[2], k, k + 1);
+            UBV[1].utranspose();
+        }
+        UBV[1].utranspose();
         return UBV;
     }
 
