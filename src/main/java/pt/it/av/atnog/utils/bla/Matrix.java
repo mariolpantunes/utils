@@ -64,22 +64,26 @@ public class Matrix {
         }
     }
 
-    public static void householder(Matrix M, Matrix H, int row, int column) {
+    private static boolean householder(Matrix M, Matrix H, int row, int column) {
+        boolean rv = false;
         Vector v = M.vector(row, column);
         double d = v.norm(2);
-        if (d != v.data[0]) {
-            if (v.data[0] > 0)
+        if (d != v.data[v.bIdx]) {
+            rv = true;
+            if (v.data[v.bIdx] > 0)
                 d = -d;
-            v.data[0] -= d;
-            double f1 = Math.sqrt(-2 * v.data[0] * d);
+            v.data[v.bIdx] -= d;
+            double f1 = Math.sqrt(-2 * v.data[v.bIdx] * d);
             v = v.div(f1);
             M.zeros(row, column);
             M.data[row * M.columns + column] = d;
             for (int i = row + 1; i < M.rows; i++)
                 M.uSub(i, column, v.mul(2.0 * v.innerProduct(M.vector(i, column))));
-            for (int i = 0; i < H.rows; i++)
-                H.uSub(i, column, v.mul(2.0 * v.innerProduct(H.vector(i, column))));
+            if (H != null)
+                for (int i = 0; i < H.rows; i++)
+                    H.uSub(i, column, v.mul(2.0 * v.innerProduct(H.vector(i, column))));
         }
+        return rv;
     }
 
     public int rows() {
@@ -211,66 +215,21 @@ public class Matrix {
      * @return
      */
     public Matrix triangular() {
-        Matrix C = transpose();
-        triangular(C);
-        return C.transpose();
+        Matrix T = transpose();
+        for (int k = 0; k < rows - 1; k++)
+            householder(T, null, k, k);
+        T.utranspose();
+        return T;
     }
 
-    public Matrix[] QR() {
+    public Matrix[] qr() {
         Matrix QR[] = new Matrix[2];
-
         QR[0] = Matrix.identity(rows);
         QR[1] = transpose();
-
-        for (int k = 0; k < rows - 1; k++) {
-            Vector v = new Vector(rows - k);
-            double d = QR[1].normAndVector(k, k, v);
-            if (d != v.data[0]) {
-                if (v.data[0] > 0)
-                    d = -d;
-                v.data[0] = v.data[0] - d;
-                double f1 = Math.sqrt(-2 * v.data[0] * d);
-                v.uDiv(f1);
-
-                QR[1].zeros(k, k);
-                QR[1].data[k * QR[1].columns + k] = d;
-                // Apply householder for the remaining columns
-                for (int i = k + 1; i < columns; i++)
-                    QR[1].uSub(i, k, v.mul(2.0 * v.innerProduct(QR[1].vector(i, k))));
-                for (int i = 0; i < rows; i++)
-                    QR[0].uSub(i, k, v.mul(2.0 * v.innerProduct(QR[0].vector(i, k))));
-            }
-        }
-        QR[1] = QR[1].transpose();
+        for (int k = 0; k < rows - 1; k++)
+            householder(QR[1], QR[0], k, k);
+        QR[1].utranspose();
         return QR;
-    }
-
-    private int triangular(Matrix T) {
-        int rv = 0;
-        for (int k = 0; k < rows - 1; k++) {
-            Vector v = new Vector(rows - k);
-            double d = T.normAndVector(k, k, v);
-            if (d != v.data[0]) {
-                rv++;
-                if (v.data[0] > 0)
-                    d = -d;
-                v.data[0] -= d;
-                double f1 = Math.sqrt(-2 * v.data[0] * d);
-                v.uDiv(f1);
-
-                // Reflection matrix
-                //Matrix H = Matrix.identity(rows-k).sub(v.outerProduct(v).mul(2.0));
-
-                T.zeros(k, k);
-                T.data[k * T.columns + k] = d;
-                // Apply householder for the remaining columns
-                for (int i = k + 1; i < columns; i++) {
-                    double f = 2.0 * v.innerProduct(T.vector(i, k));
-                    T.uSub(i, k, v.mul(f));
-                }
-            }
-        }
-        return rv;
     }
 
     public Matrix[] bidiagonal() {
@@ -279,28 +238,22 @@ public class Matrix {
         return UBV;
     }
 
-    private double normAndVector(int row, int column, Vector v) {
-        double norm = 0.0;
-        for (int i = 0; i < columns - column; i++) {
-            v.data[i] = data[row * columns + i + column];
-            norm = Utils.norm(norm, data[row * columns + i + column], 2);
-        }
-        return norm;
-    }
-
     public double det() {
         double rv = 1.0;
         if (columns == 1 && rows == 1)
             rv = data[0];
         else if (columns == 2 && rows == 2)
             rv = data[0] * data[3] - data[2] * data[1];
-        else {
-            Matrix T = transpose();
+        else if (columns == 3 && rows == 3) {
+            rv = (data[0] * data[4] * data[8] + data[1] * data[5] * data[6] + data[2] * data[3] * data[7])
+                    - (data[2] * data[4] * data[6] + data[1] * data[3] * data[8] + data[0] * data[5] * data[7]);
+        } else {
+            /*Matrix T = transpose();
             int k = triangular(T);
             rv = 1.0;
             for (int i = 0; i < T.rows; i++)
                 rv *= T.data[i * T.columns + i];
-            rv *= Math.pow(-1.0, k);
+            rv *= Math.pow(-1.0, k);*/
         }
         return rv;
     }
