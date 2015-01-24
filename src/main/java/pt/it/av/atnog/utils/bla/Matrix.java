@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
- *
  * @author Mário Antunes
  */
 public class Matrix {
@@ -253,46 +252,30 @@ public class Matrix {
             rv = data[0];
         else if (columns == 2 && rows == 2)
             rv = data[0] * data[3] - data[2] * data[1];
-        else if (columns == 3 && rows == 3) {
+        else if (columns == 3 && rows == 3)
             rv = (data[0] * data[4] * data[8] + data[1] * data[5] * data[6] + data[2] * data[3] * data[7])
                     - (data[2] * data[4] * data[6] + data[1] * data[3] * data[8] + data[0] * data[5] * data[7]);
-        } else {
-            /*Matrix T = transpose();
-            int k = triangular(T);
+        else {
+            Matrix T = transpose();
+            int hh = 0;
+            for (int k = 0; k < rows - 1; k++)
+                if (householder(T, null, k, k))
+                    hh++;
+            T.utranspose();
             rv = 1.0;
             for (int i = 0; i < T.rows; i++)
                 rv *= T.data[i * T.columns + i];
-            rv *= Math.pow(-1.0, k);*/
-        }
-        return rv;
-    }
-
-    public double det_slow() {
-        double rv = 0.0;
-        if (columns == 1 && rows == 1)
-            rv = data[0];
-        else if (columns == 2 && rows == 2)
-            rv = data[0] * data[3] - data[2] * data[1];
-        else {
-            for (int j1 = 0; j1 < rows; j1++) {
-                Matrix M = new Matrix(rows - 1, columns - 1);
-                for (int i = 1; i < rows; i++) {
-                    int j2 = 0;
-                    for (int j = 0; j < rows; j++) {
-                        if (j == j1)
-                            continue;
-                        M.data[(i - 1) * M.columns + j2] = data[i * columns + j];
-                        j2++;
-                    }
-                }
-                rv += Math.pow(-1.0, 1.0 + j1 + 1.0) * data[0 * columns + j1] * M.det_slow();
-            }
+            rv *= Math.pow(-1.0, hh);
         }
         return rv;
     }
 
     public Vector vector(int row, int column) {
         return new Vector(data, row * columns + column, columns - column);
+    }
+
+    public Vector vector() {
+        return new Vector(data, 0, rows * columns);
     }
 
     private void zeros(int row, int column) {
