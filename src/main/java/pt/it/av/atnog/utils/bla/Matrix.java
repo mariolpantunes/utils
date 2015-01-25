@@ -74,7 +74,8 @@ public class Matrix {
             v.data[v.bIdx] -= d;
             double f1 = Math.sqrt(-2 * v.data[v.bIdx] * d);
             v = v.div(f1);
-            M.zeros(row, column);
+            for (int i = column; i < M.columns; i++)
+                M.data[row * M.columns + i] = 0.0;
             M.data[row * M.columns + column] = d;
             for (int i = row + 1; i < M.rows; i++)
                 M.uSub(i, column, v.mul(2.0 * v.innerProduct(M.vector(i, column))));
@@ -276,11 +277,6 @@ public class Matrix {
 
     public Vector vector() {
         return new Vector(data, 0, rows * columns);
-    }
-
-    private void zeros(int row, int column) {
-        for (int i = column; i < columns; i++)
-            data[row * columns + i] = 0.0;
     }
 
     public boolean equals(Object o) {
