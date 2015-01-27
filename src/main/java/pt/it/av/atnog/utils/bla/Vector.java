@@ -142,6 +142,13 @@ public class Vector {
         return minkowskiDistance(p, 1);
     }
 
+    public double cosine(Vector b) {
+        double rv = 0.0, dp = innerProduct(b);
+        if (dp > 0)
+            rv = dp / (norm(2) * b.norm(2));
+        return rv;
+    }
+
     public boolean equals(Object o) {
         boolean rv = false;
         if (o != null) {
