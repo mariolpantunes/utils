@@ -54,8 +54,9 @@ public class Worker implements Runnable {
                     }
                     out.clear();
                 }
-            } else
+            } else {
                 done = true;
+            }
         }
     }
 }

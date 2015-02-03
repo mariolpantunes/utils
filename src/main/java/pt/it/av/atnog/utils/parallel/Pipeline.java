@@ -52,8 +52,12 @@ public class Pipeline {
     }
 
     public void join() throws InterruptedException {
-        sink.put(new Stop());
+        Stop stop = new Stop();
+        sink.put(stop);
+        for (BlockingQueue<Object> q : queues)
+            q.put(stop);
         for (Worker w : workers)
             w.join();
+        source.add(stop);
     }
 }

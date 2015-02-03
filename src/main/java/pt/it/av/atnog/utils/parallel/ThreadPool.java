@@ -37,5 +37,6 @@ public class ThreadPool {
             sink.put(stop);
         for (Worker worker : workers)
             worker.join();
+        source.add(stop);
     }
 }
