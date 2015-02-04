@@ -9,6 +9,10 @@ public class Pair<A, B> {
         this.b = b;
     }
 
+    public String toString() {
+        return "(" + a.toString() + ", " + b.toString() + ")";
+    }
+
     @Override
     public int hashCode() {
         return a.hashCode() ^ b.hashCode();

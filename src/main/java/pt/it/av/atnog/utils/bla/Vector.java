@@ -46,6 +46,13 @@ public class Vector {
         return data[bIdx + i];
     }
 
+    public double sum() {
+        double rv = 0.0;
+        for (int i = 0; i < length; i++)
+            rv += data[bIdx + i];
+        return rv;
+    }
+
     public Vector add(double scalar) {
         Vector c = new Vector(length);
         for (int i = 0; i < length; i++)
@@ -90,14 +97,12 @@ public class Vector {
 
     public Matrix outerProduct(Vector b) {
         Matrix C = new Matrix(length, b.length);
-
         int k = 0;
         for (int i = 0; i < length; i++)
             for (int j = 0; j < b.length; j++) {
                 C.data[k] = data[bIdx + i] * b.data[b.bIdx + j];
                 k++;
             }
-
         return C;
     }
 
@@ -121,16 +126,12 @@ public class Vector {
     }
 
     // TODO: review this methods
-    public double minkowskiDistance(Vector po, int p) {
+    public double minkowskiDistance(Vector b, int p) {
         double sum = 0.0;
-        if (data.length == po.data.length)
-            for (int i = 0; i < data.length; i++) {
-                double absDiff = Math.abs(data[i] - po.data[i]);
-                sum += Math.pow(absDiff, p);
-            }
-        else
-            throw new IllegalArgumentException("The points do not have the same number of dimensions");
-
+        for (int i = 0; i < data.length; i++) {
+            double absDiff = Math.abs(data[bIdx + i] - b.data[b.bIdx + i]);
+            sum += Math.pow(absDiff, p);
+        }
         return Math.pow(sum, 1.0 / p);
     }
 
@@ -146,6 +147,17 @@ public class Vector {
         double rv = 0.0, dp = innerProduct(b);
         if (dp > 0)
             rv = dp / (norm(2) * b.norm(2));
+        return rv;
+    }
+
+    public double kld(Vector b) {
+        double rv = 0.0;
+        for (int i = 0; i < length; i++) {
+            if (b.data[b.bIdx + i] != 0.0 && data[bIdx + i] != 0.0)
+                rv += data[bIdx + i] * Math.log(data[bIdx + i] / b.data[b.bIdx + i]);
+            else if (b.data[b.bIdx + i] == 0.0)
+                rv += data[bIdx + i];
+        }
         return rv;
     }
 

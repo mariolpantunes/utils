@@ -16,6 +16,10 @@ public class Quad<A, B, C, D> {
         this.d = d;
     }
 
+    public String toString() {
+        return "(" + a.toString() + ", " + b.toString() + ", " + c.toString() + ", " + d.toString() + ")";
+    }
+
     @Override
     public int hashCode() {
         return a.hashCode() ^ b.hashCode() ^ c.hashCode() ^ d.hashCode();
