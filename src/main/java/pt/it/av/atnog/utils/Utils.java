@@ -2,7 +2,9 @@ package pt.it.av.atnog.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 
 public class Utils {
     @SuppressWarnings("unchecked")
@@ -209,5 +211,16 @@ public class Utils {
             a = t;
         }
         return a;
+    }
+
+    public static Date dateTrim(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.clear(); // as per BalusC comment.
+        c.setTime(date);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTime();
     }
 }

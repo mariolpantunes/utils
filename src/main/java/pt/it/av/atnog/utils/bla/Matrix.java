@@ -78,10 +78,10 @@ public class Matrix {
                 M.data[row * M.columns + i] = 0.0;
             M.data[row * M.columns + column] = d;
             for (int i = row + 1; i < M.rows; i++)
-                M.uSub(i, column, v.mul(2.0 * v.innerProduct(M.vector(i, column))));
+                M.uSubRow(i, column, v.mul(2.0 * v.innerProduct(M.vector(i, column))));
             if (H != null)
                 for (int i = 0; i < H.rows; i++)
-                    H.uSub(i, column, v.mul(2.0 * v.innerProduct(H.vector(i, column))));
+                    H.uSubRow(i, column, v.mul(2.0 * v.innerProduct(H.vector(i, column))));
         }
         return rv;
     }
@@ -133,16 +133,22 @@ public class Matrix {
 
     public Matrix add(Matrix B) {
         Matrix C = new Matrix(rows, columns);
-        for (int n = 0, total = data.length; n < total; n++)
-            C.data[n] = data[n] + B.data[n];
+        Vector.add(data, 0, B.data, 0, C.data, 0, data.length);
         return C;
+    }
+
+    public void uAdd(Matrix B) {
+        Vector.add(data, 0, B.data, 0, data, 0, data.length);
     }
 
     public Matrix sub(Matrix B) {
         Matrix C = new Matrix(rows, columns);
-        for (int n = 0, total = data.length; n < total; n++)
-            C.data[n] = data[n] - B.data[n];
+        Vector.sub(data, 0, B.data, 0, C.data, 0, data.length);
         return C;
+    }
+
+    public void uSub(Matrix B) {
+        Vector.sub(data, 0, B.data, 0, data, 0, data.length);
     }
 
     public Matrix sub(double b) {
@@ -152,7 +158,7 @@ public class Matrix {
         return C;
     }
 
-    public void uSub(int row, int column, Vector b) {
+    public void uSubRow(int row, int column, Vector b) {
         for (int i = 0; i < columns - column; i++)
             data[row * columns + i + column] -= b.data[i];
     }

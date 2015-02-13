@@ -6,6 +6,8 @@ import pt.it.av.atnog.utils.Utils;
  * Created by mantunes on 11/26/14.
  */
 public class Vector {
+    private static int T = 256;
+    private static int B = 128;
     protected int bIdx, length;
     protected double data[];
 
@@ -27,6 +29,25 @@ public class Vector {
         Vector c = new Vector(length);
         c.set(1.0);
         return c;
+    }
+
+    public static Vector rand(int length) {
+        Vector b = new Vector(length);
+        for (int n = 0; n < length; n++)
+            b.data[n + b.bIdx] = Utils.randomBetween(0, 10);
+        return b;
+    }
+
+    protected static void add(double a[], int bA, double b[], int bB,
+                              double c[], int bC, int len) {
+        for (int i = 0; i < len; i++)
+            c[bC + i] = a[bA + i] + b[bB + i];
+    }
+
+    protected static void sub(double a[], int bA, double b[], int bB,
+                              double c[], int bC, int len) {
+        for (int i = 0; i < len; i++)
+            c[bC + i] = a[bA + i] - b[bB + i];
     }
 
     public int size() {
@@ -62,9 +83,12 @@ public class Vector {
 
     public Vector add(Vector b) {
         Vector c = new Vector(length);
-        for (int i = 0; i < length; i++)
-            c.data[c.bIdx + i] = data[bIdx + i] + b.data[b.bIdx + i];
+        add(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, length);
         return c;
+    }
+
+    public void uAdd(Vector b) {
+        add(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, length);
     }
 
     public Vector sub(double scalar) {

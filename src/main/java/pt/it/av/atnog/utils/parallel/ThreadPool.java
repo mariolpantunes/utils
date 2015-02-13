@@ -7,13 +7,19 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by mantunes on 11/6/14.
  */
 public class ThreadPool {
-    private int nCores = Runtime.getRuntime().availableProcessors();
-    private Worker workers[] = new Worker[nCores];
+    private int nCores = 0;
+    private Worker workers[];
     private BlockingQueue<Object> sink = new LinkedBlockingQueue<>(), source = new LinkedBlockingQueue<>();
     private Task t;
 
     public ThreadPool(Task t) {
+        this(t, Runtime.getRuntime().availableProcessors());
+    }
+
+    public ThreadPool(Task t, int nCores) {
         this.t = t;
+        this.nCores = nCores;
+        this.workers = new Worker[nCores];
     }
 
     public void start() {
