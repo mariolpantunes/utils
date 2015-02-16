@@ -215,12 +215,24 @@ public class Utils {
 
     public static Date dateTrim(Date date) {
         Calendar c = Calendar.getInstance();
-        c.clear(); // as per BalusC comment.
+        c.clear();
         c.setTime(date);
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
         return c.getTime();
+    }
+
+    public static void printArray(double[] array, int left, int right) {
+        System.out.print("[");
+        for (int i = left; i < right + 1; i++) {
+            System.out.print(array[i] + "; ");
+        }
+        System.out.println("]");
+    }
+
+    public static void printArray(double[] array) {
+        printArray(array, 0, array.length - 1);
     }
 }

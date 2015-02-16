@@ -137,6 +137,11 @@ public class Matrix {
         return C;
     }
 
+    /*public Matrix add(double scalar) {
+        Matrix C = new Matrix(rows, columns);
+        Vector.add(data, 0, B.data, 0, C.data, 0, data.length);
+    }*/
+
     public void uAdd(Matrix B) {
         Vector.add(data, 0, B.data, 0, data, 0, data.length);
     }
@@ -168,6 +173,21 @@ public class Matrix {
         for (int n = 0, total = data.length; n < total; n++)
             C.data[n] = data[n] * scalar;
         return C;
+    }
+
+    //TODO: optimize this function
+    public Vector mul(Vector v) {
+        Vector rv = new Vector(v.length);
+
+        for (int i = 0; i < v.length; i++) {
+            double rvi = 0.0;
+            for (int j = 0; j < columns; j++) {
+                rvi += v.data[v.bIdx + i] * data[i * columns + j];
+            }
+            rv.data[rv.bIdx + i] = rvi;
+        }
+
+        return rv;
     }
 
     public Matrix mul(Matrix B) {
@@ -251,6 +271,67 @@ public class Matrix {
         }
         UBV[1].utranspose();
         return UBV;
+    }
+
+    private double[] rot(double a, double b) {
+        double csr[] = new double[3];
+        if (b == 0) {
+            csr[0] = Math.copySign(1, a);
+            csr[1] = 0;
+            csr[2] = Math.abs(a);
+        } else if (a == 0) {
+            csr[0] = 0;
+            csr[1] = Math.copySign(1, b);
+            csr[2] = Math.abs(b);
+        } else if (Math.abs(b) > Math.abs(a)) {
+            double t = a / b;
+            double u = Math.copySign(Math.sqrt(1 + t * t), b);
+            csr[1] = -1 / u;
+            csr[0] = -csr[1] * t;
+            csr[2] = b * u;
+        } else {
+            double t = b / a;
+            double u = Math.copySign(Math.sqrt(1 + t * t), a);
+            csr[0] = 1 / u;
+            csr[1] = -csr[0] * t;
+            csr[2] = a * u;
+        }
+        return csr;
+    }
+
+    private double[] diag() {
+        return diag(0);
+    }
+
+    private double[] diag(int n) {
+        int size = Math.min(rows, columns);
+        double diag[] = new double[size - Math.abs(n)];
+        if (n >= 0) {
+            for (int i = 0; i < size - n; i++)
+                diag[i] = data[i * columns + (i + n)];
+        } else {
+            for (int i = Math.abs(n); i < size; i++) {
+                diag[i] = data[i * columns + (i + Math.abs(n))];
+            }
+        }
+        return diag;
+    }
+
+    public Matrix[] svd() {
+        Matrix UDV[] = bidiagonal();
+
+        // TODO: bidiag to diag
+        double diag[] = UDV[1].diag();
+        double lambda[] = new double[diag.length],
+                mu[] = new double[diag.length];
+        Utils.printArray(diag);
+        lambda[diag.length - 1] = Math.abs(diag[diag.length - 1]);
+
+        for (int i = diag.length - 1; i > 0; i--)
+            lambda[i] = Math.abs(diag[i]) * lambda[i + 1];
+
+
+        return UDV;
     }
 
     public double det() {

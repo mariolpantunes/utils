@@ -185,6 +185,13 @@ public class Vector {
         return rv;
     }
 
+    public boolean equals(Vector b, double eps) {
+        boolean rv = false;
+
+        return rv;
+    }
+
+    @Override
     public boolean equals(Object o) {
         boolean rv = false;
         if (o != null) {
