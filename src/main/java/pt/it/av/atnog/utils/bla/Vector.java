@@ -44,10 +44,22 @@ public class Vector {
             c[bC + i] = a[bA + i] + b[bB + i];
     }
 
+    protected static void add(double a[], int bA, double b,
+                              double c[], int bC, int len) {
+        for (int i = 0; i < len; i++)
+            c[bC + i] = a[bA + i] + b;
+    }
+
     protected static void sub(double a[], int bA, double b[], int bB,
                               double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] - b[bB + i];
+    }
+
+    protected static void sub(double a[], int bA, double b,
+                              double c[], int bC, int len) {
+        for (int i = 0; i < len; i++)
+            c[bC + i] = a[bA + i] - b;
     }
 
     public int size() {

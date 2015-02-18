@@ -42,6 +42,56 @@ public class Matrix {
         return C;
     }
 
+    public static void transpose2(double data[], double tdata[], int rows, int columns) {
+        int blk = 4;
+        double tmp[] = new double[blk * blk];
+        Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
+        stack.push(new Quad(0, rows, 0, columns));
+        while (!stack.isEmpty()) {
+            Quad<Integer, Integer, Integer, Integer> q = stack.pop();
+            int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
+            if (r <= blk && c <= blk) {
+                int tmpr = 0, tmpc = 0;
+                for (int i = rb; i < re; i++) {
+                    for (int j = cb; j < ce; j++) {
+                        System.out.print(data[i * columns + j] + " ");
+                        //System.out.println(tmpr+" "+tmpc+" -> "+(tmpr*blk+tmpc));
+                        tmp[tmpr * blk + tmpc] = data[i * columns + j];
+                        tmpr++;
+                    }
+                    System.out.println();
+                    tmpc++;
+                    tmpr = 0;
+                }
+                System.out.println();
+
+                tmpr = 0;
+                tmpc = 0;
+                for (int j = cb; j < ce; j++) {
+                    for (int i = rb; i < re; i++) {
+                        tdata[j * rows + i] = tmp[tmpr * blk + tmpc];
+                        tmpc++;
+                        System.out.print(tdata[j * columns + i] + " ");
+                    }
+                    System.out.println();
+                    tmpr++;
+                    tmpc = 0;
+                }
+
+                System.out.println();
+                //System.out.println("TEMP Buffer");
+                //Utils.printArray(tmp);
+
+            } else if (r >= c) {
+                stack.push(new Quad(rb, rb + (r / 2), cb, ce));
+                stack.push(new Quad(rb + (r / 2), re, cb, ce));
+            } else {
+                stack.push(new Quad(rb, re, cb, cb + (c / 2)));
+                stack.push(new Quad(rb, re, cb + (c / 2), ce));
+            }
+        }
+    }
+
     private static void transpose(double data[], double tdata[], int rows, int columns) {
         int blk = 32;
         Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
@@ -137,13 +187,18 @@ public class Matrix {
         return C;
     }
 
-    /*public Matrix add(double scalar) {
-        Matrix C = new Matrix(rows, columns);
-        Vector.add(data, 0, B.data, 0, C.data, 0, data.length);
-    }*/
-
     public void uAdd(Matrix B) {
         Vector.add(data, 0, B.data, 0, data, 0, data.length);
+    }
+
+    public Matrix add(double scalar) {
+        Matrix C = new Matrix(rows, columns);
+        Vector.add(data, 0, scalar, C.data, 0, data.length);
+        return C;
+    }
+
+    public void uAdd(double scalar) {
+        Vector.add(data, 0, scalar, data, 0, data.length);
     }
 
     public Matrix sub(Matrix B) {
@@ -178,15 +233,13 @@ public class Matrix {
     //TODO: optimize this function
     public Vector mul(Vector v) {
         Vector rv = new Vector(v.length);
-
-        for (int i = 0; i < v.length; i++) {
+        for (int i = 0; i < rows; i++) {
             double rvi = 0.0;
             for (int j = 0; j < columns; j++) {
-                rvi += v.data[v.bIdx + i] * data[i * columns + j];
+                rvi += v.data[v.bIdx + j] * data[i * columns + j];
             }
             rv.data[rv.bIdx + i] = rvi;
         }
-
         return rv;
     }
 
