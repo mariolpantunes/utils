@@ -352,29 +352,32 @@ public class Matrix {
         return csr;
     }
 
-    private double[] diag() {
-        return diag(0);
+    //TODO: fix this function for rectangular matrixes
+    private double[] diagArray(int n) {
+        int size = Math.min(rows, columns);
+        double d[] = new double[size - Math.abs(n)];
+        if (n >= 0)
+            for (int i = 0; i < size - n; i++)
+                d[i] = data[i * columns + (i + n)];
+        else
+            for (int i = Math.abs(n); i < size; i++)
+                d[i] = data[i * columns + (i + Math.abs(n))];
+        return d;
     }
 
-    private double[] diag(int n) {
-        int size = Math.min(rows, columns);
-        double diag[] = new double[size - Math.abs(n)];
-        if (n >= 0) {
-            for (int i = 0; i < size - n; i++)
-                diag[i] = data[i * columns + (i + n)];
-        } else {
-            for (int i = Math.abs(n); i < size; i++) {
-                diag[i] = data[i * columns + (i + Math.abs(n))];
-            }
-        }
-        return diag;
+    public Vector diag() {
+        return new Vector(diagArray(0));
+    }
+
+    public Vector diag(int n) {
+        return new Vector(diagArray(n));
     }
 
     public Matrix[] svd() {
         Matrix UDV[] = bidiagonal();
 
         // TODO: bidiag to diag
-        double diag[] = UDV[1].diag();
+        double diag[] = UDV[1].diagArray(0);
         double lambda[] = new double[diag.length],
                 mu[] = new double[diag.length];
         Utils.printArray(diag);

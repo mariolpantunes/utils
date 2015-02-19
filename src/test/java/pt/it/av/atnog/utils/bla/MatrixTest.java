@@ -80,6 +80,13 @@ public class MatrixTest {
         assertTrue(AAt.equals(A.mul(At)));
     }
 
+    @Test
+    public void test_diag() {
+        double data[] = {5, 25, 61};
+        Vector d = new Vector(data);
+        assertTrue(d.equals(AAt.diag()));
+    }
+
     /*@Test
     public void test_parallel_mul() {
         Matrix A = Matrix.rand(512, 256);
