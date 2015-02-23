@@ -13,6 +13,7 @@ import java.util.concurrent.BlockingQueue;
  * @author Mário Antunes
  */
 public class Matrix {
+    private static int BLK = 64;
     protected double data[];
     protected int rows, columns;
 
@@ -42,8 +43,7 @@ public class Matrix {
         return C;
     }
 
-    public static void transpose2(double data[], double tdata[], int rows, int columns) {
-        int blk = 4;
+    protected static void transpose(double data[], double tdata[], int rows, int columns, int blk) {
         double tmp[] = new double[blk * blk];
         Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
         stack.push(new Quad(0, rows, 0, columns));
@@ -51,26 +51,12 @@ public class Matrix {
             Quad<Integer, Integer, Integer, Integer> q = stack.pop();
             int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
             if (r <= blk && c <= blk) {
-                int tmpr = 0, tmpc = 0;
-                for (int i = rb; i < re; i++) {
-                    for (int j = cb; j < ce; j++) {
+                for (int i = rb, tmpc = 0; i < re; i++, tmpc++)
+                    for (int j = cb, tmpr = 0; j < ce; j++, tmpr++)
                         tmp[tmpr * blk + tmpc] = data[i * columns + j];
-                        tmpr++;
-                    }
-                    tmpc++;
-                    tmpr = 0;
-                }
-                tmpr = 0;
-                tmpc = 0;
-                for (int j = cb; j < ce; j++) {
-                    for (int i = rb; i < re; i++) {
+                for (int j = cb, tmpr = 0; j < ce; j++, tmpr++)
+                    for (int i = rb, tmpc = 0; i < re; i++, tmpc++)
                         tdata[j * rows + i] = tmp[tmpr * blk + tmpc];
-                        tmpc++;
-
-                    }
-                    tmpr++;
-                    tmpc = 0;
-                }
             } else if (r >= c) {
                 stack.push(new Quad(rb, rb + (r / 2), cb, ce));
                 stack.push(new Quad(rb + (r / 2), re, cb, ce));
@@ -81,26 +67,7 @@ public class Matrix {
         }
     }
 
-    private static void transpose(double data[], double tdata[], int rows, int columns) {
-        int blk = 32;
-        Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
-        stack.push(new Quad(0, rows, 0, columns));
-        while (!stack.isEmpty()) {
-            Quad<Integer, Integer, Integer, Integer> q = stack.pop();
-            int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
-            if (r <= blk && c <= blk) {
-                for (int i = rb; i < re; i++)
-                    for (int j = cb; j < ce; j++)
-                        tdata[j * rows + i] = data[i * columns + j];
-            } else if (r >= c) {
-                stack.push(new Quad(rb, rb + (r / 2), cb, ce));
-                stack.push(new Quad(rb + (r / 2), re, cb, ce));
-            } else {
-                stack.push(new Quad(rb, re, cb, cb + (c / 2)));
-                stack.push(new Quad(rb, re, cb + (c / 2), ce));
-            }
-        }
-    }
+
 
     private static boolean householder(Matrix M, Matrix H, int row, int column) {
         boolean rv = false;
@@ -148,13 +115,13 @@ public class Matrix {
 
     public Matrix transpose() {
         Matrix T = new Matrix(columns, rows);
-        transpose(data, T.data, rows, columns);
+        transpose(data, T.data, rows, columns, BLK);
         return T;
     }
 
     public void uTranspose() {
         double buffer[] = new double[rows * columns];
-        transpose(data, buffer, rows, columns);
+        transpose(data, buffer, rows, columns, BLK);
         this.data = buffer;
         int t = rows;
         this.rows = columns;

@@ -1,5 +1,10 @@
 package pt.it.av.atnog.utils.bla;
 
+import pt.it.av.atnog.utils.structures.tuple.Quad;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  * Created by mantunes on 1/23/15.
  */
@@ -35,6 +40,28 @@ public class Naive {
         for (int n = 0, total = M.data.length; n < total; n++) {
             int r = n / M.columns, c = n % M.columns;
             C.data[c * C.columns + r] = M.data[n];
+        }
+        return C;
+    }
+
+    public static Matrix transpose(Matrix M, int blk) {
+        Matrix C = new Matrix(M.columns, M.rows);
+        Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
+        stack.push(new Quad(0, M.rows, 0, M.columns));
+        while (!stack.isEmpty()) {
+            Quad<Integer, Integer, Integer, Integer> q = stack.pop();
+            int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
+            if (r <= blk && c <= blk) {
+                for (int i = rb; i < re; i++)
+                    for (int j = cb; j < ce; j++)
+                        C.data[j * M.rows + i] = M.data[i * M.columns + j];
+            } else if (r >= c) {
+                stack.push(new Quad(rb, rb + (r / 2), cb, ce));
+                stack.push(new Quad(rb + (r / 2), re, cb, ce));
+            } else {
+                stack.push(new Quad(rb, re, cb, cb + (c / 2)));
+                stack.push(new Quad(rb, re, cb + (c / 2), ce));
+            }
         }
         return C;
     }
