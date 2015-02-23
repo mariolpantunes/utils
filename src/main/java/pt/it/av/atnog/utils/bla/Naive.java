@@ -29,4 +29,13 @@ public class Naive {
         }
         return rv;
     }
+
+    public static Matrix transpose(Matrix M) {
+        Matrix C = new Matrix(M.columns, M.rows);
+        for (int n = 0, total = M.data.length; n < total; n++) {
+            int r = n / M.columns, c = n % M.columns;
+            C.data[c * C.columns + r] = M.data[n];
+        }
+        return C;
+    }
 }

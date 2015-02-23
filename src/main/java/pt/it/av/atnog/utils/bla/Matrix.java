@@ -54,34 +54,23 @@ public class Matrix {
                 int tmpr = 0, tmpc = 0;
                 for (int i = rb; i < re; i++) {
                     for (int j = cb; j < ce; j++) {
-                        System.out.print(data[i * columns + j] + " ");
-                        //System.out.println(tmpr+" "+tmpc+" -> "+(tmpr*blk+tmpc));
                         tmp[tmpr * blk + tmpc] = data[i * columns + j];
                         tmpr++;
                     }
-                    System.out.println();
                     tmpc++;
                     tmpr = 0;
                 }
-                System.out.println();
-
                 tmpr = 0;
                 tmpc = 0;
                 for (int j = cb; j < ce; j++) {
                     for (int i = rb; i < re; i++) {
                         tdata[j * rows + i] = tmp[tmpr * blk + tmpc];
                         tmpc++;
-                        System.out.print(tdata[j * columns + i] + " ");
+
                     }
-                    System.out.println();
                     tmpr++;
                     tmpc = 0;
                 }
-
-                System.out.println();
-                //System.out.println("TEMP Buffer");
-                //Utils.printArray(tmp);
-
             } else if (r >= c) {
                 stack.push(new Quad(rb, rb + (r / 2), cb, ce));
                 stack.push(new Quad(rb + (r / 2), re, cb, ce));
@@ -157,22 +146,13 @@ public class Matrix {
         return data[r * columns + c];
     }
 
-    public Matrix naive_transpose() {
-        Matrix C = new Matrix(columns, rows);
-        for (int n = 0, total = data.length; n < total; n++) {
-            int r = n / columns, c = n % columns;
-            C.data[c * C.columns + r] = data[n];
-        }
-        return C;
-    }
-
     public Matrix transpose() {
         Matrix T = new Matrix(columns, rows);
         transpose(data, T.data, rows, columns);
         return T;
     }
 
-    public void utranspose() {
+    public void uTranspose() {
         double buffer[] = new double[rows * columns];
         transpose(data, buffer, rows, columns);
         this.data = buffer;
@@ -297,7 +277,7 @@ public class Matrix {
         Matrix T = transpose();
         for (int k = 0; k < rows - 1; k++)
             householder(T, null, k, k);
-        T.utranspose();
+        T.uTranspose();
         return T;
     }
 
@@ -307,7 +287,7 @@ public class Matrix {
         QR[1] = transpose();
         for (int k = 0; k < rows - 1; k++)
             householder(QR[1], QR[0], k, k);
-        QR[1].utranspose();
+        QR[1].uTranspose();
         return QR;
     }
 
@@ -318,11 +298,11 @@ public class Matrix {
         UBV[2] = Matrix.identity(columns);
         for (int k = 0; k < rows - 1; k++) {
             householder(UBV[1], UBV[0], k, k);
-            UBV[1].utranspose();
+            UBV[1].uTranspose();
             householder(UBV[1], UBV[2], k, k + 1);
-            UBV[1].utranspose();
+            UBV[1].uTranspose();
         }
-        UBV[1].utranspose();
+        UBV[1].uTranspose();
         return UBV;
     }
 
@@ -352,16 +332,20 @@ public class Matrix {
         return csr;
     }
 
-    //TODO: fix this function for rectangular matrixes
     private double[] diagArray(int n) {
-        int size = Math.min(rows, columns);
-        double d[] = new double[size - Math.abs(n)];
-        if (n >= 0)
-            for (int i = 0; i < size - n; i++)
+        double d[];
+        if (n >= 0) {
+            int size = Math.min(rows, columns - n);
+            d = new double[size];
+            for (int i = 0; i < size; i++)
                 d[i] = data[i * columns + (i + n)];
-        else
-            for (int i = Math.abs(n); i < size; i++)
-                d[i] = data[i * columns + (i + Math.abs(n))];
+        } else {
+            n = Math.abs(n);
+            int size = Math.min(rows - n, columns);
+            d = new double[size];
+            for (int i = 0; i < size; i++)
+                d[i] = data[(i + n) * columns + i];
+        }
         return d;
     }
 
@@ -405,7 +389,7 @@ public class Matrix {
             for (int k = 0; k < rows - 1; k++)
                 if (householder(T, null, k, k))
                     hh++;
-            T.utranspose();
+            T.uTranspose();
             rv = 1.0;
             for (int i = 0; i < T.rows; i++)
                 rv *= T.data[i * T.columns + i];

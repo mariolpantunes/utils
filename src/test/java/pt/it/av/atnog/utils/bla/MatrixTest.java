@@ -61,7 +61,7 @@ public class MatrixTest {
     public void test_transpose() {
         assertTrue(At.equals(A.transpose()));
         Matrix T = A.transpose();
-        T.utranspose();
+        T.uTranspose();
         assertTrue(T.equals(A));
     }
 
@@ -82,9 +82,21 @@ public class MatrixTest {
 
     @Test
     public void test_diag() {
-        double data[] = {5, 25, 61};
+        double data[] = {1, 4};
         Vector d = new Vector(data);
-        assertTrue(d.equals(AAt.diag()));
+        assertTrue(d.equals(A.diag()));
+
+        data = new double[]{2};
+        d = new Vector(data);
+        assertTrue(d.equals(A.diag(1)));
+
+        data = new double[]{3, 6};
+        d = new Vector(data);
+        assertTrue(d.equals(A.diag(-1)));
+
+        data = new double[]{5};
+        d = new Vector(data);
+        assertTrue(d.equals(A.diag(-2)));
     }
 
     /*@Test
