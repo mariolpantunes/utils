@@ -68,7 +68,6 @@ public class Matrix {
     }
 
 
-
     private static boolean householder(Matrix M, Matrix H, int row, int column) {
         boolean rv = false;
         Vector v = M.vector(row, column);

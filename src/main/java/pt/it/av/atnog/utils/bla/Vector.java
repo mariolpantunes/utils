@@ -197,6 +197,19 @@ public class Vector {
         return rv;
     }
 
+    public int elbow() {
+        int min = 0;
+        double minDist = Math.sqrt(Math.pow(0.0 - data[bIdx], 2.0) + Math.pow(0.0 - 0.0, 2.0));
+        for (int i = 1; i < length; i++) {
+            double tmpDist = Math.sqrt(Math.pow(0.0 - data[bIdx + i], 2.0) + Math.pow(0.0 - i, 2.0));
+            if (tmpDist < minDist) {
+                minDist = tmpDist;
+                min = i;
+            }
+        }
+        return min;
+    }
+
     public boolean equals(Vector b, double eps) {
         boolean rv = false;
 

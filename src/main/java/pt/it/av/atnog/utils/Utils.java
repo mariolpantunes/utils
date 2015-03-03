@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 public class Utils {
     @SuppressWarnings("unchecked")
@@ -230,6 +231,12 @@ public class Utils {
             System.out.print(array[i] + "; ");
         }
         System.out.println("]");
+    }
+
+    public static void printList(List l) {
+        for (Object o : l) {
+            System.out.println(o.toString());
+        }
     }
 
     public static void printArray(double[] array) {
