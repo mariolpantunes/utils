@@ -1,5 +1,7 @@
 package pt.it.av.atnog.utils.bla;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by mantunes on 22/01/2015.
  */
@@ -35,10 +37,33 @@ public class Test {
         //Matrix B = new Matrix(4, 4, tmp);
         //System.out.println(B);
 
-        double data[] = {12, 8, 6, 5, 4, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-        Vector v = new Vector(data);
-        System.out.println(v.elbow());
+        double dataA[] = {1, 2, 3, 4, 5, 6, 7, 8};
+        double dataB[] = {1, 2, 3, 4, 5, 6, 7, 8};
+        //Vector v = new Vector(data);
+        //System.out.println(v.elbow());
 
+
+        Matrix A = Matrix.rand(1024, 1024);
+        Matrix B = Matrix.rand(1024, 1024);
+
+        int reps = 10;
+        long time = 0;
+        for (int i = 0; i < reps; i++) {
+            long begin = System.nanoTime();
+            A.mul_seq(B);
+            time += System.nanoTime() - begin;
+        }
+        time /= reps;
+        System.out.println("Time: " + TimeUnit.NANOSECONDS.toMillis(time));
+
+        time = 0;
+        for (int i = 0; i < reps; i++) {
+            long begin = System.nanoTime();
+            A.mul(B);
+            time += System.nanoTime() - begin;
+        }
+        time /= reps;
+        System.out.println("Time: " + TimeUnit.NANOSECONDS.toMillis(time));
 
         /*int size = 4096, reps = 100;
         long time = 0;

@@ -67,6 +67,37 @@ public class Matrix {
         }
     }
 
+    public static void mul_rec(Matrix A, int a_rb, int a_re, int a_cb, int a_ce,
+                               Matrix B, int b_rb, int b_re, int b_cb, int b_ce,
+                               Matrix C, int blk) {
+        if ((a_re - a_rb) <= blk && (a_ce - a_cb) <= blk) {
+            for (int i = a_rb; i < a_re; i++) {
+                int ai = i * A.columns;
+                for (int j = b_cb; j < b_ce; j++) {
+                    double cij = 0.0;
+                    for (int k = b_rb; k < b_re; k++)
+                        cij += A.data[ai + k] * B.data[k * B.columns + j];
+                    C.data[i * C.columns + j] += cij;
+                }
+            }
+        } else if ((a_re - a_rb) >= (a_ce - a_cb)) {
+            //stack.push(new Quad(rb, rb + (r / 2), cb, ce));
+            //stack.push(new Quad(rb + (r / 2), re, cb, ce));
+            mul_rec(A, a_rb, a_rb + ((a_re - a_rb) / 2), a_cb, a_ce,
+                    B, b_rb, b_re, b_cb, b_cb + ((b_cb - b_ce) / 2), C, blk);
+            mul_rec(A, a_rb + ((a_re - a_rb) / 2), a_re, a_cb, a_ce,
+                    B, b_rb, b_re, b_cb + ((b_cb - b_ce) / 2), b_ce, C, blk);
+        } else {
+            //stack.push(new Quad(rb, re, cb, cb + (c / 2)));
+            //stack.push(new Quad(rb, re, cb + (c / 2), ce));
+            mul_rec(A, a_rb, a_re, a_cb, a_cb + ((a_ce - a_cb) / 2),
+                    B, b_rb, b_rb + ((b_re - b_rb) / 2), b_cb, b_ce, C, blk);
+            mul_rec(A, a_rb, a_re, a_cb + ((a_ce - a_cb) / 2), a_ce,
+                    B, b_rb + ((b_re - b_rb) / 2), b_re, b_cb, b_ce, C, blk);
+        }
+
+
+    }
 
     private static boolean householder(Matrix M, Matrix H, int row, int column) {
         boolean rv = false;
@@ -189,8 +220,14 @@ public class Matrix {
         return rv;
     }
 
-    public Matrix mul(Matrix B) {
+    /*public Matrix mul(Matrix B) {
         return mul_seq(B);
+    }*/
+
+    public Matrix mul(Matrix B) {
+        Matrix C = new Matrix(rows, B.columns);
+        mul_rec(this, 0, rows, 0, columns, B, 0, B.rows, 0, B.columns, C, 64);
+        return C;
     }
 
     public Matrix mul_seq(Matrix B) {
@@ -270,32 +307,6 @@ public class Matrix {
         }
         UBV[1].uTranspose();
         return UBV;
-    }
-
-    private double[] rot(double a, double b) {
-        double csr[] = new double[3];
-        if (b == 0) {
-            csr[0] = Math.copySign(1, a);
-            csr[1] = 0;
-            csr[2] = Math.abs(a);
-        } else if (a == 0) {
-            csr[0] = 0;
-            csr[1] = Math.copySign(1, b);
-            csr[2] = Math.abs(b);
-        } else if (Math.abs(b) > Math.abs(a)) {
-            double t = a / b;
-            double u = Math.copySign(Math.sqrt(1 + t * t), b);
-            csr[1] = -1 / u;
-            csr[0] = -csr[1] * t;
-            csr[2] = b * u;
-        } else {
-            double t = b / a;
-            double u = Math.copySign(Math.sqrt(1 + t * t), a);
-            csr[0] = 1 / u;
-            csr[1] = -csr[0] * t;
-            csr[2] = a * u;
-        }
-        return csr;
     }
 
     private double[] diagArray(int n) {
@@ -398,5 +409,31 @@ public class Matrix {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    private double[] rot(double a, double b) {
+        double csr[] = new double[3];
+        if (b == 0) {
+            csr[0] = Math.copySign(1, a);
+            csr[1] = 0;
+            csr[2] = Math.abs(a);
+        } else if (a == 0) {
+            csr[0] = 0;
+            csr[1] = Math.copySign(1, b);
+            csr[2] = Math.abs(b);
+        } else if (Math.abs(b) > Math.abs(a)) {
+            double t = a / b;
+            double u = Math.copySign(Math.sqrt(1 + t * t), b);
+            csr[1] = -1 / u;
+            csr[0] = -csr[1] * t;
+            csr[2] = b * u;
+        } else {
+            double t = b / a;
+            double u = Math.copySign(Math.sqrt(1 + t * t), a);
+            csr[0] = 1 / u;
+            csr[1] = -csr[0] * t;
+            csr[2] = a * u;
+        }
+        return csr;
     }
 }
