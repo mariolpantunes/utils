@@ -42,19 +42,36 @@ public class Test {
         //Vector v = new Vector(data);
         //System.out.println(v.elbow());
 
-
-        Matrix A = Matrix.rand(1024, 1024);
-        Matrix B = Matrix.rand(1024, 1024);
+        Matrix A = Matrix.rand(2048, 2048);
+        Matrix B = Matrix.rand(2048, 2048);
 
         int reps = 10;
         long time = 0;
-        for (int i = 0; i < reps; i++) {
+        /*for (int i = 0; i < reps; i++) {
             long begin = System.nanoTime();
             A.mul_seq(B);
             time += System.nanoTime() - begin;
         }
         time /= reps;
-        System.out.println("Time: " + TimeUnit.NANOSECONDS.toMillis(time));
+        System.out.println("Time SEQ: " + TimeUnit.NANOSECONDS.toMillis(time));*/
+
+        /*time = 0;
+        for (int i = 0; i < reps; i++) {
+            long begin = System.nanoTime();
+            A.mul_par(B);
+            time += System.nanoTime() - begin;
+        }
+        time /= reps;
+        System.out.println("Time PAR: " + TimeUnit.NANOSECONDS.toMillis(time));*/
+
+        time = 0;
+        for (int i = 0; i < reps; i++) {
+            long begin = System.nanoTime();
+            A.mul_r(B);
+            time += System.nanoTime() - begin;
+        }
+        time /= reps;
+        System.out.println("Time REC: " + TimeUnit.NANOSECONDS.toMillis(time));
 
         time = 0;
         for (int i = 0; i < reps; i++) {
@@ -63,7 +80,7 @@ public class Test {
             time += System.nanoTime() - begin;
         }
         time /= reps;
-        System.out.println("Time: " + TimeUnit.NANOSECONDS.toMillis(time));
+        System.out.println("Time NEW: " + TimeUnit.NANOSECONDS.toMillis(time));
 
         /*int size = 4096, reps = 100;
         long time = 0;

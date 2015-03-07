@@ -2,6 +2,7 @@ package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.Utils;
 import pt.it.av.atnog.utils.parallel.ThreadPool;
+import pt.it.av.atnog.utils.structures.tuple.Octuple;
 import pt.it.av.atnog.utils.structures.tuple.Quad;
 
 import java.util.ArrayDeque;
@@ -70,7 +71,10 @@ public class Matrix {
     public static void mul_rec(Matrix A, int a_rb, int a_re, int a_cb, int a_ce,
                                Matrix B, int b_rb, int b_re, int b_cb, int b_ce,
                                Matrix C, int blk) {
+        //System.err.println("A ->("+a_rb+"; "+a_re+"; "+a_cb+"; "+a_ce+")");
+        //System.err.println("B ->(" + b_rb + "; " + b_re + "; " + b_cb + "; " + b_ce + ")");
         if ((a_re - a_rb) <= blk && (a_ce - a_cb) <= blk) {
+            //System.err.println("Work...\n");
             for (int i = a_rb; i < a_re; i++) {
                 int ai = i * A.columns;
                 for (int j = b_cb; j < b_ce; j++) {
@@ -81,13 +85,15 @@ public class Matrix {
                 }
             }
         } else if ((a_re - a_rb) >= (a_ce - a_cb)) {
+            //System.err.println("Split by row...\n");
             //stack.push(new Quad(rb, rb + (r / 2), cb, ce));
             //stack.push(new Quad(rb + (r / 2), re, cb, ce));
             mul_rec(A, a_rb, a_rb + ((a_re - a_rb) / 2), a_cb, a_ce,
-                    B, b_rb, b_re, b_cb, b_cb + ((b_cb - b_ce) / 2), C, blk);
+                    B, b_rb, b_re, b_cb, b_cb + ((b_ce - b_cb) / 2), C, blk);
             mul_rec(A, a_rb + ((a_re - a_rb) / 2), a_re, a_cb, a_ce,
-                    B, b_rb, b_re, b_cb + ((b_cb - b_ce) / 2), b_ce, C, blk);
+                    B, b_rb, b_re, b_cb + ((b_ce - b_cb) / 2), b_ce, C, blk);
         } else {
+            //System.err.println("Split by column...\n");
             //stack.push(new Quad(rb, re, cb, cb + (c / 2)));
             //stack.push(new Quad(rb, re, cb + (c / 2), ce));
             mul_rec(A, a_rb, a_re, a_cb, a_cb + ((a_ce - a_cb) / 2),
@@ -95,8 +101,6 @@ public class Matrix {
             mul_rec(A, a_rb, a_re, a_cb + ((a_ce - a_cb) / 2), a_ce,
                     B, b_rb + ((b_re - b_rb) / 2), b_re, b_cb, b_ce, C, blk);
         }
-
-
     }
 
     private static boolean householder(Matrix M, Matrix H, int row, int column) {
@@ -220,13 +224,40 @@ public class Matrix {
         return rv;
     }
 
-    /*public Matrix mul(Matrix B) {
-        return mul_seq(B);
-    }*/
-
     public Matrix mul(Matrix B) {
         Matrix C = new Matrix(rows, B.columns);
-        mul_rec(this, 0, rows, 0, columns, B, 0, B.rows, 0, B.columns, C, 64);
+        //mul_rec(this, 0, rows, 0, columns, B, 0, B.rows, 0, B.columns, C, 64);
+        Deque<Octuple<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
+        stack.push(new Octuple(0, rows, 0, columns, 0, B.rows, 0, B.columns));
+        while (!stack.isEmpty()) {
+            Octuple<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> o = stack.pop();
+            int a_rb = o.a, a_re = o.b, a_cb = o.c, a_ce = o.d, b_rb = o.e, b_re = o.f, b_cb = o.g, b_ce = o.h;
+            if ((a_re - a_rb) <= BLK && (a_ce - a_cb) <= BLK) {
+                //System.err.println("Work...\n");
+                for (int i = a_rb; i < a_re; i++) {
+                    int ai = i * columns;
+                    for (int k = b_rb; k < b_re; k++)
+                        for (int j = b_cb; j < b_ce; j++) {
+                            C.data[i * C.columns + j] += data[ai + k] * B.data[k * B.columns + j];
+                        }
+                }
+            } else if ((a_re - a_rb) >= (a_ce - a_cb)) {
+                //System.err.println("Split by row...\n");
+                stack.push(new Octuple(a_rb, a_rb + ((a_re - a_rb) / 2), a_cb, a_ce, b_rb, b_re, b_cb, b_cb + ((b_ce - b_cb) / 2)));
+                stack.push(new Octuple(a_rb + ((a_re - a_rb) / 2), a_re, a_cb, a_ce, b_rb, b_re, b_cb + ((b_ce - b_cb) / 2), b_ce));
+            } else {
+                //System.err.println("Split by column...\n");
+                stack.push(new Octuple(a_rb, a_re, a_cb, a_cb + ((a_ce - a_cb) / 2), b_rb, b_rb + ((b_re - b_rb) / 2), b_cb, b_ce));
+                stack.push(new Octuple(a_rb, a_re, a_cb + ((a_ce - a_cb) / 2), a_ce, b_rb + ((b_re - b_rb) / 2), b_re, b_cb, b_ce));
+            }
+        }
+
+        return C;
+    }
+
+    public Matrix mul_r(Matrix B) {
+        Matrix C = new Matrix(rows, B.columns);
+        mul_rec(this, 0, rows, 0, columns, B, 0, B.rows, 0, B.columns, C, BLK);
         return C;
     }
 
