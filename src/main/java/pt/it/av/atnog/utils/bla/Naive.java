@@ -1,7 +1,6 @@
 package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.structures.tuple.Octuple;
-import pt.it.av.atnog.utils.structures.tuple.Quad;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -45,25 +44,12 @@ public class Naive {
         return C;
     }
 
-    public static Matrix transpose(Matrix M, int blk) {
-        Matrix C = new Matrix(M.columns, M.rows);
-        Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
-        stack.push(new Quad(0, M.rows, 0, M.columns));
-        while (!stack.isEmpty()) {
-            Quad<Integer, Integer, Integer, Integer> q = stack.pop();
-            int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
-            if (r <= blk && c <= blk) {
-                for (int i = rb; i < re; i++)
-                    for (int j = cb; j < ce; j++)
-                        C.data[j * M.rows + i] = M.data[i * M.columns + j];
-            } else if (r >= c) {
-                stack.push(new Quad(rb, rb + (r / 2), cb, ce));
-                stack.push(new Quad(rb + (r / 2), re, cb, ce));
-            } else {
-                stack.push(new Quad(rb, re, cb, cb + (c / 2)));
-                stack.push(new Quad(rb, re, cb + (c / 2), ce));
-            }
-        }
+    public static Matrix mul(Matrix A, Matrix B) {
+        Matrix C = new Matrix(A.rows, B.columns);
+        for (int i = 0; i < A.rows; i++)
+            for (int k = 0; k < B.rows; k++)
+                for (int j = 0; j < B.columns; j++)
+                    C.data[i * C.columns + j] += A.data[i * A.columns + k] * B.data[k * B.columns + j];
         return C;
     }
 

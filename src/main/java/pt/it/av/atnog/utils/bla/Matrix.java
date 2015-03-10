@@ -221,7 +221,7 @@ public class Matrix {
         return rv;
     }
 
-    //TODO: Improve code add unit testing clean naive implementations...
+    //TODO: Check code, improve selection between sequencial and parallel implemenatations
     public Matrix mul(Matrix B) {
         Matrix C = new Matrix(rows, B.columns);
         double bt[] = new double[B.rows * B.columns];
@@ -262,10 +262,6 @@ public class Matrix {
             }
         }
         return C;
-    }
-
-    public void mulSeq(Matrix B, Matrix C) {
-
     }
 
     public Matrix triangular() {

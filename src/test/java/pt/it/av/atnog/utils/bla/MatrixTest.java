@@ -58,11 +58,18 @@ public class MatrixTest {
     }
 
     @Test
-    public void test_transpose() {
+    public void test_transpose_small() {
         assertTrue(At.equals(A.transpose()));
         Matrix T = A.transpose();
         T.uTranspose();
         assertTrue(T.equals(A));
+    }
+
+    @Test
+    public void test_transpose_large() {
+        Matrix A = Matrix.rand(256, 512);
+        Matrix T1 = A.transpose(), T2 = Naive.transpose(A);
+        assertTrue(T1.equals(T2));
     }
 
     @Test
@@ -76,8 +83,15 @@ public class MatrixTest {
     }
 
     @Test
-    public void test_mul() {
+    public void test_mul_small() {
         assertTrue(AAt.equals(A.mul(At)));
+    }
+
+    @Test
+    public void test_mull_large() {
+        Matrix A = Matrix.rand(256, 512), B = Matrix.rand(512, 256);
+        Matrix R1 = A.mul(B), R2 = Naive.mul(A, B);
+        assertTrue(R1.equals(R2));
     }
 
     @Test
@@ -98,12 +112,4 @@ public class MatrixTest {
         d = new Vector(data);
         assertTrue(d.equals(A.diag(-2)));
     }
-
-    /*@Test
-    public void test_parallel_mul() {
-        Matrix A = Matrix.rand(512, 256);
-        Matrix B = Matrix.rand(256, 512);
-        Matrix C = A.mul(B);
-        assertTrue(C.equals(A.parallel_mul(B)));
-    }*/
 }
