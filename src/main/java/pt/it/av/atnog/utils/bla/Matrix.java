@@ -2,7 +2,6 @@ package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.Utils;
 import pt.it.av.atnog.utils.parallel.ThreadPool;
-import pt.it.av.atnog.utils.structures.tuple.Octuple;
 import pt.it.av.atnog.utils.structures.tuple.Quad;
 
 import java.util.ArrayDeque;
@@ -44,20 +43,20 @@ public class Matrix {
         return C;
     }
 
-    protected static void transpose(double data[], double tdata[], int rows, int columns, int blk) {
-        double tmp[] = new double[blk * blk];
+    protected static void transpose(double data[], double tdata[], int rows, int columns) {
+        double tmp[] = new double[BLK * BLK];
         Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
         stack.push(new Quad(0, rows, 0, columns));
         while (!stack.isEmpty()) {
             Quad<Integer, Integer, Integer, Integer> q = stack.pop();
             int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
-            if (r <= blk && c <= blk) {
+            if (r <= BLK && c <= BLK) {
                 for (int i = rb, tmpc = 0; i < re; i++, tmpc++)
                     for (int j = cb, tmpr = 0; j < ce; j++, tmpr++)
-                        tmp[tmpr * blk + tmpc] = data[i * columns + j];
+                        tmp[tmpr * BLK + tmpc] = data[i * columns + j];
                 for (int j = cb, tmpr = 0; j < ce; j++, tmpr++)
                     for (int i = rb, tmpc = 0; i < re; i++, tmpc++)
-                        tdata[j * rows + i] = tmp[tmpr * blk + tmpc];
+                        tdata[j * rows + i] = tmp[tmpr * BLK + tmpc];
             } else if (r >= c) {
                 stack.push(new Quad(rb, rb + (r / 2), cb, ce));
                 stack.push(new Quad(rb + (r / 2), re, cb, ce));
@@ -65,41 +64,6 @@ public class Matrix {
                 stack.push(new Quad(rb, re, cb, cb + (c / 2)));
                 stack.push(new Quad(rb, re, cb + (c / 2), ce));
             }
-        }
-    }
-
-    public static void mul_rec(Matrix A, int a_rb, int a_re, int a_cb, int a_ce,
-                               Matrix B, int b_rb, int b_re, int b_cb, int b_ce,
-                               Matrix C, int blk) {
-        //System.err.println("A ->("+a_rb+"; "+a_re+"; "+a_cb+"; "+a_ce+")");
-        //System.err.println("B ->(" + b_rb + "; " + b_re + "; " + b_cb + "; " + b_ce + ")");
-        if ((a_re - a_rb) <= blk && (a_ce - a_cb) <= blk) {
-            //System.err.println("Work...\n");
-            for (int i = a_rb; i < a_re; i++) {
-                int ai = i * A.columns;
-                for (int j = b_cb; j < b_ce; j++) {
-                    double cij = 0.0;
-                    for (int k = b_rb; k < b_re; k++)
-                        cij += A.data[ai + k] * B.data[k * B.columns + j];
-                    C.data[i * C.columns + j] += cij;
-                }
-            }
-        } else if ((a_re - a_rb) >= (a_ce - a_cb)) {
-            //System.err.println("Split by row...\n");
-            //stack.push(new Quad(rb, rb + (r / 2), cb, ce));
-            //stack.push(new Quad(rb + (r / 2), re, cb, ce));
-            mul_rec(A, a_rb, a_rb + ((a_re - a_rb) / 2), a_cb, a_ce,
-                    B, b_rb, b_re, b_cb, b_cb + ((b_ce - b_cb) / 2), C, blk);
-            mul_rec(A, a_rb + ((a_re - a_rb) / 2), a_re, a_cb, a_ce,
-                    B, b_rb, b_re, b_cb + ((b_ce - b_cb) / 2), b_ce, C, blk);
-        } else {
-            //System.err.println("Split by column...\n");
-            //stack.push(new Quad(rb, re, cb, cb + (c / 2)));
-            //stack.push(new Quad(rb, re, cb + (c / 2), ce));
-            mul_rec(A, a_rb, a_re, a_cb, a_cb + ((a_ce - a_cb) / 2),
-                    B, b_rb, b_rb + ((b_re - b_rb) / 2), b_cb, b_ce, C, blk);
-            mul_rec(A, a_rb, a_re, a_cb + ((a_ce - a_cb) / 2), a_ce,
-                    B, b_rb + ((b_re - b_rb) / 2), b_re, b_cb, b_ce, C, blk);
         }
     }
 
@@ -126,6 +90,39 @@ public class Matrix {
         return rv;
     }
 
+    public static Matrix mul_par(Matrix A, Matrix B) {
+        Matrix C = new Matrix(A.rows, B.columns), BT = B.transpose();
+
+
+        return C;
+    }
+
+    private static double[] rot(double a, double b) {
+        double csr[] = new double[3];
+        if (b == 0) {
+            csr[0] = Math.copySign(1, a);
+            csr[1] = 0;
+            csr[2] = Math.abs(a);
+        } else if (a == 0) {
+            csr[0] = 0;
+            csr[1] = Math.copySign(1, b);
+            csr[2] = Math.abs(b);
+        } else if (Math.abs(b) > Math.abs(a)) {
+            double t = a / b;
+            double u = Math.copySign(Math.sqrt(1 + t * t), b);
+            csr[1] = -1 / u;
+            csr[0] = -csr[1] * t;
+            csr[2] = b * u;
+        } else {
+            double t = b / a;
+            double u = Math.copySign(Math.sqrt(1 + t * t), a);
+            csr[0] = 1 / u;
+            csr[1] = -csr[0] * t;
+            csr[2] = a * u;
+        }
+        return csr;
+    }
+
     public int rows() {
         return rows;
     }
@@ -149,13 +146,13 @@ public class Matrix {
 
     public Matrix transpose() {
         Matrix T = new Matrix(columns, rows);
-        transpose(data, T.data, rows, columns, BLK);
+        transpose(data, T.data, rows, columns);
         return T;
     }
 
     public void uTranspose() {
         double buffer[] = new double[rows * columns];
-        transpose(data, buffer, rows, columns, BLK);
+        transpose(data, buffer, rows, columns);
         this.data = buffer;
         int t = rows;
         this.rows = columns;
@@ -224,89 +221,53 @@ public class Matrix {
         return rv;
     }
 
+    //TODO: Improve code add unit testing clean naive implementations...
     public Matrix mul(Matrix B) {
         Matrix C = new Matrix(rows, B.columns);
-        //mul_rec(this, 0, rows, 0, columns, B, 0, B.rows, 0, B.columns, C, 64);
-        Deque<Octuple<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
-        stack.push(new Octuple(0, rows, 0, columns, 0, B.rows, 0, B.columns));
-        while (!stack.isEmpty()) {
-            Octuple<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> o = stack.pop();
-            int a_rb = o.a, a_re = o.b, a_cb = o.c, a_ce = o.d, b_rb = o.e, b_re = o.f, b_cb = o.g, b_ce = o.h;
-            if ((a_re - a_rb) <= BLK && (a_ce - a_cb) <= BLK) {
-                //System.err.println("Work...\n");
-                for (int i = a_rb; i < a_re; i++) {
-                    int ai = i * columns;
-                    for (int k = b_rb; k < b_re; k++)
-                        for (int j = b_cb; j < b_ce; j++) {
-                            C.data[i * C.columns + j] += data[ai + k] * B.data[k * B.columns + j];
-                        }
+        double bt[] = new double[B.rows * B.columns];
+        transpose(B.data, bt, B.rows, B.columns);
+        if (C.rows * C.columns < BLK * BLK) {
+            for (int i = 0; i < C.rows; i++) {
+                int ic = i * columns;
+                for (int j = 0; j < C.columns; j++) {
+                    int jc = j * B.rows;
+                    double cij = 0.0;
+                    for (int k = 0; k < B.rows; k++)
+                        cij += data[ic + k] * bt[jc + k];
+                    C.data[i * C.columns + j] = cij;
                 }
-            } else if ((a_re - a_rb) >= (a_ce - a_cb)) {
-                //System.err.println("Split by row...\n");
-                stack.push(new Octuple(a_rb, a_rb + ((a_re - a_rb) / 2), a_cb, a_ce, b_rb, b_re, b_cb, b_cb + ((b_ce - b_cb) / 2)));
-                stack.push(new Octuple(a_rb + ((a_re - a_rb) / 2), a_re, a_cb, a_ce, b_rb, b_re, b_cb + ((b_ce - b_cb) / 2), b_ce));
-            } else {
-                //System.err.println("Split by column...\n");
-                stack.push(new Octuple(a_rb, a_re, a_cb, a_cb + ((a_ce - a_cb) / 2), b_rb, b_rb + ((b_re - b_rb) / 2), b_cb, b_ce));
-                stack.push(new Octuple(a_rb, a_re, a_cb + ((a_ce - a_cb) / 2), a_ce, b_rb + ((b_re - b_rb) / 2), b_re, b_cb, b_ce));
             }
-        }
+        } else {
+            int I = C.rows, J = C.columns, K = columns;
+            ThreadPool tp = new ThreadPool((Object o, List<Object> l) -> {
+                int i = (Integer) o, ic = i * columns;
+                for (int j = 0; j < C.columns; j++) {
+                    int jc = j * B.rows;
+                    double cij = 0.0;
+                    for (int k = 0; k < B.rows; k++)
+                        cij += data[ic + k] * bt[jc + k];
+                    C.data[i * C.columns + j] = cij;
+                }
+            });
 
-        return C;
-    }
+            BlockingQueue<Object> sink = tp.sink();
+            tp.start();
 
-    public Matrix mul_r(Matrix B) {
-        Matrix C = new Matrix(rows, B.columns);
-        mul_rec(this, 0, rows, 0, columns, B, 0, B.rows, 0, B.columns, C, BLK);
-        return C;
-    }
-
-    public Matrix mul_seq(Matrix B) {
-        Matrix C = new Matrix(rows, B.columns), BT = B.transpose();
-        for (int i = 0; i < C.rows; i++) {
-            int ic = i * columns;
-            for (int j = 0; j < C.columns; j++) {
-                int jc = j * BT.columns;
-                double cij = 0.0;
-                for (int k = 0; k < B.rows; k++)
-                    cij += data[ic + k] * BT.data[jc + k];
-                C.data[i * C.columns + j] = cij;
+            try {
+                for (int i = 0; i < I; i++)
+                    sink.add(new Integer(i));
+                tp.join();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return C;
     }
 
-    public Matrix mul_par(Matrix B) {
-        Matrix C = new Matrix(rows, B.columns), BT = B.transpose();
-        int I = C.rows, J = C.columns, K = columns;
-        ThreadPool tp = new ThreadPool((Object o, List<Object> l) -> {
-            int i = (Integer) o, ic = i * columns;
-            for (int j = 0; j < C.columns; j++) {
-                int jc = j * BT.columns;
-                double cij = 0.0;
-                for (int k = 0; k < B.rows; k++)
-                    cij += data[ic + k] * BT.data[jc + k];
-                C.data[i * C.columns + j] = cij;
-            }
-        });
+    public void mulSeq(Matrix B, Matrix C) {
 
-        BlockingQueue<Object> sink = tp.sink();
-        tp.start();
-
-        try {
-            for (int i = 0; i < I; i++)
-                sink.add(new Integer(i));
-            tp.join();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return C;
     }
 
-    /**
-     * @return
-     */
     public Matrix triangular() {
         Matrix T = transpose();
         for (int k = 0; k < rows - 1; k++)
@@ -440,31 +401,5 @@ public class Matrix {
             sb.append("\n");
         }
         return sb.toString();
-    }
-
-    private double[] rot(double a, double b) {
-        double csr[] = new double[3];
-        if (b == 0) {
-            csr[0] = Math.copySign(1, a);
-            csr[1] = 0;
-            csr[2] = Math.abs(a);
-        } else if (a == 0) {
-            csr[0] = 0;
-            csr[1] = Math.copySign(1, b);
-            csr[2] = Math.abs(b);
-        } else if (Math.abs(b) > Math.abs(a)) {
-            double t = a / b;
-            double u = Math.copySign(Math.sqrt(1 + t * t), b);
-            csr[1] = -1 / u;
-            csr[0] = -csr[1] * t;
-            csr[2] = b * u;
-        } else {
-            double t = b / a;
-            double u = Math.copySign(Math.sqrt(1 + t * t), a);
-            csr[0] = 1 / u;
-            csr[1] = -csr[0] * t;
-            csr[2] = a * u;
-        }
-        return csr;
     }
 }

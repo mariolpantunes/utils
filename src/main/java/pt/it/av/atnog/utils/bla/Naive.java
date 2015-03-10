@@ -1,5 +1,6 @@
 package pt.it.av.atnog.utils.bla;
 
+import pt.it.av.atnog.utils.structures.tuple.Octuple;
 import pt.it.av.atnog.utils.structures.tuple.Quad;
 
 import java.util.ArrayDeque;
@@ -61,6 +62,43 @@ public class Naive {
             } else {
                 stack.push(new Quad(rb, re, cb, cb + (c / 2)));
                 stack.push(new Quad(rb, re, cb + (c / 2), ce));
+            }
+        }
+        return C;
+    }
+
+    public Matrix mul(Matrix A, Matrix B, int blk) {
+        Matrix C = new Matrix(A.rows, B.columns);
+        double b_data[] = new double[blk * blk];
+        Deque<Octuple<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
+        stack.push(new Octuple(0, A.rows, 0, A.columns, 0, B.rows, 0, B.columns));
+        while (!stack.isEmpty()) {
+            Octuple<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> o = stack.pop();
+            int a_rb = o.a, a_re = o.b, a_cb = o.c, a_ce = o.d, b_rb = o.e, b_re = o.f, b_cb = o.g, b_ce = o.h;
+            if ((a_re - a_rb) <= blk && (a_ce - a_cb) <= blk) {
+                for (int i = b_rb, bc = 0; i < b_re; i++, bc++)
+                    for (int j = b_cb, br = 0; j < b_ce; j++, br++)
+                        b_data[br * blk + bc] = B.data[i * A.columns + j];
+                for (int i = a_rb; i < a_re; i++) {
+                    int ai = i * A.columns;
+                    for (int j = b_cb, br = 0; j < b_ce; j++, br++) {
+                        double cij = 0;
+                        int bi = br * blk;
+                        for (int k = b_rb, bc = 0; k < b_re; k++, bc++)
+                            cij += A.data[ai + k] * b_data[bi + bc];
+                        C.data[i * C.columns + j] += cij;
+                    }
+                }
+            } else if ((a_re - a_rb) >= (a_ce - a_cb)) {
+                int a_rm = (a_rb + a_re) / 2, b_cm = (b_cb + b_ce) / 2;
+                stack.push(new Octuple(a_rb, a_rm, a_cb, a_ce, b_rb, b_re, b_cb, b_cm));
+                stack.push(new Octuple(a_rb, a_rm, a_cb, a_ce, b_rb, b_re, b_cm, b_ce));
+                stack.push(new Octuple(a_rm, a_re, a_cb, a_ce, b_rb, b_re, b_cb, b_cm));
+                stack.push(new Octuple(a_rm, a_re, a_cb, a_ce, b_rb, b_re, b_cm, b_ce));
+            } else {
+                int a_cm = (a_cb + a_ce) / 2, b_rm = (b_rb + b_re) / 2;
+                stack.push(new Octuple(a_rb, a_re, a_cb, a_cm, b_rb, b_rm, b_cb, b_ce));
+                stack.push(new Octuple(a_rb, a_re, a_cm, a_ce, b_rm, b_re, b_cb, b_ce));
             }
         }
         return C;
