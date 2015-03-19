@@ -7,7 +7,7 @@ public class TestSE {
     private final static String FAROO_KEY = "XWyjTp6De1S0axhVD14voLV5vjk_";
 
     public static void main(String[] args) {
-        Faroo f = new Faroo(FAROO_KEY);
-        Utils.printList(f.search("humidity"));
+        SearchEngine s = new Wikipedia();
+        Utils.printList(s.search("humidity"));
     }
 }

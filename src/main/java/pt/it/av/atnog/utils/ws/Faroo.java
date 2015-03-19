@@ -10,7 +10,7 @@ import pt.it.av.atnog.utils.HTTP;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Faroo {
+public class Faroo implements SearchEngine {
     private static final int LENGTH = 10;
     private static final long SLEEP = 100;
     private final String key;
@@ -19,6 +19,7 @@ public class Faroo {
         this.key = key;
     }
 
+    @Override
     public List<String> search(final String q) {
         List<String> rv = new ArrayList<>();
         boolean done = false;
@@ -49,6 +50,7 @@ public class Faroo {
         return rv;
     }
 
+    @Override
     public List<String> snippets(final String q) {
         List<String> rv = new ArrayList<>();
         boolean done = false;
