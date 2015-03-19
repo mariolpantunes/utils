@@ -8,6 +8,6 @@ public class TestSE {
 
     public static void main(String[] args) {
         SearchEngine s = new Wikipedia();
-        Utils.printList(s.search("humidity"));
+        Utils.printList(s.search("humidity|temperature"));
     }
 }
