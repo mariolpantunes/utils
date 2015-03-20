@@ -45,7 +45,6 @@ public class HTTP {
 
     public static JsonObject getJSON(String url, int timeout) throws IOException {
         JsonObject json = null;
-
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setReadTimeout(timeout);
