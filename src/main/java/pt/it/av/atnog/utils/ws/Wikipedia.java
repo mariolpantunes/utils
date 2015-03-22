@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: improve the continue interface
 public class Wikipedia implements SearchEngine {
     @Override
     public List<String> search(final String q) {
