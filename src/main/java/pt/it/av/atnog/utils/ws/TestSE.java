@@ -4,10 +4,9 @@ package pt.it.av.atnog.utils.ws;
 import pt.it.av.atnog.utils.Utils;
 
 public class TestSE {
-    private final static String FAROO_KEY = "XWyjTp6De1S0axhVD14voLV5vjk_";
 
-    public static void main(String[] args) {
-        SearchEngine s = new Searx();
-        Utils.printList(s.search("humidity"));
+    public static void main(String[] args) throws Exception {
+        SearchEngine s = new Yacy();
+        Utils.printList(s.snippets("humidity"));
     }
 }

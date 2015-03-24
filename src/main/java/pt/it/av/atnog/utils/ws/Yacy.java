@@ -11,28 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by mantunes on 3/21/15.
+ * Created by mantunes on 3/23/15.
  */
-public class Searx implements SearchEngine {
-    private static final int MAX_PAGE = 5;
+public class Yacy implements SearchEngine {
+    private static final int MAX_RECORDS = 30, LENGTH = 10;
 
     @Override
-    public List<String> search(final String q) {
+    public List<String> search(String q) {
         List<String> rv = new ArrayList<>();
         boolean done = false;
-        int page = 1;
+        int start = 1;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("https://searx.me/?format=json&pageno=" + page + "&q=" + q);
-                if (page >= MAX_PAGE)
+                JsonObject json = HTTP.getJSON("http://search.yacy.de/yacysearch.json?resource=global&contentdom=text" +
+                        "&lr=lang_en&startRecord=" + start + "&query=" + q).get("channels").asArray().get(0).asObject();
+                start += LENGTH;
+                if (start >= MAX_RECORDS)
                     done = true;
-                else
-                    page++;
-                JsonArray results = json.get("results").asArray();
+                JsonArray results = json.get("items").asArray();
                 for (JsonValue jv : results) {
-                    //System.out.println(jv.asObject().get("url").asString());
                     try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString()));
+                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("link").asString()));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
                         //e.printStackTrace();
@@ -50,21 +49,20 @@ public class Searx implements SearchEngine {
     public List<String> snippets(String q) {
         List<String> rv = new ArrayList<>();
         boolean done = false;
-        int page = 1;
+        int start = 1;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("https://searx.me/?format=json&pageno=" + page + "&q=" + q);
-                System.out.println(json);
-                if (page >= MAX_PAGE)
+                JsonObject json = HTTP.getJSON("http://search.yacy.de/yacysearch.json?resource=global&contentdom=text" +
+                        "&lr=lang_en&startRecord=" + start + "&query=" + q).get("channels").asArray().get(0).asObject();
+                start += LENGTH;
+                if (start >= MAX_RECORDS)
                     done = true;
-                else
-                    page++;
-                JsonArray results = json.get("results").asArray();
+                JsonArray results = json.get("items").asArray();
                 for (JsonValue jv : results) {
-                    rv.add(jv.asObject().get("content").asString());
+                    rv.add(jv.asObject().get("description").asString());
                 }
             } catch (Exception e) {
-                //e.printStackTrace();
+                e.printStackTrace();
                 done = true;
             }
         }

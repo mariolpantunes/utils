@@ -23,6 +23,7 @@ public class HTTP {
         con.setReadTimeout(timeout);
         con.setReadTimeout(timeout);
         con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "text/plain");
         con.connect();
         if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
             BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -50,6 +51,7 @@ public class HTTP {
         con.setReadTimeout(timeout);
         con.setReadTimeout(timeout);
         con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "application/json");
         con.connect();
         if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
             json = JsonObject.readFrom(new InputStreamReader(con.getInputStream()));

@@ -26,7 +26,7 @@ public class Faroo implements SearchEngine {
         int start = 1;
         while (!done) {
             try {
-                JsonObject json = JsonObject.readFrom(HTTP.get(url(q, start)));
+                JsonObject json = HTTP.getJSON(url(q, start));
                 System.out.println("Count " + json.get("count").asInt() + " total " + (start * LENGTH));
                 if (start * LENGTH >= json.get("count").asInt())
                     done = true;
@@ -57,7 +57,7 @@ public class Faroo implements SearchEngine {
         int start = 1;
         while (!done) {
             try {
-                JsonObject json = JsonObject.readFrom(HTTP.get(url(q, start)));
+                JsonObject json = HTTP.getJSON(url(q, start));
                 JsonArray results = json.get("results").asArray();
                 for (JsonValue jv : results) {
                     rv.add(jv.asObject().get("kwic").asString());
@@ -118,7 +118,6 @@ public class Faroo implements SearchEngine {
 
         return rv;
     }
-
 
     public enum Src {
         WEB, NEWS, TOPICS, TRENDS, SUGGEST
