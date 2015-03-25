@@ -27,14 +27,12 @@ public class Faroo implements SearchEngine {
         while (!done) {
             try {
                 JsonObject json = HTTP.getJSON(url(q, start));
-                System.out.println("Count " + json.get("count").asInt() + " total " + (start * LENGTH));
                 if (start * LENGTH >= json.get("count").asInt())
                     done = true;
                 else
                     start++;
                 JsonArray results = json.get("results").asArray();
                 for (JsonValue jv : results) {
-                    System.out.println(jv.asObject().get("url").asString());
                     try {
                         Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString()));
                         rv.add(doc.body().text());

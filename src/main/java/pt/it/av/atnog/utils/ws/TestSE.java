@@ -6,7 +6,7 @@ import pt.it.av.atnog.utils.Utils;
 public class TestSE {
 
     public static void main(String[] args) throws Exception {
-        SearchEngine s = new Yacy();
+        SearchEngine s = new Bing("---");
         Utils.printList(s.snippets("humidity"));
     }
 }

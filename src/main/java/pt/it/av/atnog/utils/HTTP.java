@@ -2,63 +2,144 @@ package pt.it.av.atnog.utils;
 
 import com.eclipsesource.json.JsonObject;
 
-import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Base64;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 //TODO: review the exception for error codes different from OK
 public class HTTP {
+    private static final int TIMEOUT = 5000;
+
+    private static InputStream stream(HttpURLConnection con) throws IOException {
+        InputStream rv;
+        String encoding = con.getContentEncoding();
+        if (encoding != null && encoding.equalsIgnoreCase("gzip"))
+            rv = new GZIPInputStream(con.getInputStream());
+        else if (encoding != null && encoding.equalsIgnoreCase("deflate"))
+            rv = new InflaterInputStream(con.getInputStream(), new Inflater(true));
+        else
+            rv = con.getInputStream();
+        return rv;
+    }
 
     public static String get(String url) throws Exception {
-        return get(url, 5000);
+        return get(url, TIMEOUT);
     }
 
     public static String get(String url, int timeout) throws IOException {
         String rv = null;
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setReadTimeout(timeout);
-        con.setReadTimeout(timeout);
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "text/plain");
-        con.connect();
-        if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    con.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null)
-                response.append(inputLine);
-            in.close();
-            rv = response.toString();
-        } else {
-            throw new HTTPException(con.getResponseCode());
+        HttpURLConnection con = null;
+        try {
+            con = (HttpURLConnection) new URL(url).openConnection();
+            con.setReadTimeout(timeout);
+            con.setReadTimeout(timeout);
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "text/plain");
+            con.setRequestProperty("Accept-Encoding", "gzip, deflate");
+            con.connect();
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                StringBuilder response = new StringBuilder();
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(stream(con)))) {
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null)
+                        response.append(inputLine);
+                }
+                rv = response.toString();
+            }
+        } finally {
+            if (con != null)
+                con.disconnect();
+        }
+        return rv;
+    }
+
+    public static String get(String url, String user, String pass) throws IOException {
+        return get(url, user, pass, TIMEOUT);
+    }
+
+    public static String get(String url, String user, String pass, int timeout) throws IOException {
+        String rv = null;
+        HttpURLConnection con = null;
+        try {
+            con = (HttpURLConnection) new URL(url).openConnection();
+            con.setReadTimeout(timeout);
+            con.setReadTimeout(timeout);
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "text/plain");
+            con.setRequestProperty("Authorization", "Basic " +
+                    Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
+            con.setRequestProperty("Accept-Encoding", "gzip, deflate");
+            con.connect();
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                StringBuilder response = new StringBuilder();
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(stream(con)))) {
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null)
+                        response.append(inputLine);
+                }
+                rv = response.toString();
+            }
+        } finally {
+            if (con != null)
+                con.disconnect();
         }
         return rv;
     }
 
     public static JsonObject getJSON(String url) throws Exception {
-        return getJSON(url, 5000);
+        return getJSON(url, TIMEOUT);
     }
 
     public static JsonObject getJSON(String url, int timeout) throws IOException {
-        JsonObject json = null;
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setReadTimeout(timeout);
-        con.setReadTimeout(timeout);
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Content-Type", "application/json");
-        con.connect();
-        if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            json = JsonObject.readFrom(new InputStreamReader(con.getInputStream()));
-        } else {
-            throw new HTTPException(con.getResponseCode());
+        JsonObject rv = null;
+        HttpURLConnection con = null;
+        try {
+            con = (HttpURLConnection) new URL(url).openConnection();
+            con.setReadTimeout(timeout);
+            con.setReadTimeout(timeout);
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "text/plain");
+            con.setRequestProperty("Accept-Encoding", "gzip, deflate");
+            con.connect();
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK)
+                rv = JsonObject.readFrom(new BufferedReader(new InputStreamReader(stream(con))));
+        } finally {
+            if (con != null)
+                con.disconnect();
         }
+        return rv;
+    }
 
-        return json;
+    public static JsonObject getJSON(String url, String user, String pass) throws Exception {
+        return getJSON(url, TIMEOUT);
+    }
+
+    public static JsonObject getJSON(String url, String user, String pass, int timeout) throws IOException {
+        JsonObject rv = null;
+        HttpURLConnection con = null;
+        try {
+            con = (HttpURLConnection) new URL(url).openConnection();
+            con.setReadTimeout(timeout);
+            con.setReadTimeout(timeout);
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "text/plain");
+            con.setRequestProperty("Authorization", "Basic " +
+                    Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
+            con.setRequestProperty("Accept-Encoding", "gzip, deflate");
+            con.connect();
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK)
+                rv = JsonObject.readFrom(new BufferedReader(new InputStreamReader(stream(con))));
+        } finally {
+            if (con != null)
+                con.disconnect();
+        }
+        return rv;
     }
 }
