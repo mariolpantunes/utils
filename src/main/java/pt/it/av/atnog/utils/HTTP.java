@@ -15,18 +15,29 @@ import java.util.zip.InflaterInputStream;
 
 //TODO: review the exception for error codes different from OK
 public class HTTP {
-    private static final int TIMEOUT = 5000;
+    private static final int TIMEOUT = 3000;
 
-    private static InputStream stream(HttpURLConnection con) throws IOException {
+    private static InputStream inputStream(HttpURLConnection con) throws IOException {
         InputStream rv;
         String encoding = con.getContentEncoding();
-        System.out.println(encoding);
         if (encoding != null && encoding.equalsIgnoreCase("gzip"))
             rv = new GZIPInputStream(con.getInputStream());
         else if (encoding != null && encoding.equalsIgnoreCase("deflate"))
             rv = new InflaterInputStream(con.getInputStream(), new Inflater(true));
         else
             rv = con.getInputStream();
+        return rv;
+    }
+
+    private static InputStream errorStream(HttpURLConnection con) throws IOException {
+        InputStream rv;
+        String encoding = con.getContentEncoding();
+        if (encoding != null && encoding.equalsIgnoreCase("gzip"))
+            rv = new GZIPInputStream(con.getErrorStream());
+        else if (encoding != null && encoding.equalsIgnoreCase("deflate"))
+            rv = new InflaterInputStream(con.getErrorStream(), new Inflater(true));
+        else
+            rv = con.getErrorStream();
         return rv;
     }
 
@@ -48,7 +59,7 @@ public class HTTP {
             con.connect();
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 StringBuilder response = new StringBuilder();
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(stream(con)))) {
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(inputStream(con)))) {
                     String inputLine;
                     while ((inputLine = in.readLine()) != null)
                         response.append(inputLine);
@@ -82,7 +93,7 @@ public class HTTP {
             con.connect();
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 StringBuilder response = new StringBuilder();
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(stream(con)))) {
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(inputStream(con)))) {
                     String inputLine;
                     while ((inputLine = in.readLine()) != null)
                         response.append(inputLine);
@@ -104,7 +115,6 @@ public class HTTP {
         JsonObject rv = null;
         HttpURLConnection con = null;
         try {
-            System.out.println(url);
             con = (HttpURLConnection) new URL(url).openConnection();
             con.setReadTimeout(timeout);
             con.setReadTimeout(timeout);
@@ -114,7 +124,7 @@ public class HTTP {
             con.setRequestProperty("User-Agent", "");
             con.connect();
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK)
-                rv = JsonObject.readFrom(new BufferedReader(new InputStreamReader(stream(con))));
+                rv = JsonObject.readFrom(new BufferedReader(new InputStreamReader(inputStream(con))));
         } finally {
             if (con != null)
                 con.disconnect();
@@ -141,7 +151,7 @@ public class HTTP {
             con.setRequestProperty("User-Agent", "");
             con.connect();
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK)
-                rv = JsonObject.readFrom(new BufferedReader(new InputStreamReader(stream(con))));
+                rv = JsonObject.readFrom(new BufferedReader(new InputStreamReader(inputStream(con))));
         } finally {
             if (con != null)
                 con.disconnect();

@@ -12,6 +12,7 @@ public class TestSE {
     public static void main(String[] args) throws Exception {
         JsonObject config = JsonObject.readFrom(new BufferedReader(new InputStreamReader(new FileInputStream("ws.json"))));
         //SearchEngine s = new Bing(config.get("bing").asString());
+        //SearchEngine s = new Faroo(config.get("faroo").asString());
         SearchEngine s = new DuckDuckGo();
         Utils.printList(s.search("humidity"));
     }

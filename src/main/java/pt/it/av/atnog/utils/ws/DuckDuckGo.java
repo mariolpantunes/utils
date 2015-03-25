@@ -16,26 +16,7 @@ public class DuckDuckGo implements SearchEngine {
 
     @Override
     public List<String> search(final String q) {
-        String qURL = URLEncoder.encode(q);
-        List<String> rv = new ArrayList<>();
-        try {
-            System.out.println("http://api.duckduckgo.com/?format=json&q=" + qURL);
-            JsonObject json = HTTP.getJSON("http://api.duckduckgo.com/?format=json&q=" + qURL);
-            System.out.println(json);
-            /*JsonArray results = json.get("results").asArray();
-            for (JsonValue jv : results) {
-                //System.out.println(jv.asObject().get("url").asString());
-                try {
-                    Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString()));
-                    rv.add(doc.body().text());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }*/
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return rv;
+        return snippets(q);
     }
 
     @Override
@@ -44,13 +25,19 @@ public class DuckDuckGo implements SearchEngine {
         List<String> rv = new ArrayList<>();
         try {
             JsonObject json = HTTP.getJSON("http://api.duckduckgo.com/?format=json&q=" + qURL);
-            System.out.println(json);
-            JsonArray results = json.get("results").asArray();
+            JsonArray results = json.get("RelatedTopics").asArray();
+            String text = json.get("AbstractText").asString();
+            if (text != null)
+                rv.add(text);
             for (JsonValue jv : results) {
-                rv.add(jv.asObject().get("content").asString());
+                try {
+                    rv.add(jv.asObject().get("Text").asString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
         return rv;
     }
