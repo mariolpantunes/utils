@@ -3,6 +3,8 @@ package pt.it.av.atnog.utils.ws;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
 
 import java.net.URLEncoder;
@@ -30,13 +32,19 @@ public class Bing implements SearchEngine {
             try {
                 JsonObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
                         "&$skip=" + skip + "&Query=" + qURL, "", key).get("d").asObject();
-                System.out.println(json);
-                System.out.println(json.get("__next"));
                 if (json.get("__next") != null)
                     skip += LENGTH;
                 else
                     done = true;
-
+                JsonArray results = json.get("results").asArray();
+                for (JsonValue jv : results) {
+                    try {
+                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("Url").asString()));
+                        rv.add(doc.body().text());
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -54,8 +62,6 @@ public class Bing implements SearchEngine {
             try {
                 JsonObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
                         "&$skip=" + skip + "&Query=" + qURL, "", key).get("d").asObject();
-                System.out.println(json);
-                System.out.println(json.get("__next"));
                 if (json.get("__next") != null)
                     skip += LENGTH;
                 else

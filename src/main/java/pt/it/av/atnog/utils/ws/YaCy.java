@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by mantunes on 3/23/15.
  */
-public class Yacy implements SearchEngine {
+public class YaCy implements SearchEngine {
     private static final int MAX_RECORDS = 30, LENGTH = 10;
 
     @Override

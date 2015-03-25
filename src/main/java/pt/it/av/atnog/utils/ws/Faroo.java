@@ -37,11 +37,11 @@ public class Faroo implements SearchEngine {
                         Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString()));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 done = true;
             }
         }
@@ -66,7 +66,7 @@ public class Faroo implements SearchEngine {
                     start++;
                 Thread.sleep(SLEEP);
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 done = true;
             }
         }

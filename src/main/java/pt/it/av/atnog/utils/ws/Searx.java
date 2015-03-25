@@ -47,14 +47,13 @@ public class Searx implements SearchEngine {
     }
 
     @Override
-    public List<String> snippets(String q) {
+    public List<String> snippets(final String q) {
         List<String> rv = new ArrayList<>();
         boolean done = false;
         int page = 1;
         while (!done) {
             try {
                 JsonObject json = HTTP.getJSON("https://searx.me/?format=json&pageno=" + page + "&q=" + q);
-                System.out.println(json);
                 if (page >= MAX_PAGE)
                     done = true;
                 else
