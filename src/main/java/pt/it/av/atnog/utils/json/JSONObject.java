@@ -27,6 +27,13 @@ public class JSONObject extends JSONValue {
         try {
             while ((n = reader.read()) != -1 && state.peek() != STATE.ERROR) {
                 if (state.peek() != previous) {
+                    int space = 0;
+                    if (state.peek() == STATE.JARRAY)
+                        space = arrays.size();
+                    else
+                        space = objects.size();
+                    for (int i = 0; i < space; i++)
+                        System.err.print("  ");
                     System.err.println(state.peek().name());
                     previous = state.peek();
                 }
@@ -76,8 +83,11 @@ public class JSONObject extends JSONValue {
                     case KEY:
                         switch (c) {
                             case '"':
-                                state.pop();
-                                state.push(STATE.COLON);
+                                if (name.charAt(name.length() - 1) != '\\') {
+                                    state.pop();
+                                    state.push(STATE.COLON);
+                                } else
+                                    name.append(c);
                                 break;
                             default:
                                 name.append(c);
