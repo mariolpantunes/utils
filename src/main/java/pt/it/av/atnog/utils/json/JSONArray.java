@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by mantunes on 26/03/2015.
  */
-public class JSONArray extends JSONValue {
+public class JSONArray implements JSONValue {
     private List<JSONValue> list = new ArrayList<>();
 
     public void add(JSONValue value) {

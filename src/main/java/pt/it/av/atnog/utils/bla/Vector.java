@@ -210,9 +210,61 @@ public class Vector {
         return min;
     }
 
+    double mean() {
+        double m = 0;
+        int t = 1;
+        for (int i = 0; i < length; i++) {
+            m += (data[bIdx + i] - m) / t;
+            ++t;
+        }
+        return m;
+    }
+
+    double var() {
+        double m = mean(), v = 0.0;
+        for (int i = 0; i < length; i++)
+            v += Math.pow(data[bIdx + i] - m, 2.0);
+        return v / (length - 1);
+    }
+
+    public double std() {
+        return Math.sqrt(var());
+    }
+
+    public double cov(Vector Y) {
+        double c = 0.0, mx = 0.0, my = 0.0;
+        int t = 1;
+        for (int i = 0; i < length; i++) {
+            mx += (data[bIdx + i] - mx) / t;
+            my += (Y.data[Y.bIdx + i] - my) / t;
+            ++t;
+        }
+        for (int i = 0; i < length; i++)
+            c += (data[bIdx + i] - mx) * (Y.data[Y.bIdx + i] - my);
+        return c / (length - 1);
+    }
+
+    public double corr(Vector Y) {
+        double r = 0.0, mx = 0.0, my = 0.0, sx = 0.0, sy = 0.0;
+        int t = 1;
+        for (int i = 0; i < length; i++) {
+            mx += (data[bIdx + i] - mx) / t;
+            my += (Y.data[Y.bIdx + i] - my) / t;
+            ++t;
+        }
+        for (int i = 0; i < length; i++) {
+            sx += Math.pow(data[bIdx + i] - mx, 2.0);
+            sy += Math.pow(Y.data[Y.bIdx + i] - my, 2.0);
+        }
+        sx = Math.sqrt(sx / (length - 1));
+        sy = Math.sqrt(sy / (length - 1));
+        for (int i = 0; i < length; i++)
+            r += ((data[bIdx + i] - mx) / sx) * ((Y.data[Y.bIdx + i] - my) / sy);
+        return r / (length - 1);
+    }
+
     public boolean equals(Vector b, double eps) {
         boolean rv = false;
-
         return rv;
     }
 

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by mantunes on 26/03/2015.
  */
-public class JSONObject extends JSONValue {
+public class JSONObject implements JSONValue {
     private static final int LENGTH = 1024;
     private Map<String, JSONValue> map = new HashMap<>();
 
