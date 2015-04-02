@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+//TODO: Verify Blocking queues...
 public class Pipeline {
     private BlockingQueue<Object> sink = new LinkedBlockingQueue<Object>(), source = new LinkedBlockingQueue<Object>();
     private List<Worker> workers = new ArrayList<Worker>();
@@ -33,19 +34,14 @@ public class Pipeline {
                 for (int i = 0; i < workers.size() - 1; i++)
                     queues.add(new LinkedBlockingQueue<Object>());
             }
-
             if (workers.size() > 1) {
                 workers.get(0).connect(sink, queues.get(0));
-
                 for (int i = 1; i < workers.size() - 1; i++)
                     workers.get(i).connect(queues.get(i - 1), queues.get(i));
-
                 workers.get(workers.size() - 1).connect(
                         queues.get(queues.size() - 1), source);
-            } else {
+            } else
                 workers.get(0).connect(sink, source);
-            }
-
             for (Worker w : workers)
                 w.start();
         }
@@ -54,10 +50,11 @@ public class Pipeline {
     public void join() throws InterruptedException {
         Stop stop = new Stop();
         sink.put(stop);
-        for (BlockingQueue<Object> q : queues)
-            q.put(stop);
-        for (Worker w : workers)
-            w.join();
+        for (int i = 0; i < queues.size(); i++) {
+            workers.get(i).join();
+            queues.get(i).put(stop);
+        }
+        workers.get(workers.size() - 1).join();
         source.add(stop);
     }
 }

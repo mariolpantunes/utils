@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
  * Created by mantunes on 11/26/14.
  */
 public class VectorTest {
-    private static Vector A, Aplus1, B, C;
+    private static Vector A, Aplus1, B, C, D;
 
     @BeforeClass
     public static void init() {
@@ -21,6 +21,8 @@ public class VectorTest {
         B = new Vector(dataB);
         double dataC[] = {4.0, 6.0, 10.0, 12.0, 13.0,};
         C = new Vector(dataC);
+        double dataD[] = {13.0, 12.0, 10.0, 6.0, 4.0,};
+        D = new Vector(dataD);
     }
 
     @Test
@@ -52,6 +54,7 @@ public class VectorTest {
         assertTrue(A.mean() == 1.0);
         assertTrue(B.mean() == 4.0);
         assertTrue(C.mean() == 9.0);
+        assertTrue(D.mean() == 9.0);
     }
 
     @Test
@@ -59,17 +62,23 @@ public class VectorTest {
         assertTrue(A.var() == 0.0);
         assertTrue(B.var() == 4.0);
         assertTrue(C.var() == 15.0);
+        assertTrue(D.var() == 15.0);
     }
 
     @Test
     public void test_cov() {
         assertTrue(A.cov(B) == 0.0);
         assertTrue(A.cov(C) == 0.0);
+        assertTrue(A.cov(D) == 0.0);
         assertTrue(B.cov(C) == 7.5);
+        assertTrue(B.cov(D) == -6.75);
+        assertTrue(C.cov(D) == -14.25);
     }
 
     @Test
     public void test_correlation() {
         assertTrue(Utils.equals(B.corr(C), 0.96825, 0.001));
+        assertTrue(Utils.equals(B.corr(D), -0.87142, 0.001));
+        assertTrue(Utils.equals(C.corr(D), -0.95, 0.001));
     }
 }

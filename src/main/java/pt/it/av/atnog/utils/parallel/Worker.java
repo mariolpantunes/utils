@@ -45,7 +45,7 @@ public class Worker implements Runnable {
             }
             if (!(in instanceof Stop)) {
                 t.process(in, out);
-                if (out.size() > 0) {
+                if (!out.isEmpty()) {
                     try {
                         for (Object o : out)
                             source.put(o);
@@ -54,9 +54,8 @@ public class Worker implements Runnable {
                     }
                     out.clear();
                 }
-            } else {
+            } else
                 done = true;
-            }
         }
     }
 }

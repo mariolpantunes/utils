@@ -15,7 +15,11 @@ import java.util.List;
  * Created by mantunes on 3/21/15.
  */
 public class Searx implements SearchEngine {
-    private static final int MAX_PAGE = 25;
+    private final int maxPages;
+
+    public Searx(int maxPages) {
+        this.maxPages = maxPages;
+    }
 
     @Override
     public List<String> search(final String q) {
@@ -28,7 +32,7 @@ public class Searx implements SearchEngine {
             try {
                 JsonObject json = HTTP.getJSON("https://searx.me/?format=json&category_general&pageno="
                         + page + "&q=" + qURL);
-                if (json.equals(previous) || page >= MAX_PAGE)
+                if (json.equals(previous) || page >= maxPages)
                     done = true;
                 page++;
                 previous = json;
@@ -61,7 +65,7 @@ public class Searx implements SearchEngine {
             try {
                 JsonObject json = HTTP.getJSON("https://searx.me/?format=json&category_general&pageno="
                         + page + "&q=" + qURL);
-                if (json.equals(previous) || page >= MAX_PAGE)
+                if (json.equals(previous) || page >= maxPages)
                     done = true;
                 page++;
                 previous = json;

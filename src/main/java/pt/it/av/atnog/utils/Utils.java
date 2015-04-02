@@ -2,10 +2,7 @@ package pt.it.av.atnog.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Utils {
     @SuppressWarnings("unchecked")
@@ -187,7 +184,7 @@ public class Utils {
         System.out.println();
     }
     public static <T> void printArray(T[] array) {
-        printArray(array, 0, array.length-1);
+        printArray(array, 0, array.length - 1);
     }
 
     public static String stackTrace(Exception e) {
@@ -225,21 +222,59 @@ public class Utils {
         return c.getTime();
     }
 
+    public static void printArray(double[] array) {
+        printArray(array, 0, array.length - 1);
+    }
+
     public static void printArray(double[] array, int left, int right) {
         System.out.print("[");
-        for (int i = left; i < right + 1; i++) {
+        int i = left;
+        for (; i < right; i++)
             System.out.print(array[i] + "; ");
-        }
-        System.out.println("]");
+        System.out.println(array[i] + "]");
     }
 
     public static void printList(List l) {
-        for (Object o : l) {
-            System.out.println(o.toString());
-        }
+        System.out.print("[");
+        int i = 0;
+        for (; i < l.size() - 1; i++)
+            System.out.print(l.get(i).toString() + "; ");
+        System.out.println(l.get(i) + "]");
     }
 
-    public static void printArray(double[] array) {
-        printArray(array, 0, array.length - 1);
+    public static <K, V> void printMap(Map<K, V> map) {
+        StringBuilder sb = new StringBuilder();
+        Iterator<Map.Entry<K, V>> iter = map.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<K, V> entry = iter.next();
+            sb.append(entry.getKey());
+            sb.append('=').append('"');
+            sb.append(entry.getValue());
+            sb.append('"');
+            if (iter.hasNext()) {
+                sb.append(',').append(' ');
+            }
+        }
+        System.out.println(sb.toString());
+    }
+
+    public static int levenshtein(String a, String b) {
+        a = a.toLowerCase();
+        b = b.toLowerCase();
+        // i == 0
+        int[] costs = new int[b.length() + 1];
+        for (int j = 0; j < costs.length; j++)
+            costs[j] = j;
+        for (int i = 1; i <= a.length(); i++) {
+            // j == 0; nw = lev(i - 1, j)
+            costs[0] = i;
+            int nw = i - 1;
+            for (int j = 1; j <= b.length(); j++) {
+                int cj = Math.min(1 + Math.min(costs[j], costs[j - 1]), a.charAt(i - 1) == b.charAt(j - 1) ? nw : nw + 1);
+                nw = costs[j];
+                costs[j] = cj;
+            }
+        }
+        return costs[b.length()];
     }
 }
