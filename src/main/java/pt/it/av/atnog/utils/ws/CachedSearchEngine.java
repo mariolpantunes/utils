@@ -9,6 +9,7 @@ import java.util.List;
  */
 
 //TODO: its a dirty fix to improve performance on other code
+//TODO: remove the limitation of docs....
 public class CachedSearchEngine implements SearchEngine {
     private final SearchEngine se;
     private final int docs;

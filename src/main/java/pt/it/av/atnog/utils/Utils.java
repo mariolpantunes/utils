@@ -21,28 +21,6 @@ public class Utils {
         }
     }
 
-    public static double precision(double TP, double FP) {
-        double rv = 0.0;
-        if (TP > 0)
-            rv = TP / (TP + FP);
-        return rv;
-    }
-
-    public static double recall(double TP, double FN) {
-        double rv = 0.0;
-        if (TP > 0)
-            rv = TP / (TP + FN);
-        return rv;
-    }
-
-    public static double fmeasure(double precision, double recall, double beta) {
-        double rv = 0;
-        if (precision > 0 || recall > 0)
-            rv = ((1.0 + Math.pow(beta, 2.0)) * precision * recall)
-                    / ((Math.pow(beta, 2.0) * precision) + recall);
-        return rv;
-    }
-
     public static double randomBetween(double min, double max) {
         return min + (Math.random() * ((max - min) + 1.0));
     }
@@ -211,6 +189,7 @@ public class Utils {
         return a;
     }
 
+    // TODO: Use calendar to solve this issue....
     public static Date dateTrim(Date date) {
         Calendar c = Calendar.getInstance();
         c.clear();

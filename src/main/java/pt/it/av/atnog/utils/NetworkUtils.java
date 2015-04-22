@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
 
-public class Network {
+public class NetworkUtils {
     /**
      * Returns true if the specified port is available on this host.
      *
