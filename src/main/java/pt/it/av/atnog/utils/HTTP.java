@@ -1,6 +1,6 @@
 package pt.it.av.atnog.utils;
 
-import com.eclipsesource.json.JsonObject;
+import pt.it.av.atnog.utils.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -107,12 +107,12 @@ public class HTTP {
         return rv;
     }
 
-    public static JsonObject getJSON(String url) throws Exception {
+    public static JSONObject getJSON(String url) throws Exception {
         return getJSON(url, TIMEOUT);
     }
 
-    public static JsonObject getJSON(String url, int timeout) throws IOException {
-        JsonObject rv = null;
+    public static JSONObject getJSON(String url, int timeout) throws IOException {
+        JSONObject rv = null;
         HttpURLConnection con = null;
         try {
             con = (HttpURLConnection) new URL(url).openConnection();
@@ -124,7 +124,7 @@ public class HTTP {
             con.setRequestProperty("User-Agent", "");
             con.connect();
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK)
-                rv = JsonObject.readFrom(new BufferedReader(new InputStreamReader(inputStream(con))));
+                rv = JSONObject.parse(new BufferedReader(new InputStreamReader(inputStream(con))));
         } finally {
             if (con != null)
                 con.disconnect();
@@ -132,12 +132,12 @@ public class HTTP {
         return rv;
     }
 
-    public static JsonObject getJSON(String url, String user, String pass) throws Exception {
+    public static JSONObject getJSON(String url, String user, String pass) throws Exception {
         return getJSON(url, user, pass, TIMEOUT);
     }
 
-    public static JsonObject getJSON(String url, String user, String pass, int timeout) throws IOException {
-        JsonObject rv = null;
+    public static JSONObject getJSON(String url, String user, String pass, int timeout) throws IOException {
+        JSONObject rv = null;
         HttpURLConnection con = null;
         try {
             con = (HttpURLConnection) new URL(url).openConnection();
@@ -151,7 +151,7 @@ public class HTTP {
             con.setRequestProperty("User-Agent", "");
             con.connect();
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK)
-                rv = JsonObject.readFrom(new BufferedReader(new InputStreamReader(inputStream(con))));
+                rv = JSONObject.parse(new BufferedReader(new InputStreamReader(inputStream(con))));
         } finally {
             if (con != null)
                 con.disconnect();

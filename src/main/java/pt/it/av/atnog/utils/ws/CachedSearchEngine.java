@@ -12,11 +12,9 @@ import java.util.List;
 //TODO: remove the limitation of docs....
 public class CachedSearchEngine implements SearchEngine {
     private final SearchEngine se;
-    private final int docs;
 
-    public CachedSearchEngine(SearchEngine se, int docs) {
+    public CachedSearchEngine(SearchEngine se) {
         this.se = se;
-        this.docs = docs;
     }
 
     @Override
@@ -24,12 +22,11 @@ public class CachedSearchEngine implements SearchEngine {
         List<String> rv = new ArrayList<>();
         //System.out.println("Loading file search_" + q + ".dat");
         try (BufferedReader br = new BufferedReader(new FileReader("search_" + q + ".dat"))) {
-            int d = 1;
             String line = br.readLine();
-            while (line != null && d <= docs) {
+            while (line != null) {
                 rv.add(line);
                 line = br.readLine();
-                d++;
+
             }
         } catch (FileNotFoundException e) {
             //System.out.println("File search_" + q + ".dat not found");
@@ -54,12 +51,10 @@ public class CachedSearchEngine implements SearchEngine {
         List<String> rv = new ArrayList<>();
         //System.out.println("Loading file snippet_" + q + ".dat");
         try (BufferedReader br = new BufferedReader(new FileReader("snippet_" + q + ".dat"))) {
-            int d = 1;
             String line = br.readLine();
-            while (line != null && d <= docs) {
+            while (line != null) {
                 rv.add(line);
                 line = br.readLine();
-                d++;
             }
         } catch (FileNotFoundException e) {
             //System.out.println("File snippet_" + q + ".dat not found");

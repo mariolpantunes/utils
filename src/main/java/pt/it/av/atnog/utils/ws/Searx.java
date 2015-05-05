@@ -1,11 +1,11 @@
 package pt.it.av.atnog.utils.ws;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
+import pt.it.av.atnog.utils.json.JSONArray;
+import pt.it.av.atnog.utils.json.JSONObject;
+import pt.it.av.atnog.utils.json.JSONValue;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -27,20 +27,20 @@ public class Searx implements SearchEngine {
         List<String> rv = new ArrayList<>();
         boolean done = false;
         int page = 1;
-        JsonObject previous = null;
+        JSONObject previous = null;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("https://searx.me/?format=json&category_general&pageno="
+                JSONObject json = HTTP.getJSON("https://searx.me/?format=json&category_general&pageno="
                         + page + "&q=" + qURL);
                 if (json.equals(previous) || page >= maxPages)
                     done = true;
                 page++;
                 previous = json;
-                JsonArray results = json.get("results").asArray();
-                for (JsonValue jv : results) {
+                JSONArray results = json.get("results").asArray();
+                for (JSONValue jv : results) {
                     //System.out.println(jv.asObject().get("url").asString());
                     try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString()));
+                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString().value()));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
                         //e.printStackTrace();
@@ -60,18 +60,18 @@ public class Searx implements SearchEngine {
         List<String> rv = new ArrayList<>();
         boolean done = false;
         int page = 1;
-        JsonObject previous = null;
+        JSONObject previous = null;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("https://searx.me/?format=json&category_general&pageno="
+                JSONObject json = HTTP.getJSON("https://searx.me/?format=json&category_general&pageno="
                         + page + "&q=" + qURL);
                 if (json.equals(previous) || page >= maxPages)
                     done = true;
                 page++;
                 previous = json;
-                JsonArray results = json.get("results").asArray();
-                for (JsonValue jv : results)
-                    rv.add(jv.asObject().get("content").asString());
+                JSONArray results = json.get("results").asArray();
+                for (JSONValue jv : results)
+                    rv.add(jv.asObject().get("content").asString().value());
             } catch (Exception e) {
                 //e.printStackTrace();
                 done = true;

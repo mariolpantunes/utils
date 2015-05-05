@@ -1,9 +1,9 @@
 package pt.it.av.atnog.utils.ws;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import pt.it.av.atnog.utils.HTTP;
+import pt.it.av.atnog.utils.json.JSONArray;
+import pt.it.av.atnog.utils.json.JSONObject;
+import pt.it.av.atnog.utils.json.JSONValue;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -24,14 +24,14 @@ public class DuckDuckGo implements SearchEngine {
         String qURL = URLEncoder.encode(q);
         List<String> rv = new ArrayList<>();
         try {
-            JsonObject json = HTTP.getJSON("http://api.duckduckgo.com/?format=json&q=" + qURL);
-            JsonArray results = json.get("RelatedTopics").asArray();
-            String text = json.get("AbstractText").asString();
+            JSONObject json = HTTP.getJSON("http://api.duckduckgo.com/?format=json&q=" + qURL);
+            JSONArray results = json.get("RelatedTopics").asArray();
+            String text = json.get("AbstractText").asString().value();
             if (text != null)
                 rv.add(text);
-            for (JsonValue jv : results) {
+            for (JSONValue jv : results) {
                 try {
-                    rv.add(jv.asObject().get("Text").asString());
+                    rv.add(jv.asObject().get("Text").asString().value());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

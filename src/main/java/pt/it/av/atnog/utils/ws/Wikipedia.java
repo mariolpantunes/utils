@@ -1,9 +1,9 @@
 package pt.it.av.atnog.utils.ws;
 
-import com.eclipsesource.json.JsonObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
+import pt.it.av.atnog.utils.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class Wikipedia implements SearchEngine {
         String cont = "";
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("http://en.wikipedia.org/w/api.php?format=json&action=query" +
+                JSONObject json = HTTP.getJSON("http://en.wikipedia.org/w/api.php?format=json&action=query" +
                         "&rawcontinue=&continue=" + cont + "&titles=" + qURL);
                 try {
                     cont = json.get("query-continue").asObject().get("extracts").asObject().get("continue").toString();
@@ -28,10 +28,9 @@ public class Wikipedia implements SearchEngine {
                     done = true;
                 }
                 json = json.get("query").asObject().get("pages").asObject();
-                List<String> names = json.names();
-                for (String name : names) {
+                for (String name : json.names()) {
                     try {
-                        long pageid = json.get(name).asObject().get("pageid").asLong();
+                        long pageid = (long) json.get(name).asObject().get("pageid").asNumber().value();
                         Document doc = Jsoup.parse(HTTP.get("http://en.wikipedia.org/?curid=" + pageid));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
@@ -54,7 +53,7 @@ public class Wikipedia implements SearchEngine {
         String cont = "";
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&" +
+                JSONObject json = HTTP.getJSON("http://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&" +
                         "exintro=&explaintext=&rawcontinue=&excontinue=" + cont + "&titles=" + qURL);
                 try {
                     cont = json.get("query-continue").asObject().get("extracts").asObject().get("excontinue").toString();
@@ -63,10 +62,9 @@ public class Wikipedia implements SearchEngine {
                     done = true;
                 }
                 json = json.get("query").asObject().get("pages").asObject();
-                List<String> names = json.names();
-                for (String name : names) {
+                for (String name : json.names()) {
                     try {
-                        rv.add(json.get(name).asObject().get("extract").asString());
+                        rv.add(json.get(name).asObject().get("extract").asString().value());
                     } catch (Exception e) {
                         //e.printStackTrace();
                     }

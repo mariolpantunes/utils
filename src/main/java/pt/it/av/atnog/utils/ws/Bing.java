@@ -1,11 +1,11 @@
 package pt.it.av.atnog.utils.ws;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
+import pt.it.av.atnog.utils.json.JSONArray;
+import pt.it.av.atnog.utils.json.JSONObject;
+import pt.it.av.atnog.utils.json.JSONValue;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -30,16 +30,16 @@ public class Bing implements SearchEngine {
         boolean done = false;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
+                JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
                         "&$skip=" + skip + "&Query=" + qURL, "", key).get("d").asObject();
                 if (json.get("__next") != null)
                     skip += LENGTH;
                 else
                     done = true;
-                JsonArray results = json.get("results").asArray();
-                for (JsonValue jv : results) {
+                JSONArray results = json.get("results").asArray();
+                for (JSONValue jv : results) {
                     try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("Url").asString()));
+                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("Url").asString().value()));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
                         //e.printStackTrace();
@@ -60,15 +60,15 @@ public class Bing implements SearchEngine {
         boolean done = false;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
+                JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
                         "&$skip=" + skip + "&Query=" + qURL, "", key).get("d").asObject();
                 if (json.get("__next") != null)
                     skip += LENGTH;
                 else
                     done = true;
-                JsonArray results = json.get("results").asArray();
-                for (JsonValue jv : results)
-                    rv.add(jv.asObject().get("Description").asString());
+                JSONArray results = json.get("results").asArray();
+                for (JSONValue jv : results)
+                    rv.add(jv.asObject().get("Description").asString().value());
 
             } catch (Exception e) {
                 done = true;

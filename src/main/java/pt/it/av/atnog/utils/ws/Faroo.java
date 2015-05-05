@@ -1,11 +1,11 @@
 package pt.it.av.atnog.utils.ws;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
+import pt.it.av.atnog.utils.json.JSONArray;
+import pt.it.av.atnog.utils.json.JSONObject;
+import pt.it.av.atnog.utils.json.JSONValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +26,15 @@ public class Faroo implements SearchEngine {
         int start = 1;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON(url(q, start));
-                if (start * LENGTH >= json.get("count").asInt())
+                JSONObject json = HTTP.getJSON(url(q, start));
+                if (start * LENGTH >= json.get("count").asNumber().value())
                     done = true;
                 else
                     start++;
-                JsonArray results = json.get("results").asArray();
-                for (JsonValue jv : results) {
+                JSONArray results = json.get("results").asArray();
+                for (JSONValue jv : results) {
                     try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString()));
+                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString().value()));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
                         //e.printStackTrace();
@@ -55,12 +55,12 @@ public class Faroo implements SearchEngine {
         int start = 1;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON(url(q, start));
-                JsonArray results = json.get("results").asArray();
-                for (JsonValue jv : results) {
-                    rv.add(jv.asObject().get("kwic").asString());
+                JSONObject json = HTTP.getJSON(url(q, start));
+                JSONArray results = json.get("results").asArray();
+                for (JSONValue jv : results) {
+                    rv.add(jv.asObject().get("kwic").asString().value());
                 }
-                if (start * LENGTH >= json.get("count").asInt())
+                if (start * LENGTH >= json.get("count").asNumber().value())
                     done = true;
                 else
                     start++;

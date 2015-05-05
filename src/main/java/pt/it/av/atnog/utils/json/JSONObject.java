@@ -2,17 +2,14 @@ package pt.it.av.atnog.utils.json;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by mantunes on 26/03/2015.
  */
-public class JSONObject implements JSONValue {
-    private static final int LENGTH = 1024;
-    private Map<String, JSONValue> map = new HashMap<>();
+public class JSONObject extends JSONValue {
+    //private static final int LENGTH = 1024;
+    private final Map<String, JSONValue> map = new HashMap<>();
 
     public static JSONObject parse(Reader reader) {
         JSONObject root = new JSONObject();
@@ -254,8 +251,28 @@ public class JSONObject implements JSONValue {
         return new JSONString(sb.toString());
     }
 
+    public JSONValue get(String name) {
+        return map.get(name);
+    }
+
+    public String getString(String name) {
+        return map.get(name).asString().value();
+    }
+
     public void add(String name, JSONValue value) {
         map.put(name, value);
+    }
+
+    public void add(String name, double value) {
+        map.put(name, new JSONNumber(value));
+    }
+
+    public void add(String name, String value) {
+        map.put(name, new JSONString(value));
+    }
+
+    public Set<String> names() {
+        return map.keySet();
     }
 
     public void clear() {

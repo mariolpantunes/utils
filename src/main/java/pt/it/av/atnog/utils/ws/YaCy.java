@@ -1,11 +1,11 @@
 package pt.it.av.atnog.utils.ws;
 
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
+import pt.it.av.atnog.utils.json.JSONArray;
+import pt.it.av.atnog.utils.json.JSONObject;
+import pt.it.av.atnog.utils.json.JSONValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +23,15 @@ public class YaCy implements SearchEngine {
         int start = 1;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("http://search.yacy.de/yacysearch.json?resource=global&contentdom=text" +
+                JSONObject json = HTTP.getJSON("http://search.yacy.de/yacysearch.json?resource=global&contentdom=text" +
                         "&lr=lang_en&startRecord=" + start + "&query=" + q).get("channels").asArray().get(0).asObject();
                 start += LENGTH;
                 if (start >= MAX_RECORDS)
                     done = true;
-                JsonArray results = json.get("items").asArray();
-                for (JsonValue jv : results) {
+                JSONArray results = json.get("items").asArray();
+                for (JSONValue jv : results) {
                     try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("link").asString()));
+                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("link").asString().value()));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
                         //e.printStackTrace();
@@ -52,14 +52,14 @@ public class YaCy implements SearchEngine {
         int start = 1;
         while (!done) {
             try {
-                JsonObject json = HTTP.getJSON("http://search.yacy.de/yacysearch.json?resource=global&contentdom=text" +
+                JSONObject json = HTTP.getJSON("http://search.yacy.de/yacysearch.json?resource=global&contentdom=text" +
                         "&lr=lang_en&startRecord=" + start + "&query=" + q).get("channels").asArray().get(0).asObject();
                 start += LENGTH;
                 if (start >= MAX_RECORDS)
                     done = true;
-                JsonArray results = json.get("items").asArray();
-                for (JsonValue jv : results) {
-                    rv.add(jv.asObject().get("description").asString());
+                JSONArray results = json.get("items").asArray();
+                for (JSONValue jv : results) {
+                    rv.add(jv.asObject().get("description").asString().value());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
