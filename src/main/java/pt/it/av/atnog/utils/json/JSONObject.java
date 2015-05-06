@@ -23,7 +23,7 @@ public class JSONObject extends JSONValue {
         int n = 0;
         try {
             while ((n = reader.read()) != -1) {
-                if (state.peek() != previous) {
+                /*if (state.peek() != previous) {
                     int space = 0;
                     if (state.peek() == STATE.JARRAY)
                         space = arrays.size();
@@ -33,7 +33,7 @@ public class JSONObject extends JSONValue {
                         System.err.print("  ");
                     System.err.println(state.peek().name());
                     previous = state.peek();
-                }
+                }*/
                 char c = (char) n;
                 switch (state.peek()) {
                     case BEGIN:
@@ -258,19 +258,14 @@ public class JSONObject extends JSONValue {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        int space = 0;
+        /*int space = 0;
         if (state.peek() == STATE.JARRAY)
             space = arrays.size();
         else
             space = objects.size();
         for (int i = 0; i < space; i++)
             System.err.print("  ");
-        System.err.println(state.peek().name());
-
-
-
+        System.err.println(state.peek().name());*/
         return root;
     }
 
