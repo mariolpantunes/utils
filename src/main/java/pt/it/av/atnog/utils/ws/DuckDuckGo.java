@@ -25,8 +25,10 @@ public class DuckDuckGo implements SearchEngine {
         List<String> rv = new ArrayList<>();
         try {
             JSONObject json = HTTP.getJSON("http://api.duckduckgo.com/?format=json&q=" + qURL);
+            System.err.println("http://api.duckduckgo.com/?format=json&q=" + qURL);
+            System.err.println(json);
             JSONArray results = json.get("RelatedTopics").asArray();
-            String text = json.get("AbstractText").asString().value();
+            String text = json.get("Abstract").asString().value();
             if (text != null)
                 rv.add(text);
             for (JSONValue jv : results) {

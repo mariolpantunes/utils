@@ -20,7 +20,15 @@ public class JSONArray extends JSONValue implements Iterable<JSONValue> {
 
     @Override
     public void toString(StringBuilder sb) {
-
+        sb.append("[");
+        int i = 0;
+        for (int t = list.size() - 1; i < t; i++) {
+            list.get(i).toString(sb);
+            sb.append(",");
+        }
+        if (list.size() > 0)
+            list.get(i).toString(sb);
+        sb.append("]");
     }
 
     public Iterator<JSONValue> iterator() {

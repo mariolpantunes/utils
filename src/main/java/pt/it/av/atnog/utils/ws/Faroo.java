@@ -27,6 +27,7 @@ public class Faroo implements SearchEngine {
         while (!done) {
             try {
                 JSONObject json = HTTP.getJSON(url(q, start));
+
                 if (start * LENGTH >= json.get("count").asNumber().value())
                     done = true;
                 else

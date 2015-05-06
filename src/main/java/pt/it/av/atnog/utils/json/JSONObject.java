@@ -22,7 +22,7 @@ public class JSONObject extends JSONValue {
         STATE previous = null;
         int n = 0;
         try {
-            while ((n = reader.read()) != -1 && state.peek() != STATE.ERROR) {
+            while ((n = reader.read()) != -1) {
                 if (state.peek() != previous) {
                     int space = 0;
                     if (state.peek() == STATE.JARRAY)
@@ -80,7 +80,7 @@ public class JSONObject extends JSONValue {
                     case KEY:
                         switch (c) {
                             case '"':
-                                if (name.charAt(name.length() - 1) != '\\') {
+                                if (!isEscaped(name)) {
                                     state.pop();
                                     state.push(STATE.COLON);
                                 } else
@@ -95,16 +95,47 @@ public class JSONObject extends JSONValue {
                         switch (c) {
                             case ':':
                                 state.pop();
-                                state.push(STATE.VALUE);
+                                state.push(STATE.PRE_VALUE);
                                 break;
+                        }
+                        break;
+                    case PRE_VALUE:
+                        if (!Character.isWhitespace(c)) {
+                            switch (c) {
+                                case '"':
+                                    state.pop();
+                                    state.push(STATE.JSTRING);
+                                    value.setLength(0);
+                                    break;
+                                case '{': {
+                                    JSONObject j = new JSONObject();
+                                    objects.peek().map.put(name.toString(), j);
+                                    objects.push(j);
+                                    state.pop();
+                                    state.push(STATE.JSON);
+                                    name.setLength(0);
+                                    break;
+                                }
+                                case '[': {
+                                    JSONArray j = new JSONArray();
+                                    objects.peek().map.put(name.toString(), j);
+                                    arrays.push(j);
+                                    state.pop();
+                                    state.push(STATE.JARRAY);
+                                    name.setLength(0);
+                                    value.setLength(0);
+                                    break;
+                                }
+                                default:
+                                    state.pop();
+                                    state.push(STATE.VALUE);
+                                    value.append(c);
+                                    break;
+                            }
                         }
                         break;
                     case VALUE:
                         switch (c) {
-                            case '"':
-                                state.pop();
-                                state.push(STATE.JSTRING);
-                                break;
                             case ',':
                                 objects.peek().map.put(name.toString(), factory(value));
                                 state.pop();
@@ -113,15 +144,6 @@ public class JSONObject extends JSONValue {
                                 name.setLength(0);
                                 value.setLength(0);
                                 break;
-                            case '{': {
-                                JSONObject j = new JSONObject();
-                                objects.peek().map.put(name.toString(), j);
-                                objects.push(j);
-                                state.pop();
-                                state.push(STATE.JSON);
-                                name.setLength(0);
-                                break;
-                            }
                             case '}': {
                                 JSONValue j = factory(value);
                                 objects.peek().map.put(name.toString(), j);
@@ -136,15 +158,6 @@ public class JSONObject extends JSONValue {
                                 value.setLength(0);
                                 break;
                             }
-                            case '[': {
-                                JSONArray j = new JSONArray();
-                                objects.peek().map.put(name.toString(), j);
-                                arrays.push(j);
-                                state.pop();
-                                state.push(STATE.JARRAY);
-                                name.setLength(0);
-                                break;
-                            }
                             default:
                                 value.append(c);
                                 break;
@@ -153,13 +166,13 @@ public class JSONObject extends JSONValue {
                     case JSTRING:
                         switch (c) {
                             case '"':
-                                if (value.charAt(value.length() - 1) != '\\') {
+                                if (!isEscaped(value)) {
                                     state.pop();
                                     if (state.peek() == STATE.ROOT || state.peek() == STATE.JSON) {
-                                        objects.peek().map.put(name.toString(), factory(value));
+                                        objects.peek().map.put(name.toString(), new JSONString(value.toString()));
                                         name.setLength(0);
                                     } else if (state.peek() == STATE.JARRAY)
-                                        arrays.peek().add(factory(value));
+                                        arrays.peek().add(new JSONString(value.toString()));
                                     value.setLength(0);
                                     state.push(STATE.COMMA);
                                 } else
@@ -208,10 +221,12 @@ public class JSONObject extends JSONValue {
                                 arrays.peek().add(j);
                                 arrays.push(j);
                                 state.push(STATE.JARRAY);
+                                value.setLength(0);
                                 break;
                             }
                             case ']':
                                 if (value.length() > 0) {
+                                    System.err.println("Value: " + value.toString());
                                     arrays.peek().add(factory(value));
                                     value.setLength(0);
                                 }
@@ -244,11 +259,46 @@ public class JSONObject extends JSONValue {
             e.printStackTrace();
         }
 
+
+        int space = 0;
+        if (state.peek() == STATE.JARRAY)
+            space = arrays.size();
+        else
+            space = objects.size();
+        for (int i = 0; i < space; i++)
+            System.err.print("  ");
+        System.err.println(state.peek().name());
+
+
+
         return root;
     }
 
+    private static boolean isEscaped(StringBuilder sb) {
+        boolean rv = false;
+        if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\\')
+            rv = true;
+        return rv;
+    }
+
     private static JSONValue factory(StringBuilder sb) {
-        return new JSONString(sb.toString());
+        JSONValue rv = null;
+        String s = sb.toString().trim();
+        switch (s) {
+            case "true":
+                rv = new JSONBoolean(true);
+                break;
+            case "false":
+                rv = new JSONBoolean(false);
+                break;
+            case "null":
+                rv = new JSONNull();
+                break;
+            default:
+                rv = new JSONNumber(Double.parseDouble(s));
+                break;
+        }
+        return rv;
     }
 
     public JSONValue get(String name) {
@@ -300,5 +350,5 @@ public class JSONObject extends JSONValue {
         return sb.toString();
     }
 
-    private enum STATE {BEGIN, ROOT, JSON, PRE_KEY, KEY, COLON, COMMA, VALUE, JSTRING, JARRAY, END, ERROR}
+    private enum STATE {BEGIN, ROOT, JSON, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, JSTRING, JARRAY, END, ERROR}
 }

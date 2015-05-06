@@ -12,9 +12,6 @@ public class StringUtils {
                 case '\"':
                     sb.append("\\\"");
                     break;
-                case '/':
-                    sb.append("\\/");
-                    break;
                 case '\\':
                     sb.append("\\\\");
                     break;
@@ -49,9 +46,6 @@ public class StringUtils {
                 switch (array[i]) {
                     case '\"':
                         sb.append("\"");
-                        break;
-                    case '/':
-                        sb.append("/");
                         break;
                     case '\\':
                         sb.append("\\");
