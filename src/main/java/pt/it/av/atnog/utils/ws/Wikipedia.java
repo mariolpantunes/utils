@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
 import pt.it.av.atnog.utils.json.JSONObject;
+import pt.it.av.atnog.utils.ws.search.SearchEngine;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;

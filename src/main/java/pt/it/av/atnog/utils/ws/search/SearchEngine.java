@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.ws;
+package pt.it.av.atnog.utils.ws.search;
 
 import java.util.List;
 

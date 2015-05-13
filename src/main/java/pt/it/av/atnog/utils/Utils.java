@@ -210,15 +210,17 @@ public class Utils {
         int i = left;
         for (; i < right; i++)
             System.out.print(array[i] + "; ");
-        System.out.println(array[i] + "]");
+        if (right >= left)
+            System.out.println(array[i] + "]");
     }
 
     public static void printList(List l) {
         System.out.print("[");
         int i = 0;
-        for (; i < l.size() - 1; i++)
+        for (int t = l.size() - 1; i < t; i++)
             System.out.print(l.get(i).toString() + "; ");
-        System.out.println(l.get(i) + "]");
+        if (!l.isEmpty())
+            System.out.println(l.get(i) + "]");
     }
 
     public static <K, V> void printMap(Map<K, V> map) {

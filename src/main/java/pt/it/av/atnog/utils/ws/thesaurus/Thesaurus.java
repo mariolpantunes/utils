@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.ws;
+package pt.it.av.atnog.utils.ws.thesaurus;
 
 import java.util.List;
 
@@ -7,4 +7,6 @@ import java.util.List;
  */
 public interface Thesaurus {
     List<String> synonyms(String s);
+
+    List<String> antonyms(String s);
 }

@@ -296,6 +296,10 @@ public class JSONObject extends JSONValue {
         return rv;
     }
 
+    public boolean contains(String name) {
+        return map.containsKey(name);
+    }
+
     public JSONValue get(String name) {
         return map.get(name);
     }

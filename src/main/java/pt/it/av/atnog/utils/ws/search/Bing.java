@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.ws;
+package pt.it.av.atnog.utils.ws.search;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
