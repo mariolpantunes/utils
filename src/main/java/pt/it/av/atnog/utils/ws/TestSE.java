@@ -13,11 +13,11 @@ import java.util.List;
 
 public class TestSE {
     public static void main(String[] args) throws Exception {
-        JSONObject config = JSONObject.parse(new BufferedReader(new InputStreamReader(new FileInputStream("ws.json"))));
+        JSONObject config = JSONObject.read(new BufferedReader(new InputStreamReader(new FileInputStream("ws.json"))));
 
-        String w = "peace";
+        String w = "good";
 
-        Thesaurus t = new BigHugeThesaurus(config.get("bighugethesaurus").asString().value());
+        Thesaurus t = new BigHugeThesaurus(config.get("bighugethesaurus").asString());
         //Thesaurus t = new Altervista(config.get("altervista").asString().value());
         List<String> syn = t.synonyms(w);
         System.out.println("Results: " + syn.size());

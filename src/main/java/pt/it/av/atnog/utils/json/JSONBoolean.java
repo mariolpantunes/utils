@@ -1,20 +1,23 @@
 package pt.it.av.atnog.utils.json;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /**
  * Created by mantunes on 5/5/15.
  */
 public class JSONBoolean extends JSONValue {
-    private final boolean b;
+    protected final boolean b;
 
     public JSONBoolean(final boolean b) {
         this.b = b;
     }
 
     @Override
-    public void toString(StringBuilder sb) {
+    public void write(Writer w) throws IOException {
         if (b)
-            sb.append("true");
+            w.append("true");
         else
-            sb.append("false");
+            w.append("false");
     }
 }

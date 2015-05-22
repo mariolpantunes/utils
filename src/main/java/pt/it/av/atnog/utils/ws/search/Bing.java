@@ -39,7 +39,7 @@ public class Bing implements SearchEngine {
                 JSONArray results = json.get("results").asArray();
                 for (JSONValue jv : results) {
                     try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("Url").asString().value()));
+                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("Url").asString()));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
                         //e.printStackTrace();
@@ -69,7 +69,7 @@ public class Bing implements SearchEngine {
                     done = true;
                 JSONArray results = json.get("results").asArray();
                 for (JSONValue jv : results)
-                    rv.add(jv.asObject().get("Description").asString().value());
+                    rv.add(jv.asObject().get("Description").asString());
 
             } catch (Exception e) {
                 done = true;

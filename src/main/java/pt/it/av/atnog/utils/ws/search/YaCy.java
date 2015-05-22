@@ -31,7 +31,7 @@ public class YaCy implements SearchEngine {
                 JSONArray results = json.get("items").asArray();
                 for (JSONValue jv : results) {
                     try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("link").asString().value()));
+                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("link").asString()));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
                         //e.printStackTrace();
@@ -59,7 +59,7 @@ public class YaCy implements SearchEngine {
                     done = true;
                 JSONArray results = json.get("items").asArray();
                 for (JSONValue jv : results) {
-                    rv.add(jv.asObject().get("description").asString().value());
+                    rv.add(jv.asObject().get("description").asString());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

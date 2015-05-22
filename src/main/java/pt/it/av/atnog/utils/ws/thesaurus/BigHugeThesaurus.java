@@ -24,21 +24,24 @@ public class BigHugeThesaurus implements Thesaurus {
         List<String> rv = new ArrayList<>();
         try {
             JSONObject json = HTTP.getJSON("http://words.bighugelabs.com/api/" + VERSION + "/" + key + "/" + s + "/json");
-            System.err.println("http://words.bighugelabs.com/api/" + VERSION + "/" + key + "/" + s + "/json");
 
             if (json.contains("noun")) {
                 JSONObject noun = json.get("noun").asObject();
                 if (noun.contains("syn")) {
                     JSONArray syn = noun.get("syn").asArray();
                     for (JSONValue j : syn)
-                        rv.add(j.asString().value());
+                        rv.add(j.asString());
                 }
             }
 
-            if (json.contains("adjective")) {
+            /*if (json.contains("adjective")) {
                 JSONObject adjective = json.get("adjective").asObject();
-
-            }
+                if (adjective.contains("syn")) {
+                    JSONArray syn = adjective.get("syn").asArray();
+                    for (JSONValue j : syn)
+                        rv.add(j.asString().value());
+                }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,20 +53,23 @@ public class BigHugeThesaurus implements Thesaurus {
         List<String> rv = new ArrayList<>();
         try {
             JSONObject json = HTTP.getJSON("http://words.bighugelabs.com/api/" + VERSION + "/" + key + "/" + s + "/json");
-            System.err.println("http://words.bighugelabs.com/api/" + VERSION + "/" + key + "/" + s + "/json");
 
             if (json.contains("noun")) {
                 JSONObject noun = json.get("noun").asObject();
                 if (noun.contains("ant")) {
                     JSONArray syn = noun.get("ant").asArray();
                     for (JSONValue j : syn)
-                        rv.add(j.asString().value());
+                        rv.add(j.asString());
                 }
             }
 
             if (json.contains("adjective")) {
                 JSONObject adjective = json.get("adjective").asObject();
-
+                if (adjective.contains("ant")) {
+                    JSONArray syn = adjective.get("ant").asArray();
+                    for (JSONValue j : syn)
+                        rv.add(j.asString());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

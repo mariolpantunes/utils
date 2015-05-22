@@ -1,10 +1,13 @@
 package pt.it.av.atnog.utils.json;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /**
  * Created by mantunes on 3/30/15.
  */
 public class JSONNumber extends JSONValue {
-    private final double n;
+    protected final double n;
 
     public JSONNumber(double n) {
         this.n = n;
@@ -15,7 +18,7 @@ public class JSONNumber extends JSONValue {
     }
 
     @Override
-    public void toString(StringBuilder sb) {
-        sb.append(n);
+    public void write(Writer w) throws IOException {
+        w.append(String.valueOf(n));
     }
 }

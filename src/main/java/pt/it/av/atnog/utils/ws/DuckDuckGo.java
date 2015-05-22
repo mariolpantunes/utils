@@ -27,12 +27,12 @@ public class DuckDuckGo implements SearchEngine {
         try {
             JSONObject json = HTTP.getJSON("http://api.duckduckgo.com/?format=json&q=" + qURL);
             JSONArray results = json.get("RelatedTopics").asArray();
-            String text = json.get("AbstractText").asString().value();
+            String text = json.get("AbstractText").asString();
             if (text != null)
                 rv.add(text);
             for (JSONValue jv : results) {
                 try {
-                    rv.add(jv.asObject().get("Text").asString().value());
+                    rv.add(jv.asObject().get("Text").asString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

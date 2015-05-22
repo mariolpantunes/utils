@@ -1,5 +1,7 @@
 package pt.it.av.atnog.utils.json;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,25 +12,33 @@ import java.util.List;
 public class JSONArray extends JSONValue implements Iterable<JSONValue> {
     private final List<JSONValue> list = new ArrayList<>();
 
-    public void add(JSONValue value) {
+    public void add(final JSONValue value) {
         list.add(value);
     }
 
-    public JSONValue get(int idx) {
+    public void add(final String s) {
+        add(new JSONString(s));
+    }
+
+    public JSONValue get(final int idx) {
         return list.get(idx);
     }
 
+    public int size() {
+        return list.size();
+    }
+
     @Override
-    public void toString(StringBuilder sb) {
-        sb.append("[");
-        int i = 0;
-        for (int t = list.size() - 1; i < t; i++) {
-            list.get(i).toString(sb);
-            sb.append(",");
+    public void write(Writer w) throws IOException {
+        w.append("[");
+        int i = 0, t = list.size() - 1;
+        for (; i < t; i++) {
+            list.get(i).write(w);
+            w.append(",");
         }
-        if (list.size() > 0)
-            list.get(i).toString(sb);
-        sb.append("]");
+        if (t >= 0)
+            list.get(i).write(w);
+        w.append("]");
     }
 
     public Iterator<JSONValue> iterator() {

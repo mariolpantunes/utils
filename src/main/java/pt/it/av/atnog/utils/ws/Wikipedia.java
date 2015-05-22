@@ -31,7 +31,7 @@ public class Wikipedia implements SearchEngine {
                 json = json.get("query").asObject().get("pages").asObject();
                 for (String name : json.names()) {
                     try {
-                        long pageid = (long) json.get(name).asObject().get("pageid").asNumber().value();
+                        long pageid = (long) json.get(name).asObject().get("pageid").asNumber();
                         Document doc = Jsoup.parse(HTTP.get("http://en.wikipedia.org/?curid=" + pageid));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
@@ -65,7 +65,7 @@ public class Wikipedia implements SearchEngine {
                 json = json.get("query").asObject().get("pages").asObject();
                 for (String name : json.names()) {
                     try {
-                        rv.add(json.get(name).asObject().get("extract").asString().value());
+                        rv.add(json.get(name).asObject().get("extract").asString());
                     } catch (Exception e) {
                         //e.printStackTrace();
                     }

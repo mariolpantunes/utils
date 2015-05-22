@@ -124,7 +124,7 @@ public class HTTP {
             con.setRequestProperty("User-Agent", "");
             con.connect();
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK)
-                rv = JSONObject.parse(new BufferedReader(new InputStreamReader(inputStream(con))));
+                rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(con))));
         } finally {
             if (con != null)
                 con.disconnect();
@@ -151,7 +151,7 @@ public class HTTP {
             con.setRequestProperty("User-Agent", "");
             con.connect();
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK)
-                rv = JSONObject.parse(new BufferedReader(new InputStreamReader(inputStream(con))));
+                rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(con))));
         } finally {
             if (con != null)
                 con.disconnect();

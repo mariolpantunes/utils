@@ -28,14 +28,14 @@ public class Faroo implements SearchEngine {
             try {
                 JSONObject json = HTTP.getJSON(url(q, start));
 
-                if (start * LENGTH >= json.get("count").asNumber().value())
+                if (start * LENGTH >= json.get("count").asNumber())
                     done = true;
                 else
                     start++;
                 JSONArray results = json.get("results").asArray();
                 for (JSONValue jv : results) {
                     try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString().value()));
+                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString()));
                         rv.add(doc.body().text());
                     } catch (Exception e) {
                         //e.printStackTrace();
@@ -59,9 +59,9 @@ public class Faroo implements SearchEngine {
                 JSONObject json = HTTP.getJSON(url(q, start));
                 JSONArray results = json.get("results").asArray();
                 for (JSONValue jv : results) {
-                    rv.add(jv.asObject().get("kwic").asString().value());
+                    rv.add(jv.asObject().get("kwic").asString());
                 }
-                if (start * LENGTH >= json.get("count").asNumber().value())
+                if (start * LENGTH >= json.get("count").asNumber())
                     done = true;
                 else
                     start++;
