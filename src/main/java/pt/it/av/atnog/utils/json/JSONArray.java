@@ -20,6 +20,10 @@ public class JSONArray extends JSONValue implements Iterable<JSONValue> {
         add(new JSONString(s));
     }
 
+    public void add(double n) {
+        add(new JSONNumber(n));
+    }
+
     public JSONValue get(final int idx) {
         return list.get(idx);
     }

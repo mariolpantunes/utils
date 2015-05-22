@@ -5,6 +5,18 @@ package pt.it.av.atnog.utils;
  */
 public class StatisticsUtils {
 
+    public static double average(double s0, double s1) {
+        return s1 / s0;
+    }
+
+    public static double standartDeviation(double s0, double s1, double s2) {
+        return Math.sqrt((s0 * s2 - s1 * s1) / (s0 * (s0 - 1)));
+    }
+
+    public static double itemsPerSecond(double s0, double s1) {
+        return s0 / s1;
+    }
+
     public static double precision(double TP, double FP) {
         double rv = 0.0;
         if (TP > 0)

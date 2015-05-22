@@ -2,7 +2,7 @@ package pt.it.av.atnog.utils.bla;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import pt.it.av.atnog.utils.Utils;
+import pt.it.av.atnog.utils.MathUtils;
 
 import static org.junit.Assert.assertTrue;
 
@@ -77,8 +77,8 @@ public class VectorTest {
 
     @Test
     public void test_correlation() {
-        assertTrue(Utils.equals(B.corr(C), 0.96825, 0.001));
-        assertTrue(Utils.equals(B.corr(D), -0.87142, 0.001));
-        assertTrue(Utils.equals(C.corr(D), -0.95, 0.001));
+        assertTrue(MathUtils.equals(B.corr(C), 0.96825, 0.001));
+        assertTrue(MathUtils.equals(B.corr(D), -0.87142, 0.001));
+        assertTrue(MathUtils.equals(C.corr(D), -0.95, 0.001));
     }
 }

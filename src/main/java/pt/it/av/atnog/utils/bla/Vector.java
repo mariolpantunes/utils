@@ -1,6 +1,6 @@
 package pt.it.av.atnog.utils.bla;
 
-import pt.it.av.atnog.utils.Utils;
+import pt.it.av.atnog.utils.MathUtils;
 
 /**
  * Created by mantunes on 11/26/14.
@@ -34,7 +34,7 @@ public class Vector {
     public static Vector rand(int length) {
         Vector b = new Vector(length);
         for (int n = 0; n < length; n++)
-            b.data[n + b.bIdx] = Utils.randomBetween(0, 10);
+            b.data[n + b.bIdx] = MathUtils.randomBetween(0, 10);
         return b;
     }
 
@@ -157,7 +157,7 @@ public class Vector {
     public double norm(int p) {
         double norm = 0.0;
         for (int i = 0; i < length; i++)
-            norm = Utils.norm(norm, data[bIdx + i], p);
+            norm = MathUtils.norm(norm, data[bIdx + i], p);
         return norm;
     }
 

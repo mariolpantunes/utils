@@ -1,8 +1,8 @@
 package pt.it.av.atnog.utils.bla;
 
 import org.junit.Test;
+import pt.it.av.atnog.utils.MathUtils;
 import pt.it.av.atnog.utils.StatisticsUtils;
-import pt.it.av.atnog.utils.Utils;
 
 import static org.junit.Assert.assertTrue;
 
@@ -21,6 +21,6 @@ public class StatisticUtilsTest {
         v[4] = true;
         v[5] = true;
         double ap = StatisticsUtils.averagePrecision(v);
-        assertTrue(Utils.equals(ap, 0.6917, 0.0001));
+        assertTrue(MathUtils.equals(ap, 0.6917, 0.0001));
     }
 }

@@ -25,6 +25,22 @@ public abstract class JSONValue {
         return ((JSONNumber) this).n;
     }
 
+    public int asInt() {
+        return (int) ((JSONNumber) this).n;
+    }
+
+    public long asLong() {
+        return (long) ((JSONNumber) this).n;
+    }
+
+    public float asFloat() {
+        return (float) ((JSONNumber) this).n;
+    }
+
+    public double asDouble() {
+        return asNumber();
+    }
+
     public boolean asBoolean() {
         return ((JSONBoolean) this).b;
     }

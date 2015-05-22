@@ -1,6 +1,7 @@
 package pt.it.av.atnog.utils.bla;
 
-import pt.it.av.atnog.utils.Utils;
+import pt.it.av.atnog.utils.MathUtils;
+import pt.it.av.atnog.utils.PrintUtils;
 import pt.it.av.atnog.utils.parallel.ThreadPool;
 import pt.it.av.atnog.utils.structures.tuple.Quad;
 
@@ -39,7 +40,7 @@ public class Matrix {
     public static Matrix rand(int rows, int columns) {
         Matrix C = new Matrix(rows, columns);
         for (int n = 0; n < rows * columns; n++)
-            C.data[n] = Utils.randomBetween(0, 10);
+            C.data[n] = MathUtils.randomBetween(0, 10);
         return C;
     }
 
@@ -329,7 +330,7 @@ public class Matrix {
         double diag[] = UDV[1].diagArray(0);
         double lambda[] = new double[diag.length],
                 mu[] = new double[diag.length];
-        Utils.printArray(diag);
+        PrintUtils.printArray(diag);
         lambda[diag.length - 1] = Math.abs(diag[diag.length - 1]);
 
         for (int i = diag.length - 1; i > 0; i--)
