@@ -19,26 +19,14 @@ public class JSONObject extends JSONValue {
         JSONObject root = new JSONObject();
         char buffer[] = new char[LENGTH];
         Deque<STATE> state = new ArrayDeque<>();
-        Deque<JSONObject> objects = new ArrayDeque<>();
-        Deque<JSONArray> arrays = new ArrayDeque<>();
+        Deque<JSONValue> store = new ArrayDeque<>();
+        //Deque<JSONArray> arrays = new ArrayDeque<>();
         state.push(STATE.BEGIN);
         StringBuilder name = new StringBuilder(), value = new StringBuilder();
-        STATE previous = null;
-        int t = 0;
+        int t = 0, i = 0;
         try {
             while ((t = r.read(buffer)) != -1) {
-                /*if (state.peek() != previous) {
-                    int space = 0;
-                    if (state.peek() == STATE.JARRAY)
-                        space = arrays.size();
-                    else
-                        space = objects.size();
-                    for (int i = 0; i < space; i++)
-                        System.err.print("  ");
-                    System.err.println(state.peek().name());
-                    previous = state.peek();
-                }*/
-                for (int i = 0; i < t; i++) {
+                for (i = 0; i < t; i++) {
                     switch (state.peek()) {
                         case BEGIN:
                             switch (buffer[i]) {
@@ -46,7 +34,7 @@ public class JSONObject extends JSONValue {
                                     state.pop();
                                     state.push(STATE.END);
                                     state.push(STATE.ROOT);
-                                    objects.push(root);
+                                    store.push(root);
                                     break;
                             }
                             break;
@@ -56,18 +44,18 @@ public class JSONObject extends JSONValue {
                                     state.push(STATE.KEY);
                                     break;
                                 case '}':
-                                    objects.pop();
+                                    store.pop();
                                     state.pop();
                                     break;
                             }
                             break;
-                        case JSON:
+                        case OBJECT:
                             switch (buffer[i]) {
                                 case '"':
                                     state.push(STATE.KEY);
                                     break;
                                 case '}':
-                                    objects.pop();
+                                    store.pop();
                                     state.pop();
                                     state.push(STATE.COMMA);
                                     break;
@@ -108,24 +96,31 @@ public class JSONObject extends JSONValue {
                                 switch (buffer[i]) {
                                     case '"':
                                         state.pop();
-                                        state.push(STATE.JSTRING);
+                                        state.push(STATE.STRING);
                                         value.setLength(0);
                                         break;
                                     case '{': {
-                                        JSONObject j = new JSONObject();
-                                        objects.peek().map.put(name.toString(), j);
-                                        objects.push(j);
                                         state.pop();
-                                        state.push(STATE.JSON);
+                                        JSONObject j = new JSONObject();
+                                        if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT)
+                                            ((JSONObject) store.peek()).add(name.toString(), j);
+                                        else if (state.peek() == STATE.ARRAY)
+                                            ((JSONArray) store.peek()).add(j);
+                                        store.push(j);
+                                        state.push(STATE.OBJECT);
                                         name.setLength(0);
                                         break;
                                     }
                                     case '[': {
-                                        JSONArray j = new JSONArray();
-                                        objects.peek().map.put(name.toString(), j);
-                                        arrays.push(j);
                                         state.pop();
-                                        state.push(STATE.JARRAY);
+                                        JSONArray j = new JSONArray();
+                                        if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT)
+                                            ((JSONObject) store.peek()).add(name.toString(), j);
+                                        else if (state.peek() == STATE.ARRAY)
+                                            ((JSONArray) store.peek()).add(j);
+                                        store.push(j);
+                                        state.push(STATE.ARRAY);
+                                        state.push(STATE.PRE_VALUE);
                                         name.setLength(0);
                                         value.setLength(0);
                                         break;
@@ -141,24 +136,36 @@ public class JSONObject extends JSONValue {
                         case VALUE:
                             switch (buffer[i]) {
                                 case ',':
-                                    objects.peek().map.put(name.toString(), factory(value));
                                     state.pop();
-                                    if (state.peek() == STATE.ROOT || state.peek() == STATE.JSON)
+                                    if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT) {
+                                        ((JSONObject) store.peek()).add(name.toString(), factory(value));
                                         state.push(STATE.PRE_KEY);
-                                    name.setLength(0);
+                                        name.setLength(0);
+                                    } else if (state.peek() == STATE.ARRAY) {
+                                        ((JSONArray) store.peek()).add(factory(value));
+                                        state.push(STATE.PRE_VALUE);
+                                    } else {
+                                        System.err.println("MERDA-----");
+                                    }
                                     value.setLength(0);
                                     break;
                                 case '}': {
-                                    JSONValue j = factory(value);
-                                    objects.peek().map.put(name.toString(), j);
-                                    objects.pop();
                                     state.pop();
+                                    ((JSONObject) store.peek()).add(name.toString(), factory(value));
                                     state.pop();
-                                    if (state.peek() == STATE.JSON || state.peek() == STATE.JARRAY)
+                                    store.pop();
+                                    if (state.peek() == STATE.OBJECT || state.peek() == STATE.ARRAY)
                                         state.push(STATE.COMMA);
-                                    else
-                                        state.pop();
                                     name.setLength(0);
+                                    value.setLength(0);
+                                    break;
+                                }
+                                case ']': {
+                                    state.pop();
+                                    ((JSONArray) store.peek()).add(factory(value));
+                                    state.pop();
+                                    store.pop();
+                                    state.push(STATE.COMMA);
                                     value.setLength(0);
                                     break;
                                 }
@@ -167,16 +174,17 @@ public class JSONObject extends JSONValue {
                                     break;
                             }
                             break;
-                        case JSTRING:
+                        case STRING:
                             switch (buffer[i]) {
                                 case '"':
                                     if (!isEscaped(value)) {
                                         state.pop();
-                                        if (state.peek() == STATE.ROOT || state.peek() == STATE.JSON) {
-                                            objects.peek().map.put(name.toString(), new JSONString(value.toString()));
+                                        if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT) {
+                                            ((JSONObject) store.peek()).add(name.toString(),
+                                                    new JSONString(value.toString()));
                                             name.setLength(0);
-                                        } else if (state.peek() == STATE.JARRAY)
-                                            arrays.peek().add(new JSONString(value.toString()));
+                                        } else if (state.peek() == STATE.ARRAY)
+                                            ((JSONArray) store.peek()).add(new JSONString(value.toString()));
                                         value.setLength(0);
                                         state.push(STATE.COMMA);
                                     } else
@@ -191,67 +199,27 @@ public class JSONObject extends JSONValue {
                             switch (buffer[i]) {
                                 case ',':
                                     state.pop();
-                                    if (state.peek() == STATE.ROOT || state.peek() == STATE.JSON)
+                                    if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT)
                                         state.push(STATE.PRE_KEY);
+                                    else if (state.peek() == STATE.ARRAY)
+                                        state.push(STATE.PRE_VALUE);
                                     break;
                                 case '}':
                                     state.pop();
-                                    if (state.peek() == STATE.JSON) {
-                                        objects.pop();
-                                        state.pop();
+                                    store.pop();
+                                    state.pop();
+                                    if (state.peek() == STATE.OBJECT)
                                         state.push(STATE.COMMA);
-                                    } else if (state.peek() == STATE.ROOT) {
-                                        objects.pop();
-                                        state.pop();
-                                    }
                                     break;
                                 case ']':
                                     state.pop();
-                                    if (state.peek() == STATE.JARRAY) {
-                                        arrays.pop();
-                                        state.pop();
-                                        state.push(STATE.COMMA);
-                                    }
-                                    break;
-                            }
-                            break;
-                        case JARRAY:
-                            switch (buffer[i]) {
-                                case '"':
-                                    state.push(STATE.JSTRING);
-                                    break;
-                                case '[': {
-                                    JSONArray j = new JSONArray();
-                                    arrays.peek().add(j);
-                                    arrays.push(j);
-                                    state.push(STATE.JARRAY);
-                                    value.setLength(0);
-                                    break;
-                                }
-                                case ']':
-                                    if (value.length() > 0) {
-                                        System.err.println("Value: " + value.toString());
-                                        arrays.peek().add(factory(value));
-                                        value.setLength(0);
-                                    }
-                                    arrays.pop();
+                                    store.pop();
                                     state.pop();
                                     state.push(STATE.COMMA);
                                     break;
-                                case ',':
-                                    if (value.length() > 0) {
-                                        arrays.peek().add(factory(value));
-                                        value.setLength(0);
-                                    }
-                                    break;
-                                case '{': {
-                                    JSONObject j = new JSONObject();
-                                    arrays.peek().add(j);
-                                    objects.push(j);
-                                    state.push(STATE.JSON);
-                                    break;
-                                }
                             }
+                            break;
+                        case ARRAY:
                             break;
                         case END:
                             break;
@@ -260,19 +228,19 @@ public class JSONObject extends JSONValue {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.err.println("BUFFER: " + new String(buffer));
+            System.err.println(root);
             e.printStackTrace();
         }
-        /*int space = 0;
-        if (state.peek() == STATE.JARRAY)
-            space = arrays.size();
-        else
-            space = objects.size();
-        for (int i = 0; i < space; i++)
-            System.err.print("  ");
-        System.err.println(state.peek().name());*/
 
         if (state.peek() != STATE.END) {
+            System.err.println("BUFFER: " + new String(buffer));
+            System.err.println(root);
+            while (!state.isEmpty()) {
+                System.err.println("STATE -> " + state.peek().name());
+                state.pop();
+            }
             root.clear();
             throw new IOException();
         }
@@ -367,5 +335,5 @@ public class JSONObject extends JSONValue {
         return sw.toString();
     }
 
-    private enum STATE {BEGIN, ROOT, JSON, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, JSTRING, JARRAY, END, ERROR}
+    private enum STATE {BEGIN, ROOT, OBJECT, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, STRING, ARRAY, END, ERROR}
 }
