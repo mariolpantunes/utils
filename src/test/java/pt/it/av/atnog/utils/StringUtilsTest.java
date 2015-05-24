@@ -1,7 +1,6 @@
-package pt.it.av.atnog.utils.bla;
+package pt.it.av.atnog.utils;
 
 import org.junit.Test;
-import pt.it.av.atnog.utils.StringUtils;
 
 import static org.junit.Assert.assertTrue;
 

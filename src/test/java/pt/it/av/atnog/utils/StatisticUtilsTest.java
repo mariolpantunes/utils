@@ -1,8 +1,6 @@
-package pt.it.av.atnog.utils.bla;
+package pt.it.av.atnog.utils;
 
 import org.junit.Test;
-import pt.it.av.atnog.utils.MathUtils;
-import pt.it.av.atnog.utils.StatisticsUtils;
 
 import static org.junit.Assert.assertTrue;
 
@@ -10,7 +8,6 @@ import static org.junit.Assert.assertTrue;
  * Created by mantunes on 4/22/15.
  */
 public class StatisticUtilsTest {
-
     @Test
     public void test_averagePrecision() {
         boolean v[] = new boolean[6];
