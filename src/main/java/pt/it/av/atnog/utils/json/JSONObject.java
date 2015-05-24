@@ -14,19 +14,24 @@ public class JSONObject extends JSONValue {
         return read(new BufferedReader(new StringReader(s)));
     }
 
+    // TODO: imrpove PRE_KEY and ROOT states
     // TODO: improve error detection...
     public static JSONObject read(Reader r) throws IOException {
         JSONObject root = new JSONObject();
         char buffer[] = new char[LENGTH];
         Deque<STATE> state = new ArrayDeque<>();
         Deque<JSONValue> store = new ArrayDeque<>();
-        //Deque<JSONArray> arrays = new ArrayDeque<>();
         state.push(STATE.BEGIN);
         StringBuilder name = new StringBuilder(), value = new StringBuilder();
+        STATE previous = STATE.BEGIN;
         int t = 0, i = 0;
         try {
             while ((t = r.read(buffer)) != -1) {
                 for (i = 0; i < t; i++) {
+                   /* if(state.peek() != previous) {
+                        previous = state.peek();
+                        System.err.println(previous.name()+" -> "+buffer[i]);
+                    }*/
                     switch (state.peek()) {
                         case BEGIN:
                             switch (buffer[i]) {
@@ -109,6 +114,7 @@ public class JSONObject extends JSONValue {
                                         store.push(j);
                                         state.push(STATE.OBJECT);
                                         name.setLength(0);
+                                        value.setLength(0);
                                         break;
                                     }
                                     case '[': {
@@ -144,8 +150,6 @@ public class JSONObject extends JSONValue {
                                     } else if (state.peek() == STATE.ARRAY) {
                                         ((JSONArray) store.peek()).add(factory(value));
                                         state.push(STATE.PRE_VALUE);
-                                    } else {
-                                        System.err.println("MERDA-----");
                                     }
                                     value.setLength(0);
                                     break;
@@ -208,7 +212,7 @@ public class JSONObject extends JSONValue {
                                     state.pop();
                                     store.pop();
                                     state.pop();
-                                    if (state.peek() == STATE.OBJECT)
+                                    if (state.peek() != STATE.END)
                                         state.push(STATE.COMMA);
                                     break;
                                 case ']':
@@ -303,6 +307,10 @@ public class JSONObject extends JSONValue {
         map.clear();
     }
 
+    public int size() {
+        return map.size();
+    }
+
     //TODO: JSONENCODE the names...
     @Override
     public void write(Writer w) throws IOException {
@@ -326,13 +334,33 @@ public class JSONObject extends JSONValue {
 
     @Override
     public String toString() {
-        StringWriter sw = new StringWriter();
+        String s = "";
         try {
+            StringWriter sw = new StringWriter();
             write(sw);
+            s = sw.toString();
+            sw.close();
         } catch (IOException e) {
 
         }
-        return sw.toString();
+        return s.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean rv = false;
+        if (o != null) {
+            if (o == this)
+                rv = true;
+            else if (o instanceof JSONObject) {
+                JSONObject j = (JSONObject) o;
+                if (j.size() == size()) {
+                    rv = map.equals(j.map);
+                } else
+                    rv = false;
+            }
+        }
+        return rv;
     }
 
     private enum STATE {BEGIN, ROOT, OBJECT, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, STRING, ARRAY, END, ERROR}

@@ -21,4 +21,18 @@ public class JSONNumber extends JSONValue {
     public void write(Writer w) throws IOException {
         w.append(String.valueOf(n));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean rv = false;
+        if (o != null) {
+            if (o == this)
+                rv = true;
+            else if (o instanceof JSONNumber) {
+                JSONNumber j = (JSONNumber) o;
+                rv = n == j.n ? true : false;
+            }
+        }
+        return rv;
+    }
 }

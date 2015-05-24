@@ -20,4 +20,18 @@ public class JSONBoolean extends JSONValue {
         else
             w.append("false");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean rv = false;
+        if (o != null) {
+            if (o == this)
+                rv = true;
+            else if (o instanceof JSONBoolean) {
+                JSONBoolean j = (JSONBoolean) o;
+                rv = b == j.b ? true : false;
+            }
+        }
+        return rv;
+    }
 }

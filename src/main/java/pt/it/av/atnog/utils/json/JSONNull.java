@@ -11,4 +11,17 @@ public class JSONNull extends JSONValue {
     public void write(Writer w) throws IOException {
         w.append("null");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean rv = false;
+        if (o != null) {
+            if (o == this)
+                rv = true;
+            else if (o instanceof JSONNull) {
+                rv = true;
+            }
+        }
+        return rv;
+    }
 }

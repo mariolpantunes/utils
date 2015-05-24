@@ -54,9 +54,17 @@ public class JSONObjectTest {
 
     @Test
     public void test_small() throws IOException {
-        JSONObject j = JSONObject.read(new StringReader("{\"friends\":[{\"id\":1,\"name\":\"Corby Page\"},{\"id\":2,\"name\":\"Carter Page\"}]}"));
-        StringWriter w = new StringWriter();
-        j.write(w);
-        assertTrue(w.toString().equals("{\"friends\":[{\"id\":1,\"name\":\"Corby Page\"},{\"id\":2,\"name\":\"Carter Page\"}]}"));
+        JSONObject a = JSONObject.read(new StringReader("{\"friends\":[{\"id\":1,\"name\":\"Corby Page\"},{\"id\":2,\"name\":\"Carter Page\"}]}"));
+        JSONObject b = new JSONObject();
+        JSONArray array = new JSONArray();
+        JSONObject id1 = new JSONObject(), id2 = new JSONObject();
+        id1.add("id", 1);
+        id1.add("name", "Corby Page");
+        id2.add("id", 2);
+        id2.add("name", "Carter Page");
+        array.add(id1);
+        array.add(id2);
+        b.add("friends", array);
+        assertTrue(a.equals(b));
     }
 }

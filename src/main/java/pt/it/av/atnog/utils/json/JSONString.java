@@ -23,4 +23,18 @@ public class JSONString extends JSONValue {
     public void write(Writer w) throws IOException {
         w.append("\"" + StringUtils.escape(s) + "\"");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean rv = false;
+        if (o != null) {
+            if (o == this)
+                rv = true;
+            else if (o instanceof JSONString) {
+                JSONString j = (JSONString) o;
+                rv = s.equals(j.s);
+            }
+        }
+        return rv;
+    }
 }
