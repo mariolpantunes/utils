@@ -25,9 +25,10 @@ public class JSONObject extends JSONValue {
         StringBuilder name = new StringBuilder(), value = new StringBuilder();
         STATE previous = STATE.BEGIN;
         int t = 0, i = 0;
+        boolean done = false;
         try {
-            while ((t = r.read(buffer)) != -1) {
-                for (i = 0; i < t; i++) {
+            while ((t = r.read(buffer)) != -1 && !done) {
+                for (i = 0; i < t && !done; i++) {
                    /* if(state.peek() != previous) {
                         previous = state.peek();
                         System.err.println(previous.name()+" -> "+buffer[i]);
@@ -131,6 +132,16 @@ public class JSONObject extends JSONValue {
                                         value.setLength(0);
                                         break;
                                     }
+                                    case ']': {
+                                        state.pop();
+                                        if (state.peek() == STATE.ARRAY) {
+                                            store.pop();
+                                            state.pop();
+                                            state.push(STATE.COMMA);
+                                        } else
+                                            state.push(STATE.ERROR);
+                                        break;
+                                    }
                                     default:
                                         state.pop();
                                         state.push(STATE.VALUE);
@@ -217,9 +228,12 @@ public class JSONObject extends JSONValue {
                                     break;
                                 case ']':
                                     state.pop();
-                                    store.pop();
-                                    state.pop();
-                                    state.push(STATE.COMMA);
+                                    if (state.peek() == STATE.ARRAY) {
+                                        store.pop();
+                                        state.pop();
+                                        state.push(STATE.COMMA);
+                                    } else
+                                        state.push(STATE.ERROR);
                                     break;
                             }
                             break;
@@ -228,6 +242,7 @@ public class JSONObject extends JSONValue {
                         case END:
                             break;
                         case ERROR:
+                            done = true;
                             break;
                     }
                 }
@@ -246,7 +261,7 @@ public class JSONObject extends JSONValue {
                 state.pop();
             }
             root.clear();
-            throw new IOException();
+            throw new IOException("BUFFER: " + new String(buffer) + " [" + i + "]");
         }
 
         return root;
@@ -297,6 +312,10 @@ public class JSONObject extends JSONValue {
 
     public void add(String name, String value) {
         map.put(name, new JSONString(value));
+    }
+
+    public void add(String name, boolean value) {
+        map.put(name, new JSONBoolean(value));
     }
 
     public Set<String> names() {
