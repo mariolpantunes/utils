@@ -62,7 +62,6 @@ public class Bing implements SearchEngine {
             try {
                 JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
                         "&$skip=" + skip + "&Query=" + qURL, "", key).get("d").asObject();
-                System.err.println(json);
                 if (json.get("__next") != null)
                     skip += LENGTH;
                 else
@@ -70,7 +69,6 @@ public class Bing implements SearchEngine {
                 JSONArray results = json.get("results").asArray();
                 for (JSONValue jv : results)
                     rv.add(jv.asObject().get("Description").asString());
-
             } catch (Exception e) {
                 done = true;
                 e.printStackTrace();

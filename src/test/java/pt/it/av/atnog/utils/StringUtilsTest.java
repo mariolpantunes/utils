@@ -19,4 +19,12 @@ public class StringUtilsTest {
         String origial = "\"banana\"", escaped = "\\\"banana\\\"";
         assertTrue(origial.equals(StringUtils.unescape(escaped)));
     }
+
+    @Test
+    public void test_levenshtein() {
+        assertTrue(StringUtils.levenshtein("kitten", "sitting") == 3);
+        assertTrue(StringUtils.levenshtein("book", "back") == 2);
+        assertTrue(StringUtils.levenshtein("book", "") == 4);
+        assertTrue(StringUtils.levenshtein("zeil", "trials") == 4);
+    }
 }
