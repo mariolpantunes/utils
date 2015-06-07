@@ -10,25 +10,25 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Created by mantunes on 4/15/15.
  */
-// TODO: Verify date and decide when to update results...
-// TODO: this may only be feaseble for snippets, search takes too long.
-// TODO: Maybe searhc can return a valid url
+// TODO: Maybe search operration should return a valid url instead of a string
 public class CachedSearchEngine implements SearchEngine {
     private final SearchEngine se;
     private final Path path;
+    private final long timeout;
 
     public CachedSearchEngine(SearchEngine se) throws IOException {
-        this(se, Paths.get(".cache"));
+        this(se, Paths.get(".cache"), 0);
     }
 
-    public CachedSearchEngine(SearchEngine se, Path path) throws IOException {
+    public CachedSearchEngine(SearchEngine se, Path path, long timeout) throws IOException {
+        this.timeout = timeout;
         this.se = se;
         this.path = path;
         if (!Files.isDirectory(path))
@@ -41,7 +41,11 @@ public class CachedSearchEngine implements SearchEngine {
         try (BufferedReader r = Files.newBufferedReader(path.resolve("search_" + q + ".dat"), StandardCharsets.UTF_8)) {
             JSONObject j = JSONObject.read(r);
             if (j.contains("search")) {
-                JSONArray array = j.get("search").asArray();
+                JSONObject search = j.get("search").asObject();
+                ZonedDateTime date = ZonedDateTime.parse(j.get("date").asString()),
+                        now = ZonedDateTime.now();
+
+                JSONArray array = search.get("results").asArray();
                 for (JSONValue v : array)
                     rv.add(v.asString());
             } else {
@@ -49,7 +53,9 @@ public class CachedSearchEngine implements SearchEngine {
                 JSONArray array = new JSONArray();
                 for (String s : rv)
                     array.add(new JSONString(s));
-                j.add("search", array);
+                JSONObject search = new JSONObject();
+                search.add("results", array);
+                j.add("search", search);
             }
         } catch (NoSuchFileException e) {
 

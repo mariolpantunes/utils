@@ -23,11 +23,9 @@ public class TestSE {
         //List<String> ant = t.antonyms(w);
         //System.out.println("Results: " + ant.size());
         //PrintUtils.printList(ant);
-
         //SearchEngine s = new Bing(config.get("bing").asString().value());
         //SearchEngine s = new Faroo(config.get("faroo").asString().value());
         //SearchEngine s = new DuckDuckGo();
-
         System.out.println("Search Engine Test");
         SearchEngine s = new CachedSearchEngine(new Bing(config.get("bing").asString()));
         List<String> snippets = s.snippets(q);
