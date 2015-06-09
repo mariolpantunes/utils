@@ -38,7 +38,6 @@ public class KDTree<T extends Vector> {
     private static <T extends Vector> KDNode<T> build(T[] points, int left, int right, int cd, int maxDim) {
         KDNode<T> node = null;
         if (left < right) {
-
             Utils.qselect(points, left, right, left + ((right - left) / 2), (T e1, T e2) -> Double.compare(e1.get(cd), e2.get(cd)));
             int pivot = pivot(points, left, right, cd);
             node = new KDNode<T>(points[pivot]);
@@ -138,19 +137,16 @@ public class KDTree<T extends Vector> {
 
     public T nearest(T target) {
         T rv = null;
-
         if (root != null) {
             KDNode<T> nn[] = new KDNode[1];
             nn[0] = parent(target, root, 0);
             nearest(root, nn, target, 0);
             rv = nn[0].data;
         }
-
         return rv;
     }
 
-    private void nearest(KDNode<T> node, KDNode<T> nn[],
-                         T target, int cd) {
+    private void nearest(KDNode<T> node, KDNode<T> nn[], T target, int cd) {
         if (node != null) {
             if (target.euclideanDistance(node.data) < target.euclideanDistance(nn[0].data))
                 nn[0] = node;

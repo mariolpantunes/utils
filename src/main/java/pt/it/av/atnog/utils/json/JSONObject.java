@@ -360,7 +360,7 @@ public class JSONObject extends JSONValue {
             s = sw.toString();
             sw.close();
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
         return s.toString();
     }

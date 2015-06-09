@@ -19,7 +19,10 @@ public class JSONNumber extends JSONValue {
 
     @Override
     public void write(Writer w) throws IOException {
-        w.append(String.valueOf(n));
+        if (n % 1 == 0)
+            w.append(String.valueOf((long) n));
+        else
+            w.append(String.valueOf(n));
     }
 
     @Override

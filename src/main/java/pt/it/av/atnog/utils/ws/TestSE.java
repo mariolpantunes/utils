@@ -30,6 +30,6 @@ public class TestSE {
         SearchEngine s = new CachedSearchEngine(new Bing(config.get("bing").asString()));
         List<String> snippets = s.snippets(q);
         System.out.println("Results: " + snippets.size());
-        PrintUtils.printList(snippets);
+        System.out.println(PrintUtils.list(snippets));
     }
 }

@@ -30,10 +30,10 @@ public class JSONObjectTest {
 
     @Test
     public void test_number() throws IOException {
-        JSONObject j = JSONObject.read(new StringReader("{\"name\":15.5}"));
+        JSONObject j = JSONObject.read(new StringReader("{\"a\":15.5,\"b\":3,\"c\":10000}"));
         StringWriter w = new StringWriter();
         j.write(w);
-        assertTrue(w.toString().equals("{\"name\":15.5}"));
+        assertTrue(w.toString().equals("{\"a\":15.5,\"b\":3,\"c\":10000}"));
     }
 
     @Test
