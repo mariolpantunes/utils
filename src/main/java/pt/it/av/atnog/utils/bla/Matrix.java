@@ -1,7 +1,6 @@
 package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.MathUtils;
-import pt.it.av.atnog.utils.PrintUtils;
 import pt.it.av.atnog.utils.parallel.ThreadPool;
 import pt.it.av.atnog.utils.structures.tuple.Quad;
 
@@ -330,7 +329,7 @@ public class Matrix {
         double diag[] = UDV[1].diagArray(0);
         double lambda[] = new double[diag.length],
                 mu[] = new double[diag.length];
-        PrintUtils.printArray(diag);
+        //PrintUtils.printArray(diag);
         lambda[diag.length - 1] = Math.abs(diag[diag.length - 1]);
 
         for (int i = diag.length - 1; i > 0; i--)

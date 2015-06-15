@@ -1,7 +1,6 @@
 package pt.it.av.atnog.utils;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Iterator;
@@ -12,47 +11,34 @@ import java.util.Map;
  * Created by mantunes on 5/22/15.
  */
 public class PrintUtils {
-    public static void printArray(double[] array) {
-        printArray(array, 0, array.length - 1);
-    }
 
-    public static void printArray(double[] array, int left, int right) {
-        System.out.print("[");
-        int i = left;
-        for (; i < right; i++)
-            System.out.print(array[i] + "; ");
-        if (right >= left)
-            System.out.println(array[i] + "]");
-    }
-
-
-    public static <T> void printArray(T[] a) {
+    public static <T> String array(T[] a) {
+        StringWriter w = new StringWriter();
         try {
-            PrintWriter w = new PrintWriter(System.out);
-            printArray(a, 0, a.length, w);
-            w.println();
+            array(a, 0, a.length - 1, w);
             w.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return w.toString();
     }
 
-    public static <T> void printArray(T[] a, int left, int right) {
+    public static <T> String array(T[] a, int left, int right) {
+        StringWriter w = new StringWriter();
         try {
-            PrintWriter w = new PrintWriter(System.out);
-            printArray(a, left, right, w);
-            w.println();
+            array(a, left, right, w);
             w.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return w.toString();
     }
 
-    public static <T> void printArray(T[] a, Writer w) throws IOException {
-        printArray(a, 0, a.length, w);
+    public static <T> void array(T[] a, Writer w) throws IOException {
+        array(a, 0, a.length - 1, w);
     }
 
-    public static <T> void printArray(T[] a, int left, int right, Writer w) throws IOException {
+    public static <T> void array(T[] a, int left, int right, Writer w) throws IOException {
         w.append('[');
         int i = left;
         for (; i < right; i++)
