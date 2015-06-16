@@ -15,7 +15,12 @@ import java.util.List;
  * Created by mantunes on 3/21/15.
  */
 public class Searx implements SearchEngine {
+    private static final int DEFAULT_MAX_PAGES = 100;
     private final int maxPages;
+
+    public Searx() {
+        this(DEFAULT_MAX_PAGES);
+    }
 
     public Searx(int maxPages) {
         this.maxPages = maxPages;
