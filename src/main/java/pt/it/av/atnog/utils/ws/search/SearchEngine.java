@@ -7,6 +7,5 @@ import java.util.List;
  */
 public interface SearchEngine {
     List<String> search(final String q);
-
     List<String> snippets(final String q);
 }

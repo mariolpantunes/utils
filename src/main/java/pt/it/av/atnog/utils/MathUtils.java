@@ -53,4 +53,38 @@ public class MathUtils {
     public static boolean equals(double a, double b, double eps) {
         return Math.abs(a - b) < eps;
     }
+
+    public static double factorial(double n) {
+        return product(n, 0);
+    }
+
+    public static double combination(double n, double k) {
+        return product(n, n - k) / factorial(k);
+    }
+
+    public static double permutation(double n, double k) {
+        return product(n, n - k);
+    }
+
+    private static double product(double a, double b) {
+        int d = (int) Math.floor(a - b);
+        double m = Math.floor((a + b) / 2.0), rv = 0.0;
+        switch (d) {
+            case 0:
+                rv = 1.0;
+                break;
+            case 1:
+                rv = a;
+                break;
+            case 2:
+                rv = a * (a - 1.0);
+                break;
+            case 3:
+                rv = a * (a - 1.0) * (a - 2.0);
+                break;
+            default:
+                rv = product(a, m) * product(m, b);
+        }
+        return rv;
+    }
 }
