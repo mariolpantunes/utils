@@ -59,7 +59,18 @@ public class MathUtils {
     }
 
     public static double combination(double n, double k) {
-        return product(n, n - k) / factorial(k);
+        double rv = 0.0;
+
+        if (k == 0.0 || n == k)
+            rv = 1.0;
+        else if (k == 1.0 || (n - k) == 1.0)
+            rv = n;
+        else if (k > (n / 2.0))
+            rv = product(n, k) / factorial(n - k);
+        else
+            rv = product(n, n - k) / factorial(k);
+
+        return rv;
     }
 
     public static double permutation(double n, double k) {
