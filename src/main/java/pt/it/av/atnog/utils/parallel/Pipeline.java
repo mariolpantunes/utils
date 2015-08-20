@@ -1,22 +1,25 @@
 package pt.it.av.atnog.utils.parallel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 //TODO: Verify Blocking queues...
 public class Pipeline {
     private BlockingQueue<Object> sink = new LinkedBlockingQueue<Object>(), source = new LinkedBlockingQueue<Object>();
-    private List<Worker> workers = new ArrayList<Worker>();
+    private Deque<Worker> workers = new ArrayDeque<>();
     private List<BlockingQueue<Object>> queues;
 
     public Pipeline() {
         queues = new ArrayList<BlockingQueue<Object>>();
     }
 
-    public void add(Task task) {
-        workers.add(new Worker(task));
+    public void addFirst(Task task) {
+        workers.addFirst(new Worker(task));
+    }
+
+    public void addLast(Task task) {
+        workers.addLast(new Worker(task));
     }
 
     public BlockingQueue<Object> sink() {
@@ -34,27 +37,35 @@ public class Pipeline {
                 for (int i = 0; i < workers.size() - 1; i++)
                     queues.add(new LinkedBlockingQueue<Object>());
             }
+            Iterator<Worker> it = workers.iterator();
+            Worker w = it.next();
             if (workers.size() > 1) {
-                workers.get(0).connect(sink, queues.get(0));
-                for (int i = 1; i < workers.size() - 1; i++)
-                    workers.get(i).connect(queues.get(i - 1), queues.get(i));
-                workers.get(workers.size() - 1).connect(
-                        queues.get(queues.size() - 1), source);
-            } else
-                workers.get(0).connect(sink, source);
-            for (Worker w : workers)
+                w.connect(sink, queues.get(0));
                 w.start();
+                for (int i = 1; it.hasNext(); i++) {
+                    w = it.next();
+                    if (it.hasNext())
+                        w.connect(queues.get(i - 1), queues.get(i));
+                    else
+                        w.connect(queues.get(queues.size() - 1), source);
+                    w.start();
+                }
+            } else {
+                w.connect(sink, source);
+                w.start();
+            }
         }
     }
 
     public void join() throws InterruptedException {
         Stop stop = new Stop();
         sink.put(stop);
+        Iterator<Worker> it = workers.iterator();
         for (int i = 0; i < queues.size(); i++) {
-            workers.get(i).join();
+            it.next().join();
             queues.get(i).put(stop);
         }
-        workers.get(workers.size() - 1).join();
+        it.next().join();
         source.add(stop);
     }
 }

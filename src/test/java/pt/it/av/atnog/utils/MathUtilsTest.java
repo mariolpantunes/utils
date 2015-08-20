@@ -37,5 +37,7 @@ public class MathUtilsTest {
     @Test
     public void test_permutation() {
         assertTrue(MathUtils.permutation(10, 2) == 90.0);
+        assertTrue(MathUtils.permutation(16, 3) == 3360.0);
+        assertTrue(MathUtils.permutation(128, 4) == 256032000.0);
     }
 }

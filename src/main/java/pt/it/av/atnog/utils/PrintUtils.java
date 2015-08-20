@@ -3,6 +3,7 @@ package pt.it.av.atnog.utils;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,43 @@ import java.util.Map;
  * Created by mantunes on 5/22/15.
  */
 public class PrintUtils {
+
+    public static String array(double[] a) {
+        StringWriter w = new StringWriter();
+        try {
+            array(a, 0, a.length - 1, w);
+            w.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return w.toString();
+    }
+
+    public static String array(double[] a, int left, int right) {
+        StringWriter w = new StringWriter();
+        try {
+            array(a, left, right, w);
+            w.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return w.toString();
+    }
+
+    public static void array(double[] a, Writer w) throws IOException {
+        array(a, 0, a.length - 1, w);
+    }
+
+    public static void array(double[] a, int left, int right, Writer w) throws IOException {
+        DecimalFormat format = new DecimalFormat("0.#");
+        w.append('[');
+        int i = left;
+        for (; i < right; i++)
+            w.append(a[i] + "; ");
+        if (right >= left)
+            w.append(format.format(a[i]));
+        w.append(']');
+    }
 
     public static <T> String array(T[] a) {
         StringWriter w = new StringWriter();

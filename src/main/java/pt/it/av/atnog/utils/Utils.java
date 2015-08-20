@@ -125,16 +125,6 @@ public class Utils {
         return  qselect(array, 0, array.length-1, n);
     }
 
-    public static <T> void printArray(T[] array, int left, int right) {
-        for(int i = left; i < right+1; i++ ) {
-            System.out.print(array[i].toString()+"; ");
-        }
-        System.out.println();
-    }
-    public static <T> void printArray(T[] array) {
-        printArray(array, 0, array.length - 1);
-    }
-
     public static String stackTrace(Exception e) {
         final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw, true);
