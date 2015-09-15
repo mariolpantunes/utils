@@ -50,6 +50,11 @@ public class VectorTest {
     }
 
     @Test
+    public void test_sub_row() {
+
+    }
+
+    @Test
     public void test_mean() {
         assertTrue(A.mean() == 1.0);
         assertTrue(B.mean() == 4.0);

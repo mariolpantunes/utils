@@ -1,9 +1,29 @@
 package pt.it.av.atnog.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by mantunes on 5/4/15.
  */
 public class StringUtils {
+
+    public static int count(String s, char c) {
+        int rv = 0;
+        for (int i = 0, t = s.length(); i < t; i++)
+            if (s.charAt(i) == c)
+                rv += 1;
+        return rv;
+    }
+
+    public static List<Integer> indexOf(String s, char c) {
+        List<Integer> rv = new ArrayList<>();
+        for (int i = 0, t = s.length(); i < t; i++)
+            if (s.charAt(i) == c)
+                rv.add(i);
+        return rv;
+    }
+
     public static String escape(String s) {
         StringBuilder sb = new StringBuilder();
         char array[] = s.toCharArray();

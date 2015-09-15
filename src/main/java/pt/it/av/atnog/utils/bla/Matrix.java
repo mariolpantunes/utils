@@ -150,13 +150,14 @@ public class Matrix {
         return T;
     }
 
-    public void uTranspose() {
+    public Matrix uTranspose() {
         double buffer[] = new double[rows * columns];
         transpose(data, buffer, rows, columns);
         this.data = buffer;
         int t = rows;
         this.rows = columns;
         this.columns = t;
+        return this;
     }
 
     public Matrix add(Matrix B) {
@@ -165,8 +166,9 @@ public class Matrix {
         return C;
     }
 
-    public void uAdd(Matrix B) {
+    public Matrix uAdd(Matrix B) {
         Vector.add(data, 0, B.data, 0, data, 0, data.length);
+        return this;
     }
 
     public Matrix add(double scalar) {
@@ -175,8 +177,9 @@ public class Matrix {
         return C;
     }
 
-    public void uAdd(double scalar) {
+    public Matrix uAdd(double scalar) {
         Vector.add(data, 0, scalar, data, 0, data.length);
+        return this;
     }
 
     public Matrix sub(Matrix B) {
@@ -185,27 +188,31 @@ public class Matrix {
         return C;
     }
 
-    public void uSub(Matrix B) {
+    public Matrix uSub(Matrix B) {
         Vector.sub(data, 0, B.data, 0, data, 0, data.length);
+        return this;
     }
 
     public Matrix sub(double b) {
         Matrix C = new Matrix(rows, columns);
-        for (int n = 0, total = data.length; n < total; n++)
-            C.data[n] = data[n] - b;
+        Vector.sub(this.data, 0, b, C.data, 0, data.length);
         return C;
     }
 
-    public void uSubRow(int row, int column, Vector b) {
-        for (int i = 0; i < columns - column; i++)
-            data[row * columns + i + column] -= b.data[i];
+    public Matrix uSubRow(int row, int column, Vector b) {
+        Vector.sub(data, row * columns + column, b.data, b.bIdx, data, row * columns + column, b.data.length);
+        return this;
     }
 
     public Matrix mul(double scalar) {
         Matrix C = new Matrix(rows, columns);
-        for (int n = 0, total = data.length; n < total; n++)
-            C.data[n] = data[n] * scalar;
+        Vector.mul(data, 0, scalar, C.data, 0, data.length);
         return C;
+    }
+
+    public Matrix uMul(double scalar) {
+        Vector.mul(data, 0, scalar, this.data, 0, data.length);
+        return this;
     }
 
     //TODO: optimize this function
