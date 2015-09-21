@@ -90,13 +90,6 @@ public class Matrix {
         return rv;
     }
 
-    public static Matrix mul_par(Matrix A, Matrix B) {
-        Matrix C = new Matrix(A.rows, B.columns), BT = B.transpose();
-
-
-        return C;
-    }
-
     private static double[] rot(double a, double b) {
         double csr[] = new double[3];
         if (b == 0) {
@@ -215,9 +208,25 @@ public class Matrix {
         return this;
     }
 
+    public Matrix addColumn(int column, double scalar) {
+        Matrix C = new Matrix(rows, columns + 1);
+        for (int i = 0, j = 0; i < C.data.length; i++)
+            if (column == i % C.columns)
+                C.data[i] = scalar;
+            else
+                C.data[i] = data[j++];
+        return C;
+    }
+
     //TODO: optimize this function
+    // M*v
     public Vector mul(Vector v) {
-        Vector rv = new Vector(v.length);
+        Vector rv = new Vector(rows);
+
+        for (int i = 0; i < data.length; i++) {
+            int r = i / columns, c = i % columns;
+        }
+
         for (int i = 0; i < rows; i++) {
             double rvi = 0.0;
             for (int j = 0; j < columns; j++) {
