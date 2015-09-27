@@ -218,20 +218,12 @@ public class Matrix {
         return C;
     }
 
-    //TODO: optimize this function
-    // M*v
     public Vector mul(Vector v) {
         Vector rv = new Vector(rows);
-
-        for (int i = 0; i < data.length; i++) {
-            int r = i / columns, c = i % columns;
-        }
-
         for (int i = 0; i < rows; i++) {
             double rvi = 0.0;
-            for (int j = 0; j < columns; j++) {
+            for (int j = 0; j < columns; j++)
                 rvi += v.data[v.bIdx + j] * data[i * columns + j];
-            }
             rv.data[rv.bIdx + i] = rvi;
         }
         return rv;
