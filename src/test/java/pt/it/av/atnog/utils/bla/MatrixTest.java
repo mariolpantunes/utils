@@ -12,7 +12,7 @@ public class MatrixTest {
     private static Matrix A, At, B, AplusB, AAt;
 
     @BeforeClass
-    public static void init() {
+    public static void setup() {
         A = new Matrix(3, 2);
         A.set(0, 0, 1);
         A.set(0, 1, 2);
