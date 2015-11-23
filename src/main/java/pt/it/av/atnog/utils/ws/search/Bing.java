@@ -7,8 +7,10 @@ import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,8 +25,8 @@ public class Bing implements SearchEngine {
     }
 
     @Override
-    public List<String> search(String q) {
-        String qURL = URLEncoder.encode("'" + q + "'");
+    public List<String> search(String q) throws UnsupportedEncodingException {
+        String qURL = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
         List<String> rv = new ArrayList<>();
         int skip = 0;
         boolean done = false;
@@ -53,8 +55,8 @@ public class Bing implements SearchEngine {
     }
 
     @Override
-    public List<String> snippets(String q) {
-        String qURL = URLEncoder.encode("'" + q + "'");
+    public List<String> snippets(String q) throws UnsupportedEncodingException {
+        String qURL = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
         List<String> rv = new ArrayList<>();
         int skip = 0;
         boolean done = false;
@@ -75,5 +77,15 @@ public class Bing implements SearchEngine {
             }
         }
         return rv;
+    }
+
+    @Override
+    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
+        return null;
+    }
+
+    @Override
+    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
+        return null;
     }
 }

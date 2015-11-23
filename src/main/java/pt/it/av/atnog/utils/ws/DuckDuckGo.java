@@ -6,8 +6,10 @@ import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
 import pt.it.av.atnog.utils.ws.search.SearchEngine;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -41,5 +43,15 @@ public class DuckDuckGo implements SearchEngine {
             e.printStackTrace();
         }
         return rv;
+    }
+
+    @Override
+    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
+        return null;
+    }
+
+    @Override
+    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
+        return null;
     }
 }

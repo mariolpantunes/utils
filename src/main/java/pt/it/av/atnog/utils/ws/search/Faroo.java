@@ -7,7 +7,9 @@ import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Faroo implements SearchEngine {
@@ -72,6 +74,16 @@ public class Faroo implements SearchEngine {
             }
         }
         return rv;
+    }
+
+    @Override
+    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
+        return null;
+    }
+
+    @Override
+    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
+        return null;
     }
 
     private String url(String q, int start) {

@@ -6,8 +6,10 @@ import pt.it.av.atnog.utils.HTTP;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.ws.search.SearchEngine;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 //TODO: improve the continue interface
@@ -77,5 +79,15 @@ public class Wikipedia implements SearchEngine {
             }
         }
         return rv;
+    }
+
+    @Override
+    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
+        return null;
+    }
+
+    @Override
+    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
+        return null;
     }
 }

@@ -2,9 +2,7 @@ package pt.it.av.atnog.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
+import java.util.*;
 
 public class Utils {
     @SuppressWarnings("unchecked")
@@ -142,5 +140,23 @@ public class Utils {
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
         return c.getTime();
+    }
+
+    public static <T> List<T> intertwine(List<T> a, List<T> b) {
+        List<T> rv = new ArrayList<>();
+
+        Iterator<T> itA = a.iterator(), itB = b.iterator();
+        while (itA.hasNext() && itB.hasNext()) {
+            rv.add(itA.next());
+            rv.add(itB.next());
+        }
+
+        while (itA.hasNext())
+            rv.add(itA.next());
+
+        while (itB.hasNext())
+            rv.add(itB.next());
+
+        return rv;
     }
 }

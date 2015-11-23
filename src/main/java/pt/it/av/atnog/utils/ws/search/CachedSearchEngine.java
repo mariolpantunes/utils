@@ -8,10 +8,12 @@ import pt.it.av.atnog.utils.json.JSONValue;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ public class CachedSearchEngine implements SearchEngine {
     }
 
     @Override
-    public List<String> search(final String q) {
+    public List<String> search(final String q) throws UnsupportedEncodingException {
         List<String> rv = new ArrayList<>();
         try (BufferedReader r = Files.newBufferedReader(path.resolve("search_" + q + ".dat"), StandardCharsets.UTF_8)) {
             JSONObject j = JSONObject.read(r);
@@ -66,7 +68,7 @@ public class CachedSearchEngine implements SearchEngine {
     }
 
     @Override
-    public List<String> snippets(String q) {
+    public List<String> snippets(String q) throws UnsupportedEncodingException {
         List<String> rv = new ArrayList<>();
         Path file = path.resolve("search_" + q + ".dat");
         try (BufferedReader r = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
@@ -103,5 +105,15 @@ public class CachedSearchEngine implements SearchEngine {
             e.printStackTrace();
         }
         return rv;
+    }
+
+    @Override
+    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
+        return null;
+    }
+
+    @Override
+    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
+        return null;
     }
 }

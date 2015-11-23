@@ -7,6 +7,5 @@ import java.util.List;
  */
 public interface Thesaurus {
     List<String> synonyms(String s);
-
     List<String> antonyms(String s);
 }
