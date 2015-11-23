@@ -25,11 +25,20 @@ public class Bing implements SearchEngine {
     }
 
     @Override
-    public List<String> search(String q) throws UnsupportedEncodingException {
-        String qURL = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
+    public List<String> search(String q) {
+        String qURL = null;
+        boolean done = false;
         List<String> rv = new ArrayList<>();
         int skip = 0;
-        boolean done = false;
+
+        try {
+            qURL = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            done = true;
+        }
+
+
         while (!done) {
             try {
                 JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
@@ -51,15 +60,24 @@ public class Bing implements SearchEngine {
                 e.printStackTrace();
             }
         }
+
         return rv;
     }
 
     @Override
-    public List<String> snippets(String q) throws UnsupportedEncodingException {
-        String qURL = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
+    public List<String> snippets(String q) {
+        String qURL = null;
+        boolean done = false;
         List<String> rv = new ArrayList<>();
         int skip = 0;
-        boolean done = false;
+
+        try {
+            qURL = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            done = true;
+        }
+
         while (!done) {
             try {
                 JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
@@ -80,12 +98,65 @@ public class Bing implements SearchEngine {
     }
 
     @Override
-    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
+    public Iterator<String> searchIt(final String q) {
         return null;
     }
 
     @Override
-    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
-        return null;
+    public Iterator<String> snippetsIt(final String q) {
+        return new BingSnippetIterator(q);
+    }
+
+    private class BingSnippetIterator implements Iterator<String> {
+        private String q;
+        private boolean lastPage = false, done = false;
+        private int skip = 0;
+        private Iterator<JSONValue> it = null;
+
+        public BingSnippetIterator(final String q) {
+            try {
+                this.q = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                done = true;
+            }
+
+            if (!done)
+                nextIterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !done;
+        }
+
+        @Override
+        public String next() {
+            JSONObject json = it.next().asObject();
+            String rv = json.get("Description").asString();
+
+            if (!it.hasNext() && !lastPage)
+                nextIterator();
+
+            if (!it.hasNext() && lastPage)
+                done = true;
+
+            return rv;
+        }
+
+        private void nextIterator() {
+            try {
+                JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
+                        "&$skip=" + skip + "&Query=" + q, "", key).get("d").asObject();
+                if (json.get("__next") != null)
+                    skip += LENGTH;
+                else
+                    lastPage = true;
+                it = json.get("results").asArray().iterator();
+            } catch (Exception e) {
+                done = true;
+                e.printStackTrace();
+            }
+        }
     }
 }
