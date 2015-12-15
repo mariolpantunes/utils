@@ -76,7 +76,10 @@ public class JSONArray extends JSONValue implements Iterable<JSONValue> {
 
         @Override
         public JSONValue next() {
-            return array.get(idx++);
+            JSONValue rv = null;
+            if (idx < array.size())
+                rv = array.get(idx++);
+            return rv;
         }
     }
 }

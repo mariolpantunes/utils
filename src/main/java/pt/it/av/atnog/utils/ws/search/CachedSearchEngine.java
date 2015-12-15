@@ -8,7 +8,6 @@ import pt.it.av.atnog.utils.json.JSONValue;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.ZonedDateTime;
@@ -20,7 +19,7 @@ import java.util.List;
  * Created by mantunes on 4/15/15.
  */
 // TODO: Maybe search operration should return a valid url instead of a string
-public class CachedSearchEngine implements SearchEngine {
+public class CachedSearchEngine extends SearchEngine {
     private final SearchEngine se;
     private final Path path;
     private final long timeout;
@@ -38,7 +37,7 @@ public class CachedSearchEngine implements SearchEngine {
     }
 
     @Override
-    public List<String> search(final String q) throws UnsupportedEncodingException {
+    public List<String> search(final String q) {
         List<String> rv = new ArrayList<>();
         try (BufferedReader r = Files.newBufferedReader(path.resolve("search_" + q + ".dat"), StandardCharsets.UTF_8)) {
             JSONObject j = JSONObject.read(r);
@@ -68,7 +67,7 @@ public class CachedSearchEngine implements SearchEngine {
     }
 
     @Override
-    public List<String> snippets(String q) throws UnsupportedEncodingException {
+    public List<String> snippets(String q) {
         List<String> rv = new ArrayList<>();
         Path file = path.resolve("search_" + q + ".dat");
         try (BufferedReader r = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
@@ -108,12 +107,12 @@ public class CachedSearchEngine implements SearchEngine {
     }
 
     @Override
-    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
+    public Iterator<String> searchIt(String q) {
         return null;
     }
 
     @Override
-    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
+    public Iterator<String> snippetsIt(String q) {
         return null;
     }
 }

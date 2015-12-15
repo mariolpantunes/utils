@@ -1,6 +1,5 @@
 package pt.it.av.atnog.utils.ws.search;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -8,7 +7,7 @@ import java.util.List;
 /**
  * Created by mantunes on 6/16/15.
  */
-public class CollectionSearchEngine implements SearchEngine {
+public class CollectionSearchEngine extends SearchEngine {
     private final List<SearchEngine> se;
 
     public CollectionSearchEngine(final List<SearchEngine> se) {
@@ -16,7 +15,7 @@ public class CollectionSearchEngine implements SearchEngine {
     }
 
     @Override
-    public List<String> search(String q) throws UnsupportedEncodingException {
+    public List<String> search(String q) {
         List<String> rv = new ArrayList<>();
         for (SearchEngine s : se)
             rv.addAll(s.search(q));
@@ -24,7 +23,7 @@ public class CollectionSearchEngine implements SearchEngine {
     }
 
     @Override
-    public List<String> snippets(String q) throws UnsupportedEncodingException {
+    public List<String> snippets(String q) {
         List<String> rv = new ArrayList<>();
         for (SearchEngine s : se)
             rv.addAll(s.snippets(q));
@@ -32,12 +31,12 @@ public class CollectionSearchEngine implements SearchEngine {
     }
 
     @Override
-    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
+    public Iterator<String> searchIt(String q) {
         return null;
     }
 
     @Override
-    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
+    public Iterator<String> snippetsIt(String q) {
         return null;
     }
 }

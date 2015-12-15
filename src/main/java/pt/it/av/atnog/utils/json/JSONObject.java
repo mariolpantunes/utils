@@ -6,6 +6,7 @@ import java.util.*;
 /**
  * Created by mantunes on 26/03/2015.
  */
+//TODO: need to escape all control charaters as stated in stack overflow
 public class JSONObject extends JSONValue {
     private static final int LENGTH = 128;
     private final Map<String, JSONValue> map = new HashMap<>();
@@ -14,7 +15,7 @@ public class JSONObject extends JSONValue {
         return read(new BufferedReader(new StringReader(s)));
     }
 
-    // TODO: imrpove PRE_KEY and ROOT states
+    // TODO: improve PRE_KEY and ROOT states
     // TODO: improve error detection...
     public static JSONObject read(Reader r) throws IOException {
         JSONObject root = new JSONObject();

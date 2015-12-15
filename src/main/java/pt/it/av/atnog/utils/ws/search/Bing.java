@@ -5,101 +5,41 @@ import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
 import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
-import pt.it.av.atnog.utils.json.JSONValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by mantunes on 3/23/15.
  */
-public class Bing implements SearchEngine {
-    private static final int LENGTH = 50;
+public class Bing extends SearchEngine {
     private final String key;
 
     public Bing(final String key) {
         this.key = key;
     }
 
-    @Override
-    public List<String> search(String q) {
-        String qURL = null;
-        boolean done = false;
-        List<String> rv = new ArrayList<>();
-        int skip = 0;
-
+    private static void nextIterator(final String q, final String key, IteratorParameters p) {
         try {
-            qURL = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
+            JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
+                    "&$skip=" + p.skip + "&Query=" + q, "", key).get("d").asObject();
+            if (json.get("__next") == null)
+                p.lastPage = true;
+            JSONArray array = json.get("results").asArray();
+            p.skip += array.size();
+            p.it = array.iterator();
+            if (!p.it.hasNext())
+                p.done = true;
+        } catch (Exception e) {
+            p.done = true;
             e.printStackTrace();
-            done = true;
         }
-
-
-        while (!done) {
-            try {
-                JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
-                        "&$skip=" + skip + "&Query=" + qURL, "", key).get("d").asObject();
-                if (json.get("__next") != null)
-                    skip += LENGTH;
-                else
-                    done = true;
-                JSONArray results = json.get("results").asArray();
-                for (JSONValue jv : results) {
-                    try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("Url").asString()));
-                        rv.add(doc.body().text());
-                    } catch (Exception e) {
-                        //e.printStackTrace();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return rv;
-    }
-
-    @Override
-    public List<String> snippets(String q) {
-        String qURL = null;
-        boolean done = false;
-        List<String> rv = new ArrayList<>();
-        int skip = 0;
-
-        try {
-            qURL = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            done = true;
-        }
-
-        while (!done) {
-            try {
-                JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
-                        "&$skip=" + skip + "&Query=" + qURL, "", key).get("d").asObject();
-                if (json.get("__next") != null)
-                    skip += LENGTH;
-                else
-                    done = true;
-                JSONArray results = json.get("results").asArray();
-                for (JSONValue jv : results)
-                    rv.add(jv.asObject().get("Description").asString());
-            } catch (Exception e) {
-                done = true;
-                e.printStackTrace();
-            }
-        }
-        return rv;
     }
 
     @Override
     public Iterator<String> searchIt(final String q) {
-        return null;
+        return new BingSearchIterator(q);
     }
 
     @Override
@@ -108,54 +48,84 @@ public class Bing implements SearchEngine {
     }
 
     private class BingSnippetIterator implements Iterator<String> {
+        private IteratorParameters p = new IteratorParameters(0);
         private String q;
-        private boolean lastPage = false, done = false;
-        private int skip = 0;
-        private Iterator<JSONValue> it = null;
 
         public BingSnippetIterator(final String q) {
             try {
                 this.q = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
+                nextIterator(this.q, key, p);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-                done = true;
+                p.done = true;
             }
-
-            if (!done)
-                nextIterator();
         }
 
         @Override
         public boolean hasNext() {
-            return !done;
+            return !p.done;
         }
 
         @Override
         public String next() {
-            JSONObject json = it.next().asObject();
-            String rv = json.get("Description").asString();
-
-            if (!it.hasNext() && !lastPage)
-                nextIterator();
-
-            if (!it.hasNext() && lastPage)
-                done = true;
-
+            String rv = null;
+            if (!p.done) {
+                JSONObject json = p.it.next().asObject();
+                rv = json.get("Description").asString();
+                if (!p.it.hasNext() && !p.lastPage)
+                    nextIterator(q, key, p);
+                else if (!p.it.hasNext() && p.lastPage)
+                    p.done = true;
+            }
             return rv;
         }
+    }
 
-        private void nextIterator() {
+    private class BingSearchIterator implements Iterator<String> {
+        private String q, page;
+        private IteratorParameters p = new IteratorParameters(0);
+
+        public BingSearchIterator(final String q) {
             try {
-                JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
-                        "&$skip=" + skip + "&Query=" + q, "", key).get("d").asObject();
-                if (json.get("__next") != null)
-                    skip += LENGTH;
-                else
-                    lastPage = true;
-                it = json.get("results").asArray().iterator();
-            } catch (Exception e) {
-                done = true;
+                this.q = URLEncoder.encode("'" + q + "'", java.nio.charset.StandardCharsets.UTF_8.toString());
+                nextIterator(this.q, key, p);
+                nextPage();
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                p.done = true;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !p.done;
+        }
+
+        @Override
+        public String next() {
+            String rv = null;
+            if (!p.done) {
+                rv = page;
+                nextPage();
+            }
+            return page;
+        }
+
+        private void nextPage() {
+            boolean newPage = false;
+            while (!newPage) {
+                newPage = true;
+                try {
+                    String url = p.it.next().asObject().get("Url").asString();
+                    if (!p.it.hasNext() && !p.lastPage)
+                        nextIterator(q, key, p);
+                    else if (!p.it.hasNext() && p.lastPage)
+                        p.done = true;
+                    Document doc = Jsoup.parse(HTTP.get(url));
+                    page = doc.body().text();
+                } catch (Exception e) {
+                    newPage = false;
+                }
             }
         }
     }

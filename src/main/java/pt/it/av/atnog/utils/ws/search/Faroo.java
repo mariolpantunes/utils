@@ -5,132 +5,126 @@ import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
 import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
-import pt.it.av.atnog.utils.json.JSONValue;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+import java.net.URLEncoder;
 import java.util.Iterator;
-import java.util.List;
 
-public class Faroo implements SearchEngine {
-    private static final int LENGTH = 10;
-    private static final long SLEEP = 100;
+public class Faroo extends SearchEngine {
+    //private static final long SLEEP = 1000;
     private final String key;
 
     public Faroo(final String key) {
         this.key = key;
     }
 
-    @Override
-    public List<String> search(final String q) {
-        List<String> rv = new ArrayList<>();
-        boolean done = false;
-        int start = 1;
-        while (!done) {
-            try {
-                JSONObject json = HTTP.getJSON(url(q, start));
+    private static void nextIterator(final String q, final String key, IteratorParameters p) {
+        try {
+            JSONObject json = HTTP.getJSON("http://www.faroo.com/api?key=" + key + "&start=" + p.skip + "&q=" + q);
+            JSONArray array = json.get("results").asArray();
+            p.skip += array.size();
+            if (p.skip >= json.get("count").asNumber())
+                p.lastPage = true;
+            p.it = array.iterator();
+            if (!p.it.hasNext())
+                p.done = true;
+        } catch (Exception e) {
+            p.done = true;
+        }
+    }
 
-                if (start * LENGTH >= json.get("count").asNumber())
-                    done = true;
-                else
-                    start++;
-                JSONArray results = json.get("results").asArray();
-                for (JSONValue jv : results) {
-                    try {
-                        Document doc = Jsoup.parse(HTTP.get(jv.asObject().get("url").asString()));
-                        rv.add(doc.body().text());
-                    } catch (Exception e) {
-                        //e.printStackTrace();
-                    }
-                }
-            } catch (Exception e) {
-                //e.printStackTrace();
-                done = true;
+    @Override
+    public Iterator<String> searchIt(String q) {
+        return new FarooSearchIterator(q);
+    }
+
+    @Override
+    public Iterator<String> snippetsIt(final String q) {
+        return new FarooSnippetIterator(q);
+    }
+
+    private class FarooSnippetIterator implements Iterator<String> {
+        private IteratorParameters p = new IteratorParameters(1);
+        private String q;
+
+        public FarooSnippetIterator(final String q) {
+            try {
+                this.q = URLEncoder.encode(q, java.nio.charset.StandardCharsets.UTF_8.toString());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                p.done = true;
+            }
+            nextIterator(this.q, key, p);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !p.done;
+        }
+
+        @Override
+        public String next() {
+            String rv = null;
+            if (!p.done) {
+                JSONObject json = p.it.next().asObject();
+                rv = json.get("kwic").asString();
+                if (!p.it.hasNext() && !p.lastPage)
+                    nextIterator(q, key, p);
+                else if (!p.it.hasNext() && p.lastPage)
+                    p.done = true;
+            }
+            return rv;
+        }
+    }
+
+    //TODO: Test to see if needs \" \" arround the query
+    private class FarooSearchIterator implements Iterator<String> {
+        private String q, page;
+        private IteratorParameters p = new IteratorParameters(1);
+
+        public FarooSearchIterator(final String q) {
+            try {
+                this.q = URLEncoder.encode(q, java.nio.charset.StandardCharsets.UTF_8.toString());
+                nextIterator(this.q, key, p);
+                nextPage();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                p.done = true;
             }
         }
-        return rv;
-    }
 
-    @Override
-    public List<String> snippets(final String q) {
-        List<String> rv = new ArrayList<>();
-        boolean done = false;
-        int start = 1;
-        while (!done) {
-            try {
-                JSONObject json = HTTP.getJSON(url(q, start));
-                JSONArray results = json.get("results").asArray();
-                for (JSONValue jv : results) {
-                    rv.add(jv.asObject().get("kwic").asString());
+        @Override
+        public boolean hasNext() {
+            return !p.done;
+        }
+
+        @Override
+        public String next() {
+            String rv = null;
+            if (!p.done) {
+                rv = page;
+                nextPage();
+            }
+            return page;
+        }
+
+        private void nextPage() {
+            boolean newPage = false;
+            while (!newPage && !p.done) {
+                newPage = true;
+                try {
+                    String url = p.it.next().asObject().get("url").asString();
+                    if (!p.it.hasNext() && !p.lastPage)
+                        nextIterator(q, key, p);
+                    else if (!p.it.hasNext() && p.lastPage)
+                        p.done = true;
+                    Document doc = Jsoup.parse(HTTP.get(url));
+                    page = doc.body().text();
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                    newPage = false;
                 }
-                if (start * LENGTH >= json.get("count").asNumber())
-                    done = true;
-                else
-                    start++;
-                Thread.sleep(SLEEP);
-            } catch (Exception e) {
-                //e.printStackTrace();
-                done = true;
             }
         }
-        return rv;
-    }
-
-    @Override
-    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
-        return null;
-    }
-
-    @Override
-    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
-        return null;
-    }
-
-    private String url(String q, int start) {
-        return url(q, start, Src.WEB, true, false);
-    }
-
-    private String url(String q) {
-        return url(q, 1, Src.WEB, true, false);
-    }
-
-    private String url(String q, int start,
-                       Src src, boolean kwic, boolean i) {
-        java.lang.StringBuilder sb = new StringBuilder("http://www.faroo.com/api?");
-        sb.append("q=" + q + "&");
-        sb.append("start=" + start + "&");
-        sb.append("src=" + enum2Src(src) + "&");
-        sb.append("kwic=" + kwic + "&");
-        sb.append("i=" + i + "&");
-        sb.append("length=10&rlength=20&l=en&f=json&key=" + key);
-        return sb.toString();
-    }
-
-    private String enum2Src(Src src) {
-        String rv = null;
-
-        switch (src) {
-            case WEB:
-                rv = "web";
-                break;
-            case NEWS:
-                rv = "news";
-                break;
-            case TOPICS:
-                rv = "topics";
-                break;
-            case TRENDS:
-                rv = "trends";
-                break;
-            case SUGGEST:
-                rv = "suggest";
-                break;
-        }
-
-        return rv;
-    }
-
-    public enum Src {
-        WEB, NEWS, TOPICS, TRENDS, SUGGEST
     }
 }

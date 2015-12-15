@@ -4,9 +4,7 @@ import pt.it.av.atnog.utils.HTTP;
 import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
-import pt.it.av.atnog.utils.ws.search.SearchEngine;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,14 +13,14 @@ import java.util.List;
 /**
  * Created by mantunes on 3/20/15.
  */
-public class DuckDuckGo implements SearchEngine {
+public class DuckDuckGo {
 
-    @Override
+
     public List<String> search(final String q) {
         return snippets(q);
     }
 
-    @Override
+
     public List<String> snippets(final String q) {
         String qURL = URLEncoder.encode(q);
         List<String> rv = new ArrayList<>();
@@ -45,13 +43,13 @@ public class DuckDuckGo implements SearchEngine {
         return rv;
     }
 
-    @Override
-    public Iterator<String> searchIt(String q) throws UnsupportedEncodingException {
+
+    public Iterator<String> searchIt(String q) {
         return null;
     }
 
-    @Override
-    public Iterator<String> snippetsIt(String q) throws UnsupportedEncodingException {
+
+    public Iterator<String> snippetsIt(String q) {
         return null;
     }
 }

@@ -14,7 +14,7 @@ import java.util.zip.InflaterInputStream;
 //TODO: test try-resource to minize the amount of code
 //TODO: review put method
 public class HTTP {
-    private static final int TIMEOUT = 3000;
+    private static final int TIMEOUT = 5000;
 
     private static InputStream inputStream(HttpURLConnection con) throws IOException {
         InputStream rv;
