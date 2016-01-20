@@ -1,5 +1,7 @@
 package pt.it.av.atnog.utils.ws.search;
 
+import pt.it.av.atnog.utils.CollectionIterator;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,51 +34,17 @@ public class CollectionSearchEngine extends SearchEngine {
 
     @Override
     public Iterator<String> searchIt(final String q) {
-        return new CollectionSearchIterator(q);
+        List<Iterator<String>> its = new ArrayList<>();
+        for (SearchEngine s : se)
+            its.add(s.searchIt(q));
+        return new CollectionIterator<>(its);
     }
 
     @Override
     public Iterator<String> snippetsIt(final String q) {
-        return null;
-    }
-
-    private class CollectionSearchIterator implements Iterator<String> {
-        private final List<Iterator<String>> seIt;
-
-        public CollectionSearchIterator(final String q) {
-            seIt = new ArrayList<>();
-            for (SearchEngine s : se)
-                seIt.add(s.searchIt(q));
-        }
-
-        @Override
-        public boolean hasNext() {
-            return false;
-        }
-
-        @Override
-        public String next() {
-            return null;
-        }
-    }
-
-    private class CollectionSnippetIterator implements Iterator<String> {
-        private final List<Iterator<String>> seIt;
-
-        public CollectionSnippetIterator(final String q) {
-            seIt = new ArrayList<>();
-            for (SearchEngine s : se)
-                seIt.add(s.snippetsIt(q));
-        }
-
-        @Override
-        public boolean hasNext() {
-            return false;
-        }
-
-        @Override
-        public String next() {
-            return null;
-        }
+        List<Iterator<String>> its = new ArrayList<>();
+        for (SearchEngine s : se)
+            its.add(s.snippetsIt(q));
+        return new CollectionIterator<>(its);
     }
 }
