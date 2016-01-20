@@ -31,12 +31,52 @@ public class CollectionSearchEngine extends SearchEngine {
     }
 
     @Override
-    public Iterator<String> searchIt(String q) {
-        return null;
+    public Iterator<String> searchIt(final String q) {
+        return new CollectionSearchIterator(q);
     }
 
     @Override
-    public Iterator<String> snippetsIt(String q) {
+    public Iterator<String> snippetsIt(final String q) {
         return null;
+    }
+
+    private class CollectionSearchIterator implements Iterator<String> {
+        private final List<Iterator<String>> seIt;
+
+        public CollectionSearchIterator(final String q) {
+            seIt = new ArrayList<>();
+            for (SearchEngine s : se)
+                seIt.add(s.searchIt(q));
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public String next() {
+            return null;
+        }
+    }
+
+    private class CollectionSnippetIterator implements Iterator<String> {
+        private final List<Iterator<String>> seIt;
+
+        public CollectionSnippetIterator(final String q) {
+            seIt = new ArrayList<>();
+            for (SearchEngine s : se)
+                seIt.add(s.snippetsIt(q));
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public String next() {
+            return null;
+        }
     }
 }
