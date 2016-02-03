@@ -7,7 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by mantunes on 6/16/15.
+ * Collection Search Engine.
+ * <P>Executes</P>
  */
 public class CollectionSearchEngine extends SearchEngine {
     private final List<SearchEngine> se;

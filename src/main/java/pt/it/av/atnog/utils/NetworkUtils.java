@@ -37,20 +37,18 @@ public class NetworkUtils {
     }
 
     /**
-     * Finds a free port between {@link #MIN_PORT_NUMBER} and
-     * {@link #MAX_PORT_NUMBER}.
+     * Finds a free port between minPort and maxPort.
      *
-     * @return a free port
-     * @throw RuntimeException if a port could not be found
+     * @return free port
+     * @throws RuntimeException if a port could not be found
      */
-    public static int findFreePort(int MIN_PORT_NUMBER, int MAX_PORT_NUMBER) {
-        for (int i = MIN_PORT_NUMBER; i <= MAX_PORT_NUMBER; i++) {
+    public static int findFreePort(int minPort, int maxPort) throws RuntimeException {
+        for (int i = minPort; i <= maxPort; i++) {
             if (available(i)) {
                 return i;
             }
         }
-        throw new RuntimeException("Could not find an available port between "
-                + MIN_PORT_NUMBER + " and " + MAX_PORT_NUMBER);
+        throw new RuntimeException("Could not find an available port between " + minPort + " and " + maxPort);
     }
 
     public static String ip(String dev) {

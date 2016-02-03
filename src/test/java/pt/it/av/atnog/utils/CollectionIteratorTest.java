@@ -127,7 +127,7 @@ public class CollectionIteratorTest {
         its.add(A.iterator());
         its.add(B.iterator());
         its.add(C.iterator());
-        it = new CollectionIterator<String>(its);
+        it = new CollectionIterator<>(its);
         list = Utils.iterator2List(it);
         rv.add("A");
         rv.add("B");
@@ -135,6 +135,19 @@ public class CollectionIteratorTest {
         rv.add("D");
         rv.add("E");
         rv.add("F");
+
+        assertTrue(list.equals(rv));
+    }
+
+    @Test
+    public void test_empty_iterators() {
+        List<Iterator<String>> its = new ArrayList<>();
+        List<String> rv = new ArrayList<>(), list;
+        CollectionIterator<String> it;
+
+        its.add(rv.iterator());
+        it = new CollectionIterator<>(its);
+        list = Utils.iterator2List(it);
 
         assertTrue(list.equals(rv));
     }
