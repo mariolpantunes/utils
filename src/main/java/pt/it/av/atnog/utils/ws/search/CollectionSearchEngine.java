@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Collection Search Engine.
- * <P>Executes</P>
+ * <p>Encapsulates multiple search engines in one interface.</p>
  */
 public class CollectionSearchEngine extends SearchEngine {
     private final List<SearchEngine> se;
@@ -18,34 +18,10 @@ public class CollectionSearchEngine extends SearchEngine {
     }
 
     @Override
-    public List<String> search(String q) {
-        List<String> rv = new ArrayList<>();
-        for (SearchEngine s : se)
-            rv.addAll(s.search(q));
-        return rv;
-    }
-
-    @Override
-    public List<String> snippets(String q) {
-        List<String> rv = new ArrayList<>();
-        for (SearchEngine s : se)
-            rv.addAll(s.snippets(q));
-        return rv;
-    }
-
-    @Override
-    public Iterator<String> searchIt(final String q) {
-        List<Iterator<String>> its = new ArrayList<>();
+    public Iterator<Result> searchIt(final String q) {
+        List<Iterator<Result>> its = new ArrayList<>();
         for (SearchEngine s : se)
             its.add(s.searchIt(q));
-        return new CollectionIterator<>(its);
-    }
-
-    @Override
-    public Iterator<String> snippetsIt(final String q) {
-        List<Iterator<String>> its = new ArrayList<>();
-        for (SearchEngine s : se)
-            its.add(s.snippetsIt(q));
         return new CollectionIterator<>(its);
     }
 }

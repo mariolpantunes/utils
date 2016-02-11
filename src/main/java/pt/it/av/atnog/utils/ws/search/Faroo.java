@@ -1,15 +1,17 @@
 package pt.it.av.atnog.utils.ws.search;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import pt.it.av.atnog.utils.HTTP;
 import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
+import pt.it.av.atnog.utils.json.JSONValue;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
+/**
+ * Faroo search engine.
+ */
 public class Faroo extends SearchEngine {
     //private static final long SLEEP = 1000;
     private final String key;
@@ -18,112 +20,75 @@ public class Faroo extends SearchEngine {
         this.key = key;
     }
 
-    private static void nextIterator(final String q, final String key, IteratorParameters p) {
-        try {
-            JSONObject json = HTTP.getJSON("http://www.faroo.com/api?key=" + key + "&start=" + p.skip + "&q=" + q);
-            JSONArray array = json.get("results").asArray();
-            p.skip += array.size();
-            if (p.skip >= json.get("count").asNumber())
-                p.lastPage = true;
-            p.it = array.iterator();
-            if (!p.it.hasNext())
-                p.done = true;
-        } catch (Exception e) {
-            p.done = true;
-        }
-    }
-
     @Override
-    public Iterator<String> searchIt(String q) {
+    public Iterator<Result> searchIt(String q) {
         return new FarooSearchIterator(q);
     }
 
-    @Override
-    public Iterator<String> snippetsIt(final String q) {
-        return new FarooSnippetIterator(q);
-    }
-
-    private class FarooSnippetIterator implements Iterator<String> {
-        private IteratorParameters p = new IteratorParameters(1);
-        private String q;
-
-        public FarooSnippetIterator(final String q) {
-            try {
-                this.q = URLEncoder.encode(q, java.nio.charset.StandardCharsets.UTF_8.toString());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                p.done = true;
-            }
-            nextIterator(this.q, key, p);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return !p.done;
-        }
-
-        @Override
-        public String next() {
-            String rv = null;
-            if (!p.done) {
-                JSONObject json = p.it.next().asObject();
-                rv = json.get("kwic").asString();
-                if (!p.it.hasNext() && !p.lastPage)
-                    nextIterator(q, key, p);
-                else if (!p.it.hasNext() && p.lastPage)
-                    p.done = true;
-            }
-            return rv;
-        }
-    }
-
     //TODO: Test to see if needs \" \" arround the query
-    private class FarooSearchIterator implements Iterator<String> {
-        private String q, page;
-        private IteratorParameters p = new IteratorParameters(1);
+
+    /**
+     * Fast Faroo search iterator.
+     * <p>
+     * <p>The result pages are consomed continuously.
+     * Fetch one page of results and iterates over them, before fetching another result's page.
+     * This way the network calls are spread throught time, improving latency to the user.</p>
+     */
+    private class FarooSearchIterator implements Iterator<Result> {
+        private boolean lastPage = false, done = false;
+        private int skip = 1;
+        private Iterator<JSONValue> it = null;
+        private String q;
 
         public FarooSearchIterator(final String q) {
             try {
                 this.q = URLEncoder.encode(q, java.nio.charset.StandardCharsets.UTF_8.toString());
-                nextIterator(this.q, key, p);
-                nextPage();
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-                p.done = true;
+                done = true;
             }
+            nextIterator();
         }
 
         @Override
         public boolean hasNext() {
-            return !p.done;
+            return !done;
         }
 
         @Override
-        public String next() {
-            String rv = null;
-            if (!p.done) {
-                rv = page;
-                nextPage();
+        public Result next() {
+            Result rv = null;
+            if (!done) {
+                JSONObject json = it.next().asObject();
+
+                rv = new Result(json.get("title").asString(),
+                        json.get("kwic").asString(),
+                        json.get("url").asString());
+
+                if (!it.hasNext() && !lastPage)
+                    nextIterator();
+                else if (!it.hasNext() && lastPage)
+                    done = true;
             }
-            return page;
+            return rv;
         }
 
-        private void nextPage() {
-            boolean newPage = false;
-            while (!newPage && !p.done) {
-                newPage = true;
-                try {
-                    String url = p.it.next().asObject().get("url").asString();
-                    if (!p.it.hasNext() && !p.lastPage)
-                        nextIterator(q, key, p);
-                    else if (!p.it.hasNext() && p.lastPage)
-                        p.done = true;
-                    Document doc = Jsoup.parse(HTTP.get(url));
-                    page = doc.body().text();
-                } catch (Exception e) {
-                    //e.printStackTrace();
-                    newPage = false;
-                }
+        /**
+         * Fetch a new result's page, process it and returns a iterator with the results.
+         * This methods manages network exceptions and the end of the iteration.
+         */
+        private void nextIterator() {
+            try {
+                JSONObject json = HTTP.getJSON("http://www.faroo.com/api?key=" + key + "&start=" + skip + "&q=" + q);
+                JSONArray array = json.get("results").asArray();
+                skip += array.size();
+                if (skip >= json.get("count").asNumber())
+                    lastPage = true;
+                it = array.iterator();
+                if (!it.hasNext())
+                    done = true;
+            } catch (Exception e) {
+                done = true;
             }
         }
     }
