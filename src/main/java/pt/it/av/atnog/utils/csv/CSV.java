@@ -1,40 +1,45 @@
 package pt.it.av.atnog.utils.csv;
 
 import java.io.Reader;
-import java.util.Iterator;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 /**
- * Created by mantunes on 11/24/15.
+ * CSV parser based on RFC 4180
  */
 public class CSV {
-    private List<List<String>> data;
+    private List<String> header;
+    private List<List<String>> records;
 
-
-    public static Iterator<String> decode(final Reader reader, final char delimiter) {
-        return new CSVIterator(reader, delimiter);
+    public CSV(final Reader r) {
+        this.header = new ArrayList<>();
+        this.records = new ArrayList<>();
+        read(r);
     }
 
-    private enum STATE {BEGIN, ROOT, OBJECT, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, STRING, ARRAY, END, ERROR}
+    ;
 
-    private static class CSVIterator implements Iterator<String> {
-        private final Reader reader;
-        private final char delimiter;
-        private STATE state = STATE.BEGIN;
+    private void read(final Reader r) {
+        Deque<STATE> state = new ArrayDeque<>();
+        state.push(STATE.BEGIN);
+        STATE previous = STATE.BEGIN;
+        StringBuilder name = new StringBuilder();
+        boolean done = false;
+        int i = 0;
+        char c = ' ';
 
-        public CSVIterator(final Reader reader, final char delimiter) {
-            this.reader = reader;
-            this.delimiter = delimiter;
-        }
+        try {
+            while ((i = r.read()) != -1) {
+                c = (char) i;
 
-        @Override
-        public boolean hasNext() {
-            return false;
-        }
-
-        @Override
-        public String next() {
-            return null;
+            }
+        } catch (Exception e) {
+            System.err.println("BUFFER: " + c);
+            e.printStackTrace();
         }
     }
+
+    private enum STATE {BEGIN, END, HEADER, RECORD, DQUOTE, TEXT, EXCAPED_TEXT, COMMA, CRLF, ERROR}
 }

@@ -31,7 +31,6 @@ public class Searx extends SearchEngine {
 
     /**
      * Fast Searx search iterator.
-     * <p>
      * <p>The result pages are consomed continuously.
      * Fetch one page of results and iterates over them, before fetching another result's page.
      * This way the network calls are spread throught time, improving latency to the user.</p>
@@ -63,7 +62,6 @@ public class Searx extends SearchEngine {
             Result rv = null;
             if (!done) {
                 JSONObject json = it.next().asObject();
-                System.out.println(json);
 
                 String title = json.get("title").asString(), url = json.get("url").asString();
 

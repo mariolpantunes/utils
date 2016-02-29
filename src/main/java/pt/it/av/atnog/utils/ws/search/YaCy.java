@@ -9,8 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
-
-//TODO: incomplete, the code is not finnished.
+//TODO: JSON parse fails some times
+//TODO: it appears some json are invalid
 /**
  * YaCy search engine.
  */
@@ -33,7 +33,6 @@ public class YaCy extends SearchEngine {
 
     /**
      * Fast YaCy search iterator.
-     * <p>
      * <p>The result pages are consomed continuously.
      * Fetch one page of results and iterates over them, before fetching another result's page.
      * This way the network calls are spread throught time, improving latency to the user.</p>
@@ -65,9 +64,10 @@ public class YaCy extends SearchEngine {
             Result rv = null;
             if (!done) {
                 JSONObject json = it.next().asObject();
-                System.out.println(json);
-                String snippet = json.get("description").asString(),
-                        title;
+                //System.out.println(json);
+                rv = new Result(json.get("title").asString(),
+                        json.get("description").asString(),
+                        json.get("link").asString());
 
                 if (!it.hasNext() && !lastPage)
                     nextIterator();
@@ -83,8 +83,10 @@ public class YaCy extends SearchEngine {
          */
         private void nextIterator() {
             try {
+                //String s = HTTP.get("http://search.yacy.net/yacysearch.json?resource=global&contentdom=text&lr=lang_en&startRecord=" + skip + "&query=" + q);
+                //System.err.println(s);
                 JSONObject json = HTTP.getJSON("http://search.yacy.net/yacysearch.json?resource=global&contentdom=text" +
-                        "&lr=lang_en&startRecord=" + skip + "&query=" + q, 30000).get("channels").asArray().get(0).asObject();
+                        "&lr=lang_en&startRecord=" + skip + "&query=" + q).get("channels").asArray().get(0).asObject();
                 JSONArray array = json.get("items").asArray();
                 skip += array.size();
                 if (skip >= maxResults)

@@ -34,7 +34,6 @@ public class Bing extends SearchEngine {
 
     /**
      * Fast Bing search iterator.
-     * <p>
      * <p>The result pages are consomed continuously.
      * Fetch one page of results and iterates over them, before fetching another result's page.
      * This way the network calls are spread throught time, improving latency to the user.</p>

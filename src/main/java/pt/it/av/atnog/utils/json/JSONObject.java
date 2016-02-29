@@ -11,13 +11,14 @@ public class JSONObject extends JSONValue {
     private static final int LENGTH = 128;
     private final Map<String, JSONValue> map = new HashMap<>();
 
+    //TODO: close reader
     public static JSONObject read(String s) throws IOException {
         return read(new BufferedReader(new StringReader(s)));
     }
 
     // TODO: improve PRE_KEY and ROOT states
     // TODO: improve error detection...
-    public static JSONObject read(Reader r) throws IOException {
+    public static JSONObject read(final Reader r) throws IOException {
         JSONObject root = new JSONObject();
         char buffer[] = new char[LENGTH];
         Deque<STATE> state = new ArrayDeque<>();
@@ -249,16 +250,16 @@ public class JSONObject extends JSONValue {
                 }
             }
         } catch (Exception e) {
-            System.err.println("BUFFER: " + new String(buffer));
-            System.err.println(root);
+            //System.err.println("BUFFER: " + new String(buffer));
+            //System.err.println(root);
             e.printStackTrace();
         }
 
         if (state.peek() != STATE.END) {
-            System.err.println("BUFFER: " + new String(buffer));
-            System.err.println(root);
+            //System.err.println("BUFFER: " + new String(buffer));
+            //System.err.println(root);
             while (!state.isEmpty()) {
-                System.err.println("STATE -> " + state.peek().name());
+                //System.err.println("STATE -> " + state.peek().name());
                 state.pop();
             }
             root.clear();
@@ -278,6 +279,7 @@ public class JSONObject extends JSONValue {
     private static JSONValue factory(StringBuilder sb) {
         JSONValue rv = null;
         String s = sb.toString().trim();
+
         switch (s) {
             case "true":
                 rv = new JSONBoolean(true);
@@ -292,6 +294,7 @@ public class JSONObject extends JSONValue {
                 rv = new JSONNumber(Double.parseDouble(s));
                 break;
         }
+
         return rv;
     }
 
