@@ -6,28 +6,39 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 
 /**
- * @param <E>
+ * Queue implemented with a circular buffer.
+ *
+ * <p>This queue has a fixed size.
+ * After filling the buffer, any subsequent add operation will overweight the oldest element.
+ * Currently this structure is used in two differente scenarios:
+ * gather the gather neighborhoods of a elements and
+ * as a buffer to mediate the communication between producers and consumers </p>
+ * @param <E> the type of elements held in this collection
  */
-public class RingBuffer<E> implements Queue<E> {
+public class CircularQueue<E> implements Queue<E> {
     private int head = 0, size = 0;
     private E data[];
 
-    public RingBuffer() {
+    public CircularQueue() {
         this(10);
     }
 
-    public RingBuffer(int size) {
+    public CircularQueue(int size) {
         this.data = (E[]) new Object[size];
     }
 
     @Override
     public boolean add(E e) {
+        if(e == null)
+            throw new NullPointerException();
+
         int tail = (head + size) % data.length;
         data[tail] = e;
         if (size == data.length)
             head = (head + 1) % data.length;
         else
             size++;
+
         return true;
     }
 
@@ -102,26 +113,35 @@ public class RingBuffer<E> implements Queue<E> {
         this.size = 0;
     }
 
-    //TODO:
     @Override
     public boolean offer(E e) {
-        return false;
+        add(e);
+        return true;
     }
 
-    //TODO:
     @Override
     public E remove() {
-        return null;
+        if (isEmpty())
+            throw new NoSuchElementException();
+        E rv = data[head];
+        head = (head + 1) % data.length;
+        size--;
+        return rv;
     }
 
-    //TODO:
     @Override
     public E poll() {
-        return null;
+        E rv = null;
+        if (!isEmpty()) {
+            rv = data[head];
+            head = (head + 1) % data.length;
+            size--;
+        }
+        return rv;
     }
 
     @Override
-    public E element() throws NoSuchElementException {
+    public E element() {
         if (isEmpty())
             throw new NoSuchElementException();
         return data[head];
@@ -175,7 +195,7 @@ public class RingBuffer<E> implements Queue<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new RingBufferIterator();
+        return new CircularQueueIterator();
     }
 
     @Override
@@ -194,7 +214,7 @@ public class RingBuffer<E> implements Queue<E> {
     /**
      *
      */
-    private class RingBufferIterator implements Iterator {
+    private class CircularQueueIterator implements Iterator {
         private int i = head, count = size;
 
         @Override
@@ -204,10 +224,10 @@ public class RingBuffer<E> implements Queue<E> {
 
         @Override
         public Object next() {
-            E datum = data[i];
+            E rv = data[i];
             i = (i + 1) % data.length;
             count--;
-            return datum;
+            return rv;
         }
     }
 }
