@@ -179,6 +179,14 @@ public class CircularQueue<E> implements Queue<E> {
         return data[(head + (size / 2)) % data.length];
     }
 
+    /**
+     * Returns the maximum number of elements in the queue.
+     * @return the maximum number of elements in the queue
+     */
+    public int length() {
+        return data.length;
+    }
+
     @Override
     public boolean contains(Object o) {
         boolean rv = false;
@@ -198,10 +206,6 @@ public class CircularQueue<E> implements Queue<E> {
         return new CircularQueueIterator();
     }
 
-    @Override
-    public Object[] toArray() {
-        return new Object[0];
-    }
 
     @Override
     public <T> T[] toArray(T[] a) {
@@ -211,8 +215,17 @@ public class CircularQueue<E> implements Queue<E> {
         return a;
     }
 
+    @Override
+    public Object[] toArray() {
+        E rv[] = (E[])new Object[data.length];
+        int i = 0;
+        for(E e: this)
+            rv[i++] = e;
+        return rv;
+    }
+
     /**
-     *
+     * CircularQueue iterator
      */
     private class CircularQueueIterator implements Iterator {
         private int i = head, count = size;

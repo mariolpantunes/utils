@@ -166,10 +166,12 @@ public class StringUtils {
             end = it.next();
         }
 
+        @Override
         public boolean hasNext() {
             return end != BreakIterator.DONE;
         }
 
+        @Override
         public String next() {
             String rv = input.substring(start, end);
             start = end;
