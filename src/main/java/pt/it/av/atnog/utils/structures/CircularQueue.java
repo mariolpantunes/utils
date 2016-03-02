@@ -243,4 +243,18 @@ public class CircularQueue<E> implements Queue<E> {
             return rv;
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        Iterator it = iterator();
+        while (it.hasNext()) {
+            sb.append(it.next());
+            if (it.hasNext())
+                sb.append(", ");
+        }
+        sb.append(']');
+        return sb.toString();
+    }
 }
