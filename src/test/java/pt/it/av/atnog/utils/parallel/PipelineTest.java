@@ -10,7 +10,7 @@ import java.util.concurrent.BlockingQueue;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by mantunes on 8/20/15.
+ *
  */
 public class PipelineTest {
     static List<Integer> input = new ArrayList<>();
@@ -29,7 +29,7 @@ public class PipelineTest {
         input.add(9);
     }
 
-    @Test(timeout = 1000)
+    @Test(timeout = 3000)
     public void test_one_task() {
         Pipeline pipeline = new Pipeline();
         BlockingQueue sink = pipeline.sink(), source = pipeline.source();
@@ -62,7 +62,7 @@ public class PipelineTest {
         }
     }
 
-    @Test(timeout = 1000)
+    @Test(timeout = 3000)
     public void test_two_tasks() {
         Pipeline pipeline = new Pipeline();
         BlockingQueue sink = pipeline.sink(), source = pipeline.source();
@@ -100,7 +100,7 @@ public class PipelineTest {
         }
     }
 
-    @Test(timeout = 1000)
+    @Test(timeout = 3000)
     public void test_three_tasks() {
         Pipeline pipeline = new Pipeline();
         BlockingQueue sink = pipeline.sink(), source = pipeline.source();
