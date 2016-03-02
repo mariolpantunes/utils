@@ -1,14 +1,6 @@
 stages:
-    - build
     - test
     - deploy
-
-compile:
-    stage: build
-    script:
-        - mvn compile
-    tags:
-        - maven
 
 unit_test:
     stage: test
