@@ -14,6 +14,7 @@ public class Triplet<A, B, C> {
         this.c = c;
     }
 
+    @Override
     public String toString() {
         return "(" + a.toString() + ", " + b.toString() + ", " + c.toString() + ")";
     }

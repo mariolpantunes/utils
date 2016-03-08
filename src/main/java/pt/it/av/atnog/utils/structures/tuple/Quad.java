@@ -16,6 +16,7 @@ public class Quad<A, B, C, D> {
         this.d = d;
     }
 
+    @Override
     public String toString() {
         return "(" + a.toString() + ", " + b.toString() + ", " + c.toString() + ", " + d.toString() + ")";
     }

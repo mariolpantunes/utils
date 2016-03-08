@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-//TODO: Verify Blocking queues...
 public class Pipeline {
     private BlockingQueue<Object> sink = new LinkedBlockingQueue<Object>(), source = new LinkedBlockingQueue<Object>();
     private Deque<Worker> workers = new ArrayDeque<>();

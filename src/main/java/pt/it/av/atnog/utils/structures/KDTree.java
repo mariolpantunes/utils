@@ -248,6 +248,7 @@ public class KDTree<T extends Vector> {
         }
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         print(root, sb, 0);
@@ -264,6 +265,7 @@ public class KDTree<T extends Vector> {
             right = null;
         }
 
+        @Override
         public String toString() {
             return data.toString();
         }

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ *
+ */
 public class Worker implements Runnable {
     private Task t;
     private BlockingQueue<Object> sink, source;
@@ -33,6 +36,7 @@ public class Worker implements Runnable {
         thread.join();
     }
 
+    @Override
     public void run() {
         boolean done = false;
         List<Object> out = new ArrayList<>();
