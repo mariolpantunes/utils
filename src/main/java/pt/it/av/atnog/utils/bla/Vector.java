@@ -3,7 +3,11 @@ package pt.it.av.atnog.utils.bla;
 import pt.it.av.atnog.utils.MathUtils;
 
 /**
- * Created by mantunes on 11/26/14.
+ * This class represent a Vector used in linear algebra.
+ * Implements several functions used in linear algebra, machine learning and matrix algebra.
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class Vector {
     private static int T = 256;
@@ -39,7 +43,6 @@ public class Vector {
     }
 
     /**
-     * Auxiliary function.
      * Sum of vector element-wise.
      *
      * @param a   first vector
@@ -369,6 +372,7 @@ public class Vector {
         return rv;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");

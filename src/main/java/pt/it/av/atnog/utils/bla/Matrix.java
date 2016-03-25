@@ -379,6 +379,7 @@ public class Matrix {
         return new Vector(data, 0, rows * columns);
     }
 
+    @Override
     public boolean equals(Object o) {
         boolean rv = false;
         if (o != null) {
@@ -397,6 +398,7 @@ public class Matrix {
         return rv;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int r = 0; r < rows; r++) {

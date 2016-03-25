@@ -2,6 +2,8 @@ package pt.it.av.atnog.utils;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -17,22 +19,34 @@ public class MathUtilsTest {
     }
 
     @Test
-    public void test_combination() {
-        assertTrue(MathUtils.combination(4, 0) == 1.0);
-        assertTrue(MathUtils.combination(4, 1) == 4.0);
-        assertTrue(MathUtils.combination(4, 2) == 6.0);
-        assertTrue(MathUtils.combination(4, 3) == 4.0);
-        assertTrue(MathUtils.combination(4, 4) == 1.0);
-        assertTrue(MathUtils.combination(5, 0) == 1.0);
-        assertTrue(MathUtils.combination(5, 1) == 5.0);
-        assertTrue(MathUtils.combination(5, 2) == 10.0);
-        assertTrue(MathUtils.combination(5, 3) == 10.0);
-        assertTrue(MathUtils.combination(5, 4) == 5.0);
-        assertTrue(MathUtils.combination(5, 5) == 1.0);
-        assertTrue(MathUtils.combination(5, 5) == 1.0);
-        assertTrue(MathUtils.combination(100, 3) == 161700.0);
-        assertTrue(MathUtils.combination(100, 97) == 161700.0);
-        assertTrue(MathUtils.combination(294, 4) == 304985751.0);
+    public void test_binomial() {
+        assertTrue(MathUtils.binomial(4, 0) == 1.0);
+        assertTrue(MathUtils.binomial(4, 1) == 4.0);
+        assertTrue(MathUtils.binomial(4, 2) == 6.0);
+        assertTrue(MathUtils.binomial(4, 3) == 4.0);
+        assertTrue(MathUtils.binomial(4, 4) == 1.0);
+        assertTrue(MathUtils.binomial(5, 0) == 1.0);
+        assertTrue(MathUtils.binomial(5, 1) == 5.0);
+        assertTrue(MathUtils.binomial(5, 2) == 10.0);
+        assertTrue(MathUtils.binomial(5, 3) == 10.0);
+        assertTrue(MathUtils.binomial(5, 4) == 5.0);
+        assertTrue(MathUtils.binomial(5, 5) == 1.0);
+        assertTrue(MathUtils.binomial(5, 5) == 1.0);
+        assertTrue(MathUtils.binomial(100, 3) == 161700.0);
+        assertTrue(MathUtils.binomial(100, 97) == 161700.0);
+        assertTrue(MathUtils.binomial(294, 4) == 304985751.0);
+    }
+
+    @Test
+    public void test_binomialBD() {
+        assertTrue(MathUtils.binomialBD(4, 0).compareTo(BigDecimal.ONE) == 0);
+        assertTrue(MathUtils.binomialBD(4, 1).compareTo(new BigDecimal(4.0)) == 0);
+        assertTrue(MathUtils.binomialBD(4, 2).compareTo(new BigDecimal(6.0)) == 0);
+        assertTrue(MathUtils.binomialBD(4, 3).compareTo(new BigDecimal(4.0)) == 0);
+        assertTrue(MathUtils.binomialBD(4, 4).compareTo(BigDecimal.ONE) == 0);
+        assertTrue(MathUtils.binomialBD(100, 3).compareTo(new BigDecimal(161700.0)) == 0);
+        assertTrue(MathUtils.binomialBD(100, 97).compareTo(new BigDecimal(161700.0)) == 0);
+        assertTrue(MathUtils.binomialBD(294, 4).compareTo(new BigDecimal(304985751.0)) == 0);
     }
 
     @Test
