@@ -177,9 +177,9 @@ public class MathUtils {
             if (k > (n / 2.0))
                 k = n - k;
             for (int d = 1; d <= k; d++)
-                rv = rv.multiply(new BigDecimal(n--)).divide(new BigDecimal(d));
+                rv = rv.multiply(new BigDecimal(n-- / d));
         }
-        return rv;
+        return rv.setScale(0, RoundingMode.HALF_UP);
     }
 
     /**
@@ -227,7 +227,7 @@ public class MathUtils {
     }
 
     /**
-     *
+     * Returns
      * @param s0
      * @param s1
      * @return
@@ -339,7 +339,7 @@ public class MathUtils {
     }
 
     /**
-     * 
+     *
      * @param v
      * @return
      */
