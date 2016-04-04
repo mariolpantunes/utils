@@ -6,7 +6,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
- * Created by mantunes on 1/23/15.
+ * @author Mário Antunes
  */
 public class Naive {
     public static double det(Matrix M) {
@@ -16,7 +16,12 @@ public class Naive {
         else if (M.columns == 2 && M.rows == 2)
             rv = M.data[0] * M.data[3] - M.data[2] * M.data[1];
         else if (M.columns == 3 && M.rows == 3)
-            rv = (M.data[0] * M.data[4] * M.data[8] + M.data[1] * M.data[5] * M.data[6] + M.data[2] * M.data[3] * M.data[7]) - (M.data[2] * M.data[4] * M.data[6] + M.data[1] * M.data[3] * M.data[8] + M.data[0] * M.data[5] * M.data[7]);
+            rv = (M.data[0] * M.data[4] * M.data[8] +
+                    M.data[1] * M.data[5] * M.data[6] +
+                    M.data[2] * M.data[3] * M.data[7]) -
+                    (M.data[2] * M.data[4] * M.data[6] +
+                            M.data[1] * M.data[3] * M.data[8] +
+                            M.data[0] * M.data[5] * M.data[7]);
         else {
             for (int j1 = 0; j1 < M.rows; j1++) {
                 Matrix T = new Matrix(M.rows - 1, M.columns - 1);

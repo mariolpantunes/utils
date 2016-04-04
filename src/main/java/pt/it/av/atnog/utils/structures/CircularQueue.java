@@ -174,9 +174,32 @@ public class CircularQueue<E> implements Queue<E> {
      * It is usefull to gather neighborhoods of elements.
      *
      * @return the middle element in the queue
+     * @exception NoSuchElementException if this queue is empty
+     *
      */
     public E middle() {
+        if(isEmpty())
+            throw new NoSuchElementException();
         return data[(head + (size / 2)) % data.length];
+    }
+
+    /**
+     * Returns the middle elements in the queue.
+     * It is usefull to gather neighborhoods of elements.
+     * Copies the references of the middle elements to the array.
+     *
+     * @param array where the references from the middle objects are stored
+     * @exception NoSuchElementException if this queue is empty
+     * @exception IllegalArgumentException if the parity of the array and the queue are not the same
+     */
+    public void middle(E array[]) {
+        if(isEmpty())
+            throw new NoSuchElementException();
+        if(size > array.length && array.length % 2 != size % 2)
+            throw new IllegalArgumentException();
+        int idx = ((head + (size / 2)) % data.length) - (array.length / 2);
+        for(int i = 0; i < array.length; i++, idx++)
+            array[i] = data[idx];
     }
 
     /**
