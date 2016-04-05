@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit tests for CircularQueue
+ * Unit tests for CircularQueue.
  *
  * @author Mário Antunes
  * @version 1.0

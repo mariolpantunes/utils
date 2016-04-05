@@ -6,11 +6,11 @@ import java.util.List;
 
 /**
  * Abstract class that represents a search engine service.
- *
  * <p>
- *     Provides methods to search a specific query.
- *     It was designed to provide a efficient iterator mechanism, ideal for pipeline processing.
+ * Provides methods to search a specific query.
+ * It was designed to provide a efficient iterator mechanism, ideal for pipeline processing.
  * </p>
+ *
  * @author Mário Antunes
  * @version 1.0
  */

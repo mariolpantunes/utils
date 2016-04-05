@@ -27,6 +27,14 @@ public class Utils {
         array[j] = tmp;
     }
 
+    public static int min(double array[]) {
+        int rv = 0;
+        for(int i = 1; i < array.length; i++)
+            if(array[i] < array[rv])
+                rv = i;
+        return rv;
+    }
+
     public static <T extends Comparable<T>> T min(T a, T b) {
         T rv = b;
         if (a.compareTo(b) < 0)

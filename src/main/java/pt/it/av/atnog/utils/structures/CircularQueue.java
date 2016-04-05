@@ -8,12 +8,19 @@ import java.util.Queue;
 /**
  * Queue implemented with a circular buffer.
  *
- * <p>This queue has a fixed size.
- * After filling the buffer, any subsequent add operation will overweight the oldest element.
- * Currently this structure is used in two differente scenarios:
- * gather the gather neighborhoods of a elements and
- * as a buffer to mediate the communication between producers and consumers </p>
- * @param <E> the type of elements held in this collection
+ * <p>
+ *     This queue has a fixed size.
+ *     After filling the buffer, any subsequent add operation will overweight the oldest element.
+ *     Currently this structure is used in two differente scenarios:
+ *     <ul>
+ *     <li>gather the gather neighborhoods of a elements and
+ *     <li>as a buffer to mediate the communication between producers and consumers
+ *     </ul>
+ * </p>
+ *
+ * @author Mário Antunes
+ * @version 1.0
+ * @param <E> the type of elements held by the collection
  */
 public class CircularQueue<E> implements Queue<E> {
     private int head = 0, size = 0;
