@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Enumeration;
 
+/**
+ * @author Mário Antunes
+ * @version 1.0
+ */
 public class NetworkUtils {
     /**
      * Returns true if the specified port is available on this host.

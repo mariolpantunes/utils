@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.Random;
 
 /**
- * Collection of general porpused Math utilities.
+ * Collection of general-purpose Math utilities.
  *
  * @author Mário Antunes
  * @version 1.0

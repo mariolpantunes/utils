@@ -11,6 +11,9 @@ import java.util.Iterator;
 
 /**
  * Searx search engine.
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class Searx extends SearchEngine {
     private static final int DEFAULT_MAX_PAGES = 3;

@@ -11,6 +11,9 @@ import java.util.Iterator;
 
 /**
  * Bing search engine.
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class Bing extends SearchEngine {
     /**

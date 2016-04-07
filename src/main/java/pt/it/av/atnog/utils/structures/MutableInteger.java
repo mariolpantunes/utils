@@ -36,6 +36,14 @@ public class MutableInteger extends Number implements Comparable<MutableInteger>
         value--;
     }
 
+    /**
+     *
+     * @param value
+     */
+    public void set(int value) {
+        this.value = value;
+    }
+
     @Override
     public int intValue() {
         return value;

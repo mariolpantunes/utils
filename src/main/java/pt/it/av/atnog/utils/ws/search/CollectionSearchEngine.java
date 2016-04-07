@@ -8,7 +8,12 @@ import java.util.List;
 
 /**
  * Collection Search Engine.
- * <p>Encapsulates multiple search engines in one interface.</p>
+ * <p>
+ *     Encapsulates multiple search engines in one interface.
+ * </p>
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class CollectionSearchEngine extends SearchEngine {
     private final List<SearchEngine> se;

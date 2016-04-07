@@ -13,6 +13,9 @@ import java.util.Iterator;
 //TODO: it appears some json are invalid
 /**
  * YaCy search engine.
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class YaCy extends SearchEngine {
     private static final int MAX_RESULTS = 30;

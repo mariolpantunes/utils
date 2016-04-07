@@ -11,6 +11,9 @@ import java.util.Iterator;
 
 /**
  * Faroo search engine.
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class Faroo extends SearchEngine {
     //private static final long SLEEP = 1000;

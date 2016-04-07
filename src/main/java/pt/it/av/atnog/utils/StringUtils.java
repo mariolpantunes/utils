@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by mantunes on 5/4/15.
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class StringUtils {
 

@@ -4,6 +4,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
+/**
+ * @author Mário Antunes
+ * @version 1.0
+ */
 public class Utils {
     @SuppressWarnings("unchecked")
     public static <T> T cast(Object o) {

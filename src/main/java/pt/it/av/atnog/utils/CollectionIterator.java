@@ -12,7 +12,9 @@ import java.util.List;
  * Simultaneous iteration, in this context, means the iterators are consomed simultaneously.
  * Each means that preserves a partial order between the elements of the iterators
  *
- * @param <E> generic type for the iterator
+ * @author Mário Antunes
+ * @version 1.0
+ * @param <E> type of elements contained in the iterator
  */
 public class CollectionIterator<E> implements Iterator<E> {
 

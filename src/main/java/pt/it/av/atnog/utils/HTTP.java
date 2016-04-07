@@ -13,6 +13,11 @@ import java.util.zip.InflaterInputStream;
 //TODO: review the exception for error codes different from OK
 //TODO: test try-resource to minize the amount of code
 //TODO: review put method
+
+/**
+ * @author Mário Antunes
+ * @version 1.0
+ */
 public class HTTP {
     private static final int TIMEOUT = 5000;
 
