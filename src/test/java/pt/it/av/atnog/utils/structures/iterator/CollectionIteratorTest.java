@@ -1,7 +1,9 @@
-package pt.it.av.atnog.utils;
+package pt.it.av.atnog.utils.structures.iterator;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import pt.it.av.atnog.utils.Utils;
+import pt.it.av.atnog.utils.structures.iterator.CollectionIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,7 +12,8 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by mantunes on 1/20/16.
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class CollectionIteratorTest {
     private static List<String> A, B, C;

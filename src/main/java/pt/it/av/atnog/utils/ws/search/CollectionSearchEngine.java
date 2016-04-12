@@ -1,6 +1,6 @@
 package pt.it.av.atnog.utils.ws.search;
 
-import pt.it.av.atnog.utils.CollectionIterator;
+import pt.it.av.atnog.utils.structures.iterator.CollectionIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
