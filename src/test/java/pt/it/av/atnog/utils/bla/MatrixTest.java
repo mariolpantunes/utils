@@ -6,7 +6,10 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by mantunes on 11/4/14.
+ * Unit test for Matrix class.
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class MatrixTest {
     private static Matrix A, At, B, AplusB, AAt;

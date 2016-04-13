@@ -7,7 +7,10 @@ import pt.it.av.atnog.utils.MathUtils;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by mantunes on 11/26/14.
+ * Unit test for Vector class.
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class VectorTest {
     private static Vector A, Aplus1, B, C, D;

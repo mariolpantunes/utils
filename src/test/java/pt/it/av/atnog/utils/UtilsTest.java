@@ -1,6 +1,8 @@
 package pt.it.av.atnog.utils;
 
 import org.junit.Test;
+import pt.it.av.atnog.utils.structures.MutableInteger;
+import pt.it.av.atnog.utils.structures.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,5 +33,15 @@ public class UtilsTest {
         R.add("C");
 
         assertTrue(Utils.intertwine(A, B).equals(R));
+    }
+
+    @Test
+    public void test_minMax() {
+        double array[] = {6.3, 8.4};
+        Pair<MutableInteger, MutableInteger> mm = Utils.minMax(array);
+        double min = array[mm.a.intValue()], max = array[mm.b.intValue()];
+
+        assertTrue(min == 6.3);
+        assertTrue(max == 8.4);
     }
 }
