@@ -42,62 +42,6 @@ public class Vector {
         return b;
     }
 
-    /**
-     * Sum of vector element-wise.
-     *
-     * @param a   first vector
-     * @param bA  index of the first vector
-     * @param b   second vector
-     * @param bB  index of the second vector
-     * @param c   resulting vector
-     * @param bC  index of the resulting vector
-     * @param len vectors' lengeth
-     */
-    protected static void add(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
-        for (int i = 0; i < len; i++)
-            c[bC + i] = a[bA + i] + b[bB + i];
-    }
-
-    protected static void add(double a[], int bA, double b, double c[], int bC, int len) {
-        for (int i = 0; i < len; i++)
-            c[bC + i] = a[bA + i] + b;
-    }
-
-    protected static void sub(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
-        for (int i = 0; i < len; i++)
-            c[bC + i] = a[bA + i] - b[bB + i];
-    }
-
-    protected static void sub(double a[], int bA, double b, double c[], int bC, int len) {
-        for (int i = 0; i < len; i++)
-            c[bC + i] = a[bA + i] - b;
-    }
-
-    protected static void mul(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
-        for (int i = 0; i < len; i++)
-            c[bC + i] = a[bA + i] * b[bB + i];
-    }
-
-    protected static void mul(double a[], int bA, double b, double c[], int bC, int len) {
-        for (int i = 0; i < len; i++)
-            c[bC + i] = a[bA + i] * b;
-    }
-
-    protected static void div(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
-        for (int i = 0; i < len; i++)
-            c[bC + i] = a[bA + i] / b[bB + i];
-    }
-
-    protected static void div(double a[], int bA, double b, double c[], int bC, int len) {
-        for (int i = 0; i < len; i++)
-            c[bC + i] = a[bA + i] / b;
-    }
-
-    protected static void power(double a[], int bA, double b, double c[], int bC, int len) {
-        for (int i = 0; i < len; i++)
-            c[bC + i] = Math.pow(a[bA + i], b);
-    }
-
     public int size() {
         return length;
     }
@@ -124,100 +68,100 @@ public class Vector {
 
     public Vector add(double scalar) {
         Vector c = new Vector(length);
-        add(this.data, this.bIdx, scalar, c.data, c.bIdx, length);
+        Arrays.add(this.data, this.bIdx, scalar, c.data, c.bIdx, length);
         return c;
     }
 
     public Vector uAdd(double scalar) {
-        add(this.data, this.bIdx, scalar, this.data, this.bIdx, length);
+        Arrays.add(this.data, this.bIdx, scalar, this.data, this.bIdx, length);
         return this;
     }
 
     public Vector add(Vector b) {
         Vector c = new Vector(length);
-        add(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, length);
+        Arrays.add(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, length);
         return c;
     }
 
     public Vector uAdd(Vector b) {
-        add(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, length);
+        Arrays.add(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, length);
         return this;
     }
 
     public Vector sub(double scalar) {
         Vector c = new Vector(length);
-        sub(this.data, this.bIdx, scalar, c.data, c.bIdx, length);
+        Arrays.sub(this.data, this.bIdx, scalar, c.data, c.bIdx, length);
         return c;
     }
 
     public Vector uSub(double scalar) {
-        sub(this.data, this.bIdx, scalar, this.data, this.bIdx, length);
+        Arrays.sub(this.data, this.bIdx, scalar, this.data, this.bIdx, length);
         return this;
     }
 
     public Vector sub(Vector b) {
         Vector c = new Vector(length);
-        sub(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, length);
+        Arrays.sub(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, length);
         return c;
     }
 
     public Vector uSub(Vector b) {
-        sub(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, length);
+        Arrays.sub(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, length);
         return this;
     }
 
     public Vector mul(double scalar) {
         Vector c = new Vector(length);
-        mul(this.data, this.bIdx, scalar, c.data, c.bIdx, length);
+        Arrays.mul(this.data, this.bIdx, scalar, c.data, c.bIdx, length);
         return c;
     }
 
     public Vector uMul(double scalar) {
-        mul(this.data, this.bIdx, scalar, this.data, this.bIdx, length);
+        Arrays.mul(this.data, this.bIdx, scalar, this.data, this.bIdx, length);
         return this;
     }
 
     public Vector mul(Vector b) {
         Vector c = new Vector(length);
-        mul(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, length);
+        Arrays.mul(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, length);
         return c;
     }
 
     public Vector uMul(Vector b) {
-        mul(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, length);
+        Arrays.mul(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, length);
         return this;
     }
 
     public Vector div(double scalar) {
         Vector c = new Vector(length);
-        div(this.data, this.bIdx, scalar, c.data, c.bIdx, length);
+        Arrays.div(this.data, this.bIdx, scalar, c.data, c.bIdx, length);
         return c;
     }
 
     public Vector uDiv(double scalar) {
-        div(this.data, this.bIdx, scalar, this.data, this.bIdx, length);
+        Arrays.div(this.data, this.bIdx, scalar, this.data, this.bIdx, length);
         return this;
     }
 
     public Vector div(Vector b) {
         Vector c = new Vector(length);
-        div(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, length);
+        Arrays.div(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, length);
         return c;
     }
 
     public Vector uDiv(Vector b) {
-        div(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, length);
+        Arrays.div(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, length);
         return this;
     }
 
     public Vector power(double b) {
         Vector c = new Vector(length);
-        power(this.data, this.bIdx, b, c.data, c.bIdx, length);
+        Arrays.power(this.data, this.bIdx, b, c.data, c.bIdx, length);
         return c;
     }
 
     public Vector uPower(double b) {
-        power(this.data, this.bIdx, b, this.data, this.bIdx, length);
+        Arrays.power(this.data, this.bIdx, b, this.data, this.bIdx, length);
         return this;
     }
 

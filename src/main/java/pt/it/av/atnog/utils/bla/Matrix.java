@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
+ *
  * @author Mário Antunes
  */
 public class Matrix {
@@ -17,21 +18,42 @@ public class Matrix {
     protected double data[];
     protected int rows, columns;
 
+    /**
+     * @param rows
+     * @param columns
+     */
     public Matrix(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
         this.data = new double[rows * columns];
     }
 
+    /**
+     *
+     * @param rows
+     * @param columns
+     * @param data
+     */
     public Matrix(int rows, int columns, double data[]) {
         this.rows = rows;
         this.columns = columns;
         this.data = data;
     }
 
+    /**
+     * Constructs an square identity matrix.
+     *
+     * @param size matrix's size
+     * @return an square identity matrix
+     */
     public static Matrix identity(int size) {
-        Matrix C = new Matrix(size, size);
-        for (int i = 0; i < size; i++)
+        return identity(size, size);
+    }
+
+    public static Matrix identity(int rows, int columns) {
+        Matrix C = new Matrix(rows, columns);
+        int min = (rows < columns) ? rows : columns;
+        for (int i = 0; i < min; i++)
             C.data[i * C.columns + i] = 1.0;
         return C;
     }
@@ -43,6 +65,13 @@ public class Matrix {
         return C;
     }
 
+    /**
+     *
+     * @param data
+     * @param tdata
+     * @param rows
+     * @param columns
+     */
     protected static void transpose(double data[], double tdata[], int rows, int columns) {
         double tmp[] = new double[BLK * BLK];
         Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
@@ -67,6 +96,14 @@ public class Matrix {
         }
     }
 
+    /**
+     *
+     * @param M
+     * @param H
+     * @param row
+     * @param column
+     * @return
+     */
     private static boolean householder(Matrix M, Matrix H, int row, int column) {
         boolean rv = false;
         Vector v = M.vector(row, column);
@@ -155,56 +192,56 @@ public class Matrix {
 
     public Matrix add(Matrix B) {
         Matrix C = new Matrix(rows, columns);
-        Vector.add(data, 0, B.data, 0, C.data, 0, data.length);
+        Arrays.add(data, 0, B.data, 0, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uAdd(Matrix B) {
-        Vector.add(data, 0, B.data, 0, data, 0, data.length);
+        Arrays.add(data, 0, B.data, 0, data, 0, data.length);
         return this;
     }
 
     public Matrix add(double scalar) {
         Matrix C = new Matrix(rows, columns);
-        Vector.add(data, 0, scalar, C.data, 0, data.length);
+        Arrays.add(data, 0, scalar, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uAdd(double scalar) {
-        Vector.add(data, 0, scalar, data, 0, data.length);
+        Arrays.add(data, 0, scalar, data, 0, data.length);
         return this;
     }
 
     public Matrix sub(Matrix B) {
         Matrix C = new Matrix(rows, columns);
-        Vector.sub(data, 0, B.data, 0, C.data, 0, data.length);
+        Arrays.sub(data, 0, B.data, 0, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uSub(Matrix B) {
-        Vector.sub(data, 0, B.data, 0, data, 0, data.length);
+        Arrays.sub(data, 0, B.data, 0, data, 0, data.length);
         return this;
     }
 
     public Matrix sub(double b) {
         Matrix C = new Matrix(rows, columns);
-        Vector.sub(this.data, 0, b, C.data, 0, data.length);
+        Arrays.sub(this.data, 0, b, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uSubRow(int row, int column, Vector b) {
-        Vector.sub(data, row * columns + column, b.data, b.bIdx, data, row * columns + column, b.data.length);
+        Arrays.sub(data, row * columns + column, b.data, b.bIdx, data, row * columns + column, b.data.length);
         return this;
     }
 
     public Matrix mul(double scalar) {
         Matrix C = new Matrix(rows, columns);
-        Vector.mul(data, 0, scalar, C.data, 0, data.length);
+        Arrays.mul(data, 0, scalar, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uMul(double scalar) {
-        Vector.mul(data, 0, scalar, this.data, 0, data.length);
+        Arrays.mul(data, 0, scalar, this.data, 0, data.length);
         return this;
     }
 

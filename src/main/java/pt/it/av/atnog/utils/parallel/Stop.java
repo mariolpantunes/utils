@@ -1,7 +1,10 @@
 package pt.it.av.atnog.utils.parallel;
 
 /**
- * Created by mantunes on 11/7/14.
+ *
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class Stop {
 }

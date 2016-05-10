@@ -4,6 +4,10 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * @author Mário Antunes
+ * @version 1.0
+ */
 public class Pipeline {
     private BlockingQueue<Object> sink = new LinkedBlockingQueue<Object>(), source = new LinkedBlockingQueue<Object>();
     private Deque<Worker> workers = new ArrayDeque<>();

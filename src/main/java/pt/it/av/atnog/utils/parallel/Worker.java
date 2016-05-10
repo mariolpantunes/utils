@@ -6,6 +6,9 @@ import java.util.concurrent.BlockingQueue;
 
 /**
  *
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class Worker implements Runnable {
     private Task t;

@@ -94,4 +94,18 @@ public class Naive {
         }
         return C;
     }
+
+    /**
+     * SVD based on jacobi rotations
+     *
+     * @param A
+     * @return
+     */
+    public Matrix[] jacobiSVD(Matrix A) {
+        Matrix U = Matrix.identity(A.rows, A.columns), V = Matrix.identity(A.columns, A.rows);
+        Matrix rv[] = {U, A, V};
+
+
+        return rv;
+    }
 }

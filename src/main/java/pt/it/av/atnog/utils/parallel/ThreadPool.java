@@ -5,6 +5,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class ThreadPool {
     private int nCores = 0;
