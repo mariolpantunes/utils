@@ -11,7 +11,7 @@ import java.util.concurrent.BlockingQueue;
 
 /**
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public class Matrix {
     private static int BLK = 64;

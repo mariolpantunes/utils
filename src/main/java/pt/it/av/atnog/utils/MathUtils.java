@@ -2,12 +2,11 @@ package pt.it.av.atnog.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Random;
 
 /**
  * Collection of general-purpose Math utilities.
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class MathUtils {

@@ -7,7 +7,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /**
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  * @param <E> subtype of Vector stored within the KD-Tree
  */

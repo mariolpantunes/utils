@@ -6,7 +6,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public class Naive {
     public static double det(Matrix M) {

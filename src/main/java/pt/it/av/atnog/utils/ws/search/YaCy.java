@@ -14,7 +14,7 @@ import java.util.Iterator;
 /**
  * YaCy search engine.
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class YaCy extends SearchEngine {

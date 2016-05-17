@@ -5,6 +5,8 @@ import java.io.Writer;
 
 /**
  * Created by mantunes on 5/5/15.
+ *
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public class JSONBoolean extends JSONValue {
     protected final boolean b;

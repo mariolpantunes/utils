@@ -7,20 +7,20 @@ import java.util.Queue;
 
 /**
  * Queue implemented with a circular buffer.
- *
  * <p>
- *     This queue has a fixed size.
- *     After filling the buffer, any subsequent add operation will overweight the oldest element.
- *     Currently this structure is used in two differente scenarios:
- *     <ul>
- *     <li>gather the gather neighborhoods of a elements and
- *     <li>as a buffer to mediate the communication between producers and consumers
- *     </ul>
+ * <p>
+ * This queue has a fixed size.
+ * After filling the buffer, any subsequent add operation will overweight the oldest element.<br>
+ * Currently this structure is used in two differente scenarios:
  * </p>
+ * <ul>
+ * <li>gather the gather neighborhoods of a elements and
+ * <li>as a buffer to mediate the communication between producers and consumers
+ * </ul>
  *
- * @author Mário Antunes
- * @version 1.0
  * @param <E> the type of elements held by the collection
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
 public class CircularQueue<E> implements Queue<E> {
     private int head = 0, size = 0;
@@ -36,7 +36,7 @@ public class CircularQueue<E> implements Queue<E> {
 
     @Override
     public boolean add(E e) {
-        if(e == null)
+        if (e == null)
             throw new NullPointerException();
 
         int tail = (head + size) % data.length;
@@ -181,11 +181,10 @@ public class CircularQueue<E> implements Queue<E> {
      * It is usefull to gather neighborhoods of elements.
      *
      * @return the middle element in the queue
-     * @exception NoSuchElementException if this queue is empty
-     *
+     * @throws NoSuchElementException if this queue is empty
      */
     public E middle() {
-        if(isEmpty())
+        if (isEmpty())
             throw new NoSuchElementException();
         return data[(head + (size / 2)) % data.length];
     }
@@ -196,21 +195,22 @@ public class CircularQueue<E> implements Queue<E> {
      * Copies the references of the middle elements to the array.
      *
      * @param array where the references from the middle objects are stored
-     * @exception NoSuchElementException if this queue is empty
-     * @exception IllegalArgumentException if the parity of the array and the queue are not the same
+     * @throws NoSuchElementException   if this queue is empty
+     * @throws IllegalArgumentException if the parity of the array and the queue are not the same
      */
     public void middle(E array[]) {
-        if(isEmpty())
+        if (isEmpty())
             throw new NoSuchElementException();
-        if(size > array.length && array.length % 2 != size % 2)
+        if (size > array.length && array.length % 2 != size % 2)
             throw new IllegalArgumentException();
         int idx = ((head + (size / 2)) % data.length) - (array.length / 2);
-        for(int i = 0; i < array.length; i++, idx++)
+        for (int i = 0; i < array.length; i++, idx++)
             array[i] = data[idx];
     }
 
     /**
      * Returns the maximum number of elements in the queue.
+     *
      * @return the maximum number of elements in the queue
      */
     public int length() {
@@ -247,11 +247,25 @@ public class CircularQueue<E> implements Queue<E> {
 
     @Override
     public Object[] toArray() {
-        E rv[] = (E[])new Object[data.length];
+        E rv[] = (E[]) new Object[data.length];
         int i = 0;
-        for(E e: this)
+        for (E e : this)
             rv[i++] = e;
         return rv;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        Iterator it = iterator();
+        while (it.hasNext()) {
+            sb.append(it.next());
+            if (it.hasNext())
+                sb.append(", ");
+        }
+        sb.append(']');
+        return sb.toString();
     }
 
     /**
@@ -272,19 +286,5 @@ public class CircularQueue<E> implements Queue<E> {
             count--;
             return rv;
         }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        Iterator it = iterator();
-        while (it.hasNext()) {
-            sb.append(it.next());
-            if (it.hasNext())
-                sb.append(", ");
-        }
-        sb.append(']');
-        return sb.toString();
     }
 }

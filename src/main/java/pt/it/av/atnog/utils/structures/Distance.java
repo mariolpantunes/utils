@@ -7,7 +7,7 @@ package pt.it.av.atnog.utils.structures;
  *     This interaface is currently used in the clustering framework.
  * </p>
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  * @param <T> the type of objects that this object may be compared to
  */

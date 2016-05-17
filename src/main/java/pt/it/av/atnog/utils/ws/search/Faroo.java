@@ -12,7 +12,7 @@ import java.util.Iterator;
 /**
  * Faroo search engine.
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class Faroo extends SearchEngine {

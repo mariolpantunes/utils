@@ -7,7 +7,7 @@ import java.util.concurrent.BlockingQueue;
 /**
  *
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class Worker implements Runnable {

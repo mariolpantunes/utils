@@ -12,7 +12,7 @@ import java.util.List;
  *     Encapsulates multiple search engines in one interface.
  * </p>
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class CollectionSearchEngine extends SearchEngine {

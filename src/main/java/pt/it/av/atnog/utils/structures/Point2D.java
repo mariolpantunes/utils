@@ -8,7 +8,7 @@ import pt.it.av.atnog.utils.bla.Vector;
  *     Used to test the clustering algorithms.
  * </p>
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class Point2D extends Vector implements Distance<Point2D> {

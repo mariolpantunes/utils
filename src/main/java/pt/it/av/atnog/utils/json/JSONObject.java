@@ -5,6 +5,8 @@ import java.util.*;
 
 /**
  * Created by mantunes on 26/03/2015.
+ *
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 //TODO: need to escape all control charaters as stated in stack overflow
 public class JSONObject extends JSONValue {

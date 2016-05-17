@@ -6,7 +6,7 @@ import pt.it.av.atnog.utils.MathUtils;
  * This class represent a Vector used in linear algebra.
  * Implements several functions used in linear algebra, machine learning and matrix algebra.
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class Vector {

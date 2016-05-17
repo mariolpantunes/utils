@@ -5,7 +5,7 @@ import java.util.List;
 /**
  *
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public interface Task {

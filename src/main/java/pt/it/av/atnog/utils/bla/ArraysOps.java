@@ -4,7 +4,7 @@ package pt.it.av.atnog.utils.bla;
  * Operations over arrays of doubles.
  * These operations are common to Matrix and Vector classes.
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class ArraysOps {

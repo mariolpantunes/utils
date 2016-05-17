@@ -8,6 +8,8 @@ import java.util.List;
 
 /**
  * Created by mantunes on 26/03/2015.
+ *
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public class JSONArray extends JSONValue implements Iterable<JSONValue> {
     private final List<JSONValue> array = new ArrayList<>();

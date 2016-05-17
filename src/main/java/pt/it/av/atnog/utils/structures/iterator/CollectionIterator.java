@@ -13,7 +13,7 @@ import java.util.List;
  *     Each means that preserves a partial order between the elements of the iterators.
  * </p>
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  * @param <E> type of elements contained in the iterator
  */

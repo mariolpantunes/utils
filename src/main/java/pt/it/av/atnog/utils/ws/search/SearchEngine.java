@@ -11,7 +11,7 @@ import java.util.List;
  * It was designed to provide a efficient iterator mechanism, ideal for pipeline processing.
  * </p>
  *
- * @author Mário Antunes
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public abstract class SearchEngine {

@@ -5,6 +5,8 @@ import java.io.Writer;
 
 /**
  * Created by mantunes on 26/03/2015.
+ *
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public abstract class JSONValue {
     public abstract void write(Writer w) throws IOException;

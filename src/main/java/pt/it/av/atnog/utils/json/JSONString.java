@@ -7,6 +7,8 @@ import java.io.Writer;
 
 /**
  * Created by mantunes on 3/28/15.
+ *
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public class JSONString extends JSONValue {
     protected final String s;
