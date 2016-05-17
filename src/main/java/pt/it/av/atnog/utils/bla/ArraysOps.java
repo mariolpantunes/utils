@@ -7,7 +7,7 @@ package pt.it.av.atnog.utils.bla;
  * @author Mário Antunes
  * @version 1.0
  */
-public class Arrays {
+public class ArraysOps {
 
     /**
      * Sum two arrays element-wise.
@@ -19,7 +19,7 @@ public class Arrays {
      * @param bB  index of the second vector
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len vectors' length
+     * @param len array's length
      */
     protected static void add(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -35,7 +35,7 @@ public class Arrays {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len vectors' length
+     * @param len array's length
      */
     protected static void add(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -52,7 +52,7 @@ public class Arrays {
      * @param bB  index of the second vector
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len vectors' length
+     * @param len array's length
      */
     protected static void sub(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -68,7 +68,7 @@ public class Arrays {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len vectors' length
+     * @param len array's length
      */
     protected static void sub(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -85,7 +85,7 @@ public class Arrays {
      * @param bB  index of the second vector
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len vectors' length
+     * @param len array's length
      */
     protected static void mul(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -101,7 +101,7 @@ public class Arrays {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len vectors' length
+     * @param len array's length
      */
     protected static void mul(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -118,7 +118,7 @@ public class Arrays {
      * @param bB  index of the second vector
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len vectors' length
+     * @param len array's length
      */
     protected static void div(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -134,11 +134,27 @@ public class Arrays {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len vectors' length
+     * @param len array's length
      */
     protected static void div(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] / b;
+    }
+
+    /**
+     * The elements of A are powered by B and stored in C.
+     *
+     * @param a   first vector
+     * @param bA  index of the first vector
+     * @param b   second vector
+     * @param bB  index of the second vector
+     * @param c   resulting vector
+     * @param bC  index of the resulting vector
+     * @param len array's length
+     */
+    protected static void pow(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
+        for (int i = 0; i < len; i++)
+            c[bC + i] = Math.pow(a[bA + i], b[bB + i]);
     }
 
     /**
@@ -149,9 +165,9 @@ public class Arrays {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len vectors' length
+     * @param len array's length
      */
-    protected static void power(double a[], int bA, double b, double c[], int bC, int len) {
+    protected static void pow(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = Math.pow(a[bA + i], b);
     }

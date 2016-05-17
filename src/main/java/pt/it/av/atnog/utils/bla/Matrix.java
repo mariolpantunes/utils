@@ -192,56 +192,56 @@ public class Matrix {
 
     public Matrix add(Matrix B) {
         Matrix C = new Matrix(rows, columns);
-        Arrays.add(data, 0, B.data, 0, C.data, 0, data.length);
+        ArraysOps.add(data, 0, B.data, 0, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uAdd(Matrix B) {
-        Arrays.add(data, 0, B.data, 0, data, 0, data.length);
+        ArraysOps.add(data, 0, B.data, 0, data, 0, data.length);
         return this;
     }
 
     public Matrix add(double scalar) {
         Matrix C = new Matrix(rows, columns);
-        Arrays.add(data, 0, scalar, C.data, 0, data.length);
+        ArraysOps.add(data, 0, scalar, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uAdd(double scalar) {
-        Arrays.add(data, 0, scalar, data, 0, data.length);
+        ArraysOps.add(data, 0, scalar, data, 0, data.length);
         return this;
     }
 
     public Matrix sub(Matrix B) {
         Matrix C = new Matrix(rows, columns);
-        Arrays.sub(data, 0, B.data, 0, C.data, 0, data.length);
+        ArraysOps.sub(data, 0, B.data, 0, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uSub(Matrix B) {
-        Arrays.sub(data, 0, B.data, 0, data, 0, data.length);
+        ArraysOps.sub(data, 0, B.data, 0, data, 0, data.length);
         return this;
     }
 
     public Matrix sub(double b) {
         Matrix C = new Matrix(rows, columns);
-        Arrays.sub(this.data, 0, b, C.data, 0, data.length);
+        ArraysOps.sub(this.data, 0, b, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uSubRow(int row, int column, Vector b) {
-        Arrays.sub(data, row * columns + column, b.data, b.bIdx, data, row * columns + column, b.data.length);
+        ArraysOps.sub(data, row * columns + column, b.data, b.bIdx, data, row * columns + column, b.data.length);
         return this;
     }
 
     public Matrix mul(double scalar) {
         Matrix C = new Matrix(rows, columns);
-        Arrays.mul(data, 0, scalar, C.data, 0, data.length);
+        ArraysOps.mul(data, 0, scalar, C.data, 0, data.length);
         return C;
     }
 
     public Matrix uMul(double scalar) {
-        Arrays.mul(data, 0, scalar, this.data, 0, data.length);
+        ArraysOps.mul(data, 0, scalar, this.data, 0, data.length);
         return this;
     }
 
