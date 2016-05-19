@@ -21,7 +21,7 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void add(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
+    public static void add(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] + b[bB + i];
     }
@@ -37,7 +37,7 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void add(double a[], int bA, double b, double c[], int bC, int len) {
+    public static void add(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] + b;
     }
@@ -54,7 +54,7 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void sub(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
+    public static void sub(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] - b[bB + i];
     }
@@ -70,7 +70,7 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void sub(double a[], int bA, double b, double c[], int bC, int len) {
+    public static void sub(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] - b;
     }
@@ -87,7 +87,7 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void mul(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
+    public static void mul(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] * b[bB + i];
     }
@@ -103,7 +103,7 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void mul(double a[], int bA, double b, double c[], int bC, int len) {
+    public static void mul(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] * b;
     }
@@ -120,7 +120,7 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void div(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
+    public static void div(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] / b[bB + i];
     }
@@ -136,7 +136,7 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void div(double a[], int bA, double b, double c[], int bC, int len) {
+    public static void div(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = a[bA + i] / b;
     }
@@ -152,7 +152,7 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void pow(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
+    public static void pow(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = Math.pow(a[bA + i], b[bB + i]);
     }
@@ -167,8 +167,54 @@ public class ArraysOps {
      * @param bC  index of the resulting vector
      * @param len array's length
      */
-    protected static void pow(double a[], int bA, double b, double c[], int bC, int len) {
+    public static void pow(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
             c[bC + i] = Math.pow(a[bA + i], b);
+    }
+
+    /**
+     * @param a
+     * @param bA
+     * @param b
+     * @param bB
+     * @param len
+     * @param p
+     * @return
+     */
+    public static double minkowskiDistance(double a[], int bA, double b[], int bB, int len, int p) {
+        double sum = 0.0;
+        for (int i = 0; i < len; i++)
+            sum += Math.pow(Math.abs(a[bA + i] - b[bB + i]), p);
+        return Math.pow(sum, 1.0 / p);
+    }
+
+    /**
+     * @param a
+     * @param bA
+     * @param b
+     * @param bB
+     * @param len
+     * @return
+     */
+    public static double euclideanDistance(double a[], int bA, double b[], int bB, int len) {
+        double sum = 0.0;
+        for (int i = 0; i < len; i++)
+            sum += Math.pow(a[bA + i] - b[bB + i], 2.0);
+        return Math.sqrt(sum);
+    }
+
+    /**
+     * @param a
+     * @param bA
+     * @param b
+     * @param bB
+     * @param len
+     * @return
+     */
+    public static double manhattanDistance(double a[], int bA, double b[], int bB, int len) {
+        double sum = 0.0;
+        for (int i = 0; i < len; i++)
+            sum += Math.abs(a[bA + i] - b[bB + i]);
+        return sum;
     }
 }

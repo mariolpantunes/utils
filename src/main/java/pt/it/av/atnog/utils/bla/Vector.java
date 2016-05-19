@@ -190,22 +190,16 @@ public class Vector {
         return norm;
     }
 
-    // TODO: review this methods
     public double minkowskiDistance(Vector b, int p) {
-        double sum = 0.0;
-        for (int i = 0; i < data.length; i++) {
-            double absDiff = Math.abs(data[bIdx + i] - b.data[b.bIdx + i]);
-            sum += Math.pow(absDiff, p);
-        }
-        return Math.pow(sum, 1.0 / p);
+        return ArraysOps.minkowskiDistance(data, bIdx, b.data, b.bIdx, length, p);
     }
 
-    public double euclideanDistance(Vector p) {
-        return minkowskiDistance(p, 2);
+    public double euclideanDistance(Vector b) {
+        return ArraysOps.euclideanDistance(data, bIdx, b.data, b.bIdx, length);
     }
 
-    public double manhattanDistance(Vector p) {
-        return minkowskiDistance(p, 1);
+    public double manhattanDistance(Vector b) {
+        return ArraysOps.manhattanDistance(data, bIdx, b.data, b.bIdx, length);
     }
 
     public double cosine(Vector b) {
