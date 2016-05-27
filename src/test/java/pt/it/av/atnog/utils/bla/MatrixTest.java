@@ -70,7 +70,7 @@ public class MatrixTest {
 
     @Test
     public void test_transpose_large() {
-        Matrix A = Matrix.rand(256, 512);
+        Matrix A = Matrix.random(256, 512, -10, 10);
         Matrix T1 = A.transpose(), T2 = Naive.transpose(A);
         assertTrue(T1.equals(T2));
     }
@@ -92,7 +92,7 @@ public class MatrixTest {
 
     @Test
     public void test_mull_large() {
-        Matrix A = Matrix.rand(256, 512), B = Matrix.rand(512, 256);
+        Matrix A = Matrix.random(256, 512, -10, 10), B = Matrix.random(512, 256, -10, 10);
         Matrix R1 = A.mul(B), R2 = Naive.mul(A, B);
         assertTrue(R1.equals(R2));
     }
@@ -114,5 +114,19 @@ public class MatrixTest {
         data = new double[]{5};
         d = new Vector(data);
         assertTrue(d.equals(A.diag(-2)));
+    }
+
+    @Test
+    public void test_nmf() {
+        double data[] = {5, 6, 8, 2, 3, 1, 6, 8, 4, 7, 5, 9};
+        Matrix X = new Matrix(3, 4, data);
+        System.out.println(X);
+        Matrix WH[] = X.nmf(2, 100000, 0.0);
+        System.out.println(WH[0]);
+        System.out.println(WH[1]);
+        Matrix wh = WH[0].mul(WH[1]);
+        double cost = ArraysOps.euclideanDistance(X.data, 0, wh.data, 0, X.data.length);
+        System.out.println(wh);
+        System.out.println(cost);
     }
 }

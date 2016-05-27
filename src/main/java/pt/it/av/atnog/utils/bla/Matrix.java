@@ -70,6 +70,13 @@ public class Matrix {
         return C;
     }
 
+    public static Matrix random(int rows, int columns) {
+        Matrix C = new Matrix(rows, columns);
+        for (int n = 0; n < rows * columns; n++)
+            C.data[n] = Math.random();
+        return C;
+    }
+
     /**
      * @param data
      * @param tdata
@@ -449,10 +456,11 @@ public class Matrix {
         return sb.toString();
     }
 
-    //TODO: finnish this method
+    //TODO: optimize this method
     public Matrix[] nmf(int k, int n, double e) {
-        Matrix w = Matrix.random(rows, k, 1, n);
-        Matrix h = Matrix.random(k, cols, 1, n);
+        Matrix w = Matrix.random(rows, k);
+        Matrix h = Matrix.random(k, cols);
+        double temp1[] = new double[rows * cols];
         for (int i = 0; i < n; i++) {
             // compute output.
             Matrix wh = w.mul(h);
@@ -467,12 +475,16 @@ public class Matrix {
             Matrix hn = wt.mul(this);
             Matrix hd = wt.mul(wh);
             //h.smultEq(hn.smultEq(hd.sinvEq()));
+            ArraysOps.div(hn.data, 0, hd.data, 0, temp1, 0, k * cols);
+            ArraysOps.mul(h.data, 0, temp1, 0, h.data, 0, k * cols);
 
             // update weights matrix
             Matrix ht = h.transpose();
             Matrix wn = mul(ht);
             Matrix wd = w.mul(h).mul(ht);
             //w.smultEq(wn.smultEq(wd.sinvEq()));
+            ArraysOps.div(wn.data, 0, wd.data, 0, temp1, 0, rows * k);
+            ArraysOps.mul(w.data, 0, temp1, 0, w.data, 0, rows * k);
         }
         return new Matrix[]{w, h};
     }
