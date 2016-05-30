@@ -475,16 +475,18 @@ public class Matrix {
             Matrix hn = wt.mul(this);
             Matrix hd = wt.mul(wh);
             //h.smultEq(hn.smultEq(hd.sinvEq()));
-            ArraysOps.div(hn.data, 0, hd.data, 0, temp1, 0, k * cols);
-            ArraysOps.mul(h.data, 0, temp1, 0, h.data, 0, k * cols);
+            //ArraysOps.div(hn.data, 0, hd.data, 0, temp1, 0, k * cols);
+            //ArraysOps.mul(h.data, 0, temp1, 0, h.data, 0, k * cols);
+            ArraysOps.mulDiv(h.data, 0, hn.data, 0, hd.data, 0, h.data, 0, k * cols);
 
             // update weights matrix
             Matrix ht = h.transpose();
             Matrix wn = mul(ht);
             Matrix wd = w.mul(h).mul(ht);
             //w.smultEq(wn.smultEq(wd.sinvEq()));
-            ArraysOps.div(wn.data, 0, wd.data, 0, temp1, 0, rows * k);
-            ArraysOps.mul(w.data, 0, temp1, 0, w.data, 0, rows * k);
+            //ArraysOps.div(wn.data, 0, wd.data, 0, temp1, 0, rows * k);
+            //ArraysOps.mul(w.data, 0, temp1, 0, w.data, 0, rows * k);
+            ArraysOps.mulDiv(w.data, 0, wn.data, 0, wd.data, 0, w.data, 0, k * rows);
         }
         return new Matrix[]{w, h};
     }
