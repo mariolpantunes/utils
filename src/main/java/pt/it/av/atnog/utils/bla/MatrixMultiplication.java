@@ -6,8 +6,27 @@ package pt.it.av.atnog.utils.bla;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class MatrixOps {
-/*
+public class MatrixMultiplication {
+
+    /*protected static Matrix ijk(Matrix A, Matrix B) {
+        Matrix R = new Matrix(A.rows, B.cols);
+
+        for(int i = 0; i < R.rows; i++) {
+            for (int j = 0; j < R.cols; j++) {
+                for()
+            }
+        }
+        return R;
+    }
+
+    protected static void ijk(int rows) {
+        for(int i = 0; i < rows; i++) {
+
+        }
+    }
+
+
+
     public static Matrix mul(Matrix A, Matrix B) {
         Matrix C = new Matrix(A.rows, B.cols);
         double bt[] = new double[B.rows * B.cols];
@@ -48,6 +67,6 @@ public class MatrixOps {
             }
         }
         return C;
-    }
-*/
+    }*/
+
 }

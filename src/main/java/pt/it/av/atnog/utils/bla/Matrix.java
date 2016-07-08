@@ -2,10 +2,7 @@ package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.MathUtils;
 import pt.it.av.atnog.utils.parallel.ThreadPool;
-import pt.it.av.atnog.utils.structures.tuple.Quad;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
@@ -13,7 +10,6 @@ import java.util.concurrent.BlockingQueue;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public class Matrix {
-    private static int BLK = 64;
     protected double data[];
     protected int rows, cols;
 
@@ -77,35 +73,7 @@ public class Matrix {
         return C;
     }
 
-    /**
-     * @param data
-     * @param tdata
-     * @param rows
-     * @param columns
-     */
-    protected static void transpose(double data[], double tdata[], int rows, int columns) {
-        double tmp[] = new double[BLK * BLK];
-        Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
-        stack.push(new Quad(0, rows, 0, columns));
-        while (!stack.isEmpty()) {
-            Quad<Integer, Integer, Integer, Integer> q = stack.pop();
-            int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
-            if (r <= BLK && c <= BLK) {
-                for (int i = rb, tmpc = 0; i < re; i++, tmpc++)
-                    for (int j = cb, tmpr = 0; j < ce; j++, tmpr++)
-                        tmp[tmpr * BLK + tmpc] = data[i * columns + j];
-                for (int j = cb, tmpr = 0; j < ce; j++, tmpr++)
-                    for (int i = rb, tmpc = 0; i < re; i++, tmpc++)
-                        tdata[j * rows + i] = tmp[tmpr * BLK + tmpc];
-            } else if (r >= c) {
-                stack.push(new Quad(rb, rb + (r / 2), cb, ce));
-                stack.push(new Quad(rb + (r / 2), re, cb, ce));
-            } else {
-                stack.push(new Quad(rb, re, cb, cb + (c / 2)));
-                stack.push(new Quad(rb, re, cb + (c / 2), ce));
-            }
-        }
-    }
+
 
     /**
      * @param M
@@ -186,14 +154,12 @@ public class Matrix {
 
     public Matrix transpose() {
         Matrix T = new Matrix(cols, rows);
-        transpose(data, T.data, rows, cols);
+        MatrixTranspose.transpose(data, T.data, rows, cols);
         return T;
     }
 
     public Matrix uTranspose() {
-        double buffer[] = new double[rows * cols];
-        transpose(data, buffer, rows, cols);
-        this.data = buffer;
+        MatrixTranspose.transpose(data, data, rows, cols);
         int t = rows;
         this.rows = cols;
         this.cols = t;
@@ -278,9 +244,10 @@ public class Matrix {
 
     //TODO: Check code, improve selection between sequencial and parallel implemenatations
     public Matrix mul(Matrix B) {
+        int BLK = 64;
         Matrix C = new Matrix(rows, B.cols);
         double bt[] = new double[B.rows * B.cols];
-        transpose(B.data, bt, B.rows, B.cols);
+        MatrixTranspose.transpose(B.data, bt, B.rows, B.cols);
         if (C.rows * C.cols < BLK * BLK) {
             for (int i = 0; i < C.rows; i++) {
                 int ic = i * cols;

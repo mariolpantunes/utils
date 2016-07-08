@@ -40,14 +40,6 @@ public class Naive {
         return rv;
     }
 
-    public static Matrix transpose(Matrix M) {
-        Matrix C = new Matrix(M.cols, M.rows);
-        for (int n = 0, total = M.data.length; n < total; n++) {
-            int r = n / M.cols, c = n % M.cols;
-            C.data[c * C.cols + r] = M.data[n];
-        }
-        return C;
-    }
 
     public static Matrix mul(Matrix A, Matrix B) {
         Matrix C = new Matrix(A.rows, B.cols);
