@@ -12,72 +12,29 @@ import static org.junit.Assert.assertTrue;
  * @version 1.0
  */
 public class MatrixTest {
+    private static double a[] = {1, 2, 3, 4, 5, 6}, at[] = {1, 3, 5, 2, 4, 6}, b[] = {1, 2, 3, 4, 5, 6},
+            apb[] = {2, 4, 6, 8, 10, 12}, aat[] = {5, 11, 17, 11, 25, 39, 17, 39, 61};
     private static Matrix A, At, B, AplusB, AAt;
 
     @BeforeClass
     public static void setup() {
-        A = new Matrix(3, 2);
-        A.set(0, 0, 1);
-        A.set(0, 1, 2);
-        A.set(1, 0, 3);
-        A.set(1, 1, 4);
-        A.set(2, 0, 5);
-        A.set(2, 1, 6);
-
-        At = new Matrix(2, 3);
-        At.set(0, 0, 1);
-        At.set(0, 1, 3);
-        At.set(0, 2, 5);
-        At.set(1, 0, 2);
-        At.set(1, 1, 4);
-        At.set(1, 2, 6);
-
-        B = new Matrix(3, 2);
-        B.set(0, 0, 1);
-        B.set(0, 1, 2);
-        B.set(1, 0, 3);
-        B.set(1, 1, 4);
-        B.set(2, 0, 5);
-        B.set(2, 1, 6);
-
-        AplusB = new Matrix(3, 2);
-        AplusB.set(0, 0, 2);
-        AplusB.set(0, 1, 4);
-        AplusB.set(1, 0, 6);
-        AplusB.set(1, 1, 8);
-        AplusB.set(2, 0, 10);
-        AplusB.set(2, 1, 12);
-
-        AAt = new Matrix(3, 3);
-        AAt.set(0, 0, 5);
-        AAt.set(0, 1, 11);
-        AAt.set(0, 2, 17);
-        AAt.set(1, 0, 11);
-        AAt.set(1, 1, 25);
-        AAt.set(1, 2, 39);
-        AAt.set(2, 0, 17);
-        AAt.set(2, 1, 39);
-        AAt.set(2, 2, 61);
+        A = new Matrix(3, 2, a);
+        At = new Matrix(2, 3, at);
+        B = new Matrix(3, 2, b);
+        AplusB = new Matrix(3, 2, apb);
+        AAt = new Matrix(3, 3, aat);
     }
 
     @Test
-    public void test_transpose_small() {
-        //assertTrue(At.equals(A.transpose()));
-        System.out.println(A);
-        System.out.println(At);
-        System.out.println(A.uTranspose());
-        //assertTrue(At.equals(A.uTranspose()));
-        //assertTrue(At.transpose().equals(A));
-        //assertTrue(At.uTranspose().equals(A));
+    public void test_transpose_linear() {
+        Matrix T1 = new Matrix(1, 6, a);
+        Matrix T2 = new Matrix(6, 1, a);
+        assertTrue(T2.equals(T1.transpose()));
     }
 
     @Test
     public void test_transpose_large() {
-        /*Matrix A = Matrix.random(256, 512, -10, 10);
-        Matrix T1 = A.transpose(), T2 = MatrixTransposeTest.naive_transpose(A);
-        assertTrue(T1.equals(T2));
-        A.uTranspose();
-        assertTrue(A.equals(T2));*/
+
     }
 
     @Test

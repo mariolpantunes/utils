@@ -14,8 +14,10 @@ public class Matrix {
     protected int rows, cols;
 
     /**
-     * @param rows
-     * @param cols
+     * Create a empty matrix with size: Rows x Cols.
+     *
+     * @param rows number of rows in the matrix
+     * @param cols number of columns in the matrix
      */
     public Matrix(int rows, int cols) {
         this.rows = rows;
@@ -24,9 +26,11 @@ public class Matrix {
     }
 
     /**
-     * @param rows
-     * @param cols
-     * @param data
+     * Creates a matrix from a 1D double array with size: Rows x Cols.
+     *
+     * @param rows number of rows in the matrix
+     * @param cols number of columns in the matrix
+     * @param data 1D double array with matrix values
      */
     public Matrix(int rows, int cols, double data[]) {
         this.rows = rows;
@@ -35,56 +39,70 @@ public class Matrix {
     }
 
     /**
-     * Constructs an square identity matrix.
+     * Returns a square identity matrix with size: Size x Size.
      *
-     * @param size matrix's size
-     * @return an square identity matrix
+     * @param size number of rows and columns.
+     * @return a square identity matrix
      */
     public static Matrix identity(int size) {
         return identity(size, size);
     }
 
-    public static Matrix identity(int rows, int columns) {
-        Matrix C = new Matrix(rows, columns);
-        int min = (rows < columns) ? rows : columns;
+    /**
+     * Returns an identity matrix with size: Rows x Cols.
+     *
+     * @param rows number of rows in the matrix
+     * @param cols number of columns in the matrix
+     * @return an identity matrix
+     */
+    public static Matrix identity(int rows, int cols) {
+        Matrix C = new Matrix(rows, cols);
+        int min = (rows < cols) ? rows : cols;
         for (int i = 0; i < min; i++)
             C.data[i * C.cols + i] = 1.0;
         return C;
     }
 
     /**
-     * @param rows
-     * @param columns
-     * @param min
-     * @param max
-     * @return
+     * Returns a matrix filled with random integers between [{@code min}, {@code max}[.
+     *
+     * @param rows number of rows in the matrix
+     * @param cols number of columns in the matrix
+     * @param min minimal value of the range, inclusive
+     * @param max maximal value of the range, exclusive
+     * @return a matrix filled with random integers between [{@code min}, {@code max}[.
      */
-    public static Matrix random(int rows, int columns, int min, int max) {
-        Matrix C = new Matrix(rows, columns);
-        for (int n = 0; n < rows * columns; n++)
+    public static Matrix random(int rows, int cols, int min, int max) {
+        Matrix C = new Matrix(rows, cols);
+        for (int n = 0; n < rows * cols; n++)
             C.data[n] = MathUtils.randomBetween(min, max);
         return C;
     }
 
-    public static Matrix random(int rows, int columns) {
-        Matrix C = new Matrix(rows, columns);
-        for (int n = 0; n < rows * columns; n++)
+    /**
+     * Returns a matrix filled with random numbers between [0, 1[.
+     *
+     * @param rows number of rows in the matrix
+     * @param cols number of columns in the matrix
+     * @return a matrix filled with random numbers between [0, 1[.
+     */
+    public static Matrix random(int rows, int cols) {
+        Matrix C = new Matrix(rows, cols);
+        for (int n = 0; n < rows * cols; n++)
             C.data[n] = Math.random();
         return C;
     }
 
-
-
     /**
      * @param M
      * @param H
-     * @param row
-     * @param column
+     * @param r
+     * @param c
      * @return
      */
-    private static boolean householder(Matrix M, Matrix H, int row, int column) {
+    private static boolean householder(Matrix M, Matrix H, int r, int c) {
         boolean rv = false;
-        Vector v = M.vector(row, column);
+        Vector v = M.vector(r, c);
         double d = v.norm(2);
         if (d != v.data[v.bIdx]) {
             rv = true;
@@ -93,14 +111,14 @@ public class Matrix {
             v.data[v.bIdx] -= d;
             double f1 = Math.sqrt(-2 * v.data[v.bIdx] * d);
             v = v.div(f1);
-            for (int i = column; i < M.cols; i++)
-                M.data[row * M.cols + i] = 0.0;
-            M.data[row * M.cols + column] = d;
-            for (int i = row + 1; i < M.rows; i++)
-                M.uSubRow(i, column, v.mul(2.0 * v.innerProduct(M.vector(i, column))));
+            for (int i = c; i < M.cols; i++)
+                M.data[r * M.cols + i] = 0.0;
+            M.data[r * M.cols + c] = d;
+            for (int i = r + 1; i < M.rows; i++)
+                M.uSubRow(i, c, v.mul(2.0 * v.innerProduct(M.vector(i, c))));
             if (H != null)
                 for (int i = 0; i < H.rows; i++)
-                    H.uSubRow(i, column, v.mul(2.0 * v.innerProduct(H.vector(i, column))));
+                    H.uSubRow(i, c, v.mul(2.0 * v.innerProduct(H.vector(i, c))));
         }
         return rv;
     }
@@ -131,41 +149,109 @@ public class Matrix {
         return csr;
     }
 
+    /**
+     * Returns the number of rows in the matrix.
+     *
+     * @return the number of rows in the matrix.
+     */
     public int rows() {
         return rows;
     }
 
+    /**
+     * Returns the number of columns in the matrix.
+     *
+     * @return the number of columns in the matrix.
+     */
     public int columns() {
         return cols;
     }
 
+    /**
+     * Set r-row, c-column value.
+     *
+     * @param r      row
+     * @param c      column
+     * @param scalar value
+     */
     public void set(int r, int c, double scalar) {
         data[r * cols + c] = scalar;
     }
 
+    /**
+     * Set all positions to a value.
+     *
+     * @param scalar value
+     */
     public void set(double scalar) {
         for (int i = 0; i < data.length; i++)
             data[i] = scalar;
     }
 
+    /**
+     * Retuns the value in r-row, c-column.
+     *
+     * @param r row
+     * @param c column
+     * @return the value in r-row, c-column
+     */
     public double get(int r, int c) {
         return data[r * cols + c];
     }
 
+    /**
+     * @return
+     */
+    private boolean isLinear() {
+        return rows == 1 || cols == 1;
+    }
+
+    /**
+     * @return
+     */
+    private boolean isSquare() {
+        return rows == cols;
+    }
+
+    /**
+     * Returns the transpose matrix.
+     * This function uses a cache oblivious algorithm to transpose the original matrix to a new one.
+     *
+     *
+     * @return the transpose matrix
+     */
     public Matrix transpose() {
         Matrix T = new Matrix(cols, rows);
-        MatrixTranspose.transpose(data, T.data, rows, cols);
+        if (isLinear())
+            System.arraycopy(data, 0, T.data, 0, data.length);
+        else
+            MatrixTranspose.transpose(data, T.data, rows, cols);
         return T;
     }
 
+    /**
+     * Returns the transpose matrix.
+     * The tranpose is done in place with none or minimal auxiliary memory.
+     *
+     * @return the transpose matrix
+     */
     public Matrix uTranspose() {
-        MatrixTranspose.transpose(data, data, rows, cols);
+        if (!isLinear()) {
+            if (isSquare())
+                MatrixTranspose.inplace_follow_cycles(data, rows, cols);
+            else
+                MatrixTranspose.inplace_square_transpose(data, rows);
+        }
         int t = rows;
         this.rows = cols;
         this.cols = t;
         return this;
     }
 
+    /**
+     * @param B
+     * @return
+     */
     public Matrix add(Matrix B) {
         Matrix C = new Matrix(rows, cols);
         ArraysOps.add(data, 0, B.data, 0, C.data, 0, data.length);

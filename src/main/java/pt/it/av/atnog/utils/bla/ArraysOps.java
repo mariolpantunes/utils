@@ -141,17 +141,6 @@ public class ArraysOps {
             c[bC + i] = a[bA + i] / b;
     }
 
-    /**
-     * @param a
-     * @param bA
-     * @param b
-     * @param bB
-     * @param c
-     * @param bC
-     * @param r
-     * @param bR
-     * @param len
-     */
     public static void mulDiv(double a[], int bA, double b[], int bB, double c[], int bC, double r[], int bR, int len) {
         for (int i = 0; i < len; i++)
             r[bR + i] = a[bA + i] * (b[bB + i] / c[bC + i]);
@@ -188,15 +177,6 @@ public class ArraysOps {
             c[bC + i] = Math.pow(a[bA + i], b);
     }
 
-    /**
-     * @param a
-     * @param bA
-     * @param b
-     * @param bB
-     * @param len
-     * @param p
-     * @return
-     */
     public static double minkowskiDistance(double a[], int bA, double b[], int bB, int len, int p) {
         double sum = 0.0;
         for (int i = 0; i < len; i++)
@@ -204,14 +184,6 @@ public class ArraysOps {
         return Math.pow(sum, 1.0 / p);
     }
 
-    /**
-     * @param a
-     * @param bA
-     * @param b
-     * @param bB
-     * @param len
-     * @return
-     */
     public static double euclideanDistance(double a[], int bA, double b[], int bB, int len) {
         double sum = 0.0;
         for (int i = 0; i < len; i++)
@@ -219,14 +191,6 @@ public class ArraysOps {
         return Math.sqrt(sum);
     }
 
-    /**
-     * @param a
-     * @param bA
-     * @param b
-     * @param bB
-     * @param len
-     * @return
-     */
     public static double manhattanDistance(double a[], int bA, double b[], int bB, int len) {
         double sum = 0.0;
         for (int i = 0; i < len; i++)
