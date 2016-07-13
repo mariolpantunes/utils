@@ -39,6 +39,19 @@ public class Matrix {
     }
 
     /**
+     * Creates a matrix from another matrix A.
+     * Implements a copy-constructor.
+     *
+     * @param A another matrix
+     */
+    public Matrix(Matrix A) {
+        rows = A.rows;
+        cols = A.cols;
+        data = new double[rows * cols];
+        System.arraycopy(A.data, 0, data, 0, data.length);
+    }
+
+    /**
      * Returns a square identity matrix with size: Size x Size.
      *
      * @param size number of rows and columns.

@@ -33,6 +33,14 @@ public class MatrixTest {
     }
 
     @Test
+    public void test_utranspose_linear() {
+        Matrix T1 = new Matrix(1, 6, a);
+        Matrix T2 = new Matrix(6, 1, a);
+        assertTrue(T2.equals(T1.uTranspose()));
+    }
+
+
+    @Test
     public void test_transpose_large() {
 
     }
