@@ -19,7 +19,7 @@ public class ArraysOps {
      * @param bB  index of the second vector
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void add(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -35,7 +35,7 @@ public class ArraysOps {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void add(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -52,7 +52,7 @@ public class ArraysOps {
      * @param bB  index of the second vector
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void sub(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -68,7 +68,7 @@ public class ArraysOps {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void sub(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -85,7 +85,7 @@ public class ArraysOps {
      * @param bB  index of the second vector
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void mul(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -101,7 +101,7 @@ public class ArraysOps {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void mul(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -118,7 +118,7 @@ public class ArraysOps {
      * @param bB  index of the second vector
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void div(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -134,7 +134,7 @@ public class ArraysOps {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void div(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -155,7 +155,7 @@ public class ArraysOps {
      * @param bB  index of the second vector
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void pow(double a[], int bA, double b[], int bB, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -170,7 +170,7 @@ public class ArraysOps {
      * @param b   scalar
      * @param c   resulting vector
      * @param bC  index of the resulting vector
-     * @param len array's length
+     * @param len array's len
      */
     public static void pow(double a[], int bA, double b, double c[], int bC, int len) {
         for (int i = 0; i < len; i++)
@@ -195,6 +195,13 @@ public class ArraysOps {
         double sum = 0.0;
         for (int i = 0; i < len; i++)
             sum += Math.abs(a[bA + i] - b[bB + i]);
+        return sum;
+    }
+
+    public static double sum(double a[], int bA, int len) {
+        double sum = 0.0;
+        for (int i = 0; i < len; i++)
+            sum += a[i];
         return sum;
     }
 }

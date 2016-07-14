@@ -8,7 +8,6 @@ public class MutableInteger extends Number implements Comparable<MutableInteger>
     private int value;
 
     /**
-     *
      * @param value
      */
     public MutableInteger(final int value) {
@@ -37,7 +36,6 @@ public class MutableInteger extends Number implements Comparable<MutableInteger>
     }
 
     /**
-     *
      * @param value
      */
     public void set(int value) {

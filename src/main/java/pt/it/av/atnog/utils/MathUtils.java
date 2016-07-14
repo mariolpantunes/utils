@@ -56,7 +56,7 @@ public class MathUtils {
     /**
      * Returns number rounded with specific precision.
      *
-     * @param n number to be rounded
+     * @param n   number to be rounded
      * @param ndp number of decimal places
      * @return number rounded with specific precision
      */
@@ -111,8 +111,8 @@ public class MathUtils {
     /**
      * Returns {@code true} if {@code a} is similar to {@code b} diverging at most by {@code eps}, otherwise returns {@code false}.
      *
-     * @param a first number
-     * @param b second number
+     * @param a   first number
+     * @param b   second number
      * @param eps small error epsilon
      * @return {@code true} if {@code a} is similar to {@code b} diverging at most by {@code eps}, otherwise returns {@code false}
      */
@@ -160,11 +160,11 @@ public class MathUtils {
     /**
      * Returns the binomial coefficient C({@code n}, {@code k}), this is the number of combinations of n items taken k at a time.
      * The final result is returned using a BigDecimal class.
-     * @see java.math.BigDecimal
      *
      * @param n first number
      * @param k second number
      * @return the binomial coefficient C({@code n}, {@code k})
+     * @see java.math.BigDecimal
      */
     public static BigDecimal binomialBD(double n, double k) {
         BigDecimal rv = BigDecimal.ONE;
@@ -197,15 +197,15 @@ public class MathUtils {
     /**
      * Auxiliar funtion, used to speedup the computation of factorial and permutauons.
      * This algorithm is based on binary splitting method.
-     * @see <a href="http://www.luschny.de/math/factorial/FastFactorialFunctions.htm">FastFactorialFunctions</a>
      *
      * @param a first number
      * @param b second number
      * @return binary split for factorial and permutations
+     * @see <a href="http://www.luschny.de/math/factorial/FastFactorialFunctions.htm">FastFactorialFunctions</a>
      */
     public static double product(double a, double b) {
         int d = (int) Math.floor(a - b);
-        double m = Math.floor(a/2.0 + b/2.0), rv = 0.0;
+        double m = Math.floor(a / 2.0 + b / 2.0), rv = 0.0;
         switch (d) {
             case 0:
                 rv = 1.0;
@@ -227,6 +227,7 @@ public class MathUtils {
 
     /**
      * Returns
+     *
      * @param s0
      * @param s1
      * @return
@@ -236,7 +237,6 @@ public class MathUtils {
     }
 
     /**
-     *
      * @param s0
      * @param s1
      * @param s2
@@ -247,7 +247,6 @@ public class MathUtils {
     }
 
     /**
-     *
      * @param s0
      * @param s1
      * @return
@@ -257,7 +256,6 @@ public class MathUtils {
     }
 
     /**
-     *
      * @param TP
      * @param FP
      * @return
@@ -270,7 +268,6 @@ public class MathUtils {
     }
 
     /**
-     *
      * @param TP
      * @param FN
      * @return
@@ -283,7 +280,6 @@ public class MathUtils {
     }
 
     /**
-     *
      * @param TP
      * @param FP
      * @param FN
@@ -295,7 +291,6 @@ public class MathUtils {
     }
 
     /**
-     *
      * @param precision
      * @param recall
      * @param b
@@ -310,7 +305,6 @@ public class MathUtils {
     }
 
     /**
-     *
      * @param v
      * @return
      */
@@ -319,7 +313,6 @@ public class MathUtils {
     }
 
     /**
-     *
      * @param v
      * @param TP
      * @return
@@ -338,7 +331,6 @@ public class MathUtils {
     }
 
     /**
-     *
      * @param v
      * @return
      */

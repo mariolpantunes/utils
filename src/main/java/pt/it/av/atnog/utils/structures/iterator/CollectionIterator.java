@@ -7,15 +7,15 @@ import java.util.List;
 /**
  * Collection Iterator.
  * <p>
- *     Represents a collection of iterators.
- *     It allows simultaneous iteration with all of them.
- *     Simultaneous iteration, in this context, means the iterators are consomed simultaneously.
- *     Each means that preserves a partial order between the elements of the iterators.
+ * Represents a collection of iterators.
+ * It allows simultaneous iteration with all of them.
+ * Simultaneous iteration, in this context, means the iterators are consomed simultaneously.
+ * Each means that preserves a partial order between the elements of the iterators.
  * </p>
  *
+ * @param <E> type of elements contained in the iterator
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
- * @param <E> type of elements contained in the iterator
  */
 public class CollectionIterator<E> implements Iterator<E> {
     /**

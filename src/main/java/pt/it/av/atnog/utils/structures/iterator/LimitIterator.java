@@ -5,7 +5,7 @@ import java.util.Iterator;
 /**
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
- * TODO: verify contract of iterator
+ *          TODO: verify contract of iterator
  */
 public class LimitIterator<E> implements Iterator<E> {
     private final Iterator<E> it;
@@ -25,8 +25,8 @@ public class LimitIterator<E> implements Iterator<E> {
 
     @Override
     public E next() {
-        E rv =null;
-        if(hasNext()) {
+        E rv = null;
+        if (hasNext()) {
             rv = it.next();
             i++;
         }

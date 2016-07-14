@@ -47,7 +47,7 @@ public class LimitIteratorTest {
 
         assertTrue(it.hasNext());
         List l = Utils.iterator2List(it);
-        assertTrue(l.equals(list.subList(0,3)));
+        assertTrue(l.equals(list.subList(0, 3)));
         assertTrue(!it.hasNext());
     }
 }

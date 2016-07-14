@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
+ * General purpose Matrix.
+ * Implements several functions used in linear algebra and machine learning.
+ *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public class Matrix {
@@ -14,7 +17,7 @@ public class Matrix {
     protected int rows, cols;
 
     /**
-     * Create a empty matrix with size: Rows x Cols.
+     * Creates a matrix filled with zeros and with size: Rows x Cols.
      *
      * @param rows number of rows in the matrix
      * @param cols number of columns in the matrix
@@ -27,6 +30,7 @@ public class Matrix {
 
     /**
      * Creates a matrix from a 1D double array with size: Rows x Cols.
+     * Does not copy the array's content (shallow copy).
      *
      * @param rows number of rows in the matrix
      * @param cols number of columns in the matrix
@@ -39,8 +43,8 @@ public class Matrix {
     }
 
     /**
-     * Creates a matrix from another matrix A.
-     * Implements a copy-constructor.
+     * Creates a matrix from another matrix.
+     * Implements a copy-constructor (deep copy).
      *
      * @param A another matrix
      */
@@ -77,32 +81,32 @@ public class Matrix {
     }
 
     /**
+     * Returns a matrix filled with random numbers between [0, 1[.
+     *
+     * @param rows number of rows in the matrix
+     * @param cols number of columns in the matrix
+     * @return a matrix filled with random numbers
+     */
+    public static Matrix random(int rows, int cols) {
+        Matrix C = new Matrix(rows, cols);
+        for (int n = 0, length = rows * cols; n < length; n++)
+            C.data[n] = Math.random();
+        return C;
+    }
+
+    /**
      * Returns a matrix filled with random integers between [{@code min}, {@code max}[.
      *
      * @param rows number of rows in the matrix
      * @param cols number of columns in the matrix
-     * @param min minimal value of the range, inclusive
-     * @param max maximal value of the range, exclusive
-     * @return a matrix filled with random integers between [{@code min}, {@code max}[.
+     * @param min  minimal value of the range, inclusive
+     * @param max  maximal value of the range, exclusive
+     * @return a matrix filled with random integers
      */
     public static Matrix random(int rows, int cols, int min, int max) {
         Matrix C = new Matrix(rows, cols);
         for (int n = 0; n < rows * cols; n++)
             C.data[n] = MathUtils.randomBetween(min, max);
-        return C;
-    }
-
-    /**
-     * Returns a matrix filled with random numbers between [0, 1[.
-     *
-     * @param rows number of rows in the matrix
-     * @param cols number of columns in the matrix
-     * @return a matrix filled with random numbers between [0, 1[.
-     */
-    public static Matrix random(int rows, int cols) {
-        Matrix C = new Matrix(rows, cols);
-        for (int n = 0; n < rows * cols; n++)
-            C.data[n] = Math.random();
         return C;
     }
 
@@ -192,9 +196,9 @@ public class Matrix {
     }
 
     /**
-     * Set all positions to a value.
+     * Set all values to the same scalar.
      *
-     * @param scalar value
+     * @param scalar scalar
      */
     public void set(double scalar) {
         for (int i = 0; i < data.length; i++)
@@ -230,7 +234,6 @@ public class Matrix {
      * Returns the transpose matrix.
      * This function uses a cache oblivious algorithm to transpose the original matrix to a new one.
      *
-     *
      * @return the transpose matrix
      */
     public Matrix transpose() {
@@ -251,9 +254,9 @@ public class Matrix {
     public Matrix uTranspose() {
         if (!isLinear()) {
             if (isSquare())
-                MatrixTranspose.inplace_follow_cycles(data, rows, cols);
-            else
                 MatrixTranspose.inplace_square_transpose(data, rows);
+            else
+                MatrixTranspose.inplace_follow_cycles(data, rows, cols);
         }
         int t = rows;
         this.rows = cols;

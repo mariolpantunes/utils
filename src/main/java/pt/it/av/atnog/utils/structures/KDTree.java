@@ -7,11 +7,11 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /**
+ * @param <E> subtype of Vector stored within the KD-Tree
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
- * @param <E> subtype of Vector stored within the KD-Tree
  */
-public class KDTree<E extends Vector> implements Collection<E>{
+public class KDTree<E extends Vector> implements Collection<E> {
     private KDNode<E> root;
     private int size;
 
@@ -23,7 +23,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param root
      * @param size
      */
@@ -33,7 +32,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param points
      * @param <E>
      * @return
@@ -45,7 +43,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param points
      * @param <E>
      * @return
@@ -60,7 +57,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param points
      * @param left
      * @param right
@@ -83,7 +79,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param points
      * @param left
      * @param right
@@ -98,7 +93,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @return
      */
     public int dim() {
@@ -124,7 +118,7 @@ public class KDTree<E extends Vector> implements Collection<E>{
     public Object[] toArray() {
         Object a[] = new Object[size()];
         int i = 0;
-        for (E e: this)
+        for (E e : this)
             a[i++] = e;
         return a;
     }
@@ -137,7 +131,7 @@ public class KDTree<E extends Vector> implements Collection<E>{
          * If array is to large, set the first unassigned element to null
          */
         if (a.length < size)
-            a = (T[])Array.newInstance(a.getClass().getComponentType(), size);
+            a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
 
         else if (a.length > size)
             a[size] = null;
@@ -146,7 +140,7 @@ public class KDTree<E extends Vector> implements Collection<E>{
          * ArrayStoreException will be thrown if types are incompatible, just as required
          */
         int i = 0;
-        for (E e: this)
+        for (E e : this)
             a[i++] = (T) e;
         return a;
     }
@@ -170,7 +164,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param target
      * @param node
      * @param cd
@@ -211,17 +204,15 @@ public class KDTree<E extends Vector> implements Collection<E>{
     @Override
     public boolean remove(Object o) {
         boolean rv = true;
-        if(contains(o)){
-            root = remove((E)o, root, 0);
+        if (contains(o)) {
+            root = remove((E) o, root, 0);
             size--;
-        }
-        else
+        } else
             rv = false;
         return rv;
     }
 
     /**
-     *
      * @param p
      * @param node
      * @param cd
@@ -248,7 +239,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param target
      * @param dist
      * @return
@@ -260,7 +250,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param node
      * @param target
      * @param dist
@@ -284,7 +273,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param target
      * @return
      */
@@ -300,7 +288,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param node
      * @param nn
      * @param target
@@ -324,7 +311,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param p
      * @param node
      * @param cd
@@ -345,7 +331,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param dim
      * @return
      */
@@ -354,7 +339,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param node
      * @param dim
      * @param cd
@@ -375,7 +359,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param dim
      * @return
      */
@@ -384,7 +367,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param node
      * @param dim
      * @param cd
@@ -407,14 +389,13 @@ public class KDTree<E extends Vector> implements Collection<E>{
     public boolean contains(Object o) {
         boolean rv = false;
         if (root != null)
-            if(o instanceof Vector) {
+            if (o instanceof Vector) {
                 rv = contains(root, (E) o, 0);
             }
         return rv;
     }
 
     /**
-     *
      * @param node
      * @param target
      * @param cd
@@ -434,7 +415,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param node
      * @param sb
      * @param prefix
@@ -463,7 +443,6 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param <E>
      */
     private static class KDNode<E extends Vector> {
@@ -483,14 +462,13 @@ public class KDTree<E extends Vector> implements Collection<E>{
     }
 
     /**
-     *
      * @param <E>
      */
     private class KDTreeIterator implements Iterator<E> {
         private final Queue<KDNode<E>> q = new ArrayDeque<>();
 
         public KDTreeIterator() {
-            if(root != null)
+            if (root != null)
                 q.add(root);
         }
 

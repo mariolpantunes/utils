@@ -43,7 +43,7 @@ public abstract class SearchEngine {
 
     /**
      * Represents one result from the search engine.
-     *
+     * <p>
      * <p>A single result is composed by a title, snippet and url.</p>
      */
     public class Result {
@@ -52,9 +52,9 @@ public abstract class SearchEngine {
         /**
          * Search result constructor
          *
-         * @param title title of the webpage
+         * @param title   title of the webpage
          * @param snippet snippet provided by the search engine
-         * @param url url of the webpage
+         * @param url     url of the webpage
          */
         public Result(final String title, final String snippet, final String url) {
             this.title = title;

@@ -26,7 +26,6 @@ public class MatrixTranspose {
         stack.push(new Quad(0, rows, 0, columns));
         while (!stack.isEmpty()) {
             Quad<Integer, Integer, Integer, Integer> q = stack.pop();
-            System.err.println(q);
             int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
             if (r <= BLK && c <= BLK) {
                 for (int i = rb, tmpc = 0; i < re; i++, tmpc++)

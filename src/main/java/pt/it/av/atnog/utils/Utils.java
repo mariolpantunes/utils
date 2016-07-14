@@ -46,7 +46,6 @@ public class Utils {
     }
 
     /**
-     *
      * @param array
      * @return
      */
@@ -65,12 +64,12 @@ public class Utils {
                 }
                 if (max < array[i + 1]) {
                     max = array[i + 1];
-                    maxIdx = i+1;
+                    maxIdx = i + 1;
                 }
             } else {
                 if (min > array[i + 1]) {
                     min = array[i + 1];
-                    minIdx = i+1;
+                    minIdx = i + 1;
                 }
                 if (max < array[i]) {
                     max = array[i];

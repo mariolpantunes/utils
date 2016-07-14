@@ -5,7 +5,7 @@ import pt.it.av.atnog.utils.bla.Vector;
 /**
  * Two-dimension point.
  * <p>
- *     Used to test the clustering algorithms.
+ * Used to test the clustering algorithms.
  * </p>
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
@@ -15,6 +15,7 @@ public class Point2D extends Vector implements Distance<Point2D> {
 
     /**
      * 2D Point constructor.
+     *
      * @param x coordenate of the point
      * @param y coordenate of the point
      */
@@ -25,7 +26,6 @@ public class Point2D extends Vector implements Distance<Point2D> {
     }
 
     /**
-     *
      * @return
      */
     public double x() {
@@ -33,7 +33,6 @@ public class Point2D extends Vector implements Distance<Point2D> {
     }
 
     /**
-     *
      * @return
      */
     public double y() {
@@ -46,5 +45,7 @@ public class Point2D extends Vector implements Distance<Point2D> {
     }
 
     @Override
-    public String toString() { return "(" + data[0] + ";" + data[1] + ")"; }
+    public String toString() {
+        return "(" + data[0] + ";" + data[1] + ")";
+    }
 }

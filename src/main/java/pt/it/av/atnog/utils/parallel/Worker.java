@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
- *
- *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */

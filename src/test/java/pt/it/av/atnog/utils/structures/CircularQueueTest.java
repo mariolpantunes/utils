@@ -15,20 +15,20 @@ import static org.junit.Assert.assertTrue;
  */
 public class CircularQueueTest {
 
-    @Test(expected=NoSuchElementException.class)
+    @Test(expected = NoSuchElementException.class)
     public void test_middle_empty() {
         CircularQueue<String> q = new CircularQueue(3);
         q.middle();
     }
 
-    @Test(expected=NoSuchElementException.class)
+    @Test(expected = NoSuchElementException.class)
     public void test_middle_array_empty() {
         CircularQueue<String> q = new CircularQueue(3);
         String array[] = new String[1];
         q.middle(array);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void test_middle_array_parity() {
         CircularQueue<String> q = new CircularQueue(3);
         q.add("A");
@@ -63,13 +63,13 @@ public class CircularQueueTest {
         String array[] = new String[1];
         q.middle(array);
         String r1[] = {"A"};
-        assertTrue(Arrays.equals(array,r1));
+        assertTrue(Arrays.equals(array, r1));
         q.add("B");
         q.add("C");
         array = new String[3];
         q.middle(array);
-        String r2[] = {"A","B","C"};
-        assertTrue(Arrays.equals(array,r2));
+        String r2[] = {"A", "B", "C"};
+        assertTrue(Arrays.equals(array, r2));
     }
 
     @Test
@@ -79,14 +79,14 @@ public class CircularQueueTest {
         q.add("B");
         String array[] = new String[2];
         q.middle(array);
-        String r1[] = {"A","B"};
-        assertTrue(Arrays.equals(array,r1));
+        String r1[] = {"A", "B"};
+        assertTrue(Arrays.equals(array, r1));
         q.add("C");
         q.add("D");
         array = new String[4];
         q.middle(array);
-        String r2[] = {"A","B","C","D"};
-        assertTrue(Arrays.equals(array,r2));
+        String r2[] = {"A", "B", "C", "D"};
+        assertTrue(Arrays.equals(array, r2));
     }
 
 

@@ -5,7 +5,7 @@ import pt.it.av.atnog.utils.bla.Vector;
 /**
  * One-dimension point.
  * <p>
- *     Used to test the clustering algorithms.
+ * Used to test the clustering algorithms.
  * </p>
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
@@ -15,6 +15,7 @@ public class Point1D extends Vector implements Distance<Point1D> {
 
     /**
      * 1D Point constructor.
+     *
      * @param x coordenate of the point
      */
     public Point1D(double x) {
@@ -23,7 +24,6 @@ public class Point1D extends Vector implements Distance<Point1D> {
     }
 
     /**
-     *
      * @return
      */
     public double x() {

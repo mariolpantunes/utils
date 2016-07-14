@@ -13,7 +13,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class MatrixTest {
     private static double a[] = {1, 2, 3, 4, 5, 6}, at[] = {1, 3, 5, 2, 4, 6}, b[] = {1, 2, 3, 4, 5, 6},
-            apb[] = {2, 4, 6, 8, 10, 12}, aat[] = {5, 11, 17, 11, 25, 39, 17, 39, 61};
+            apb[] = {2, 4, 6, 8, 10, 12}, aat[] = {5, 11, 17, 11, 25, 39, 17, 39, 61},
+            s[] = {1, 2, 3, 4, 5, 6, 7, 8, 9}, st[] = {1, 4, 7, 2, 5, 8, 3, 6, 9};
     private static Matrix A, At, B, AplusB, AAt;
 
     @BeforeClass
@@ -27,22 +28,52 @@ public class MatrixTest {
 
     @Test
     public void test_transpose_linear() {
-        Matrix T1 = new Matrix(1, 6, a);
-        Matrix T2 = new Matrix(6, 1, a);
+        Matrix T1 = new Matrix(1, 6, a), T2 = new Matrix(6, 1, a);
         assertTrue(T2.equals(T1.transpose()));
     }
 
     @Test
-    public void test_utranspose_linear() {
-        Matrix T1 = new Matrix(1, 6, a);
-        Matrix T2 = new Matrix(6, 1, a);
+    public void test_uTranspose_linear() {
+        Matrix T1 = new Matrix(1, 6, a), T2 = new Matrix(6, 1, a);
         assertTrue(T2.equals(T1.uTranspose()));
     }
 
+    @Test
+    public void test_transpose_small() {
+        assertTrue(At.equals(A.transpose()));
+    }
+
+    @Test
+    public void test_uTranspose_rect_small() {
+        Matrix T = new Matrix(A);
+        assertTrue(At.equals(T.uTranspose()));
+    }
+
+    @Test
+    public void test_uTranspose_square_small() {
+        Matrix S = new Matrix(3, 3, s), St = new Matrix(3, 3, st);
+        assertTrue(St.equals(S.uTranspose()));
+    }
 
     @Test
     public void test_transpose_large() {
+        Matrix B = Matrix.random(128, 64, 1, 10);
+        Matrix Bt = MatrixTranspose.naive_transpose(B);
+        assertTrue(Bt.equals(B.transpose()));
+    }
 
+    @Test
+    public void test_uTranspose_rect_large() {
+        Matrix B = Matrix.random(128, 64, 1, 10);
+        Matrix Bt = MatrixTranspose.naive_transpose(B);
+        assertTrue(Bt.equals(B.uTranspose()));
+    }
+
+    @Test
+    public void test_uTranspose_square_large() {
+        Matrix B = Matrix.random(128, 128, 1, 10);
+        Matrix Bt = MatrixTranspose.naive_transpose(B);
+        assertTrue(Bt.equals(B.uTranspose()));
     }
 
     @Test
@@ -95,7 +126,7 @@ public class MatrixTest {
         System.out.println(WH[0]);
         System.out.println(WH[1]);
         Matrix wh = WH[0].mul(WH[1]);
-        double cost = ArraysOps.euclideanDistance(X.data, 0, wh.data, 0, X.data.length);
+        double cost = ArraysOps.euclideanDistance(X.data, 0, wh.data, 0, X.data.len);
         System.out.println(wh);
         System.out.println(cost);*/
     }

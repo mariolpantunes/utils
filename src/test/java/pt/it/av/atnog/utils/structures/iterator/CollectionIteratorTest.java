@@ -3,7 +3,6 @@ package pt.it.av.atnog.utils.structures.iterator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.it.av.atnog.utils.Utils;
-import pt.it.av.atnog.utils.structures.iterator.CollectionIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;

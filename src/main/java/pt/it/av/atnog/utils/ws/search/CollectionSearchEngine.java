@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Collection Search Engine.
  * <p>
- *     Encapsulates multiple search engines in one interface.
+ * Encapsulates multiple search engines in one interface.
  * </p>
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>

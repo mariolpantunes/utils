@@ -8,7 +8,6 @@ public class MutableDouble extends Number implements Comparable<MutableDouble> {
     private double value;
 
     /**
-     *
      * @param value
      */
     public MutableDouble(final double value) {
@@ -23,7 +22,6 @@ public class MutableDouble extends Number implements Comparable<MutableDouble> {
     }
 
     /**
-     *
      * @param value
      */
     public void set(double value) {
@@ -37,17 +35,17 @@ public class MutableDouble extends Number implements Comparable<MutableDouble> {
 
     @Override
     public int intValue() {
-        return (int)value;
+        return (int) value;
     }
 
     @Override
     public long longValue() {
-        return (long)value;
+        return (long) value;
     }
 
     @Override
     public float floatValue() {
-        return (float)value;
+        return (float) value;
     }
 
     @Override
