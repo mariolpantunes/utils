@@ -8,6 +8,21 @@ package pt.it.av.atnog.utils.bla;
  */
 public class MatrixMultiplication {
 
+    /**
+     * @param a
+     * @param b
+     * @param c
+     * @param m
+     * @param n
+     * @param p
+     */
+    protected static void ijk(double a[], double b[], double c[], int m, int n, int p) {
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                for (int k = 0; k < p; k++)
+                    c[i * n + j] += a[i * p + k] * b[k * n + j];
+    }
+
     /*protected static Matrix ijk(Matrix A, Matrix B) {
         Matrix R = new Matrix(A.rows, B.cols);
 
