@@ -9,30 +9,52 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @version 1.0
  */
 public class Pipeline {
-    private BlockingQueue<Object> sink = new LinkedBlockingQueue<Object>(), source = new LinkedBlockingQueue<Object>();
-    private Deque<Worker> workers = new ArrayDeque<>();
-    private List<BlockingQueue<Object>> queues;
+    private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>(),
+            source = new LinkedBlockingQueue<>();
+    private final Deque<Worker> workers = new ArrayDeque<>();
+    private final List<BlockingQueue<Object>> queues;
 
+    /**
+     *
+     */
     public Pipeline() {
         queues = new ArrayList<BlockingQueue<Object>>();
     }
 
+    /**
+     * @param task
+     */
     public void addFirst(Task task) {
         workers.addFirst(new Worker(task));
     }
 
+    /**
+     *
+     * @param task
+     */
     public void addLast(Task task) {
         workers.addLast(new Worker(task));
     }
 
+    /**
+     *
+     * @return
+     */
     public BlockingQueue<Object> sink() {
         return sink;
     }
 
+    /**
+     *
+     * @return
+     */
     public BlockingQueue<Object> source() {
         return source;
     }
 
+    /**
+     *
+     */
     public void start() {
         if (workers.size() > 0) {
             if (queues.size() != workers.size() - 1) {
@@ -60,6 +82,10 @@ public class Pipeline {
         }
     }
 
+    /**
+     *
+     * @throws InterruptedException
+     */
     public void join() throws InterruptedException {
         Stop stop = new Stop();
         sink.put(stop);

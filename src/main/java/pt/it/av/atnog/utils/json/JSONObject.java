@@ -9,7 +9,7 @@ import java.util.*;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 //TODO: need to escape all control charaters as stated in stack overflow
-public class JSONObject extends JSONValue {
+public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, JSONValue>> {
     private static final int LENGTH = 128;
     private final Map<String, JSONValue> map = new HashMap<>();
 
@@ -386,6 +386,11 @@ public class JSONObject extends JSONValue {
             }
         }
         return rv;
+    }
+
+    @Override
+    public Iterator<Map.Entry<String, JSONValue>> iterator() {
+        return map.entrySet().iterator();
     }
 
     private enum STATE {BEGIN, ROOT, OBJECT, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, STRING, ARRAY, END, ERROR}

@@ -34,6 +34,10 @@ public class JSONArray extends JSONValue implements Iterable<JSONValue> {
         return array.size();
     }
 
+    public void clear() {
+        array.clear();
+    }
+
     @Override
     public void write(Writer w) throws IOException {
         w.append("[");

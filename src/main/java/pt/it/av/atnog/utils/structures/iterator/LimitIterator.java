@@ -5,7 +5,6 @@ import java.util.Iterator;
 /**
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
- *          TODO: verify contract of iterator
  */
 public class LimitIterator<E> implements Iterator<E> {
     private final Iterator<E> it;
@@ -16,6 +15,7 @@ public class LimitIterator<E> implements Iterator<E> {
     public LimitIterator(final Iterator<E> it, final int limit) {
         this.it = it;
         this.limit = limit;
+        i = 0;
     }
 
     @Override

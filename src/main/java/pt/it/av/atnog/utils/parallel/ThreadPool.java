@@ -8,21 +8,32 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @version 1.0
  */
 public class ThreadPool {
-    private int nCores = 0;
-    private Worker workers[];
-    private BlockingQueue<Object> sink = new LinkedBlockingQueue<>(), source = new LinkedBlockingQueue<>();
-    private Task t;
+    private final int nCores;
+    private final Worker workers[];
+    private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>(),
+            source = new LinkedBlockingQueue<>();
+    private final Task t;
 
-    public ThreadPool(Task t) {
+    /**
+     * @param t
+     */
+    public ThreadPool(final Task t) {
         this(t, Runtime.getRuntime().availableProcessors());
     }
 
-    public ThreadPool(Task t, int nCores) {
+    /**
+     * @param t
+     * @param nCores
+     */
+    public ThreadPool(final Task t, int nCores) {
         this.t = t;
         this.nCores = nCores;
         this.workers = new Worker[nCores];
     }
 
+    /**
+     *
+     */
     public void start() {
         for (int i = 0; i < nCores; i++) {
             workers[i] = new Worker(t, sink, source);
@@ -30,14 +41,25 @@ public class ThreadPool {
         }
     }
 
+    /**
+     * @return
+     */
     public BlockingQueue<Object> sink() {
         return sink;
     }
 
+    /**
+     *
+     * @return
+     */
     public BlockingQueue<Object> source() {
         return source;
     }
 
+    /**
+     *
+     * @throws InterruptedException
+     */
     public void join() throws InterruptedException {
         Stop stop = new Stop();
         for (int i = 0; i < nCores; i++)

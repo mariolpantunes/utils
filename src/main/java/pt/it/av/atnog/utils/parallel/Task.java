@@ -7,5 +7,9 @@ import java.util.List;
  * @version 1.0
  */
 public interface Task {
+    /**
+     * @param in
+     * @param out
+     */
     void process(Object in, List<Object> out);
 }

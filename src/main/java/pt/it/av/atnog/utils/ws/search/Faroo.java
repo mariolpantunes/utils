@@ -16,7 +16,6 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class Faroo extends SearchEngine {
-    //private static final long SLEEP = 1000;
     private final String key;
 
     public Faroo(final String key) {
@@ -27,8 +26,6 @@ public class Faroo extends SearchEngine {
     public Iterator<Result> searchIt(String q) {
         return new FarooSearchIterator(q);
     }
-
-    //TODO: Test to see if needs \" \" arround the query
 
     /**
      * Fast Faroo search iterator.
@@ -62,11 +59,9 @@ public class Faroo extends SearchEngine {
             Result rv = null;
             if (!done) {
                 JSONObject json = it.next().asObject();
-
                 rv = new Result(json.get("title").asString(),
                         json.get("kwic").asString(),
                         json.get("url").asString());
-
                 if (!it.hasNext() && !lastPage)
                     nextIterator();
                 else if (!it.hasNext() && lastPage)
@@ -89,8 +84,10 @@ public class Faroo extends SearchEngine {
                 it = array.iterator();
                 if (!it.hasNext())
                     done = true;
+                Thread.sleep(500);
             } catch (Exception e) {
                 done = true;
+                //e.printStackTrace();
             }
         }
     }

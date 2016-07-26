@@ -9,7 +9,7 @@ import java.util.concurrent.BlockingQueue;
  * @version 1.0
  */
 public class Worker implements Runnable {
-    private Task t;
+    private final Task t;
     private BlockingQueue<Object> sink, source;
     private Thread thread;
 

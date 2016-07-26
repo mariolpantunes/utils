@@ -9,12 +9,24 @@ import java.io.Writer;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public abstract class JSONValue {
+    /**
+     * @param w
+     * @throws IOException
+     */
     public abstract void write(Writer w) throws IOException;
 
+    /**
+     *
+     * @return
+     */
     public JSONObject asObject() {
         return (JSONObject) this;
     }
 
+    /**
+     *
+     * @return
+     */
     public JSONArray asArray() {
         return (JSONArray) this;
     }
