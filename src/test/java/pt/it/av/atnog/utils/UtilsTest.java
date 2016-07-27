@@ -1,7 +1,7 @@
 package pt.it.av.atnog.utils;
 
 import org.junit.Test;
-import pt.it.av.atnog.utils.structures.MutableInteger;
+import pt.it.av.atnog.utils.structures.mutableNumber.MutableInteger;
 import pt.it.av.atnog.utils.structures.tuple.Pair;
 
 import java.util.ArrayList;

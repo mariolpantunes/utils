@@ -1,6 +1,6 @@
 package pt.it.av.atnog.utils;
 
-import pt.it.av.atnog.utils.structures.MutableInteger;
+import pt.it.av.atnog.utils.structures.mutableNumber.MutableInteger;
 import pt.it.av.atnog.utils.structures.tuple.Pair;
 
 import java.io.PrintWriter;

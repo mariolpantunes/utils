@@ -1,6 +1,10 @@
-package pt.it.av.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures.mutableNumber;
 
 /**
+ * This class extends {@link Number}, but does not define methods such as equals,
+ * hashCode and compareTo because instances are expected to be mutated,
+ * and so are not useful as collection keys.
+ *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
@@ -19,6 +23,20 @@ public class MutableDouble extends Number implements Comparable<MutableDouble> {
      */
     public MutableDouble() {
         this(0.0);
+    }
+
+    /**
+     *
+     */
+    public void increment() {
+        value += 1.0;
+    }
+
+    /**
+     *
+     */
+    public void decrement() {
+        value -= 1.0;
     }
 
     /**
