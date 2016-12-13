@@ -9,7 +9,7 @@ import java.util.*;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 //TODO: need to escape all control charaters as stated in stack overflow
-public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, JSONValue>> {
+public class JSONObject extends JSONValue implements Map<String, JSONValue> {
     private static final int LENGTH = 128;
     private final Map<String, JSONValue> map = new HashMap<>();
 
@@ -113,7 +113,7 @@ public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, 
                                         state.pop();
                                         JSONObject j = new JSONObject();
                                         if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT)
-                                            ((JSONObject) store.peek()).add(name.toString(), j);
+                                            ((JSONObject) store.peek()).put(name.toString(), j);
                                         else if (state.peek() == STATE.ARRAY)
                                             ((JSONArray) store.peek()).add(j);
                                         store.push(j);
@@ -126,7 +126,7 @@ public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, 
                                         state.pop();
                                         JSONArray j = new JSONArray();
                                         if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT)
-                                            ((JSONObject) store.peek()).add(name.toString(), j);
+                                            ((JSONObject) store.peek()).put(name.toString(), j);
                                         else if (state.peek() == STATE.ARRAY)
                                             ((JSONArray) store.peek()).add(j);
                                         store.push(j);
@@ -159,7 +159,7 @@ public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, 
                                 case ',':
                                     state.pop();
                                     if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT) {
-                                        ((JSONObject) store.peek()).add(name.toString(), factory(value));
+                                        ((JSONObject) store.peek()).put(name.toString(), factory(value));
                                         state.push(STATE.PRE_KEY);
                                         name.setLength(0);
                                     } else if (state.peek() == STATE.ARRAY) {
@@ -170,7 +170,7 @@ public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, 
                                     break;
                                 case '}': {
                                     state.pop();
-                                    ((JSONObject) store.peek()).add(name.toString(), factory(value));
+                                    ((JSONObject) store.peek()).put(name.toString(), factory(value));
                                     state.pop();
                                     store.pop();
                                     if (state.peek() == STATE.OBJECT || state.peek() == STATE.ARRAY)
@@ -199,7 +199,7 @@ public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, 
                                     if (!isEscaped(value)) {
                                         state.pop();
                                         if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT) {
-                                            ((JSONObject) store.peek()).add(name.toString(),
+                                            ((JSONObject) store.peek()).put(name.toString(),
                                                     new JSONString(value.toString()));
                                             name.setLength(0);
                                         } else if (state.peek() == STATE.ARRAY)
@@ -304,23 +304,20 @@ public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, 
         return map.containsKey(name);
     }
 
-    public JSONValue get(String name) {
-        return map.get(name);
+    @Override
+    public boolean containsKey(Object key) {
+        return map.containsKey(key);
     }
 
-    public void add(String name, JSONValue value) {
-        map.put(name, value);
-    }
-
-    public void add(String name, double value) {
+    public void put(String name, double value) {
         map.put(name, new JSONNumber(value));
     }
 
-    public void add(String name, String value) {
+    public void put(String name, String value) {
         map.put(name, new JSONString(value));
     }
 
-    public void add(String name, boolean value) {
+    public void put(String name, boolean value) {
         map.put(name, new JSONBoolean(value));
     }
 
@@ -328,12 +325,59 @@ public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, 
         return map.keySet();
     }
 
+    @Override
+    public Set<String> keySet() {
+        return map.keySet();
+    }
+
+    @Override
     public void clear() {
         map.clear();
     }
 
+    @Override
+    public Collection<JSONValue> values() {
+        return null;
+    }
+
+    @Override
+    public Set<Entry<String, JSONValue>> entrySet() {
+        return null;
+    }
+
+    @Override
     public int size() {
         return map.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        return map.containsValue(value);
+    }
+
+    @Override
+    public JSONValue get(Object key) {
+        return map.get(key);
+    }
+
+    @Override
+    public JSONValue put(String key, JSONValue value) {
+        return map.put(key, value);
+    }
+
+    @Override
+    public JSONValue remove(Object key) {
+        return map.remove(key);
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ? extends JSONValue> m) {
+        map.putAll(m);
     }
 
     //TODO: JSONENCODE the names...
@@ -386,11 +430,6 @@ public class JSONObject extends JSONValue implements Iterable<Map.Entry<String, 
             }
         }
         return rv;
-    }
-
-    @Override
-    public Iterator<Map.Entry<String, JSONValue>> iterator() {
-        return map.entrySet().iterator();
     }
 
     private enum STATE {BEGIN, ROOT, OBJECT, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, STRING, ARRAY, END, ERROR}

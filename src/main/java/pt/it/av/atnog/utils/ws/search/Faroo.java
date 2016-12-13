@@ -1,6 +1,6 @@
 package pt.it.av.atnog.utils.ws.search;
 
-import pt.it.av.atnog.utils.HTTP;
+import pt.it.av.atnog.utils.Http;
 import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
@@ -76,7 +76,7 @@ public class Faroo extends SearchEngine {
          */
         private void nextIterator() {
             try {
-                JSONObject json = HTTP.getJSON("http://www.faroo.com/api?key=" + key + "&start=" + skip + "&q=" + q);
+                JSONObject json = Http.getJson("http://www.faroo.com/api?key=" + key + "&start=" + skip + "&q=" + q);
                 JSONArray array = json.get("results").asArray();
                 skip += array.size();
                 if (skip >= json.get("count").asNumber())

@@ -1,6 +1,6 @@
 package pt.it.av.atnog.utils.ws.search;
 
-import pt.it.av.atnog.utils.HTTP;
+import pt.it.av.atnog.utils.Http;
 import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
@@ -89,7 +89,7 @@ public class YaCy extends SearchEngine {
             try {
                 //String s = HTTP.get("http://search.yacy.net/yacysearch.json?resource=global&contentdom=text&lr=lang_en&startRecord=" + skip + "&query=" + q);
                 //System.err.println(s);
-                JSONObject json = HTTP.getJSON("http://search.yacy.net/yacysearch.json?resource=global&contentdom=text" +
+                JSONObject json = Http.getJson("http://search.yacy.net/yacysearch.json?resource=global&contentdom=text" +
                         "&lr=lang_en&startRecord=" + skip + "&query=" + q).get("channels").asArray().get(0).asObject();
                 JSONArray array = json.get("items").asArray();
                 skip += array.size();

@@ -58,13 +58,13 @@ public class JSONObjectTest {
         JSONObject b = new JSONObject();
         JSONArray array = new JSONArray();
         JSONObject id1 = new JSONObject(), id2 = new JSONObject();
-        id1.add("id", 1);
-        id1.add("name", "Corby Page");
-        id2.add("id", 2);
-        id2.add("name", "Carter Page");
+        id1.put("id", 1);
+        id1.put("name", "Corby Page");
+        id2.put("id", 2);
+        id2.put("name", "Carter Page");
         array.add(id1);
         array.add(id2);
-        b.add("friends", array);
+        b.put("friends", array);
         assertTrue(a.equals(b));
     }
 }

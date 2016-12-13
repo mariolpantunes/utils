@@ -1,6 +1,6 @@
 package pt.it.av.atnog.utils.ws.search;
 
-import pt.it.av.atnog.utils.HTTP;
+import pt.it.av.atnog.utils.Http;
 import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
@@ -86,7 +86,7 @@ public class Bing extends SearchEngine {
          */
         private void nextIterator() {
             try {
-                JSONObject json = HTTP.getJSON("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
+                JSONObject json = Http.getJson("https://api.datamarket.azure.com/Bing/SearchWeb/v1/Web?$format=json" +
                         "&$skip=" + skip + "&Query=" + q, "", key).get("d").asObject();
                 if (json.get("__next") == null)
                     lastPage = true;

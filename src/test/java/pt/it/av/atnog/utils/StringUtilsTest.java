@@ -11,14 +11,14 @@ import static org.junit.Assert.assertTrue;
  * Created by mantunes on 5/4/15.
  */
 public class StringUtilsTest {
-    @Test
+    /*@Test
     public void test_count() {
         assertTrue(StringUtils.count("banana", 'b') == 1);
         assertTrue(StringUtils.count("banana", 'a') == 3);
         assertTrue(StringUtils.count("banana", 'n') == 2);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void test_indexOf() {
         List<Integer> r1 = new ArrayList<>(), r2 = new ArrayList<>(), r3 = new ArrayList<>();
         r1.add(0);
@@ -30,7 +30,7 @@ public class StringUtilsTest {
         assertTrue(StringUtils.indexOf("banana", 'b').equals(r1));
         assertTrue(StringUtils.indexOf("banana", 'a').equals(r2));
         assertTrue(StringUtils.indexOf("banana", 'n').equals(r3));
-    }
+    }*/
 
     @Test
     public void test_escape() {
@@ -52,7 +52,7 @@ public class StringUtilsTest {
         assertTrue(StringUtils.levenshtein("zeil", "trials") == 4);
     }
 
-    @Test
+    /*@Test
     public void test_clauses() {
         String setence1 = "My estate goes to my husband, son, daughter-in-law, and nephew.";
         List<String> clauses1 = StringUtils.clauses(setence1);
@@ -70,5 +70,5 @@ public class StringUtilsTest {
         assertTrue(clauses3.size() == 2);
         assertTrue(clauses3.get(0).equals("I am very nervous about this."));
         assertTrue(clauses3.get(1).equals("by the way"));
-    }
+    }*/
 }
