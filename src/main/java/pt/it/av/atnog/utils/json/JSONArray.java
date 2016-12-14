@@ -87,12 +87,12 @@ public class JSONArray extends JSONValue implements List<JSONValue> {
 
     @Override
     public ListIterator<JSONValue> listIterator() {
-        return new JSONArrayListIterator();
+        return array.listIterator();
     }
 
     @Override
     public ListIterator<JSONValue> listIterator(int index) {
-        return new JSONArrayListIterator(index);
+        return array.listIterator(index);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class JSONArray extends JSONValue implements List<JSONValue> {
 
     @Override
     public Iterator<JSONValue> iterator() {
-        return new JSONArrayIterator();
+        return array.iterator();
     }
 
     @Override
@@ -162,96 +162,5 @@ public class JSONArray extends JSONValue implements List<JSONValue> {
     @Override
     public <T> T[] toArray(T[] a) {
         return null;
-    }
-
-    public class JSONArrayIterator implements Iterator<JSONValue> {
-        private int index = 0;
-
-        @Override
-        public boolean hasNext() {
-            return index < array.size();
-        }
-
-        @Override
-        public JSONValue next() {
-            JSONValue rv = null;
-            if (index < array.size())
-                rv = array.get(index++);
-            return rv;
-        }
-    }
-
-    public class JSONArrayListIterator implements ListIterator<JSONValue> {
-        private int index;
-
-        public JSONArrayListIterator() {
-            index = 0;
-        }
-
-        public JSONArrayListIterator(int index) {
-            this.index = index;
-        }
-
-
-        @Override
-        public boolean hasNext() {
-            return index < array.size();
-        }
-
-        @Override
-        public JSONValue next() {
-            if(index < 0)
-                index = 0;
-
-            JSONValue rv = null;
-
-            if (index < array.size())
-                rv = array.get(index++);
-
-            return rv;
-        }
-
-        @Override
-        public boolean hasPrevious() {
-            return index >= 0;
-        }
-
-        @Override
-        public JSONValue previous() {
-            if(index >= array.size())
-                index = array.size() - 1;
-
-            JSONValue rv = null;
-
-            if (index >= 0)
-                rv = array.get(index--);
-
-            return rv;
-        }
-
-        @Override
-        public int nextIndex() {
-            return index + 1;
-        }
-
-        @Override
-        public int previousIndex() {
-            return index - 1;
-        }
-
-        @Override
-        public void remove() {
-            array.remove(index);
-        }
-
-        @Override
-        public void set(JSONValue value) {
-            array.set(index, value);
-        }
-
-        @Override
-        public void add(JSONValue value) {
-            array.add(index, value);
-        }
     }
 }
