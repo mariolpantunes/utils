@@ -1,6 +1,7 @@
 package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.MathUtils;
+import pt.it.av.atnog.utils.structures.Distance;
 
 /**
  * General purpose Vector.
@@ -9,7 +10,7 @@ import pt.it.av.atnog.utils.MathUtils;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Vector {
+public class Vector<D extends Vector> implements Distance<D> {
     private static int T = 256;
     private static int B = 128;
     protected int bIdx, len;
@@ -409,5 +410,10 @@ public class Vector {
             sb.append(data[bIdx + i] + ", ");
         sb.append(data[bIdx + len - 1] + "]");
         return sb.toString();
+    }
+
+    @Override
+    public double distanceTo(D v) {
+        return euclideanDistance(v);
     }
 }

@@ -37,7 +37,7 @@ public class KDTree<E extends Vector> implements Collection<E> {
      * @return
      */
     public static <E extends Vector> KDTree<E> build(Collection<E> points) {
-        E[] array = (E[]) new Vector[points.size()];
+        E[] array = Utils.cast(new Vector[points.size()]);
         array = points.toArray(array);
         return build(array);
     }
@@ -131,7 +131,7 @@ public class KDTree<E extends Vector> implements Collection<E> {
          * If array is to large, set the first unassigned element to null
          */
         if (a.length < size)
-            a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
+            a = Utils.cast(Array.newInstance(a.getClass().getComponentType(), size));
 
         else if (a.length > size)
             a[size] = null;
@@ -141,7 +141,7 @@ public class KDTree<E extends Vector> implements Collection<E> {
          */
         int i = 0;
         for (E e : this)
-            a[i++] = (T) e;
+            a[i++] = Utils.cast(e);
         return a;
     }
 
@@ -205,7 +205,7 @@ public class KDTree<E extends Vector> implements Collection<E> {
     public boolean remove(Object o) {
         boolean rv = true;
         if (contains(o)) {
-            root = remove((E) o, root, 0);
+            root = remove(Utils.cast(o), root, 0);
             size--;
         } else
             rv = false;
@@ -279,7 +279,7 @@ public class KDTree<E extends Vector> implements Collection<E> {
     public E nearest(E target) {
         E rv = null;
         if (root != null) {
-            KDNode<E> nn[] = new KDNode[1];
+            KDNode<E> nn[] = Utils.cast(new KDNode[1]);
             nn[0] = parent(target, root, 0);
             nearest(root, nn, target, 0);
             rv = nn[0].data;
@@ -390,7 +390,7 @@ public class KDTree<E extends Vector> implements Collection<E> {
         boolean rv = false;
         if (root != null)
             if (o instanceof Vector) {
-                rv = contains(root, (E) o, 0);
+                rv = contains(root, Utils.cast(o), 0);
             }
         return rv;
     }

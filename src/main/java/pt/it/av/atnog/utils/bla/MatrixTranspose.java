@@ -22,7 +22,7 @@ public class MatrixTranspose {
      */
     protected static void transpose(double data[], double tdata[], int rows, int columns) {
         double tmp[] = new double[BLK * BLK];
-        Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
+        Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<Quad<Integer, Integer, Integer, Integer>>();
         stack.push(new Quad(0, rows, 0, columns));
         while (!stack.isEmpty()) {
             Quad<Integer, Integer, Integer, Integer> q = stack.pop();

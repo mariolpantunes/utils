@@ -1,5 +1,7 @@
 package pt.it.av.atnog.utils.structures;
 
+import pt.it.av.atnog.utils.Utils;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -31,7 +33,7 @@ public class CircularQueue<E> implements Queue<E> {
     }
 
     public CircularQueue(int size) {
-        this.data = (E[]) new Object[size];
+        this.data = Utils.cast(new Object[size]);
     }
 
     @Override
@@ -53,7 +55,7 @@ public class CircularQueue<E> implements Queue<E> {
     public boolean remove(Object o) {
         boolean rv = false;
         if (contains(o)) {
-            E tdata[] = (E[]) new Object[this.data.length];
+            E tdata[] = Utils.cast(new Object[this.data.length]);
             int tsize = 0;
             for (E e : this)
                 if (!e.equals(o))
@@ -85,7 +87,7 @@ public class CircularQueue<E> implements Queue<E> {
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        E tdata[] = (E[]) new Object[this.data.length];
+        E tdata[] = Utils.cast(new Object[this.data.length]);
         int tsize = 0;
         for (E e : this)
             if (!c.contains(e))
@@ -101,7 +103,7 @@ public class CircularQueue<E> implements Queue<E> {
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        E tdata[] = (E[]) new Object[this.data.length];
+        E tdata[] = Utils.cast(new Object[this.data.length]);
         int tsize = 0;
         for (E e : this)
             if (c.contains(e))
@@ -241,13 +243,13 @@ public class CircularQueue<E> implements Queue<E> {
     public <T> T[] toArray(T[] a) {
         int size = 0;
         for (E e : this)
-            a[size++] = (T) e;
+            a[size++] = Utils.cast(e);
         return a;
     }
 
     @Override
     public Object[] toArray() {
-        E rv[] = (E[]) new Object[data.length];
+        E rv[] = Utils.cast(new Object[data.length]);
         int i = 0;
         for (E e : this)
             rv[i++] = e;
@@ -271,7 +273,7 @@ public class CircularQueue<E> implements Queue<E> {
     /**
      * CircularQueue iterator
      */
-    private class CircularQueueIterator implements Iterator {
+    private class CircularQueueIterator implements Iterator<E> {
         private int i = head, count = size;
 
         @Override
@@ -280,7 +282,7 @@ public class CircularQueue<E> implements Queue<E> {
         }
 
         @Override
-        public Object next() {
+        public E next() {
             E rv = data[i];
             i = (i + 1) % data.length;
             count--;

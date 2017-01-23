@@ -11,7 +11,7 @@ import pt.it.av.atnog.utils.bla.Vector;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Point1D extends Vector implements Distance<Point1D> {
+public class Point1D extends Vector {
 
     /**
      * 1D Point constructor.
@@ -28,11 +28,6 @@ public class Point1D extends Vector implements Distance<Point1D> {
      */
     public double x() {
         return data[0];
-    }
-
-    @Override
-    public double distanceTo(Point1D d) {
-        return euclideanDistance(d);
     }
 
     @Override
