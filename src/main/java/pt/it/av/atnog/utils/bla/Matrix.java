@@ -345,6 +345,8 @@ public class Matrix {
     }
 
     //TODO: Check code, improve selection between sequencial and parallel implemenatations
+    // Should call functions from MatrixMultiplication library
+    // Maybe three implementation, ijk for small ones, single-thread with transpose for medium, and parallel for large
     public Matrix mul(Matrix B) {
         int BLK = 64;
         Matrix C = new Matrix(rows, B.cols);
@@ -355,10 +357,7 @@ public class Matrix {
                 int ic = i * cols;
                 for (int j = 0; j < C.cols; j++) {
                     int jc = j * B.rows;
-                    double cij = 0.0;
-                    for (int k = 0; k < B.rows; k++)
-                        cij += data[ic + k] * bt[jc + k];
-                    C.data[i * C.cols + j] = cij;
+                    C.data[i * C.cols + j] = ArraysOps.dotProduct(data, ic, bt, jc, B.rows);
                 }
             }
         } else {
@@ -367,10 +366,7 @@ public class Matrix {
                 int i = (Integer) o, ic = i * cols;
                 for (int j = 0; j < C.cols; j++) {
                     int jc = j * B.rows;
-                    double cij = 0.0;
-                    for (int k = 0; k < B.rows; k++)
-                        cij += data[ic + k] * bt[jc + k];
-                    C.data[i * C.cols + j] = cij;
+                    C.data[i * C.cols + j] = ArraysOps.dotProduct(data, ic, bt, jc, B.rows);
                 }
             });
 
@@ -406,6 +402,12 @@ public class Matrix {
         return QR;
     }
 
+    /**
+     * TODO: Review this method
+     * Need to add urls and other links
+     *
+     * @return
+     */
     public Matrix[] bidiagonal() {
         Matrix UBV[] = new Matrix[3];
         UBV[0] = Matrix.identity(rows);

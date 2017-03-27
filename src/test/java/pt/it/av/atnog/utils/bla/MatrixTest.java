@@ -88,14 +88,14 @@ public class MatrixTest {
 
     @Test
     public void test_mul_small() {
-        //assertTrue(AAt.equals(A.mul(At)));
+        assertTrue(AAt.equals(A.mul(At)));
     }
 
     @Test
     public void test_mull_large() {
-        /*Matrix A = Matrix.random(256, 512, -10, 10), B = Matrix.random(512, 256, -10, 10);
+        Matrix A = Matrix.random(256, 512, -10, 10), B = Matrix.random(512, 256, -10, 10);
         Matrix R1 = A.mul(B), R2 = Naive.mul(A, B);
-        assertTrue(R1.equals(R2));*/
+        assertTrue(R1.equals(R2));
     }
 
     @Test

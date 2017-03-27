@@ -143,6 +143,16 @@ public class Utils {
         return qselect(array, 0, array.length - 1, n, c);
     }
 
+    /**
+     * Quicksort partition algorithm.
+     *
+     * @param array
+     * @param left
+     * @param right
+     * @param pivot
+     * @param <T>
+     * @return
+     */
     private static <T extends Comparable<T>> int partition(T[] array, int left, int right, int pivot) {
         int rv = left;
         T pivotValue = array[pivot];
@@ -204,10 +214,8 @@ public class Utils {
 
     public static <T> List<T> iterator2List(Iterator<T> it) {
         List<T> rv = new ArrayList<>();
-
         while (it.hasNext())
             rv.add(it.next());
-
         return rv;
     }
 }

@@ -14,18 +14,20 @@ public final class ArraysOps {
   private ArraysOps() {
   }
 
-  /**
-   * Sum two arrays element-wise.
-   * The elements from A are added with B and stored in C.
-   *
-   * @param a   first vector
-   * @param bA  index of the first vector
-   * @param b   second vector
-   * @param bB  index of the second vector
-   * @param c   resulting vector
-   * @param bC  index of the resulting vector
-   * @param len array's len
-   */
+    /**
+     * Sum two arrays element-wise.
+     * The elements from A are added with B and stored in C.
+     *
+     * $$c = \sum_{i = 0}^{len}$$
+     *
+     * @param a   first vector
+     * @param bA  index of the first vector
+     * @param b   second vector
+     * @param bB  index of the second vector
+     * @param c   resulting vector
+     * @param bC  index of the resulting vector
+     * @param len array's len
+     */
   public static void add(final double[] a, final int bA, final double[] b,
                          final int bB, final double[] c, final int bC,
                          final int len) {
@@ -290,4 +292,22 @@ public final class ArraysOps {
     }
     return sum;
   }
+
+    /**
+     * @param a
+     * @param bA
+     * @param b
+     * @param bB
+     * @param len
+     * @return
+     */
+    public static double dotProduct(final double[] a, final int bA,
+                                    final double[] b, final int bB,
+                                    final int len) {
+        double rv = 0.0;
+        for (int i = 0; i < len; i++) {
+            rv += a[bA + i] * b[bB + i];
+        }
+        return rv;
+    }
 }

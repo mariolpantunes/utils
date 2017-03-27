@@ -1,14 +1,14 @@
 package pt.it.av.atnog.utils.structures.mutableNumber;
 
 /**
- * This class extends {@link Number}, but does not define methods such as equals,
+ * This class extends {@link MutableNumber}, but does not define methods such as equals,
  * hashCode and compareTo because instances are expected to be mutated,
  * and so are not useful as collection keys.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class MutableDouble extends Number implements Comparable<MutableDouble> {
+public class MutableDouble extends MutableNumber implements Comparable<MutableDouble> {
     private double value;
 
     /**
@@ -23,6 +23,11 @@ public class MutableDouble extends Number implements Comparable<MutableDouble> {
      */
     public MutableDouble() {
         this(0.0);
+    }
+
+    @Override
+    public Object add(Object o) {
+        return null;
     }
 
     /**
@@ -69,5 +74,10 @@ public class MutableDouble extends Number implements Comparable<MutableDouble> {
     @Override
     public double doubleValue() {
         return value;
+    }
+
+    @Override
+    public boolean isRealNumber() {
+        return true;
     }
 }
