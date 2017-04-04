@@ -13,9 +13,12 @@ public class JSONObject extends JSONValue implements Map<String, JSONValue> {
     private static final int LENGTH = 128;
     private final Map<String, JSONValue> map = new HashMap<>();
 
-    //TODO: close reader
     public static JSONObject read(String s) throws IOException {
-        return read(new BufferedReader(new StringReader(s)));
+        BufferedReader r = new BufferedReader(new StringReader(s));
+        JSONObject rv = read(r);
+        r.close();
+
+        return rv;
     }
 
     // TODO: improve PRE_KEY and ROOT states
