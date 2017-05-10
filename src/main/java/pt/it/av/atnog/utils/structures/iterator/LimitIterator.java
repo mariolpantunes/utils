@@ -3,6 +3,12 @@ package pt.it.av.atnog.utils.structures.iterator;
 import java.util.Iterator;
 
 /**
+ * Limit Iterator
+ * <p>
+ * Consumes N elements from an {@link Iterator}.
+ * Limits the number of elements that are consomed.
+ * </p>
+ *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
