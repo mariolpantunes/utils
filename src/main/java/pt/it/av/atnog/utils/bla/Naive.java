@@ -54,7 +54,7 @@ public class Naive {
         Matrix C = new Matrix(A.rows, B.cols);
         double b_data[] = new double[blk * blk];
         Deque<Octuple<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer>> stack = new ArrayDeque<>();
-        stack.push(new Octuple(0, A.rows, 0, A.cols, 0, B.rows, 0, B.cols));
+        stack.push(new Octuple<>(0, A.rows, 0, A.cols, 0, B.rows, 0, B.cols));
         while (!stack.isEmpty()) {
             Octuple<Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer> o = stack.pop();
             int a_rb = o.a, a_re = o.b, a_cb = o.c, a_ce = o.d, b_rb = o.e, b_re = o.f, b_cb = o.g, b_ce = o.h;
@@ -74,14 +74,14 @@ public class Naive {
                 }
             } else if ((a_re - a_rb) >= (a_ce - a_cb)) {
                 int a_rm = (a_rb + a_re) / 2, b_cm = (b_cb + b_ce) / 2;
-                stack.push(new Octuple(a_rb, a_rm, a_cb, a_ce, b_rb, b_re, b_cb, b_cm));
-                stack.push(new Octuple(a_rb, a_rm, a_cb, a_ce, b_rb, b_re, b_cm, b_ce));
-                stack.push(new Octuple(a_rm, a_re, a_cb, a_ce, b_rb, b_re, b_cb, b_cm));
-                stack.push(new Octuple(a_rm, a_re, a_cb, a_ce, b_rb, b_re, b_cm, b_ce));
+                stack.push(new Octuple<>(a_rb, a_rm, a_cb, a_ce, b_rb, b_re, b_cb, b_cm));
+                stack.push(new Octuple<>(a_rb, a_rm, a_cb, a_ce, b_rb, b_re, b_cm, b_ce));
+                stack.push(new Octuple<>(a_rm, a_re, a_cb, a_ce, b_rb, b_re, b_cb, b_cm));
+                stack.push(new Octuple<>(a_rm, a_re, a_cb, a_ce, b_rb, b_re, b_cm, b_ce));
             } else {
                 int a_cm = (a_cb + a_ce) / 2, b_rm = (b_rb + b_re) / 2;
-                stack.push(new Octuple(a_rb, a_re, a_cb, a_cm, b_rb, b_rm, b_cb, b_ce));
-                stack.push(new Octuple(a_rb, a_re, a_cm, a_ce, b_rm, b_re, b_cb, b_ce));
+                stack.push(new Octuple<>(a_rb, a_re, a_cb, a_cm, b_rb, b_rm, b_cb, b_ce));
+                stack.push(new Octuple<>(a_rb, a_re, a_cm, a_ce, b_rm, b_re, b_cb, b_ce));
             }
         }
         return C;

@@ -23,7 +23,7 @@ public class MatrixTranspose {
     protected static void transpose(double data[], double tdata[], int rows, int columns) {
         double tmp[] = new double[BLK * BLK];
         Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<Quad<Integer, Integer, Integer, Integer>>();
-        stack.push(new Quad(0, rows, 0, columns));
+        stack.push(new Quad<>(0, rows, 0, columns));
         while (!stack.isEmpty()) {
             Quad<Integer, Integer, Integer, Integer> q = stack.pop();
             int rb = q.a, re = q.b, cb = q.c, ce = q.d, r = q.b - q.a, c = q.d - q.c;
@@ -35,11 +35,11 @@ public class MatrixTranspose {
                     for (int i = rb, tmpc = 0; i < re; i++, tmpc++)
                         tdata[j * rows + i] = tmp[tmpr * BLK + tmpc];
             } else if (r >= c) {
-                stack.push(new Quad(rb + (r / 2), re, cb, ce));
-                stack.push(new Quad(rb, rb + (r / 2), cb, ce));
+                stack.push(new Quad<>(rb + (r / 2), re, cb, ce));
+                stack.push(new Quad<>(rb, rb + (r / 2), cb, ce));
             } else {
-                stack.push(new Quad(rb, re, cb + (c / 2), ce));
-                stack.push(new Quad(rb, re, cb, cb + (c / 2)));
+                stack.push(new Quad<>(rb, re, cb + (c / 2), ce));
+                stack.push(new Quad<>(rb, re, cb, cb + (c / 2)));
             }
         }
     }
