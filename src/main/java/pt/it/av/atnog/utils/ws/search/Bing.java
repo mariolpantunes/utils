@@ -9,6 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
+
+//TODO: waiting for Bing reply
 /**
  * Bing search engine.
  *

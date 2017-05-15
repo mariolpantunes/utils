@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 //TODO: JSON parse fails some times
 //TODO: it appears some json are invalid
+//TODO: have to deploy an Yacy in IT
 
 /**
  * YaCy search engine.
