@@ -2,7 +2,11 @@ package pt.it.av.atnog.utils;
 
 import pt.it.av.atnog.utils.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -19,7 +23,7 @@ import java.util.zip.InflaterInputStream;
  * @version 1.0
  */
 public class Http {
-  private static final int TIMEOUT = 5000;
+  private static final int TIMEOUT = 10000;
 
   private static InputStream inputStream(HttpURLConnection con) throws IOException {
     InputStream rv;

@@ -16,55 +16,64 @@ import java.util.List;
  */
 public abstract class SearchEngine {
 
+  /**
+   * Searchs a specific query in a search engine service.
+   * Returns a list with all the results, ordered by the search engine service.
+   * This method is built on top of the iterator search.
+   *
+   * @param q query used in the search
+   * @return list with all the results from the search engine
+   */
+  public List<Result> search(final String q) {
+    List<Result> rv = new ArrayList<>();
+    Iterator<Result> it = searchIt(q);
+    while (it.hasNext())
+      rv.add(it.next());
+    return rv;
+  }
+
+  /**
+   * Searchs a specific query in a search engine service.
+   * Returns an iterator containing all the results, ordered by the search engine service.
+   *
+   * @param q query used in the search
+   * @return iterator coitaining all the results
+   */
+  public abstract Iterator<Result> searchIt(final String q);
+
+  /**
+   * Represents one result from the search engine.
+   * <p>
+   * <p>A single result is composed by a title, snippet and url.</p>
+   */
+  public class Result {
+    public final String title, snippet, url;
+
     /**
-     * Searchs a specific query in a search engine service.
-     * Returns a list with all the results, ordered by the search engine service.
-     * This method is built on top of the iterator search.
+     * Search result constructor
      *
-     * @param q query used in the search
-     * @return list with all the results from the search engine
+     * @param title   title of the webpage
+     * @param snippet snippet provided by the search engine
+     * @param url     url of the webpage
      */
-    public List<Result> search(final String q) {
-        List<Result> rv = new ArrayList<>();
-        Iterator<Result> it = searchIt(q);
-        while (it.hasNext())
-            rv.add(it.next());
-        return rv;
+    public Result(final String title, final String snippet, final String url) {
+      this.title = title;
+      this.snippet = snippet;
+      this.url = url;
     }
 
-    /**
-     * Searchs a specific query in a search engine service.
-     * Returns an iterator containing all the results, ordered by the search engine service.
-     *
-     * @param q query used in the search
-     * @return iterator coitaining all the results
-     */
-    public abstract Iterator<Result> searchIt(final String q);
-
-    /**
-     * Represents one result from the search engine.
-     * <p>
-     * <p>A single result is composed by a title, snippet and url.</p>
-     */
-    public class Result {
-        public final String title, snippet, url;
-
-        /**
-         * Search result constructor
-         *
-         * @param title   title of the webpage
-         * @param snippet snippet provided by the search engine
-         * @param url     url of the webpage
-         */
-        public Result(final String title, final String snippet, final String url) {
-            this.title = title;
-            this.snippet = snippet;
-            this.url = url;
-        }
-
-        @Override
-        public String toString() {
-            return new String("Title: " + title + " Snippet: " + snippet + " URL: " + url);
-        }
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Title: ");
+      sb.append(title);
+      sb.append(System.getProperty("line.separator"));
+      sb.append("Snippet: ");
+      sb.append(snippet);
+      sb.append(System.getProperty("line.separator"));
+      sb.append("URL: ");
+      sb.append(url);
+      return sb.toString();
     }
+  }
 }
