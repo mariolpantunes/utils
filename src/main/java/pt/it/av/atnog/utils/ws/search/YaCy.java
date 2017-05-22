@@ -14,6 +14,7 @@ import java.util.Iterator;
 //TODO: it appears some json are invalid
 //TODO: Ease the constrution of the iterator, move the code to hasNext function.
 //TODO: If snippet is empty, fill it with title
+//TODO: Fix URL usage.
 
 /**
  * YaCy search engine.
@@ -109,8 +110,6 @@ public class YaCy extends SearchEngine {
      */
     private void nextIterator() {
       try {
-        //String s = HTTP.get("http://search.yacy.net/yacysearch.json?resource=global&contentdom=text&lr=lang_en&startRecord=" + skip + "&query=" + q);
-        //System.err.println(s);
         JSONObject json = Http.getJson(url + "/yacysearch.json?resource=global&contentdom=text" +
             "&lr=lang_en&startRecord=" + skip + "&query=" + q).get("channels").asArray().get(0).asObject();
         JSONArray array = json.get("items").asArray();
