@@ -1,11 +1,10 @@
 package pt.it.av.atnog.utils.ws.search;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Abstract class that represents a search engine service.
+ * Interface that represents a search engine service.
  * <p>
  * Provides methods to search a specific query.
  * It was designed to provide a efficient iterator mechanism, ideal for pipeline processing.
@@ -14,7 +13,7 @@ import java.util.List;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public abstract class SearchEngine {
+public interface SearchEngine {
 
   /**
    * Searchs a specific query in a search engine service.
@@ -24,13 +23,7 @@ public abstract class SearchEngine {
    * @param q query used in the search
    * @return list with all the results from the search engine
    */
-  public List<Result> search(final String q) {
-    List<Result> rv = new ArrayList<>();
-    Iterator<Result> it = searchIt(q);
-    while (it.hasNext())
-      rv.add(it.next());
-    return rv;
-  }
+  List<Result> search(final String q);
 
   /**
    * Searchs a specific query in a search engine service.
@@ -39,40 +32,46 @@ public abstract class SearchEngine {
    * @param q query used in the search
    * @return iterator coitaining all the results
    */
-  public abstract Iterator<Result> searchIt(final String q);
+  Iterator<Result> searchIt(final String q);
 
   /**
-   * Represents one result from the search engine.
+   * Represents a single result from the search engine.
    * <p>
-   * <p>A single result is composed by a title, snippet and url.</p>
+   *   It is composed by three elements:
+   *   <p><ul>
+   *     <li>{@link name} name of the resource.
+   *     <li>{@link snippet} snippet provided by the search engine.
+   *     <li>{@link uri} uri of the resource.
+   *   </ul><p>
+   * </p>
    */
-  public class Result {
-    public final String title, snippet, url;
+  class Result {
+    public final String name, snippet, uri;
 
     /**
-     * Search result constructor
+     * Result contructor.
      *
-     * @param title   title of the webpage
-     * @param snippet snippet provided by the search engine
-     * @param url     url of the webpage
+     * @param name   name of the resource.
+     * @param snippet snippet provided by the search engine.
+     * @param uri     uri of the resource.
      */
-    public Result(final String title, final String snippet, final String url) {
-      this.title = title;
+    public Result(final String name, final String snippet, final String uri) {
+      this.name = name;
       this.snippet = snippet;
-      this.url = url;
+      this.uri = uri;
     }
 
     @Override
     public String toString() {
       StringBuilder sb = new StringBuilder();
-      sb.append("Title: ");
-      sb.append(title);
+      sb.append("Name: ");
+      sb.append(name);
       sb.append(System.getProperty("line.separator"));
       sb.append("Snippet: ");
       sb.append(snippet);
       sb.append(System.getProperty("line.separator"));
-      sb.append("URL: ");
-      sb.append(url);
+      sb.append("URI: ");
+      sb.append(uri);
       return sb.toString();
     }
   }

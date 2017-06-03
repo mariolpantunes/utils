@@ -6,7 +6,6 @@ import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Iterator;
 
@@ -22,41 +21,27 @@ import java.util.Iterator;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class YaCy extends SearchEngine {
-  private static final int MAX_RESULTS = 30;
-  private final int maxResults;
-  private final String url;
+public class YaCy extends WebSearchEngine {
 
-  public YaCy(final URL url) {
-    this(url, MAX_RESULTS);
-  }
-
-  public YaCy(final URL url, final int maxResults) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(url.getProtocol());
-    sb.append("://");
-    sb.append(url.getHost());
-    sb.append(":");
-    sb.append(url.getPort());
-    sb.append("/");
-
-    this.url = sb.toString();
-    this.maxResults = maxResults;
-  }
-
+  /**
+   * @param url
+   */
   public YaCy(final String url) {
-    this(url, MAX_RESULTS);
+    super(url);
   }
 
+  /**
+   *
+   * @param url
+   * @param maxResults
+   */
   public YaCy(final String url, final int maxResults) {
-    this.url = url;
-    this.maxResults = maxResults;
+    super(url, maxResults);
   }
-
 
   @Override
-  public Iterator<Result> searchIt(final String q) {
-    return new YaCySearchIterator(q, maxResults);
+  protected Iterator<Result> resultsIterator(String q, int skip) {
+    return null;
   }
 
   /**

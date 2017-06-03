@@ -23,7 +23,7 @@ import java.util.zip.InflaterInputStream;
  * @version 1.0
  */
 public class Http {
-  private static final int TIMEOUT = 10000;
+  private static final int DEFAULT_TIMEOUT = 10000;
 
   private static InputStream inputStream(HttpURLConnection con) throws IOException {
     InputStream rv;
@@ -52,7 +52,7 @@ public class Http {
   }
 
   public static String get(String url) throws Exception {
-    return get(url, TIMEOUT);
+    return get(url, DEFAULT_TIMEOUT);
   }
 
   /**
@@ -92,7 +92,7 @@ public class Http {
   }
 
   public static String get(String url, String user, String pass) throws IOException {
-    return get(url, user, pass, TIMEOUT);
+    return get(url, user, pass, DEFAULT_TIMEOUT);
   }
 
   /**
@@ -136,7 +136,7 @@ public class Http {
   }
 
   public static JSONObject getJson(String url) throws Exception {
-    return getJson(url, TIMEOUT);
+    return getJson(url, DEFAULT_TIMEOUT);
   }
 
   public static JSONObject getJson(String url, int timeout) throws IOException {
@@ -163,7 +163,7 @@ public class Http {
   }
 
   public static JSONObject getJson(String url, String user, String pass) throws Exception {
-    return getJson(url, user, pass, TIMEOUT);
+    return getJson(url, user, pass, DEFAULT_TIMEOUT);
   }
 
   public static JSONObject getJson(String url, String user, String pass, int timeout)
@@ -194,7 +194,7 @@ public class Http {
 
   //TODO: this method needs some love, like all the persons in the world...
   public static void post(String url, JSONObject json) throws IOException {
-    post(url, json, TIMEOUT);
+    post(url, json, DEFAULT_TIMEOUT);
   }
 
   /**
