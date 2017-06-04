@@ -33,4 +33,73 @@ public class WebSearchEngineTest {
     Iterator<SearchEngine.Result> it = dummy.searchIt("zero");
     assertTrue(!it.hasNext());
   }
+
+  @Test
+  public void test_it_one() {
+    Iterator<SearchEngine.Result> it = dummy.searchIt("one");
+    assertTrue(it.hasNext());
+    int count = 0;
+    while (it.hasNext()) {
+      count++;
+      SearchEngine.Result r = it.next();
+      switch (count) {
+        case 1:
+          assertTrue(r.name.equals("one"));
+          break;
+        case 2:
+          assertTrue(r.name.equals("two"));
+          break;
+        case 3:
+          assertTrue(r.name.equals("three"));
+          break;
+      }
+    }
+    assertTrue(count == 1);
+  }
+
+  @Test
+  public void test_it_two() {
+    Iterator<SearchEngine.Result> it = dummy.searchIt("two");
+    assertTrue(it.hasNext());
+    int count = 0;
+    while (it.hasNext()) {
+      count++;
+      SearchEngine.Result r = it.next();
+      switch (count) {
+        case 1:
+          assertTrue(r.name.equals("one"));
+          break;
+        case 2:
+          assertTrue(r.name.equals("two"));
+          break;
+        case 3:
+          assertTrue(r.name.equals("three"));
+          break;
+      }
+    }
+    assertTrue(count == 2);
+  }
+
+  @Test
+  public void test_it_three() {
+    Iterator<SearchEngine.Result> it = dummy.searchIt("three");
+    assertTrue(it.hasNext());
+    int count = 0;
+    while (it.hasNext()) {
+      count++;
+      SearchEngine.Result r = it.next();
+      switch (count) {
+        case 1:
+          assertTrue(r.name.equals("one"));
+          break;
+        case 2:
+          assertTrue(r.name.equals("two"));
+          break;
+        case 3:
+          assertTrue(r.name.equals("three"));
+          break;
+      }
+    }
+    assertTrue(count == 3);
+  }
 }
