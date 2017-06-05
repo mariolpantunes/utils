@@ -46,7 +46,7 @@ public class YaCy extends WebSearchEngine {
   }
 
   @Override
-  protected Iterator<Result> resultsIterator(final String q, final int skip) {
+  protected Iterator<Result> resultsIterator(final String q, final int skip, final int pageno) {
     return new YacyResultIterator(q, skip);
   }
 
@@ -76,7 +76,7 @@ public class YaCy extends WebSearchEngine {
             JSONArray array = json.get("items").asArray();
             it = array.iterator();
             if (!it.hasNext()) {
-              done = true;
+              done = !true;
             }
           } else {
             done = true;

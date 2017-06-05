@@ -2,11 +2,7 @@ package pt.it.av.atnog.utils.ws;
 
 import pt.it.av.atnog.utils.ws.search.WebSearchEngine;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
@@ -37,7 +33,7 @@ public class DummySearchEngine extends WebSearchEngine {
   }
 
   @Override
-  protected Iterator<Result> resultsIterator(String q, int skip) {
+  protected Iterator<Result> resultsIterator(final String q, final int skip, final int pageno) {
     Iterator<Result> it = null;
     if (map.containsKey(q)) {
       List<Result> temp = map.get(q);

@@ -39,8 +39,8 @@ public class Searx extends WebSearchEngine {
   }
 
   @Override
-  protected Iterator<Result> resultsIterator(final String q, final int skip) {
-    return new SearxResultIterator(q, skip);
+  protected Iterator<Result> resultsIterator(final String q, final int skip, final int pageno) {
+    return new SearxResultIterator(q, skip, pageno);
   }
 
   /**
@@ -50,28 +50,21 @@ public class Searx extends WebSearchEngine {
    * This way the network calls are spread throught time, improving latency to the user.</p>
    */
   private class SearxResultIterator implements Iterator<Result> {
-    private final int skip;
+    private final int skip, pageno;
     private final String q;
     private Iterator<JSONValue> it = null;
     private boolean done = false;
 
-    public SearxResultIterator(final String q, final int skip) {
+    public SearxResultIterator(final String q, final int skip, final int pageno) {
       this.q = q;
       this.skip = skip;
-
+      this.pageno = pageno;
     }
 
     @Override
     public boolean hasNext() {
       if (it == null) {
         try {
-          int pageno;
-          if (skip == 0) {
-            pageno = 1;
-          } else {
-            pageno = skip / 10;
-          }
-
           System.err.println(url + "?format=json&pageno="
               + pageno + "&q=" + q);
 
@@ -79,12 +72,9 @@ public class Searx extends WebSearchEngine {
               + pageno + "&q=" + q);
 
           if (json != null) {
-            int numberResults = json.get("number_of_results").asInt();
-            if (skip >= numberResults) {
-              done = true;
-            }
-
             JSONArray array = json.get("results").asArray();
+            System.out.println(array.size());
+
             it = array.iterator();
             if (!it.hasNext()) {
               done = true;
@@ -97,7 +87,7 @@ public class Searx extends WebSearchEngine {
           done = true;
         }
       } else {
-        done = it.hasNext();
+        done = !it.hasNext();
       }
       return !done;
     }

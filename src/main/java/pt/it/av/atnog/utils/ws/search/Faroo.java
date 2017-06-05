@@ -26,7 +26,7 @@ public class Faroo extends WebSearchEngine {
   }
 
   @Override
-  protected Iterator<Result> resultsIterator(final String q, final int skip) {
+  protected Iterator<Result> resultsIterator(final String q, final int skip, final int pageno) {
     return new FarooResultIterator(q, skip);
   }
 
@@ -71,7 +71,7 @@ public class Faroo extends WebSearchEngine {
           done = true;
         }
       } else {
-        done = it.hasNext();
+        done = !it.hasNext();
       }
       return !done;
     }

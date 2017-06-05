@@ -34,9 +34,10 @@ public abstract class WebSearchEngine implements SearchEngine {
   /**
    * @param q
    * @param skip
+   * @param pageno
    * @return
    */
-  protected abstract Iterator<Result> resultsIterator(final String q, final int skip);
+  protected abstract Iterator<Result> resultsIterator(final String q, final int skip, final int pageno);
 
   @Override
   public List<Result> search(final String q) {
@@ -52,7 +53,7 @@ public abstract class WebSearchEngine implements SearchEngine {
     private String q;
     private Iterator<Result> it = null;
     private boolean done = false;
-    private int skip = 0;
+    private int skip = 0, pageno = 1;
 
     public WebSearchEngineIterator(final String q) {
       try {
@@ -67,7 +68,8 @@ public abstract class WebSearchEngine implements SearchEngine {
     @Override
     public boolean hasNext() {
       if (!done && it == null) {
-        it = resultsIterator(q, skip);
+        it = resultsIterator(q, skip, pageno);
+        pageno++;
         if (it == null || !it.hasNext()) {
           done = true;
         }

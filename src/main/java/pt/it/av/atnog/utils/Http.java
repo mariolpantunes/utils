@@ -2,11 +2,7 @@ package pt.it.av.atnog.utils;
 
 import pt.it.av.atnog.utils.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -24,7 +20,13 @@ import java.util.zip.InflaterInputStream;
  */
 public class Http {
   private static final int DEFAULT_TIMEOUT = 10000;
+  private static final int MAX_REDIRECT = 10;
 
+  /**
+   * @param con
+   * @return
+   * @throws IOException
+   */
   private static InputStream inputStream(HttpURLConnection con) throws IOException {
     InputStream rv;
     String encoding = con.getContentEncoding();
@@ -38,6 +40,11 @@ public class Http {
     return rv;
   }
 
+  /**
+   * @param con
+   * @return
+   * @throws IOException
+   */
   private static InputStream errorStream(HttpURLConnection con) throws IOException {
     InputStream rv;
     String encoding = con.getContentEncoding();
@@ -113,7 +120,7 @@ public class Http {
       con.setRequestMethod("GET");
       con.setRequestProperty("Content-Type", "text/plain");
       con.setRequestProperty("Authorization", "Basic "
-              + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
+          + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
       con.setRequestProperty("Accept-Encoding", "gzip, deflate");
       con.setRequestProperty("User-Agent", "");
       con.connect();
@@ -141,22 +148,40 @@ public class Http {
 
   public static JSONObject getJson(String url, int timeout) throws IOException {
     JSONObject rv = null;
-    HttpURLConnection con = null;
+    HttpURLConnection conn = null;
+    URL resourceUrl, base, next;
+    boolean done = false;
+
     try {
-      con = (HttpURLConnection) new URL(url).openConnection();
-      con.setReadTimeout(timeout);
-      con.setReadTimeout(timeout);
-      con.setRequestMethod("GET");
-      con.setRequestProperty("Content-Type", "application/json");
-      con.setRequestProperty("Accept-Encoding", "gzip, deflate");
-      con.setRequestProperty("User-Agent", "");
-      con.connect();
-      if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(con))));
+      for (int i = 0; i < MAX_REDIRECT && !done; i++) {
+        resourceUrl = new URL(url);
+        conn = (HttpURLConnection) resourceUrl.openConnection();
+        conn.setConnectTimeout(timeout);
+        conn.setReadTimeout(timeout);
+        conn.setInstanceFollowRedirects(false);
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
+        conn.setRequestProperty("User-Agent", "");
+        conn.connect();
+
+        switch (conn.getResponseCode()) {
+          case HttpURLConnection.HTTP_OK:
+            done = true;
+            rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
+            break;
+          case HttpURLConnection.HTTP_MOVED_PERM:
+          case HttpURLConnection.HTTP_MOVED_TEMP:
+            String location = conn.getHeaderField("Location");
+            base = new URL(url);
+            next = new URL(base, location);
+            url = next.toExternalForm();
+            break;
+        }
       }
     } finally {
-      if (con != null) {
-        con.disconnect();
+      if (conn != null) {
+        conn.disconnect();
       }
     }
     return rv;
@@ -167,7 +192,7 @@ public class Http {
   }
 
   public static JSONObject getJson(String url, String user, String pass, int timeout)
-          throws IOException {
+      throws IOException {
     JSONObject rv = null;
     HttpURLConnection con = null;
     try {
@@ -177,7 +202,7 @@ public class Http {
       con.setRequestMethod("GET");
       con.setRequestProperty("Content-Type", "application/json");
       con.setRequestProperty("Authorization", "Basic "
-              + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
+          + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
       con.setRequestProperty("Accept-Encoding", "gzip, deflate");
       con.setRequestProperty("User-Agent", "");
       con.connect();
