@@ -17,16 +17,16 @@ import java.util.List;
  * @version 1.0
  */
 public class CollectionSearchEngine implements SearchEngine {
-    private final List<SearchEngine> se;
+  private final List<SearchEngine> se;
 
-    public CollectionSearchEngine(final List<SearchEngine> se) {
-        this.se = se;
-    }
+  public CollectionSearchEngine(final List<SearchEngine> se) {
+    this.se = se;
+  }
 
-    @Override
-    public List<Result> search(String q) {
-      return Utils.iterator2List(searchIt(q));
-    }
+  @Override
+  public List<Result> search(String q) {
+    return Utils.iterator2List(searchIt(q));
+  }
 
   @Override
   public Iterator<Result> searchIt(final String q) {

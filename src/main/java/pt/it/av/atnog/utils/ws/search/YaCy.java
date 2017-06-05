@@ -5,8 +5,6 @@ import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 
 //TODO: JSON parse fails some times
@@ -22,6 +20,14 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class YaCy extends WebSearchEngine {
+  private static final String DEFAULT_URL = "http://hrun.hopto.org/yacy/";
+
+  /**
+   *
+   */
+  public YaCy() {
+    super(DEFAULT_URL);
+  }
 
   /**
    * @param url
@@ -40,35 +46,48 @@ public class YaCy extends WebSearchEngine {
   }
 
   @Override
-  protected Iterator<Result> resultsIterator(String q, int skip) {
-    return null;
+  protected Iterator<Result> resultsIterator(final String q, final int skip) {
+    return new YacyResultIterator(q, skip);
   }
 
-  /**
-   * Fast YaCy search iterator.
-   * <p>The result pages are consomed continuously.
-   * Fetch one page of results and iterates over them, before fetching another result's page.
-   * This way the network calls are spread throught time, improving latency to the user.</p>
-   */
-  private class YaCySearchIterator implements Iterator<Result> {
-    private boolean lastPage = false, done = false;
-    private int skip = 1, maxResults;
+  private class YacyResultIterator implements Iterator<Result> {
+    private final int skip;
+    private final String q;
     private Iterator<JSONValue> it = null;
-    private String q;
+    private boolean done = false;
 
-    public YaCySearchIterator(final String q, final int maxResults) {
-      try {
-        this.q = URLEncoder.encode(q, java.nio.charset.StandardCharsets.UTF_8.toString());
-        this.maxResults = maxResults;
-        nextIterator();
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-        done = true;
-      }
+    public YacyResultIterator(final String q, final int skip) {
+      this.q = q;
+      this.skip = skip;
     }
 
     @Override
     public boolean hasNext() {
+      if (it == null) {
+        try {
+          JSONObject json = Http.getJson(url + "/yacysearch.json?resource=global&contentdom=text" +
+              "&lr=lang_en&startRecord=" + (skip + 1) + "&query=" + q).get("channels").asArray().get(0).asObject();
+
+          if (json != null) {
+            int numberResults = Integer.parseInt(json.get("totalResults").asString());
+            if (skip >= numberResults) {
+              done = true;
+            }
+            JSONArray array = json.get("items").asArray();
+            it = array.iterator();
+            if (!it.hasNext()) {
+              done = true;
+            }
+          } else {
+            done = true;
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+          done = true;
+        }
+      } else {
+        done = it.hasNext();
+      }
       return !done;
     }
 
@@ -77,37 +96,14 @@ public class YaCy extends WebSearchEngine {
       Result rv = null;
       if (!done) {
         JSONObject json = it.next().asObject();
-        rv = new Result(json.get("title").asString(),
-            json.get("description").asString(),
-            json.get("link").asString());
-
-        if (!it.hasNext() && !lastPage)
-          nextIterator();
-        else if (!it.hasNext() && lastPage)
-          done = true;
+        String name = json.get("title").asString(), uri = json.get("link").asString();
+        if (json.contains("description")) {
+          rv = new Result(name, json.get("description").asString(), uri);
+        } else {
+          rv = new Result(name, name, uri);
+        }
       }
       return rv;
-    }
-
-    /**
-     * Fetch a new result's page, process it and returns a iterator with the results.
-     * This methods manages network exceptions and the end of the iteration.
-     */
-    private void nextIterator() {
-      try {
-        JSONObject json = Http.getJson(url + "/yacysearch.json?resource=global&contentdom=text" +
-            "&lr=lang_en&startRecord=" + skip + "&query=" + q).get("channels").asArray().get(0).asObject();
-        JSONArray array = json.get("items").asArray();
-        skip += array.size();
-        if (skip >= maxResults)
-          lastPage = true;
-        it = array.iterator();
-        if (!it.hasNext())
-          done = true;
-      } catch (Exception e) {
-        e.printStackTrace();
-        done = true;
-      }
     }
   }
 }

@@ -5,8 +5,6 @@ import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 
 /**
@@ -16,7 +14,7 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class Searx extends WebSearchEngine {
-  private static final String DEFAULT_URL = "https://searx.me";
+  private static final String DEFAULT_URL = "http://searx.me/";
 
   /**
    *
@@ -41,8 +39,8 @@ public class Searx extends WebSearchEngine {
   }
 
   @Override
-  protected Iterator<Result> resultsIterator(String q, int skip) {
-    return null;
+  protected Iterator<Result> resultsIterator(final String q, final int skip) {
+    return new SearxResultIterator(q, skip);
   }
 
   /**
@@ -51,25 +49,56 @@ public class Searx extends WebSearchEngine {
    * Fetch one page of results and iterates over them, before fetching another result's page.
    * This way the network calls are spread throught time, improving latency to the user.</p>
    */
-  private class SearxSearchIterator implements Iterator<Result> {
-    private boolean lastPage = false, done = false;
-    private int skip = 1, maxPages;
+  private class SearxResultIterator implements Iterator<Result> {
+    private final int skip;
+    private final String q;
     private Iterator<JSONValue> it = null;
-    private String q;
+    private boolean done = false;
 
-    public SearxSearchIterator(final String q, final int maxPages) {
-      try {
-        this.q = URLEncoder.encode(q, java.nio.charset.StandardCharsets.UTF_8.toString());
-        this.maxPages = maxPages;
-        nextIterator();
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-        done = true;
-      }
+    public SearxResultIterator(final String q, final int skip) {
+      this.q = q;
+      this.skip = skip;
+
     }
 
     @Override
     public boolean hasNext() {
+      if (it == null) {
+        try {
+          int pageno;
+          if (skip == 0) {
+            pageno = 1;
+          } else {
+            pageno = skip / 10;
+          }
+
+          System.err.println(url + "?format=json&pageno="
+              + pageno + "&q=" + q);
+
+          JSONObject json = Http.getJson(url + "?format=json&pageno="
+              + pageno + "&q=" + q);
+
+          if (json != null) {
+            int numberResults = json.get("number_of_results").asInt();
+            if (skip >= numberResults) {
+              done = true;
+            }
+
+            JSONArray array = json.get("results").asArray();
+            it = array.iterator();
+            if (!it.hasNext()) {
+              done = true;
+            }
+          } else {
+            done = true;
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+          done = true;
+        }
+      } else {
+        done = it.hasNext();
+      }
       return !done;
     }
 
@@ -78,39 +107,14 @@ public class Searx extends WebSearchEngine {
       Result rv = null;
       if (!done) {
         JSONObject json = it.next().asObject();
-
-        String title = json.get("title").asString(), url = json.get("url").asString();
-
-        if (json.contains("content"))
-          rv = new Result(title, json.get("content").asString(), url);
-        else
-          rv = new Result(title, title, url);
-
-        if (!it.hasNext() && !lastPage)
-          nextIterator();
-        else if (!it.hasNext() && lastPage)
-          done = true;
+        String name = json.get("title").asString(), uri = json.get("url").asString();
+        if (json.contains("content")) {
+          rv = new Result(name, json.get("content").asString(), uri);
+        } else {
+          rv = new Result(name, name, uri);
+        }
       }
       return rv;
-    }
-
-    /**
-     * Fetch a new result's page, process it and returns a iterator with the results.
-     * This methods manages network exceptions and the end of the iteration.
-     */
-    private void nextIterator() {
-      try {
-        JSONObject json = Http.getJson("https://searx.me/?format=json&category_general&pageno=" + skip + "&q=" + q);
-        JSONArray array = json.get("results").asArray();
-        if (skip >= maxPages)
-          lastPage = true;
-        skip++;
-        it = array.iterator();
-        if (!it.hasNext())
-          done = true;
-      } catch (Exception e) {
-        done = true;
-      }
     }
   }
 }

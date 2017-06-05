@@ -5,8 +5,6 @@ import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 
 /**
@@ -28,8 +26,8 @@ public class Faroo extends WebSearchEngine {
   }
 
   @Override
-  protected Iterator<Result> resultsIterator(String q, int skip) {
-    return null;
+  protected Iterator<Result> resultsIterator(final String q, final int skip) {
+    return new FarooResultIterator(q, skip);
   }
 
   /**
@@ -38,24 +36,43 @@ public class Faroo extends WebSearchEngine {
    * Fetch one page of results and iterates over them, before fetching another result's page.
    * This way the network calls are spread throught time, improving latency to the user.</p>
    */
-  private class FarooIterator implements Iterator<Result> {
-    private boolean lastPage = false, done = false;
-    private int skip = 1;
+  private class FarooResultIterator implements Iterator<Result> {
+    private final int skip;
+    private final String q;
     private Iterator<JSONValue> it = null;
-    private String q;
+    private boolean done = false;
 
-    public FarooIterator(final String q) {
-      try {
-        this.q = URLEncoder.encode(q, java.nio.charset.StandardCharsets.UTF_8.toString());
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-        done = true;
-      }
-      nextIterator();
+    public FarooResultIterator(final String q, final int skip) {
+      this.q = q;
+      this.skip = skip;
     }
 
     @Override
     public boolean hasNext() {
+      if (it == null) {
+        try {
+          JSONObject json = Http.getJson(url + "api?key=" + key + "&start=" + (skip + 1) + "&q=" + q);
+
+          if (json != null) {
+            int numberResults = json.get("count").asInt();
+            if (skip >= numberResults) {
+              done = true;
+            }
+            JSONArray array = json.get("results").asArray();
+            it = array.iterator();
+            if (!it.hasNext()) {
+              done = true;
+            }
+          } else {
+            done = true;
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+          done = true;
+        }
+      } else {
+        done = it.hasNext();
+      }
       return !done;
     }
 
@@ -64,36 +81,14 @@ public class Faroo extends WebSearchEngine {
       Result rv = null;
       if (!done) {
         JSONObject json = it.next().asObject();
-        rv = new Result(json.get("title").asString(),
-            json.get("kwic").asString(),
-            json.get("url").asString());
-        if (!it.hasNext() && !lastPage)
-          nextIterator();
-        else if (!it.hasNext() && lastPage)
-          done = true;
+        String name = json.get("title").asString(), uri = json.get("url").asString();
+        if (json.contains("kwic")) {
+          rv = new Result(name, json.get("kwic").asString(), uri);
+        } else {
+          rv = new Result(name, name, uri);
+        }
       }
       return rv;
-    }
-
-    /**
-     * Fetch a new result's page, process it and returns a iterator with the results.
-     * This methods manages network exceptions and the end of the iteration.
-     */
-    private void nextIterator() {
-      try {
-        JSONObject json = Http.getJson("http://www.faroo.com/api?key=" + key + "&start=" + skip + "&q=" + q);
-        JSONArray array = json.get("results").asArray();
-        skip += array.size();
-        if (skip >= json.get("count").asNumber())
-          lastPage = true;
-        it = array.iterator();
-        if (!it.hasNext())
-          done = true;
-        Thread.sleep(500);
-      } catch (Exception e) {
-        done = true;
-        //e.printStackTrace();
-      }
     }
   }
 }
