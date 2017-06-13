@@ -15,11 +15,11 @@ import static org.junit.Assert.assertTrue;
  * @version 1.0
  */
 public class WebSearchEngineTest {
-  private static DummySearchEngine dummy;
+  private static MockupSearchEngine dummy;
 
   @BeforeClass
   public static void setup() {
-    dummy = new DummySearchEngine();
+    dummy = new MockupSearchEngine();
   }
 
   @Test

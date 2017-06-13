@@ -2,13 +2,13 @@ package pt.it.av.atnog.utils;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by mantunes on 5/4/15.
+ * Unit tests for {@link StringUtils}.
+ *
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
 public class StringUtilsTest {
     /*@Test

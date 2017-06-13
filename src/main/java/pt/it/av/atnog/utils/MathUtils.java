@@ -16,29 +16,6 @@ public final class MathUtils {
     private MathUtils() {
     }
     /**
-     * Returns random numbers between [{@code min}, {@code max}[.
-     *
-     * @param min minimal value of the range, inclusive
-     * @param max maximal value of the range, exclusive
-     * @return random numbers between [{@code min}, {@code max}[
-     */
-    public static double randomBetween(final double min, final double max) {
-        return min + (Math.random() * ((max - min) + 1.0));
-    }
-
-    /**
-     * Returns random numbers between [{@code min}, {@code max}[.
-     * If performance is a issue consider using Random.nextInt(n).
-     *
-     * @param min minimal value of the range, inclusive
-     * @param max maximal value of the range, exclusive
-     * @return random numbers between [{@code min}, {@code max}[
-     */
-    public static int randomBetween(final int min, final int max) {
-        return min + (int) (Math.random() * ((max - min) + 1));
-    }
-
-    /**
      * Generator of Poisson-distributed random variables (Knuth algorithm).
      * This algorithm is not optimal, if performance is an issue an
      * alternative should be used.

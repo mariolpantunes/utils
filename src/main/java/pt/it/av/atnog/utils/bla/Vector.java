@@ -3,6 +3,8 @@ package pt.it.av.atnog.utils.bla;
 import pt.it.av.atnog.utils.MathUtils;
 import pt.it.av.atnog.utils.structures.Distance;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * General purpose Vector.
  * Implements several functions used in linear algebra and machine learning.
@@ -99,7 +101,7 @@ public class Vector<D extends Vector> implements Distance<D> {
     public static Vector random(int len, int min, int max) {
         Vector a = new Vector(len);
         for (int n = 0; n < len; n++)
-            a.data[n] = MathUtils.randomBetween(min, max);
+          a.data[n] = ThreadLocalRandom.current().nextInt(min, max);
         return a;
     }
 

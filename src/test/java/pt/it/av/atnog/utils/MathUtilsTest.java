@@ -7,7 +7,10 @@ import java.math.BigDecimal;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by mantunes on 8/18/15.
+ * Unit tests for {@link MathUtils}.
+ *
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
 public class MathUtilsTest {
     @Test

@@ -2,16 +2,25 @@ package pt.it.av.atnog.utils.ws;
 
 import pt.it.av.atnog.utils.ws.search.WebSearchEngine;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
+ * Mockup for a instance of {@link WebSearchEngine}.
+ *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class DummySearchEngine extends WebSearchEngine {
+public class MockupSearchEngine extends WebSearchEngine {
   HashMap<String, List<Result>> map;
 
-  public DummySearchEngine() {
+  /**
+   * Mockup search engine constructor.
+   */
+  public MockupSearchEngine() {
     super("");
     map = new LinkedHashMap<>();
 

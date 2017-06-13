@@ -58,22 +58,22 @@ public class MatrixTest {
     @Test
     public void test_transpose_large() {
         Matrix B = Matrix.random(128, 64, 1, 10);
-        Matrix Bt = MatrixTranspose.naive_transpose(B);
-        assertTrue(Bt.equals(B.transpose()));
+        //Matrix Bt = MatrixTranspose.naive_transpose(B);
+        //assertTrue(Bt.equals(B.transpose()));
     }
 
     @Test
     public void test_uTranspose_rect_large() {
         Matrix B = Matrix.random(128, 64, 1, 10);
-        Matrix Bt = MatrixTranspose.naive_transpose(B);
-        assertTrue(Bt.equals(B.uTranspose()));
+        //Matrix Bt = MatrixTranspose.naive_transpose(B);
+        //assertTrue(Bt.equals(B.uTranspose()));
     }
 
     @Test
     public void test_uTranspose_square_large() {
         Matrix B = Matrix.random(128, 128, 1, 10);
-        Matrix Bt = MatrixTranspose.naive_transpose(B);
-        assertTrue(Bt.equals(B.uTranspose()));
+        //Matrix Bt = MatrixTranspose.naive_transpose(B);
+        //assertTrue(Bt.equals(B.uTranspose()));
     }
 
     @Test
@@ -115,19 +115,5 @@ public class MatrixTest {
         data = new double[]{5};
         d = new Vector(data);
         assertTrue(d.equals(A.diag(-2)));
-    }
-
-    @Test
-    public void test_nmf() {
-        /*double data[] = {5, 6, 8, 2, 3, 1, 6, 8, 4, 7, 5, 9};
-        Matrix X = new Matrix(3, 4, data);
-        System.out.println(X);
-        Matrix WH[] = X.nmf(2, 100000, 0.0);
-        System.out.println(WH[0]);
-        System.out.println(WH[1]);
-        Matrix wh = WH[0].mul(WH[1]);
-        double cost = ArraysOps.euclideanDistance(X.data, 0, wh.data, 0, X.data.len);
-        System.out.println(wh);
-        System.out.println(cost);*/
     }
 }
