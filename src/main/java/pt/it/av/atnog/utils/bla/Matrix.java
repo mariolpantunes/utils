@@ -1,6 +1,6 @@
 package pt.it.av.atnog.utils.bla;
 
-import pt.it.av.atnog.utils.Utils;
+import pt.it.av.atnog.utils.ArrayUtils;
 import pt.it.av.atnog.utils.parallel.ThreadPool;
 
 import java.util.List;
@@ -190,7 +190,7 @@ public class Matrix {
    * @return the maximum number in the matrix.
    */
   public double max() {
-    return data[Utils.max(data)];
+    return data[ArrayUtils.max(data)];
   }
 
   /**
@@ -199,7 +199,7 @@ public class Matrix {
    * @return the minimum number in the matrix.
    */
   public double min() {
-    return data[Utils.min(data)];
+    return data[ArrayUtils.min(data)];
   }
 
   /**
@@ -306,56 +306,56 @@ public class Matrix {
    */
   public Matrix add(Matrix B) {
     Matrix C = new Matrix(rows, cols);
-    ArraysOps.add(data, 0, B.data, 0, C.data, 0, data.length);
+    ArrayUtils.add(data, 0, B.data, 0, C.data, 0, data.length);
     return C;
   }
 
   public Matrix uAdd(Matrix B) {
-    ArraysOps.add(data, 0, B.data, 0, data, 0, data.length);
+    ArrayUtils.add(data, 0, B.data, 0, data, 0, data.length);
     return this;
   }
 
   public Matrix add(double scalar) {
     Matrix C = new Matrix(rows, cols);
-    ArraysOps.add(data, 0, scalar, C.data, 0, data.length);
+    ArrayUtils.add(data, 0, scalar, C.data, 0, data.length);
     return C;
   }
 
   public Matrix uAdd(double scalar) {
-    ArraysOps.add(data, 0, scalar, data, 0, data.length);
+    ArrayUtils.add(data, 0, scalar, data, 0, data.length);
     return this;
   }
 
   public Matrix sub(Matrix B) {
     Matrix C = new Matrix(rows, cols);
-    ArraysOps.sub(data, 0, B.data, 0, C.data, 0, data.length);
+    ArrayUtils.sub(data, 0, B.data, 0, C.data, 0, data.length);
     return C;
   }
 
   public Matrix uSub(Matrix B) {
-    ArraysOps.sub(data, 0, B.data, 0, data, 0, data.length);
+    ArrayUtils.sub(data, 0, B.data, 0, data, 0, data.length);
     return this;
   }
 
   public Matrix sub(double b) {
     Matrix C = new Matrix(rows, cols);
-    ArraysOps.sub(this.data, 0, b, C.data, 0, data.length);
+    ArrayUtils.sub(this.data, 0, b, C.data, 0, data.length);
     return C;
   }
 
   public Matrix uSubRow(int row, int column, Vector b) {
-    ArraysOps.sub(data, row * cols + column, b.data, b.bIdx, data, row * cols + column, b.data.length);
+    ArrayUtils.sub(data, row * cols + column, b.data, b.bIdx, data, row * cols + column, b.data.length);
     return this;
   }
 
   public Matrix mul(double scalar) {
     Matrix C = new Matrix(rows, cols);
-    ArraysOps.mul(data, 0, scalar, C.data, 0, data.length);
+    ArrayUtils.mul(data, 0, scalar, C.data, 0, data.length);
     return C;
   }
 
   public Matrix uMul(double scalar) {
-    ArraysOps.mul(data, 0, scalar, this.data, 0, data.length);
+    ArrayUtils.mul(data, 0, scalar, this.data, 0, data.length);
     return this;
   }
 
@@ -393,7 +393,7 @@ public class Matrix {
         int ic = i * cols;
         for (int j = 0; j < C.cols; j++) {
           int jc = j * B.rows;
-          C.data[i * C.cols + j] = ArraysOps.dotProduct(data, ic, bt, jc, B.rows);
+          C.data[i * C.cols + j] = ArrayUtils.dotProduct(data, ic, bt, jc, B.rows);
         }
       }
     } else {
@@ -402,7 +402,7 @@ public class Matrix {
         int i = (Integer) o, ic = i * cols;
         for (int j = 0; j < C.cols; j++) {
           int jc = j * B.rows;
-          C.data[i * C.cols + j] = ArraysOps.dotProduct(data, ic, bt, jc, B.rows);
+          C.data[i * C.cols + j] = ArrayUtils.dotProduct(data, ic, bt, jc, B.rows);
         }
       });
 

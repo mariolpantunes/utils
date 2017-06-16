@@ -1,4 +1,9 @@
-package pt.it.av.atnog.utils.bla;
+package pt.it.av.atnog.utils;
+
+import pt.it.av.atnog.utils.structures.mutableNumber.MutableInteger;
+import pt.it.av.atnog.utils.structures.tuple.Pair;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Operations over arrays of doubles.
@@ -7,27 +12,27 @@ package pt.it.av.atnog.utils.bla;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public final class ArraysOps {
+public final class ArrayUtils {
   /**
    * Utility class, lets make the constructor private.
    */
-  private ArraysOps() {
+  private ArrayUtils() {
   }
 
-    /**
-     * Sum two arrays element-wise.
-     * The elements from A are added with B and stored in C.
-     *
-     * $$c = \sum_{i = 0}^{len}$$
-     *
-     * @param a   first vector
-     * @param bA  index of the first vector
-     * @param b   second vector
-     * @param bB  index of the second vector
-     * @param c   resulting vector
-     * @param bC  index of the resulting vector
-     * @param len array's len
-     */
+  /**
+   * Sum two arrays element-wise.
+   * The elements from A are added with B and stored in C.
+   * <p>
+   * $$c = \sum_{i = 0}^{len}$$
+   *
+   * @param a   first vector
+   * @param bA  index of the first vector
+   * @param b   second vector
+   * @param bB  index of the second vector
+   * @param c   resulting vector
+   * @param bC  index of the resulting vector
+   * @param len array's len
+   */
   public static void add(final double[] a, final int bA, final double[] b,
                          final int bB, final double[] c, final int bC,
                          final int len) {
@@ -279,7 +284,6 @@ public final class ArraysOps {
   }
 
   /**
-   *
    * @param a
    * @param bA
    * @param len
@@ -293,21 +297,120 @@ public final class ArraysOps {
     return sum;
   }
 
-    /**
-     * @param a
-     * @param bA
-     * @param b
-     * @param bB
-     * @param len
-     * @return
-     */
-    public static double dotProduct(final double[] a, final int bA,
-                                    final double[] b, final int bB,
-                                    final int len) {
-        double rv = 0.0;
-        for (int i = 0; i < len; i++) {
-            rv += a[bA + i] * b[bB + i];
-        }
-        return rv;
+  /**
+   * @param a
+   * @param bA
+   * @param b
+   * @param bB
+   * @param len
+   * @return
+   */
+  public static double dotProduct(final double[] a, final int bA,
+                                  final double[] b, final int bB,
+                                  final int len) {
+    double rv = 0.0;
+    for (int i = 0; i < len; i++) {
+      rv += a[bA + i] * b[bB + i];
     }
+    return rv;
+  }
+
+
+  /**
+   * Shuffles the content of an array.
+   * Based on Fisher–Yates algorithm.
+   *
+   * @param array an array of type {@link T}
+   * @param <T>   type of elements in the array.
+   */
+  public static <T> void shuffle(T array[]) {
+    if (array.length > 1) {
+      for (int i = array.length - 1; i > 1; i--) {
+        int j = ThreadLocalRandom.current().nextInt(0, i);
+        T t = array[j];
+        array[j] = array[i];
+        array[i] = t;
+      }
+    }
+  }
+
+  /**
+   * Swaps two elements in the array.
+   *
+   * @param array an array of type {@link T}
+   * @param i     index of the first element.
+   * @param j     index of the second element.
+   * @param <T>   type of elements in the array.
+   */
+  public static <T> void swap(T[] array, int i, int j) {
+    T tmp = array[i];
+    array[i] = array[j];
+    array[j] = tmp;
+  }
+
+  /**
+   * Returns the index of the minimium number in the array.
+   *
+   * @param array an array of doubles.
+   * @return the index of the minimium number in the array.
+   */
+  public static int min(double array[]) {
+    int rv = 0;
+    for (int i = 1; i < array.length; i++)
+      if (array[i] < array[rv])
+        rv = i;
+    return rv;
+  }
+
+  /**
+   * Returns the index of the maximum number in the array.
+   *
+   * @param array an array of doubles.
+   * @return the index of the maximum number in the array.
+   */
+  public static int max(double array[]) {
+    int rv = 0;
+    for (int i = 1; i < array.length; i++)
+      if (array[i] > array[rv])
+        rv = i;
+    return rv;
+  }
+
+  /**
+   * Returns the index of the minimum and maximum elements in the array.
+   *
+   * @param array an array of double.
+   * @return the index of the minimum and maximum elements in the array.
+   */
+  public static Pair<MutableInteger, MutableInteger> minMax(double array[]) {
+    int minIdx = 0, maxIdx = 0, start = 1;
+    double min = array[0], max = array[0];
+
+    if (array.length % 2 == 0)
+      start = 0;
+
+    for (int i = start; i < array.length; i += 2) {
+      if (array[i] < array[i + 1]) {
+        if (min > array[i]) {
+          min = array[i];
+          minIdx = i;
+        }
+        if (max < array[i + 1]) {
+          max = array[i + 1];
+          maxIdx = i + 1;
+        }
+      } else {
+        if (min > array[i + 1]) {
+          min = array[i + 1];
+          minIdx = i + 1;
+        }
+        if (max < array[i]) {
+          max = array[i];
+          maxIdx = i;
+        }
+      }
+    }
+
+    return new Pair<>(new MutableInteger(minIdx), new MutableInteger(maxIdx));
+  }
 }

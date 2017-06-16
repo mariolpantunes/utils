@@ -1,5 +1,6 @@
 package pt.it.av.atnog.utils.bla;
 
+import pt.it.av.atnog.utils.ArrayUtils;
 import pt.it.av.atnog.utils.MathUtils;
 import pt.it.av.atnog.utils.structures.Distance;
 
@@ -150,105 +151,105 @@ public class Vector<D extends Vector> implements Distance<D> {
      * @return the sum of all values in the vector
      */
     public double sum() {
-        return ArraysOps.sum(data, bIdx, len);
+        return ArrayUtils.sum(data, bIdx, len);
     }
 
     public Vector add(double scalar) {
         Vector c = new Vector(len);
-        ArraysOps.add(this.data, this.bIdx, scalar, c.data, c.bIdx, len);
+        ArrayUtils.add(this.data, this.bIdx, scalar, c.data, c.bIdx, len);
         return c;
     }
 
     public Vector uAdd(double scalar) {
-        ArraysOps.add(this.data, this.bIdx, scalar, this.data, this.bIdx, len);
+        ArrayUtils.add(this.data, this.bIdx, scalar, this.data, this.bIdx, len);
         return this;
     }
 
     public Vector add(Vector b) {
         Vector c = new Vector(len);
-        ArraysOps.add(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, len);
+        ArrayUtils.add(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, len);
         return c;
     }
 
     public Vector uAdd(Vector b) {
-        ArraysOps.add(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, len);
+        ArrayUtils.add(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, len);
         return this;
     }
 
     public Vector sub(double scalar) {
         Vector c = new Vector(len);
-        ArraysOps.sub(this.data, this.bIdx, scalar, c.data, c.bIdx, len);
+        ArrayUtils.sub(this.data, this.bIdx, scalar, c.data, c.bIdx, len);
         return c;
     }
 
     public Vector uSub(double scalar) {
-        ArraysOps.sub(this.data, this.bIdx, scalar, this.data, this.bIdx, len);
+        ArrayUtils.sub(this.data, this.bIdx, scalar, this.data, this.bIdx, len);
         return this;
     }
 
     public Vector sub(Vector b) {
         Vector c = new Vector(len);
-        ArraysOps.sub(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, len);
+        ArrayUtils.sub(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, len);
         return c;
     }
 
     public Vector uSub(Vector b) {
-        ArraysOps.sub(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, len);
+        ArrayUtils.sub(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, len);
         return this;
     }
 
     public Vector mul(double scalar) {
         Vector c = new Vector(len);
-        ArraysOps.mul(this.data, this.bIdx, scalar, c.data, c.bIdx, len);
+        ArrayUtils.mul(this.data, this.bIdx, scalar, c.data, c.bIdx, len);
         return c;
     }
 
     public Vector uMul(double scalar) {
-        ArraysOps.mul(this.data, this.bIdx, scalar, this.data, this.bIdx, len);
+        ArrayUtils.mul(this.data, this.bIdx, scalar, this.data, this.bIdx, len);
         return this;
     }
 
     public Vector mul(Vector b) {
         Vector c = new Vector(len);
-        ArraysOps.mul(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, len);
+        ArrayUtils.mul(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, len);
         return c;
     }
 
     public Vector uMul(Vector b) {
-        ArraysOps.mul(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, len);
+        ArrayUtils.mul(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, len);
         return this;
     }
 
     public Vector div(double scalar) {
         Vector c = new Vector(len);
-        ArraysOps.div(this.data, this.bIdx, scalar, c.data, c.bIdx, len);
+        ArrayUtils.div(this.data, this.bIdx, scalar, c.data, c.bIdx, len);
         return c;
     }
 
     public Vector uDiv(double scalar) {
-        ArraysOps.div(this.data, this.bIdx, scalar, this.data, this.bIdx, len);
+        ArrayUtils.div(this.data, this.bIdx, scalar, this.data, this.bIdx, len);
         return this;
     }
 
     public Vector div(Vector b) {
         Vector c = new Vector(len);
-        ArraysOps.div(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, len);
+        ArrayUtils.div(this.data, this.bIdx, b.data, b.bIdx, c.data, c.bIdx, len);
         return c;
     }
 
     public Vector uDiv(Vector b) {
-        ArraysOps.div(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, len);
+        ArrayUtils.div(this.data, this.bIdx, b.data, b.bIdx, this.data, this.bIdx, len);
         return this;
     }
 
     public Vector power(double b) {
         Vector c = new Vector(len);
-        ArraysOps.pow(this.data, this.bIdx, b, c.data, c.bIdx, len);
+        ArrayUtils.pow(this.data, this.bIdx, b, c.data, c.bIdx, len);
         return c;
     }
 
     public Vector uPower(double b) {
-        ArraysOps.pow(this.data, this.bIdx, b, this.data, this.bIdx, len);
+        ArrayUtils.pow(this.data, this.bIdx, b, this.data, this.bIdx, len);
         return this;
     }
 
@@ -278,15 +279,15 @@ public class Vector<D extends Vector> implements Distance<D> {
     }
 
     public double minkowskiDistance(Vector b, int p) {
-        return ArraysOps.minkowskiDistance(data, bIdx, b.data, b.bIdx, len, p);
+        return ArrayUtils.minkowskiDistance(data, bIdx, b.data, b.bIdx, len, p);
     }
 
     public double euclideanDistance(Vector b) {
-        return ArraysOps.euclideanDistance(data, bIdx, b.data, b.bIdx, len);
+        return ArrayUtils.euclideanDistance(data, bIdx, b.data, b.bIdx, len);
     }
 
     public double manhattanDistance(Vector b) {
-        return ArraysOps.manhattanDistance(data, bIdx, b.data, b.bIdx, len);
+        return ArrayUtils.manhattanDistance(data, bIdx, b.data, b.bIdx, len);
     }
 
     public double cosine(Vector b) {

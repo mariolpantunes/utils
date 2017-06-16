@@ -1,10 +1,17 @@
 package pt.it.av.atnog.utils.structures;
 
+import pt.it.av.atnog.utils.SortUtils;
 import pt.it.av.atnog.utils.Utils;
 import pt.it.av.atnog.utils.bla.Vector;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * @param <E> subtype of Vector stored within the KD-Tree
@@ -68,7 +75,7 @@ public class KDTree<E extends Vector> implements Collection<E> {
     private static <E extends Vector> KDNode<E> build(E[] points, int left, int right, int cd, int maxDim) {
         KDNode<E> node = null;
         if (left < right) {
-            Utils.qselect(points, left, right, left + ((right - left) / 2), (E e1, E e2) -> Double.compare(e1.get(cd), e2.get(cd)));
+            SortUtils.qselect(points, left, right, left + ((right - left) / 2), (E e1, E e2) -> Double.compare(e1.get(cd), e2.get(cd)));
             int pivot = pivot(points, left, right, cd);
             node = new KDNode<E>(points[pivot]);
             node.left = build(points, left, pivot - 1, (cd + 1) % maxDim, maxDim);
