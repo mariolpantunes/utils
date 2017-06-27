@@ -1,27 +1,30 @@
 package pt.it.av.atnog.utils.bla;
 
 /**
- * Low level matrix operations.
+ * Several implementation of matrix multiplication.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class MatrixMultiplication {
 
-    /**
-     * @param a
-     * @param b
-     * @param c
-     * @param m
-     * @param n
-     * @param p
-     */
-    protected static void ijk(double a[], double b[], double c[], int m, int n, int p) {
-        for (int i = 0; i < m; i++)
-            for (int j = 0; j < n; j++)
-                for (int k = 0; k < p; k++)
-                    c[i * n + j] += a[i * p + k] * b[k * n + j];
+  /**
+   * @param a
+   * @param b
+   * @param c
+   * @param m
+   * @param n
+   * @param p
+   */
+  protected static void ijk(double a[], double b[], double c[], int m, int n, int p) {
+    for (int i = 0; i < m; i++) {
+      for (int j = 0; j < n; j++) {
+        for (int k = 0; k < p; k++) {
+          c[i * n + j] += a[i * p + k] * b[k * n + j];
+        }
+      }
     }
+  }
 
     /*protected static Matrix ijk(Matrix A, Matrix B) {
         Matrix R = new Matrix(A.rows, B.cols);

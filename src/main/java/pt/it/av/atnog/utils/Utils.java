@@ -17,12 +17,6 @@ public class Utils {
     return (T) o;
   }
 
-
-
-
-
-
-
   public static <T extends Comparable<T>> T min(T a, T b) {
     T rv = b;
     if (a.compareTo(b) < 0)

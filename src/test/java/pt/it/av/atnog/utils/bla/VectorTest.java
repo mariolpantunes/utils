@@ -7,7 +7,7 @@ import pt.it.av.atnog.utils.MathUtils;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit test for Vector class.
+ * Unit test for {@link Vector}.
  *
  * @author Mário Antunes
  * @version 1.0

@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit test for Matrix class.
+ * Unit test for {@link Matrix}.
  *
  * @author Mário Antunes
  * @version 1.0

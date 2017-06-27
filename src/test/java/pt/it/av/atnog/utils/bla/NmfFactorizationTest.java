@@ -4,7 +4,7 @@ import org.junit.Test;
 import pt.it.av.atnog.utils.ArrayUtils;
 
 /**
- * Unit test for non-negative matrix factorization.
+ * Unit test for {@link NmfFactorization}.
  *
  * @author Mário Antunes
  * @version 1.0

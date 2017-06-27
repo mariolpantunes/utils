@@ -7,7 +7,10 @@ import java.util.Arrays;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by mantunes on 7/8/16.
+ * Unit test for {@link MatrixTranspose}.
+ *
+ * @author Mário Antunes
+ * @version 1.0
  */
 public class MatrixTransposeTest {
     private static double A[] = {1, 2, 3, 4, 5, 6}, At[] = {1, 3, 5, 2, 4, 6},
