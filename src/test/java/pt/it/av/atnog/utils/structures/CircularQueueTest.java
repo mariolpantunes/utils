@@ -20,7 +20,7 @@ public class CircularQueueTest {
 
   @Test
   public void test_insert_full() {
-    CircularQueue<String> queue = new CircularQueue(3);
+    CircularQueue<String> queue = new CircularQueue<>(3);
     for (String datum : data3) {
       queue.add(datum);
     }
@@ -35,7 +35,7 @@ public class CircularQueueTest {
 
   @Test
   public void test_insert_overfull() {
-    CircularQueue<String> queue = new CircularQueue(3);
+    CircularQueue<String> queue = new CircularQueue<>(3);
     for (String datum : data5) {
       queue.add(datum);
     }
@@ -50,20 +50,20 @@ public class CircularQueueTest {
 
   @Test(expected = NoSuchElementException.class)
   public void test_middle_empty() {
-    CircularQueue<String> q = new CircularQueue(3);
+    CircularQueue<String> q = new CircularQueue<>(3);
     q.middle();
   }
 
   @Test(expected = NoSuchElementException.class)
   public void test_middle_array_empty() {
-    CircularQueue<String> q = new CircularQueue(3);
+    CircularQueue<String> q = new CircularQueue<>(3);
     String array[] = new String[1];
     q.middle(array);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void test_middle_array_parity() {
-    CircularQueue<String> q = new CircularQueue(3);
+    CircularQueue<String> q = new CircularQueue<>(3);
     q.add("A");
     q.add("B");
     q.add("C");
@@ -73,7 +73,7 @@ public class CircularQueueTest {
 
   @Test
   public void test_middle_odd() {
-    CircularQueue<String> q = new CircularQueue(3);
+    CircularQueue<String> q = new CircularQueue<>(3);
     q.add("A");
     assertTrue(q.middle().equals("A"));
     q.add("B");
@@ -83,7 +83,7 @@ public class CircularQueueTest {
 
   @Test
   public void test_middle_even() {
-    CircularQueue<String> q = new CircularQueue(3);
+    CircularQueue<String> q = new CircularQueue<>(3);
     q.add("A");
     q.add("B");
     assertTrue(q.middle().equals("B"));
@@ -91,7 +91,7 @@ public class CircularQueueTest {
 
   @Test
   public void test_middle_array_odd() {
-    CircularQueue<String> q = new CircularQueue(5);
+    CircularQueue<String> q = new CircularQueue<>(5);
     q.add("A");
     String array[] = new String[1];
     q.middle(array);
@@ -107,7 +107,7 @@ public class CircularQueueTest {
 
   @Test
   public void test_middle_array_even() {
-    CircularQueue<String> q = new CircularQueue(5);
+    CircularQueue<String> q = new CircularQueue<>(5);
     q.add("A");
     q.add("B");
     String array[] = new String[2];

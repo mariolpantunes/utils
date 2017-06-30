@@ -32,7 +32,7 @@ public class PipelineTest {
     @Test(timeout = 3000)
     public void test_one_task() {
         Pipeline pipeline = new Pipeline();
-        BlockingQueue sink = pipeline.sink(), source = pipeline.source();
+        BlockingQueue<Object> sink = pipeline.sink(), source = pipeline.source();
 
         pipeline.addLast((Object o, List<Object> l) -> {
             Integer i = (Integer) o;
@@ -65,7 +65,7 @@ public class PipelineTest {
     @Test(timeout = 3000)
     public void test_two_tasks() {
         Pipeline pipeline = new Pipeline();
-        BlockingQueue sink = pipeline.sink(), source = pipeline.source();
+        BlockingQueue<Object> sink = pipeline.sink(), source = pipeline.source();
 
         pipeline.addLast((Object o, List<Object> l) -> {
             Integer i = (Integer) o;
@@ -103,7 +103,7 @@ public class PipelineTest {
     @Test(timeout = 3000)
     public void test_three_tasks() {
         Pipeline pipeline = new Pipeline();
-        BlockingQueue sink = pipeline.sink(), source = pipeline.source();
+        BlockingQueue<Object> sink = pipeline.sink(), source = pipeline.source();
 
         pipeline.addLast((Object o, List<Object> l) -> {
             Integer i = (Integer) o;
