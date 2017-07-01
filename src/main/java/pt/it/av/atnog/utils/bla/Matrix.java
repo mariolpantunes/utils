@@ -1,10 +1,7 @@
 package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.ArrayUtils;
-import pt.it.av.atnog.utils.parallel.ThreadPool;
 
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -386,9 +383,9 @@ public class Matrix {
   public Matrix mul(Matrix B) {
     int BLK = 64;
     Matrix C = new Matrix(rows, B.cols);
-    double bt[] = new double[B.rows * B.cols];
-    MatrixTranspose.transpose(B.data, bt, B.rows, B.cols);
-    if (C.rows * C.cols < BLK * BLK) {
+    MatrixMultiplication.fmul(data, B.data, C.data, rows, B.cols, cols);
+
+    /*if (C.rows * C.cols < BLK * BLK) {
       for (int i = 0; i < C.rows; i++) {
         int ic = i * cols;
         for (int j = 0; j < C.cols; j++) {
@@ -416,7 +413,7 @@ public class Matrix {
       } catch (Exception e) {
         e.printStackTrace();
       }
-    }
+    }*/
     return C;
   }
 
@@ -484,6 +481,9 @@ public class Matrix {
     return new Vector(diagArray(n));
   }
 
+  /**
+   * @return
+   */
   public Matrix[] svd() {
     Matrix UDV[] = bidiagonal();
 
@@ -501,6 +501,10 @@ public class Matrix {
     return UDV;
   }
 
+  /**
+   *
+   * @return
+   */
   public double det() {
     double rv = 1.0;
     if (cols == 1 && rows == 1)
@@ -525,10 +529,20 @@ public class Matrix {
     return rv;
   }
 
+  /**
+   *
+   * @param row
+   * @param column
+   * @return
+   */
   public Vector vector(int row, int column) {
     return new Vector(data, row * cols + column, cols - column);
   }
 
+  /**
+   *
+   * @return
+   */
   public Vector vector() {
     return new Vector(data, 0, rows * cols);
   }

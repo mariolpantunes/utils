@@ -40,16 +40,6 @@ public class Naive {
         return rv;
     }
 
-
-    public static Matrix mul(Matrix A, Matrix B) {
-        Matrix C = new Matrix(A.rows, B.cols);
-        for (int i = 0; i < A.rows; i++)
-            for (int k = 0; k < B.rows; k++)
-                for (int j = 0; j < B.cols; j++)
-                    C.data[i * C.cols + j] += A.data[i * A.cols + k] * B.data[k * B.cols + j];
-        return C;
-    }
-
     public Matrix mul(Matrix A, Matrix B, int blk) {
         Matrix C = new Matrix(A.rows, B.cols);
         double b_data[] = new double[blk * blk];

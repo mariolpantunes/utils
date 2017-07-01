@@ -1,5 +1,7 @@
 package pt.it.av.atnog.utils.bla;
 
+import pt.it.av.atnog.utils.ArrayUtils;
+
 /**
  * Several implementation of matrix multiplication.
  *
@@ -24,6 +26,55 @@ public class MatrixMultiplication {
         }
       }
     }
+  }
+
+  /**
+   * @param a
+   * @param b
+   * @param c
+   * @param m
+   * @param n
+   * @param p
+   */
+  protected static void ikj(double a[], double b[], double c[], int m, int n, int p) {
+    for (int i = 0; i < m; i++) {
+      for (int k = 0; k < p; k++) {
+        for (int j = 0; j < n; j++) {
+          c[i * n + j] += a[i * p + k] * b[k * n + j];
+        }
+      }
+    }
+  }
+
+  /**
+   * @param a
+   * @param bt
+   * @param c
+   * @param m
+   * @param n
+   * @param p
+   */
+  protected static void fmul_t(double a[], double bt[], double c[], int m, int n, int p) {
+    for (int i = 0; i < m; i++) {
+      for (int j = 0; j < n; j++) {
+        c[i * n + j] = ArrayUtils.dotProduct(a, i * p, bt, j * p, p);
+      }
+    }
+  }
+
+
+  /**
+   * @param a
+   * @param b
+   * @param c
+   * @param m
+   * @param n
+   * @param p
+   */
+  protected static void fmul(double a[], double b[], double c[], int m, int n, int p) {
+    double bt[] = new double[b.length];
+    MatrixTranspose.transpose(b, bt, p, n);
+    fmul_t(a, bt, c, m, n, p);
   }
 
     /*protected static Matrix ijk(Matrix A, Matrix B) {

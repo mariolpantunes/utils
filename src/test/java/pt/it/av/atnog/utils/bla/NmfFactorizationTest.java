@@ -16,13 +16,9 @@ public class NmfFactorizationTest {
   @Test
   public void test_identity_nmf() {
     Matrix V = Matrix.identity(5);
-    Matrix WH[] = NmfFactorization.nmf_mu(V, 5, 1000, 0.000001);
-    //System.out.println(WH[0]);
-    //System.out.println(WH[1]);
+    Matrix WH[] = NmfFactorization.nmf_mu(V, 5, 1000, 0.01);
     Matrix wh = WH[0].mul(WH[1]);
     double cost = ArrayUtils.euclideanDistance(V.data, 0, wh.data, 0, V.data.length);
-    //System.out.println(wh);
-    //System.out.println(cost);
-    assertTrue(cost < 0.1);
+    assertTrue(cost <= 0.1);
   }
 }

@@ -28,4 +28,26 @@ public class MatrixMultiplicationTest {
     MatrixMultiplication.ijk(B, A, ba, 2, 2, 3);
     assertTrue(Arrays.equals(ba, BA));
   }
+
+  @Test
+  public void test_ikj() {
+    double ab[] = new double[9];
+    MatrixMultiplication.ikj(A, B, ab, 3, 3, 2);
+    assertTrue(Arrays.equals(ab, AB));
+
+    double ba[] = new double[4];
+    MatrixMultiplication.ikj(B, A, ba, 2, 2, 3);
+    assertTrue(Arrays.equals(ba, BA));
+  }
+
+  @Test
+  public void test_mul() {
+    double ab[] = new double[9];
+    MatrixMultiplication.fmul(A, B, ab, 3, 3, 2);
+    assertTrue(Arrays.equals(ab, AB));
+
+    double ba[] = new double[4];
+    MatrixMultiplication.fmul(B, A, ba, 2, 2, 3);
+    assertTrue(Arrays.equals(ba, BA));
+  }
 }
