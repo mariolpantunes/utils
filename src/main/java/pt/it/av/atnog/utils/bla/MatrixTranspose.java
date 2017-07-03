@@ -12,7 +12,7 @@ import java.util.Deque;
  * @version 1.0
  */
 public class MatrixTranspose {
-  private static int DEFAULT_BLK = 32;
+  private static int DEFAULT_BLK = 128;
 
   /**
    * @param data
@@ -49,11 +49,11 @@ public class MatrixTranspose {
           for (int i = rb, tmpc = 0; i < re; i++, tmpc++)
             tdata[j * rows + i] = tmp[tmpr * blk + tmpc];
       } else if (r >= c) {
-        stack.push(new Quad<>(rb + (r / 2), re, cb, ce));
         stack.push(new Quad<>(rb, rb + (r / 2), cb, ce));
+        stack.push(new Quad<>(rb + (r / 2), re, cb, ce));
       } else {
-        stack.push(new Quad<>(rb, re, cb + (c / 2), ce));
         stack.push(new Quad<>(rb, re, cb, cb + (c / 2)));
+        stack.push(new Quad<>(rb, re, cb + (c / 2), ce));
       }
     }
     return tdata;
@@ -105,8 +105,11 @@ public class MatrixTranspose {
    * This implementation is only intendendet to be used in unit testing.
    * The function returns a Matrix that is a tranpose from the input Matrix.
    *
-   * @param M an input matrix
-   * @return Matrix that is a tranpose from the input Matrix
+   * @param data
+   * @param tdata
+   * @param rows
+   * @param columns
+   * @return
    */
   protected static double[] naive_transpose(final double data[], final double tdata[],
                                             final int rows, final int columns) {

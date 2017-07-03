@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public class Matrix {
-  protected double data[];
+  protected final double data[];
   protected int rows, cols;
 
   /**
@@ -356,6 +356,11 @@ public class Matrix {
     return this;
   }
 
+  /**
+   * @param column
+   * @param scalar
+   * @return
+   */
   public Matrix addColumn(int column, double scalar) {
     Matrix C = new Matrix(rows, cols + 1);
     for (int i = 0, j = 0; i < C.data.length; i++)
@@ -366,6 +371,11 @@ public class Matrix {
     return C;
   }
 
+  /**
+   *
+   * @param v
+   * @return
+   */
   public Vector mul(Vector v) {
     Vector rv = new Vector(rows);
     for (int i = 0; i < rows; i++) {
@@ -377,46 +387,21 @@ public class Matrix {
     return rv;
   }
 
-  //TODO: Check code, improve selection between sequencial and parallel implemenatations
-  // Should call functions from MatrixMultiplication library
-  // Maybe three implementation, ijk for small ones, single-thread with transpose for medium, and parallel for large
+  /**
+   *
+   * @param B
+   * @return
+   */
   public Matrix mul(Matrix B) {
-    int BLK = 64;
     Matrix C = new Matrix(rows, B.cols);
-    MatrixMultiplication.fmul(data, B.data, C.data, rows, B.cols, cols);
-
-    /*if (C.rows * C.cols < BLK * BLK) {
-      for (int i = 0; i < C.rows; i++) {
-        int ic = i * cols;
-        for (int j = 0; j < C.cols; j++) {
-          int jc = j * B.rows;
-          C.data[i * C.cols + j] = ArrayUtils.dotProduct(data, ic, bt, jc, B.rows);
-        }
-      }
-    } else {
-      int I = C.rows, J = C.cols, K = cols;
-      ThreadPool tp = new ThreadPool((Object o, List<Object> l) -> {
-        int i = (Integer) o, ic = i * cols;
-        for (int j = 0; j < C.cols; j++) {
-          int jc = j * B.rows;
-          C.data[i * C.cols + j] = ArrayUtils.dotProduct(data, ic, bt, jc, B.rows);
-        }
-      });
-
-      BlockingQueue<Object> sink = tp.sink();
-      tp.start();
-
-      try {
-        for (int i = 0; i < I; i++)
-          sink.add(new Integer(i));
-        tp.join();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }*/
+    MatrixMultiplication.mul(data, B.data, C.data, rows, B.cols, cols);
     return C;
   }
 
+  /**
+   *
+   * @return
+   */
   public Matrix triangular() {
     Matrix T = transpose();
     for (int k = 0; k < rows - 1; k++)
@@ -425,6 +410,10 @@ public class Matrix {
     return T;
   }
 
+  /**
+   *
+   * @return
+   */
   public Matrix[] qr() {
     Matrix QR[] = new Matrix[2];
     QR[0] = Matrix.identity(rows);
