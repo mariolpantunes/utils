@@ -413,4 +413,22 @@ public final class ArrayUtils {
 
     return new Pair<>(new MutableInteger(minIdx), new MutableInteger(maxIdx));
   }
+
+  /**
+   * Binary array fill.
+   *
+   * @param a
+   * @param v
+   */
+  public static void fill(double a[], double v) {
+    int len = a.length;
+
+    if (len > 0) {
+      a[0] = v;
+    }
+
+    for (int i = 1; i < len; i += i) {
+      System.arraycopy(a, 0, a, i, ((len - i) < i) ? (len - i) : i);
+    }
+  }
 }

@@ -230,5 +230,23 @@ public class MM {
     stop = System.nanoTime();
     elapsed = (stop - start) / 1000000000.0;
     System.out.println("Order ikj:   " + elapsed + " seconds");
+
+
+    // NMF
+    Matrix V = Matrix.identity(N);
+
+
+    start = System.nanoTime();
+    NmfFactorization.nmf_mu(V, N / 3, 1000, 0.01);
+    stop = System.nanoTime();
+    elapsed = (stop - start) / 1000000000.0;
+    System.out.println("Order nmfv1:   " + elapsed + " seconds");
+
+
+    start = System.nanoTime();
+    NmfFactorization.nmf_mu2(V, N / 3, 1000, 0.01);
+    stop = System.nanoTime();
+    elapsed = (stop - start) / 1000000000.0;
+    System.out.println("Order nmfv2:   " + elapsed + " seconds");
   }
 }
