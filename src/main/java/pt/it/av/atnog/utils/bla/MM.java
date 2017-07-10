@@ -195,13 +195,13 @@ public class MM {
     elapsed = (stop - start) / 1000000000.0;
     System.out.println("Order ijkt:   " + elapsed + " seconds");
 
-    // order 9.5: matrix transpose
+    // order 9.5: matrix cotr
     double bt[] = new double[b.length];
     start = System.nanoTime();
-    MatrixTranspose.transpose(b, bt, N, N);
+    MatrixTranspose.cotr(b, bt, N, N);
     stop = System.nanoTime();
     elapsed = (stop - start) / 1000000000.0;
-    System.out.println("Order transpose:   " + elapsed + " seconds");
+    System.out.println("Order cotr:   " + elapsed + " seconds");
 
     // order 10: pmul
     start = System.nanoTime();
@@ -233,7 +233,7 @@ public class MM {
 
 
     // NMF
-    Matrix V = Matrix.identity(N);
+    /*Matrix V = Matrix.identity(N);
 
 
     start = System.nanoTime();
@@ -247,6 +247,13 @@ public class MM {
     NmfFactorization.nmf_mu2(V, N / 3, 1000, 0.01);
     stop = System.nanoTime();
     elapsed = (stop - start) / 1000000000.0;
-    System.out.println("Order nmfv2:   " + elapsed + " seconds");
+    System.out.println("Order nmfv2:   " + elapsed + " seconds");*/
+
+    double t[] = new double[a.length];
+    start = System.nanoTime();
+    MatrixTranspose.cotr(a,t,N,N,64);
+    stop = System.nanoTime();
+    elapsed = (stop - start) / 1000000000.0;
+    System.out.println("Order cotr:   " + elapsed + " seconds");
   }
 }

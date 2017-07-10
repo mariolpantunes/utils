@@ -29,7 +29,7 @@ public class NmfFactorization {
     for (int i = 0; i < n && cost > e; i++) {
       // update feature matrix.
       Matrix wt = w.transpose();
-      //MatrixTranspose.transpose(w.data, wt.data, w.rows, w.cols);
+      //MatrixTranspose.cotr(w.data, wt.data, w.rows, w.cols);
 
       Matrix hn = wt.mul(v);
       //hn = MatrixMultiplication.mul(wt, v.data, hn, w.cols, v.cols, v.rows);
@@ -43,7 +43,7 @@ public class NmfFactorization {
 
       // update weights matrix
       Matrix ht = h.transpose();
-      //ht = MatrixTranspose.transpose(h.data, ht, h.rows, h.cols);
+      //ht = MatrixTranspose.cotr(h.data, ht, h.rows, h.cols);
       Matrix wn = v.mul(ht);
       //wn = MatrixMultiplication.mul(v.data, ht, wn, v.rows, h.rows, v.cols);
       Matrix wd = w.mul(h).mul(ht);
@@ -78,7 +78,7 @@ public class NmfFactorization {
 
     for (int i = 0; i < n && cost > e; i++) {
       // update feature matrix.
-      MatrixTranspose.transpose(w.data, wt, w.rows, w.columns());
+      MatrixTranspose.cotr(w.data, wt, w.rows, w.columns());
       MatrixMultiplication.mul(wt, v.data, hn, w.cols, v.cols, w.rows);
       MatrixMultiplication.mul(wt, wh, hd, w.cols, v.cols, w.rows);
 

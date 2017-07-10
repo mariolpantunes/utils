@@ -65,15 +65,11 @@ public class Searx extends WebSearchEngine {
     public boolean hasNext() {
       if (it == null) {
         try {
-          System.err.println(url + "?format=json&pageno="
-              + pageno + "&q=" + q);
-
           JSONObject json = Http.getJson(url + "?format=json&pageno="
               + pageno + "&q=" + q);
 
           if (json != null) {
             JSONArray array = json.get("results").asArray();
-            System.out.println(array.size());
 
             it = array.iterator();
             if (!it.hasNext()) {

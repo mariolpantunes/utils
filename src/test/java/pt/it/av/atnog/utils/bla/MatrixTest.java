@@ -58,21 +58,21 @@ public class MatrixTest {
     @Test
     public void test_transpose_large() {
         Matrix B = Matrix.random(128, 64, 1, 10);
-        //Matrix Bt = MatrixTranspose.naive_transpose(B);
-        //assertTrue(Bt.equals(B.transpose()));
+        //Matrix Bt = MatrixTranspose.ntr(B);
+        //assertTrue(Bt.equals(B.cotr()));
     }
 
     @Test
     public void test_uTranspose_rect_large() {
         Matrix B = Matrix.random(128, 64, 1, 10);
-        //Matrix Bt = MatrixTranspose.naive_transpose(B);
+        //Matrix Bt = MatrixTranspose.ntr(B);
         //assertTrue(Bt.equals(B.uTranspose()));
     }
 
     @Test
     public void test_uTranspose_square_large() {
         Matrix B = Matrix.random(128, 128, 1, 10);
-        //Matrix Bt = MatrixTranspose.naive_transpose(B);
+        //Matrix Bt = MatrixTranspose.ntr(B);
         //assertTrue(Bt.equals(B.uTranspose()));
     }
 

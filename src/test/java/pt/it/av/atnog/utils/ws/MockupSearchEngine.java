@@ -21,7 +21,7 @@ public class MockupSearchEngine extends WebSearchEngine {
    * Mockup search engine constructor.
    */
   public MockupSearchEngine() {
-    super("");
+    super("", 3);
     map = new LinkedHashMap<>();
 
     List<Result> zero = new ArrayList<>();

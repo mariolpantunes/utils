@@ -5,6 +5,7 @@ import pt.it.av.atnog.utils.json.JSONArray;
 import pt.it.av.atnog.utils.json.JSONObject;
 import pt.it.av.atnog.utils.json.JSONValue;
 
+import java.net.SocketTimeoutException;
 import java.util.Iterator;
 
 //TODO: JSON parse fails some times
@@ -14,35 +15,39 @@ import java.util.Iterator;
 //TODO: Fix URL usage.
 
 /**
- * YaCy search engine.
+ * Yacy search engine.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class YaCy extends WebSearchEngine {
+public class Yacy extends WebSearchEngine {
   private static final String DEFAULT_URL = "http://hrun.hopto.org/yacy/";
+  private static final int DEFAULT_RETRIES = 3;
+  private final int retries;
 
   /**
    *
    */
-  public YaCy() {
+  public Yacy() {
     super(DEFAULT_URL);
+    this.retries = DEFAULT_RETRIES;
   }
 
   /**
    * @param url
    */
-  public YaCy(final String url) {
+  public Yacy(final String url) {
     super(url);
+    this.retries = DEFAULT_RETRIES;
   }
 
   /**
-   *
    * @param url
    * @param maxResults
    */
-  public YaCy(final String url, final int maxResults) {
+  public Yacy(final String url, final int maxResults) {
     super(url, maxResults);
+    this.retries = DEFAULT_RETRIES;
   }
 
   @Override
@@ -64,30 +69,42 @@ public class YaCy extends WebSearchEngine {
     @Override
     public boolean hasNext() {
       if (it == null) {
-        try {
-          JSONObject json = Http.getJson(url + "/yacysearch.json?resource=global&contentdom=text" +
-              "&lr=lang_en&startRecord=" + (skip + 1) + "&query=" + q).get("channels").asArray().get(0).asObject();
 
-          if (json != null) {
-            int numberResults = Integer.parseInt(json.get("totalResults").asString());
-            if (skip >= numberResults) {
-              done = true;
+        JSONObject json = null;
+        boolean http = false;
+
+        for (int i = 0; i < retries && !http; i++) {
+          try {
+            json = Http.getJson(url + "/yacysearch.json?resource=global&contentdom=text" +
+                "&lr=lang_en&startRecord=" + (skip + 1) + "&query=" + q).get("channels").asArray().get(0).asObject();
+            http = true;
+          } catch (Exception e) {
+            try {
+              Thread.sleep(1000 * (i + 1));
+            } catch (InterruptedException ie) {
+
             }
-            JSONArray array = json.get("items").asArray();
-            it = array.iterator();
-            if (!it.hasNext()) {
-              done = !true;
-            }
-          } else {
+          }
+        }
+
+        if (json != null) {
+          //TODO: fix this...
+          //int numberResults = Integer.parseInt(json.get("totalResults").asString());
+          //if (skip >= numberResults) {
+          //  done = true;
+          //}
+          JSONArray array = json.get("items").asArray();
+          it = array.iterator();
+          if (!it.hasNext()) {
             done = true;
           }
-        } catch (Exception e) {
-          e.printStackTrace();
+        } else {
           done = true;
         }
       } else {
-        done = it.hasNext();
+        done = !it.hasNext();
       }
+
       return !done;
     }
 

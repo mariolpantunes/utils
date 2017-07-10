@@ -19,7 +19,7 @@ import java.util.zip.InflaterInputStream;
  * @version 1.0
  */
 public class Http {
-  private static final int DEFAULT_TIMEOUT = 10000;
+  private static final int DEFAULT_TIMEOUT = 30*1000;
   private static final int MAX_REDIRECT = 10;
 
   /**

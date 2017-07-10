@@ -88,7 +88,7 @@ public class Matrix {
   public static Matrix random(int rows, int cols) {
     Matrix C = new Matrix(rows, cols);
     for (int n = 0, length = rows * cols; n < length; n++)
-      C.data[n] = Math.random();
+      C.data[n] = ThreadLocalRandom.current().nextDouble();
     return C;
   }
 
@@ -265,7 +265,7 @@ public class Matrix {
 
   /**
    * Returns the transpose matrix.
-   * This function uses a cache oblivious algorithm to transpose the original matrix to a new one.
+   * This function uses a cache oblivious algorithm to transpose the original matrix into a new one.
    *
    * @return the transpose matrix
    */
@@ -274,22 +274,23 @@ public class Matrix {
     if (isLinear())
       System.arraycopy(data, 0, T.data, 0, data.length);
     else
-      MatrixTranspose.transpose(data, T.data, rows, cols);
+      MatrixTranspose.cotr(data, T.data, rows, cols);
     return T;
   }
 
   /**
-   * Returns the transpose matrix.
-   * The tranpose is done in place with none or minimal auxiliary memory.
+   * Re-organizes the internal representation and returns the transpose matrix.
+   * The tranpose is done in-place with minimal auxiliar memory.
+   * It is slower than the regular transpose method.
    *
    * @return the transpose matrix
    */
   public Matrix uTranspose() {
     if (!isLinear()) {
       if (isSquare())
-        MatrixTranspose.inplace_square_transpose(data, rows);
+        MatrixTranspose.insqtr(data, rows);
       else
-        MatrixTranspose.inplace_follow_cycles(data, rows, cols);
+        MatrixTranspose.infotr(data, rows, cols);
     }
     int t = rows;
     this.rows = cols;

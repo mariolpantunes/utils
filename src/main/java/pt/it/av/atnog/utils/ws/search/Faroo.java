@@ -51,8 +51,8 @@ public class Faroo extends WebSearchEngine {
     public boolean hasNext() {
       if (it == null) {
         try {
-          JSONObject json = Http.getJson(url + "api?key=" + key + "&start=" + (skip + 1) + "&q=" + q);
-
+          JSONObject json = Http.getJson(url + "api?key=" + key +
+              "&start=" + (skip + 1) + "&q=" + q);
           if (json != null) {
             int numberResults = json.get("count").asInt();
             if (skip >= numberResults) {

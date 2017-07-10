@@ -2,6 +2,7 @@ package pt.it.av.atnog.utils.ws.search;
 
 import pt.it.av.atnog.utils.Utils;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -18,7 +19,7 @@ import java.util.List;
  * @version 1.0
  */
 public abstract class WebSearchEngine implements SearchEngine {
-  private static final int DEFAULT_MAX_RESULTS = 30;
+  private static final int DEFAULT_MAX_RESULTS = 100;
   protected final String url;
   protected final int maxResults;
 
@@ -69,9 +70,14 @@ public abstract class WebSearchEngine implements SearchEngine {
     public boolean hasNext() {
       if (!done && it == null) {
         it = resultsIterator(q, skip, pageno);
-        pageno++;
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
         if (it == null || !it.hasNext()) {
           done = true;
+        } else {
+          pageno++;
         }
       }
       return !done;
@@ -81,13 +87,11 @@ public abstract class WebSearchEngine implements SearchEngine {
     public Result next() {
       Result rv = it.next();
       skip++;
-
       if (!it.hasNext()) {
         it = null;
         if (skip >= maxResults)
           done = true;
       }
-
       return rv;
     }
   }
