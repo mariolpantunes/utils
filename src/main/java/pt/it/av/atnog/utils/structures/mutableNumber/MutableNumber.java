@@ -10,13 +10,13 @@ package pt.it.av.atnog.utils.structures.mutableNumber;
  */
 public abstract class MutableNumber<N> extends Number {
 
-    public abstract N add(N n);
+  public abstract N add(N n);
 
-    public abstract void increment();
+  public abstract void increment();
 
-    public abstract boolean isRealNumber();
+  public abstract boolean isRealNumber();
 
-    public boolean isComplexNumber() {
-        return !isRealNumber();
-    }
+  public boolean isComplexNumber() {
+    return !isRealNumber();
+  }
 }

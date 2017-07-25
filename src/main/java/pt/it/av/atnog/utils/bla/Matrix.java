@@ -521,6 +521,28 @@ public class Matrix {
 
   /**
    *
+   * @param k
+   * @param n
+   * @param e
+   * @return
+   */
+  public Matrix[] nmf(final int k, final int n, final double e) {
+    return NmfFactorization.nmf_mu2(this, k, n, e);
+  }
+
+  /**
+   *
+   * @param k
+   * @param n
+   * @param e
+   * @return
+   */
+  public Matrix[] nmf(final int k) {
+    return NmfFactorization.nmf_mu2(this, k, 1000, 0.1);
+  }
+
+  /**
+   *
    * @param row
    * @param column
    * @return

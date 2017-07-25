@@ -62,7 +62,7 @@ public class NmfFactorization {
     return new Matrix[]{w, h};
   }
 
-  public static Matrix[] nmf_mu2(Matrix v, int k, int n, double e) {
+  public static Matrix[] nmf_mu2(final Matrix v, final int k, final int n, final double e) {
     double max = v.max(), eps = Math.ulp(1.0);
     Matrix w = Matrix.random(v.rows, k, 0.0, max);
     Matrix h = Matrix.random(k, v.cols, 0.0, max);

@@ -9,49 +9,49 @@ package pt.it.av.atnog.utils.structures.mutableNumber;
  * @version 1.0
  */
 public class ComplexNumber extends MutableNumber<ComplexNumber> {
-    private double r, i;
+  private double r, i;
 
-    public ComplexNumber(double r, double i) {
-        this.r = r;
-        this.i = i;
-    }
+  public ComplexNumber(double r, double i) {
+    this.r = r;
+    this.i = i;
+  }
 
-    public ComplexNumber() {
-        this(0.0, 0.0);
-    }
+  public ComplexNumber() {
+    this(0.0, 0.0);
+  }
 
-    @Override
-    public ComplexNumber add(ComplexNumber n) {
-        return new ComplexNumber(this.r + n.r, this.i + n.i);
-    }
+  @Override
+  public ComplexNumber add(ComplexNumber n) {
+    return new ComplexNumber(this.r + n.r, this.i + n.i);
+  }
 
-    @Override
-    public void increment() {
+  @Override
+  public void increment() {
 
-    }
+  }
 
-    @Override
-    public int intValue() {
-        return 0;
-    }
+  @Override
+  public int intValue() {
+    return 0;
+  }
 
-    @Override
-    public long longValue() {
-        return 0;
-    }
+  @Override
+  public long longValue() {
+    return 0;
+  }
 
-    @Override
-    public float floatValue() {
-        return 0;
-    }
+  @Override
+  public float floatValue() {
+    return 0;
+  }
 
-    @Override
-    public double doubleValue() {
-        return 0;
-    }
+  @Override
+  public double doubleValue() {
+    return 0;
+  }
 
-    @Override
-    public boolean isRealNumber() {
-        return false;
-    }
+  @Override
+  public boolean isRealNumber() {
+    return false;
+  }
 }

@@ -9,75 +9,75 @@ package pt.it.av.atnog.utils.structures.mutableNumber;
  * @version 1.0
  */
 public class MutableDouble extends MutableNumber implements Comparable<MutableDouble> {
-    private double value;
+  private double value;
 
-    /**
-     * @param value
-     */
-    public MutableDouble(final double value) {
-        this.value = value;
-    }
+  /**
+   * @param value
+   */
+  public MutableDouble(final double value) {
+    this.value = value;
+  }
 
-    /**
-     *
-     */
-    public MutableDouble() {
-        this(0.0);
-    }
+  /**
+   *
+   */
+  public MutableDouble() {
+    this(0.0);
+  }
 
-    @Override
-    public Object add(Object o) {
-        return null;
-    }
+  @Override
+  public Object add(Object o) {
+    return null;
+  }
 
-    /**
-     *
-     */
-    public void increment() {
-        value += 1.0;
-    }
+  /**
+   *
+   */
+  public void increment() {
+    value += 1.0;
+  }
 
-    /**
-     *
-     */
-    public void decrement() {
-        value -= 1.0;
-    }
+  /**
+   *
+   */
+  public void decrement() {
+    value -= 1.0;
+  }
 
-    /**
-     * @param value
-     */
-    public void set(double value) {
-        this.value = value;
-    }
+  /**
+   * @param value
+   */
+  public void set(double value) {
+    this.value = value;
+  }
 
-    @Override
-    public int compareTo(MutableDouble o) {
-        return Double.compare(value, o.value);
-    }
+  @Override
+  public int compareTo(MutableDouble o) {
+    return Double.compare(value, o.value);
+  }
 
-    @Override
-    public int intValue() {
-        return (int) value;
-    }
+  @Override
+  public int intValue() {
+    return (int) value;
+  }
 
-    @Override
-    public long longValue() {
-        return (long) value;
-    }
+  @Override
+  public long longValue() {
+    return (long) value;
+  }
 
-    @Override
-    public float floatValue() {
-        return (float) value;
-    }
+  @Override
+  public float floatValue() {
+    return (float) value;
+  }
 
-    @Override
-    public double doubleValue() {
-        return value;
-    }
+  @Override
+  public double doubleValue() {
+    return value;
+  }
 
-    @Override
-    public boolean isRealNumber() {
-        return true;
-    }
+  @Override
+  public boolean isRealNumber() {
+    return true;
+  }
 }
