@@ -538,7 +538,7 @@ public class Matrix {
    * @return
    */
   public Matrix[] nmf(final int k) {
-    return NmfFactorization.nmf_mu2(this, k, 1000, 0.1);
+    return NmfFactorization.nmf_mu2(this, k, 30, 0.01);
   }
 
   /**
@@ -557,6 +557,18 @@ public class Matrix {
    */
   public Vector vector() {
     return new Vector(data, 0, rows * cols);
+  }
+
+  public double minkowskiDistance(Matrix b, int p) {
+    return ArrayUtils.minkowskiDistance(data, 0, b.data, 0, data.length, p);
+  }
+
+  public double euclideanDistance(Matrix b) {
+    return ArrayUtils.euclideanDistance(data, 0, b.data, 0, data.length);
+  }
+
+  public double manhattanDistance(Matrix b) {
+    return ArrayUtils.manhattanDistance(data, 0, b.data, 0, data.length);
   }
 
   @Override

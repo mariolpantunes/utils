@@ -1,6 +1,7 @@
 package pt.it.av.atnog.utils.bla;
 
 import org.junit.Test;
+import pt.it.av.atnog.utils.ArrayUtils;
 
 import java.util.Arrays;
 
@@ -32,7 +33,7 @@ public class MatrixMultiplicationTest {
   }
 
   @Test
-  public void test_ikj() {
+  public void test_ikj_small() {
     double ab[] = new double[9];
     MatrixMultiplication.ikj(A, B, ab, 3, 3, 2);
     assertTrue(Arrays.equals(ab, AB));
@@ -40,6 +41,16 @@ public class MatrixMultiplicationTest {
     double ba[] = new double[4];
     MatrixMultiplication.ikj(B, A, ba, 2, 2, 3);
     assertTrue(Arrays.equals(ba, BA));
+  }
+
+  @Test
+  public void test_ikj_large() {
+    double a[] = ArrayUtils.random(256), b[] = ArrayUtils.random(256),
+        ab1[] = new double[256], ab2[] = new double[256];
+
+    MatrixMultiplication.ijk(a, b, ab1, 16,16,16);
+    MatrixMultiplication.ikj(a, b, ab2, 16,16,16);
+    assertTrue(Arrays.equals(ab1, ab2));
   }
 
   @Test

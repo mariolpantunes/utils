@@ -323,7 +323,7 @@ public final class ArrayUtils {
    * @param array an array of type {@link T}
    * @param <T>   type of elements in the array.
    */
-  public static <T> void shuffle(T array[]) {
+  public static <T> void shuffle(final T array[]) {
     if (array.length > 1) {
       for (int i = array.length - 1; i > 1; i--) {
         int j = ThreadLocalRandom.current().nextInt(0, i);
@@ -342,7 +342,7 @@ public final class ArrayUtils {
    * @param j     index of the second element.
    * @param <T>   type of elements in the array.
    */
-  public static <T> void swap(T[] array, int i, int j) {
+  public static <T> void swap(final T[] array, final int i, final int j) {
     T tmp = array[i];
     array[i] = array[j];
     array[j] = tmp;
@@ -354,7 +354,7 @@ public final class ArrayUtils {
    * @param array an array of doubles.
    * @return the index of the minimium number in the array.
    */
-  public static int min(double array[]) {
+  public static int min(final double array[]) {
     int rv = 0;
     for (int i = 1; i < array.length; i++)
       if (array[i] < array[rv])
@@ -368,7 +368,7 @@ public final class ArrayUtils {
    * @param array an array of doubles.
    * @return the index of the maximum number in the array.
    */
-  public static int max(double array[]) {
+  public static int max(final double array[]) {
     int rv = 0;
     for (int i = 1; i < array.length; i++)
       if (array[i] > array[rv])
@@ -382,7 +382,7 @@ public final class ArrayUtils {
    * @param array an array of double.
    * @return the index of the minimum and maximum elements in the array.
    */
-  public static Pair<MutableInteger, MutableInteger> minMax(double array[]) {
+  public static Pair<MutableInteger, MutableInteger> minMax(final double array[]) {
     int minIdx = 0, maxIdx = 0, start = 1;
     double min = array[0], max = array[0];
 
@@ -420,7 +420,7 @@ public final class ArrayUtils {
    * @param a
    * @param v
    */
-  public static void fill(double a[], double v) {
+  public static void fill(final double a[], final double v) {
     int len = a.length;
 
     if (len > 0) {
@@ -430,5 +430,21 @@ public final class ArrayUtils {
     for (int i = 1; i < len; i += i) {
       System.arraycopy(a, 0, a, i, ((len - i) < i) ? (len - i) : i);
     }
+  }
+
+  /**
+   * Returns a double array filled with random values in the range [0, 1).
+   *
+   * @param n size of the array
+   * @return a double array filled with random values in the range [0, 1)
+   */
+  public static double[] random(final int n) {
+    double rv[] = new double[n];
+
+    for(int i = 0; i < n; i++) {
+      rv[i] = ThreadLocalRandom.current().nextDouble();
+    }
+
+    return rv;
   }
 }
