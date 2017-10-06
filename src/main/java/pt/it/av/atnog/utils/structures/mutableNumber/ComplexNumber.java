@@ -11,23 +11,71 @@ package pt.it.av.atnog.utils.structures.mutableNumber;
 public class ComplexNumber extends MutableNumber<ComplexNumber> {
   private double r, i;
 
+  /**
+   *
+   * @param r
+   * @param i
+   */
   public ComplexNumber(double r, double i) {
     this.r = r;
     this.i = i;
   }
 
+  /**
+   *
+   */
   public ComplexNumber() {
     this(0.0, 0.0);
   }
 
   @Override
   public ComplexNumber add(ComplexNumber n) {
-    return new ComplexNumber(this.r + n.r, this.i + n.i);
+    return new ComplexNumber(r + n.r, i + n.i);
+  }
+
+  @Override
+  public ComplexNumber sub(ComplexNumber n) {
+    return new ComplexNumber(r - n.r, i - n.i);
+  }
+
+  @Override
+  public ComplexNumber mul(ComplexNumber n) {
+    return new ComplexNumber(r*n.r - i*n.i, r*n.i + i*n.r);
+  }
+
+  @Override
+  public ComplexNumber div(ComplexNumber n) {
+    double d = Math.pow(n.r, 2.0) + Math.pow(n.i, 2.0);
+    return new ComplexNumber((r*n.r + i*n.i)/d, (r*n.i - i*n.r)/d);
+  }
+
+  /**
+   *
+   * @return
+   */
+  public ComplexNumber pow() {
+
   }
 
   @Override
   public void increment() {
 
+  }
+
+  /**
+   *
+   * @return
+   */
+  public double abs() {
+    return Math.sqrt(Math.pow(r, 2.0) + Math.pow(i, 2.0));
+  }
+
+  /**
+   *
+   * @return
+   */
+  public ComplexNumber conjugate() {
+    return new ComplexNumber(r, -i);
   }
 
   @Override
@@ -53,5 +101,10 @@ public class ComplexNumber extends MutableNumber<ComplexNumber> {
   @Override
   public boolean isRealNumber() {
     return false;
+  }
+
+  @Override
+  public String toString() {
+    return r+"+"+i+"i";
   }
 }

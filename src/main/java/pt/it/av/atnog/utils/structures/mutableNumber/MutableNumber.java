@@ -12,6 +12,14 @@ public abstract class MutableNumber<N> extends Number {
 
   public abstract N add(N n);
 
+  public abstract N sub(N n);
+
+  public abstract N mul(N n);
+
+  public abstract N div(N n);
+
+  public abstract N pow();
+
   public abstract void increment();
 
   public abstract boolean isRealNumber();
