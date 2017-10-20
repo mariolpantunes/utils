@@ -18,7 +18,7 @@ public abstract class MutableNumber<N> extends Number {
 
   public abstract N div(N n);
 
-  public abstract N pow();
+  public abstract N pow(double n);
 
   public abstract void increment();
 

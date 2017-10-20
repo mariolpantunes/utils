@@ -9,7 +9,7 @@ package pt.it.av.atnog.utils.structures.mutableNumber;
  * @version 1.0
  */
 public class ComplexNumber extends MutableNumber<ComplexNumber> {
-  private double r, i;
+  protected double r, i;
 
   /**
    *
@@ -53,8 +53,9 @@ public class ComplexNumber extends MutableNumber<ComplexNumber> {
    *
    * @return
    */
-  public ComplexNumber pow() {
-
+  @Override
+  public ComplexNumber pow(double n) {
+    return new ComplexNumber();
   }
 
   @Override

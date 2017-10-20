@@ -8,8 +8,8 @@ package pt.it.av.atnog.utils.structures.mutableNumber;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class MutableDouble extends MutableNumber implements Comparable<MutableDouble> {
-  private double value;
+public class MutableDouble extends MutableNumber<MutableDouble> implements Comparable<MutableDouble> {
+  protected double value;
 
   /**
    * @param value
@@ -26,8 +26,28 @@ public class MutableDouble extends MutableNumber implements Comparable<MutableDo
   }
 
   @Override
-  public Object add(Object o) {
-    return null;
+  public MutableDouble add(MutableDouble n) {
+    return new MutableDouble(value + n.value);
+  }
+
+  @Override
+  public MutableDouble sub(MutableDouble n) {
+    return new MutableDouble(value - n.value);
+  }
+
+  @Override
+  public MutableDouble mul(MutableDouble n) {
+    return new MutableDouble(value * n.value);
+  }
+
+  @Override
+  public MutableDouble div(MutableDouble n) {
+    return new MutableDouble(value / n.value);
+  }
+
+  @Override
+  public MutableDouble pow(double n) {
+    return new MutableDouble(Math.pow(value, n));
   }
 
   /**

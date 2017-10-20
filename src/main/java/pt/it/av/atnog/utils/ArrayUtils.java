@@ -327,7 +327,22 @@ public final class ArrayUtils {
     if (array.length > 1) {
       for (int i = array.length - 1; i > 1; i--) {
         int j = ThreadLocalRandom.current().nextInt(0, i);
-        T t = array[j];
+        swap(array, i, j);
+      }
+    }
+  }
+
+  /**
+   * Shuffles the content of an array.
+   * Based on Fisher–Yates algorithm.
+   *
+   * @param array an array of integers
+   */
+  public static <T> void shuffle(final int array[]) {
+    if (array.length > 1) {
+      for (int i = array.length - 1; i > 1; i--) {
+        int j = ThreadLocalRandom.current().nextInt(0, i);
+        int t = array[j];
         array[j] = array[i];
         array[i] = t;
       }

@@ -9,7 +9,7 @@ package pt.it.av.atnog.utils.structures.mutableNumber;
  * @version 1.0
  */
 public class MutableInteger extends MutableNumber<MutableInteger> implements Comparable<MutableInteger> {
-  private int value;
+  protected int value;
 
   /**
    * @param value
@@ -26,8 +26,28 @@ public class MutableInteger extends MutableNumber<MutableInteger> implements Com
   }
 
   @Override
-  public MutableInteger add(MutableInteger mutableInteger) {
-    return null;
+  public MutableInteger add(MutableInteger n) {
+    return new MutableInteger(value + n.value);
+  }
+
+  @Override
+  public MutableInteger sub(MutableInteger n) {
+    return new MutableInteger(value - n.value);
+  }
+
+  @Override
+  public MutableInteger mul(MutableInteger n) {
+    return new MutableInteger(value * n.value);
+  }
+
+  @Override
+  public MutableInteger div(MutableInteger n) {
+    return new MutableInteger(value / n.value);
+  }
+
+  @Override
+  public MutableInteger pow(double n) {
+    return new MutableInteger((int) Math.pow(value, n));
   }
 
   /**
