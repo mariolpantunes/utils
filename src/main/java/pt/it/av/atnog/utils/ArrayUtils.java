@@ -369,6 +369,20 @@ public final class ArrayUtils {
    * @param array an array of doubles.
    * @return the index of the minimium number in the array.
    */
+  public static int min(final double array[], final int b, final int l) {
+    int rv = 0;
+    for (int i = 1; i < l; i++)
+      if (array[i + b] < array[rv + b])
+        rv = i;
+    return rv + b;
+  }
+
+  /**
+   * Returns the index of the minimium number in the array.
+   *
+   * @param array an array of doubles.
+   * @return the index of the minimium number in the array.
+   */
   public static int min(final double array[]) {
     int rv = 0;
     for (int i = 1; i < array.length; i++)
