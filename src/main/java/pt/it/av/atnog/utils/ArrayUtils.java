@@ -366,7 +366,9 @@ public final class ArrayUtils {
   /**
    * Returns the index of the minimium number in the array.
    *
-   * @param array an array of doubles.
+   * @param array an array of doubles
+   * @param b start index of the array
+   * @param l array's length
    * @return the index of the minimium number in the array.
    */
   public static int min(final double array[], final int b, final int l) {
@@ -384,25 +386,33 @@ public final class ArrayUtils {
    * @return the index of the minimium number in the array.
    */
   public static int min(final double array[]) {
-    int rv = 0;
-    for (int i = 1; i < array.length; i++)
-      if (array[i] < array[rv])
-        rv = i;
-    return rv;
+    return min(array, 0, array.length);
   }
 
   /**
    * Returns the index of the maximum number in the array.
    *
-   * @param array an array of doubles.
+   * @param array an array of doubles
+   * @param b     start index of the array
+   * @param l     array's length
+   * @return the index of the maximum number in the array.
+   */
+  public static int max(final double array[], final int b, final int l) {
+    int rv = 0;
+    for (int i = 1; i < l; i++)
+      if (array[i + b] > array[rv + b])
+        rv = i;
+    return rv + b;
+  }
+
+  /**
+   * Returns the index of the maximum number in the array.
+   *
+   * @param array an array of doubles
    * @return the index of the maximum number in the array.
    */
   public static int max(final double array[]) {
-    int rv = 0;
-    for (int i = 1; i < array.length; i++)
-      if (array[i] > array[rv])
-        rv = i;
-    return rv;
+    return max(array, 0, array.length);
   }
 
   /**
@@ -475,5 +485,53 @@ public final class ArrayUtils {
     }
 
     return rv;
+  }
+
+  public static double mean(final double array[], final int b, final int l) {
+    double rv = 0.0;
+
+    for (int i = 0; i < l; i++) {
+      rv += array[b + i];
+    }
+
+    return rv / l;
+  }
+
+  /**
+   * @param array
+   * @return
+   */
+  public static double isoData(final double array[]) {
+    return isoData(array, 0, array.length);
+  }
+
+  /**
+   * @param array
+   * @param b
+   * @param l
+   * @return
+   */
+  public static double isoData(final double array[], final int b, final int l) {
+    double t = mean(array, b, l), ot = 0;
+
+    while (t != ot) {
+      ot = t;
+      double mat = 0.0, mbt = 0.0;
+      int cat = 0, cbt = 0;
+      for (int i = 0; i < l; i++) {
+        if (array[b + i] > t) {
+          mat += array[b + i];
+          cat++;
+        } else {
+          mbt += array[b + i];
+          cbt++;
+        }
+      }
+      mat /= cat;
+      mbt /= cbt;
+      t = (mat + mbt) / 2.0;
+    }
+
+    return t;
   }
 }

@@ -130,4 +130,10 @@ public class ArrayUtilsTest {
     ArrayUtils.pow(A, 3, 1.0 / 2.0, C, 0, 3);
     assertTrue(Arrays.equals(C, R));
   }
+
+  @Test
+  public void test_isoData() {
+    double t = Math.round(ArrayUtils.isoData(large));
+    assertTrue(t == 33);
+  }
 }
