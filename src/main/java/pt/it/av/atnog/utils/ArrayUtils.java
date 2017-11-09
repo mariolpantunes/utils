@@ -534,4 +534,17 @@ public final class ArrayUtils {
 
     return t;
   }
+
+  /**
+   * @param array
+   * @param p
+   * @param n
+   */
+  public static void replace(final int array[], final int p, final int n) {
+    for (int i = 0; i < array.length; i++) {
+      if (array[i] == p) {
+        array[i] = n;
+      }
+    }
+  }
 }
