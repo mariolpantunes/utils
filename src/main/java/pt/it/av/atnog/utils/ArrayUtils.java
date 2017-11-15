@@ -547,4 +547,22 @@ public final class ArrayUtils {
       }
     }
   }
+
+  /**
+   * @param array
+   * @param e
+   * @param <T>
+   * @return
+   */
+  public static <T> boolean contains(T array[], T e) {
+    boolean rv = false;
+
+    for (int i = 0; i < array.length && !rv; i++) {
+      if (array[i].equals(e)) {
+        rv = true;
+      }
+    }
+
+    return rv;
+  }
 }
