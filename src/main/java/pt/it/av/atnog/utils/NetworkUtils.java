@@ -10,6 +10,11 @@ import java.util.Enumeration;
  */
 public class NetworkUtils {
   /**
+   * Utility class, lets make the constructor private.
+   */
+  private NetworkUtils() {}
+
+  /**
    * Returns true if the specified port is available on this host.
    *
    * @param port the port to check

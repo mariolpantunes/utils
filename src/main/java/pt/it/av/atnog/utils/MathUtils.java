@@ -125,8 +125,7 @@ public final class MathUtils {
      * @return {@code true} if {@code a} is similar to {@code b} diverging at
      * most by {@code eps}, otherwise returns {@code false}
      */
-    public static boolean equals(final double a,
-                                 final double b, final double eps) {
+    public static boolean equals(final double a, final double b, final double eps) {
         return Math.abs(a - b) < eps;
     }
 

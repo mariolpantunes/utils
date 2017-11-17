@@ -17,6 +17,8 @@ import static org.junit.Assert.assertTrue;
 public class ArrayUtilsTest {
   private static double small[] = {1.0, 0.0, -1.0},
       large[] = {0.0, -1.0, 100.0, -100.0, 22.0, 55.0, 53.5, 20.1, 84.5, 10.2};
+  private static int rankSmall[] = {2, 1, 0},
+  rankLarge[] = {2,1,9,0,5,7,6,4,8,3};
   private static double A[] = {0, 1, 2, 3, 4, 5}, B[] = {2, 4, 6, 8, 10, 12};
 
   @Test
@@ -135,5 +137,17 @@ public class ArrayUtilsTest {
   public void test_isoData() {
     double t = Math.round(ArrayUtils.isoData(large));
     assertTrue(t == 33);
+  }
+
+  @Test
+  public void test_rank_small() {
+    int t[] = ArrayUtils.rank(small);
+    assertTrue(Arrays.equals(t, rankSmall));
+  }
+
+  @Test
+  public void test_rank_large() {
+    int t[] = ArrayUtils.rank(large);
+    assertTrue(Arrays.equals(t, rankLarge));
   }
 }

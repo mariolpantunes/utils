@@ -12,6 +12,11 @@ import java.util.List;
  * @version 1.0
  */
 public class Utils {
+  /**
+   * Utility class, lets make the constructor private.
+   */
+  private Utils() {}
+
   @SuppressWarnings("unchecked")
   public static <T> T cast(Object o) {
     return (T) o;

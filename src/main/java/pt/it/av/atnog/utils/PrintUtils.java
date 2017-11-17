@@ -13,6 +13,10 @@ import java.util.Map;
  * @version 1.0
  */
 public class PrintUtils {
+  /**
+   * Utility class, lets make the constructor private.
+   */
+  private PrintUtils() {}
 
   public static String array(int[] a) {
     StringWriter w = new StringWriter();

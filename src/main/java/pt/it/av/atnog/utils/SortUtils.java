@@ -3,11 +3,25 @@ package pt.it.av.atnog.utils;
 import java.util.Comparator;
 
 /**
- * Created by mantunes on 6/16/17.
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
 public class SortUtils {
+  /**
+   * Utility class, lets make the constructor private.
+   */
+  private SortUtils() {}
 
-
+  /**
+   *
+   * @param array
+   * @param left
+   * @param right
+   * @param pivot
+   * @param c
+   * @param <T>
+   * @return
+   */
   private static <T> int partition(T[] array, int left, int right, int pivot, Comparator<T> c) {
     int rv = left;
     T pivotValue = array[pivot];

@@ -142,8 +142,7 @@ public final class StringUtils {
    * @param locale
    * @return
    */
-  public static Iterator<String> splitSetences(final String input,
-                                               final Locale locale) {
+  public static Iterator<String> splitSetences(final String input, final Locale locale) {
     return new SetenceIterator(input, locale);
   }
 

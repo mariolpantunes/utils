@@ -3,6 +3,7 @@ package pt.it.av.atnog.utils;
 import pt.it.av.atnog.utils.structures.mutableNumber.MutableInteger;
 import pt.it.av.atnog.utils.structures.tuple.Pair;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -561,6 +562,27 @@ public final class ArrayUtils {
       if (array[i].equals(e)) {
         rv = true;
       }
+    }
+
+    return rv;
+  }
+
+  /**
+   *
+   * @param array
+   * @return
+   */
+  public static int[] rank(double array[]) {
+    double arraySorted[] = new double[array.length];
+
+    System.arraycopy(array, 0, arraySorted,0, array.length);
+    Arrays.sort(arraySorted);
+
+    int rv[] = new int[array.length];
+
+    for(int i = 0; i < array.length; i++) {
+      int rank = Arrays.binarySearch(arraySorted, array[i]);
+      rv[i] = rank;
     }
 
     return rv;
