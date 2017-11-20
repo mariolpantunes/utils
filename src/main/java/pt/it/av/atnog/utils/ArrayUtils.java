@@ -587,4 +587,86 @@ public final class ArrayUtils {
 
     return rv;
   }
+
+  /**
+   * @param x
+   * @param y
+   * @return
+   */
+  public static double spearman(final double x[], final double y[]) {
+    int[] rx = rank(x), ry = rank(y);
+    return ArrayUtils.pearson(rx, ry);
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @return
+   */
+  public static double pearson(final double x[], final double y[]) {
+    return pearson(x, y, 0, 0, x.length);
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @param bx
+   * @param by
+   * @param len
+   * @return
+   */
+  public static double pearson(final double x[], final double y[], final int bx, final int by, final int len) {
+    double r = 0.0, mx = 0.0, my = 0.0, sx = 0.0, sy = 0.0;
+    int t = 1;
+    for (int i = 0; i < len; i++) {
+      mx += (x[bx + i] - mx) / t;
+      my += (y[by + i] - my) / t;
+      ++t;
+    }
+    for (int i = 0; i < len; i++) {
+      sx += Math.pow(x[bx + i] - mx, 2.0);
+      sy += Math.pow(y[by + i] - my, 2.0);
+    }
+    sx = Math.sqrt(sx / (len - 1));
+    sy = Math.sqrt(sy / (len - 1));
+    for (int i = 0; i < len; i++)
+      r += ((x[bx + i] - mx) / sx) * ((y[by + i] - my) / sy);
+    return r / (len - 1);
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @return
+   */
+  public static double pearson(final int x[], final int y[]) {
+    return pearson(x, y, 0, 0, x.length);
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @param bx
+   * @param by
+   * @param len
+   * @return
+   */
+  public static double pearson(final int x[], final int y[], final int bx, final int by, final int len) {
+    double r = 0.0, mx = 0.0, my = 0.0, sx = 0.0, sy = 0.0;
+    int t = 1;
+    for (int i = 0; i < len; i++) {
+      mx += (x[bx + i] - mx) / t;
+      my += (y[by + i] - my) / t;
+      ++t;
+    }
+    for (int i = 0; i < len; i++) {
+      sx += Math.pow(x[bx + i] - mx, 2.0);
+      sy += Math.pow(y[by + i] - my, 2.0);
+    }
+    sx = Math.sqrt(sx / (len - 1));
+    sy = Math.sqrt(sy / (len - 1));
+    for (int i = 0; i < len; i++)
+      r += ((x[bx + i] - mx) / sx) * ((y[by + i] - my) / sy);
+    return r / (len - 1);
+  }
 }
