@@ -368,8 +368,8 @@ public final class ArrayUtils {
    * Returns the index of the minimium number in the array.
    *
    * @param array an array of doubles
-   * @param b start index of the array
-   * @param l array's length
+   * @param b     start index of the array
+   * @param l     array's length
    * @return the index of the minimium number in the array.
    */
   public static int min(final double array[], final int b, final int l) {
@@ -494,7 +494,7 @@ public final class ArrayUtils {
   public static double[] random(final int n) {
     double rv[] = new double[n];
 
-    for(int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       rv[i] = ThreadLocalRandom.current().nextDouble();
     }
 
@@ -629,25 +629,108 @@ public final class ArrayUtils {
     return rv;
   }
 
+  // TODO: fix this code -> it should not create an array.
+
   /**
-   *
    * @param array
    * @return
    */
   public static int[] rank(double array[]) {
     double arraySorted[] = new double[array.length];
 
-    System.arraycopy(array, 0, arraySorted,0, array.length);
+    System.arraycopy(array, 0, arraySorted, 0, array.length);
     Arrays.sort(arraySorted);
 
     int rv[] = new int[array.length];
 
-    for(int i = 0; i < array.length; i++) {
+    for (int i = 0; i < array.length; i++) {
       int rank = Arrays.binarySearch(arraySorted, array[i]);
       rv[i] = rank;
     }
 
     return rv;
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @return
+   */
+  public static double spearman(final double x[], final double y[]) {
+    int[] rx = rank(x), ry = rank(y);
+    return ArrayUtils.pearson(rx, ry);
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @return
+   */
+  public static double pearson(final double x[], final double y[]) {
+    return pearson(x, y, 0, 0, x.length);
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @param bx
+   * @param by
+   * @param len
+   * @return
+   */
+  public static double pearson(final double x[], final double y[], final int bx, final int by, final int len) {
+    double r = 0.0, mx = 0.0, my = 0.0, sx = 0.0, sy = 0.0;
+    int t = 1;
+    for (int i = 0; i < len; i++) {
+      mx += (x[bx + i] - mx) / t;
+      my += (y[by + i] - my) / t;
+      ++t;
+    }
+    for (int i = 0; i < len; i++) {
+      sx += Math.pow(x[bx + i] - mx, 2.0);
+      sy += Math.pow(y[by + i] - my, 2.0);
+    }
+    sx = Math.sqrt(sx / (len - 1));
+    sy = Math.sqrt(sy / (len - 1));
+    for (int i = 0; i < len; i++)
+      r += ((x[bx + i] - mx) / sx) * ((y[by + i] - my) / sy);
+    return r / (len - 1);
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @return
+   */
+  public static double pearson(final int x[], final int y[]) {
+    return pearson(x, y, 0, 0, x.length);
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @param bx
+   * @param by
+   * @param len
+   * @return
+   */
+  public static double pearson(final int x[], final int y[], final int bx, final int by, final int len) {
+    double r = 0.0, mx = 0.0, my = 0.0, sx = 0.0, sy = 0.0;
+    int t = 1;
+    for (int i = 0; i < len; i++) {
+      mx += (x[bx + i] - mx) / t;
+      my += (y[by + i] - my) / t;
+      ++t;
+    }
+    for (int i = 0; i < len; i++) {
+      sx += Math.pow(x[bx + i] - mx, 2.0);
+      sy += Math.pow(y[by + i] - my, 2.0);
+    }
+    sx = Math.sqrt(sx / (len - 1));
+    sy = Math.sqrt(sy / (len - 1));
+    for (int i = 0; i < len; i++)
+      r += ((x[bx + i] - mx) / sx) * ((y[by + i] - my) / sy);
+    return r / (len - 1);
   }
 
   /**
