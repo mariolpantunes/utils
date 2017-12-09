@@ -423,11 +423,24 @@ public final class ArrayUtils {
    * @return the index of the minimum and maximum elements in the array.
    */
   public static Pair<MutableInteger, MutableInteger> minMax(final double array[]) {
-    int minIdx = 0, maxIdx = 0, start = 1;
-    double min = array[0], max = array[0];
+    return minMax(array, 0, array.length);
+  }
 
-    if (array.length % 2 == 0)
-      start = 0;
+  /**
+   * Returns the index of the minimum and maximum elements in the array.
+   *
+   * @param a   an array of doubles.
+   * @param bA  the index that starts the array values.
+   * @param len the lenght of the data.
+   * @return the index of the minimum and maximum elements in the array.
+   */
+  public static Pair<MutableInteger, MutableInteger> minMax(final double array[], final int bA,
+                                                            final int len) {
+    int minIdx = bA, maxIdx = bA, start = bA + 1;
+    double min = array[bA], max = array[bA];
+
+    if (len % 2 == 0)
+      start = bA;
 
     for (int i = start; i < array.length; i += 2) {
       if (array[i] < array[i + 1]) {
@@ -488,14 +501,63 @@ public final class ArrayUtils {
     return rv;
   }
 
-  public static double mean(final double array[], final int b, final int l) {
+  /**
+   * @param a
+   * @param bA
+   * @param len
+   * @return
+   */
+  public static double mean(final double a[], final int bA, final int len) {
     double rv = 0.0;
 
-    for (int i = 0; i < l; i++) {
-      rv += array[b + i];
+    for (int i = 0; i < len; i++) {
+      rv += a[bA + i];
     }
 
-    return rv / l;
+    return rv / len;
+  }
+
+  /**
+   * Returns the standard deviantion from the data.
+   *
+   * @param a
+   * @param bA
+   * @param len
+   * @return
+   */
+  public static double std(final double a[], final int bA, final int len) {
+    return Math.sqrt(var(a, bA, len));
+  }
+
+  /**
+   * Returns the variance from the data.
+   *
+   * @param a
+   * @param bA
+   * @param len
+   * @return
+   */
+  public static double var(final double a[], final int bA, final int len) {
+    double mean = mean(a, bA, len), v = 0.0;
+    for (int i = 0; i < len; i++)
+      v += Math.pow(a[bA + i] - mean, 2.0);
+    return v / (len - 1);
+  }
+
+  /**
+   * Returns the norm p from a array of data.
+   *
+   * @param a
+   * @param bA
+   * @param len
+   * @param p
+   * @return
+   */
+  public static double norm(final double a[], final int bA, final int len, final int p) {
+    double norm = 0.0;
+    for (int i = 0; i < len; i++)
+      norm = MathUtils.norm(norm, a[bA + i], p);
+    return norm;
   }
 
   /**
@@ -586,5 +648,105 @@ public final class ArrayUtils {
     }
 
     return rv;
+  }
+
+  /**
+   * Feature scaling.
+   * The simplest method is rescaling the range of features to scale the range in [rl, rh].
+   * https://stats.stackexchange.com/questions/178626/how-to-normalize-data-between-1-and-1
+   *
+   * @param a   the original data array (input).
+   * @param bA  the index where the data starts.
+   * @param r   the array that will store the results (output).
+   * @param bR  the index where the data can be stored.
+   * @param len the number of elements to be processed.
+   * @param rl  the lower limit of the range.
+   * @param rh  the higher limit of the range.
+   */
+  public static void rescaling(final double[] a, final int bA, final double[] r, final int bR,
+                               final int len, final double rl, final double rh) {
+    Pair<MutableInteger, MutableInteger> mm = minMax(a, bA, len);
+    double min = a[mm.a.intValue()], max = a[mm.b.intValue()], c = (rh - rl) / (max - min);
+
+    for (int i = 0; i < len; i++) {
+      r[bR + i] = (c * (a[bA + i] - min)) + rl;
+    }
+  }
+
+  /**
+   * Feature scaling.
+   * The simplest method is rescaling the range of features to scale the range in [0, 1].
+   *
+   * @param a   the original data array (input).
+   * @param bA  the index where the data starts.
+   * @param r   the array that will store the results (output).
+   * @param bR  the index where the data can be stored.
+   * @param len the number of elements to be processed.
+   */
+  public static void rescaling(final double[] a, final int bA, final double[] r, final int bR,
+                               final int len) {
+    rescaling(a, bA, r, bR, len, 0, 1);
+  }
+
+  /**
+   * Feature scaling.
+   * Mean normalization.
+   *
+   * @param a   the original data array (input).
+   * @param bA  the index where the data starts.
+   * @param r   the array that will store the results (output).
+   * @param bR  the index where the data can be stored.
+   * @param len the number of elements to be processed.
+   */
+  public static void meanNormalization(final double[] a, final int bA, final double[] r,
+                                       final int bR, final int len) {
+    Pair<MutableInteger, MutableInteger> mm = minMax(a, bA, len);
+    double min = a[mm.a.intValue()], max = a[mm.b.intValue()],
+        d = max - min, mean = mean(a, bA, len);
+
+    for (int i = 0; i < len; i++) {
+      r[bR + i] = (a[bA + i] - mean) / d;
+    }
+  }
+
+  /**
+   * Feature scaling.
+   * Standardization (or Z-score normalization), features will be rescaled so that they’ll have the
+   * properties of a standard normal distribution with u = 0 and std = 1
+   *
+   * @param a   the original data array (input).
+   * @param bA  the index where the data starts.
+   * @param r   the array that will store the results (output).
+   * @param bR  the index where the data can be stored.
+   * @param len the number of elements to be processed.
+   */
+  public static void standardization(final double[] a, final int bA, final double[] r,
+                                     final int bR, final int len) {
+    double mean = mean(a, bA, len), std = std(a, bA, len);
+
+    for (int i = 0; i < len; i++) {
+      r[bR + i] = (a[bA + i] - mean) / std;
+    }
+  }
+
+  /**
+   * Feature scaling.
+   * Scaling to unit length.
+   * Another option that is widely used in machine-learning is to scale the components of a feature
+   * vector such that the complete vector has length one.
+   * This usually means dividing each component by the Euclidean length of the vector.
+   *
+   * @param a   the original data array (input).
+   * @param bA  the index where the data starts.
+   * @param r   the array that will store the results (output).
+   * @param bR  the index where the data can be stored.
+   * @param len the number of elements to be processed.
+   */
+  public static void scalingUnitLength(final double[] a, final int bA, final double[] r,
+                                       final int bR, final int len) {
+    double norm = norm(a, bA, len, 2);
+    for (int i = 0; i < len; i++) {
+      r[bR + i] = a[bA + i] / norm;
+    }
   }
 }

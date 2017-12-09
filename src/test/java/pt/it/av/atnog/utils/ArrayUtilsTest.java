@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
  * @version 1.0
  */
 public class ArrayUtilsTest {
+  private static double inc[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   private static double small[] = {1.0, 0.0, -1.0},
       large[] = {0.0, -1.0, 100.0, -100.0, 22.0, 55.0, 53.5, 20.1, 84.5, 10.2};
   private static int rankSmall[] = {2, 1, 0},
@@ -149,5 +150,23 @@ public class ArrayUtilsTest {
   public void test_rank_large() {
     int t[] = ArrayUtils.rank(large);
     assertTrue(Arrays.equals(t, rankLarge));
+  }
+
+  @Test
+  public void test_mean() {
+    double mean = ArrayUtils.mean(inc, 0, inc.length);
+    assertTrue(mean == 4.5);
+  }
+
+  @Test
+  public void test_var() {
+    double var = ArrayUtils.var(inc, 0, inc.length);
+    assertTrue(MathUtils.equals(var, 9.1667, 0.0001));
+  }
+
+  @Test
+  public void test_std() {
+    double std = ArrayUtils.std(inc, 0, inc.length);
+    assertTrue(MathUtils.equals(std, 3.0277, 0.0001));
   }
 }
