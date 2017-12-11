@@ -368,8 +368,8 @@ public final class ArrayUtils {
    * Returns the index of the minimium number in the array.
    *
    * @param array an array of doubles
-   * @param b     start index of the array
-   * @param l     array's length
+   * @param b start index of the array
+   * @param l array's length
    * @return the index of the minimium number in the array.
    */
   public static int min(final double array[], final int b, final int l) {
@@ -429,7 +429,7 @@ public final class ArrayUtils {
   /**
    * Returns the index of the minimum and maximum elements in the array.
    *
-   * @param a   an array of doubles.
+   * @param array   an array of doubles.
    * @param bA  the index that starts the array values.
    * @param len the lenght of the data.
    * @return the index of the minimum and maximum elements in the array.
@@ -466,7 +466,6 @@ public final class ArrayUtils {
 
     return new Pair<>(new MutableInteger(minIdx), new MutableInteger(maxIdx));
   }
-
   /**
    * Binary array fill.
    *
@@ -502,62 +501,29 @@ public final class ArrayUtils {
   }
 
   /**
+   *
    * @param a
-   * @param bA
-   * @param len
    * @return
    */
-  public static double mean(final double a[], final int bA, final int len) {
+  public static double mean(final double a[]) {
+    return mean(a, 0, a.length);
+  }
+
+  /**
+   *
+   * @param a
+   * @param b
+   * @param l
+   * @return
+   */
+  public static double mean(final double a[], final int b, final int l) {
     double rv = 0.0;
 
-    for (int i = 0; i < len; i++) {
-      rv += a[bA + i];
+    for (int i = 0; i < l; i++) {
+      rv += a[b + i];
     }
 
-    return rv / len;
-  }
-
-  /**
-   * Returns the standard deviantion from the data.
-   *
-   * @param a
-   * @param bA
-   * @param len
-   * @return
-   */
-  public static double std(final double a[], final int bA, final int len) {
-    return Math.sqrt(var(a, bA, len));
-  }
-
-  /**
-   * Returns the variance from the data.
-   *
-   * @param a
-   * @param bA
-   * @param len
-   * @return
-   */
-  public static double var(final double a[], final int bA, final int len) {
-    double mean = mean(a, bA, len), v = 0.0;
-    for (int i = 0; i < len; i++)
-      v += Math.pow(a[bA + i] - mean, 2.0);
-    return v / (len - 1);
-  }
-
-  /**
-   * Returns the norm p from a array of data.
-   *
-   * @param a
-   * @param bA
-   * @param len
-   * @param p
-   * @return
-   */
-  public static double norm(final double a[], final int bA, final int len, final int p) {
-    double norm = 0.0;
-    for (int i = 0; i < len; i++)
-      norm = MathUtils.norm(norm, a[bA + i], p);
-    return norm;
+    return rv / l;
   }
 
   /**
@@ -629,9 +595,8 @@ public final class ArrayUtils {
     return rv;
   }
 
-  // TODO: fix this code -> it should not create an array.
-
   /**
+   *
    * @param array
    * @return
    */
@@ -658,7 +623,7 @@ public final class ArrayUtils {
    */
   public static double spearman(final double x[], final double y[]) {
     int[] rx = rank(x), ry = rank(y);
-    return ArrayUtils.pearson(rx, ry);
+    return ArrayUtils.pearson(rx, 0, ry, 0, rx.length);
   }
 
   /**
@@ -667,7 +632,7 @@ public final class ArrayUtils {
    * @return
    */
   public static double pearson(final double x[], final double y[]) {
-    return pearson(x, y, 0, 0, x.length);
+    return pearson(x, 0, y, 0, x.length);
   }
 
   /**
@@ -678,7 +643,7 @@ public final class ArrayUtils {
    * @param len
    * @return
    */
-  public static double pearson(final double x[], final double y[], final int bx, final int by, final int len) {
+  public static double pearson(final double x[], final int bx, final double y[], final int by, final int len) {
     double r = 0.0, mx = 0.0, my = 0.0, sx = 0.0, sy = 0.0;
     int t = 1;
     for (int i = 0; i < len; i++) {
@@ -700,21 +665,12 @@ public final class ArrayUtils {
   /**
    * @param x
    * @param y
-   * @return
-   */
-  public static double pearson(final int x[], final int y[]) {
-    return pearson(x, y, 0, 0, x.length);
-  }
-
-  /**
-   * @param x
-   * @param y
    * @param bx
    * @param by
    * @param len
    * @return
    */
-  public static double pearson(final int x[], final int y[], final int bx, final int by, final int len) {
+  public static double pearson(final int x[], final int bx, final int y[], final int by, final int len) {
     double r = 0.0, mx = 0.0, my = 0.0, sx = 0.0, sy = 0.0;
     int t = 1;
     for (int i = 0; i < len; i++) {
@@ -831,5 +787,48 @@ public final class ArrayUtils {
     for (int i = 0; i < len; i++) {
       r[bR + i] = a[bA + i] / norm;
     }
+  }
+
+  /**
+   * Returns the norm p from a array of data.
+   *
+   * @param a
+   * @param bA
+   * @param len
+   * @param p
+   * @return
+   */
+  public static double norm(final double a[], final int bA, final int len, final int p) {
+    double norm = 0.0;
+    for (int i = 0; i < len; i++)
+      norm = MathUtils.norm(norm, a[bA + i], p);
+    return norm;
+  }
+
+  /**
+   * Returns the standard deviantion from the data.
+   *
+   * @param a
+   * @param bA
+   * @param len
+   * @return
+   */
+  public static double std(final double a[], final int bA, final int len) {
+    return Math.sqrt(var(a, bA, len));
+  }
+
+  /**
+   * Returns the variance from the data.
+   *
+   * @param a
+   * @param bA
+   * @param len
+   * @return
+   */
+  public static double var(final double a[], final int bA, final int len) {
+    double mean = mean(a, bA, len), v = 0.0;
+    for (int i = 0; i < len; i++)
+      v += Math.pow(a[bA + i] - mean, 2.0);
+    return v / (len - 1);
   }
 }
