@@ -729,6 +729,17 @@ public final class ArrayUtils {
 
   /**
    * Feature scaling.
+   * The simplest method is rescaling the range of features to scale the range in [0, 1].
+   *
+   * @param a the original data array (input).
+   * @param r the array that will store the results (output).
+   */
+  public static void rescaling(final double[] a, final double[] r) {
+    rescaling(a, 0, r, 0, a.length, 0, 1);
+  }
+
+  /**
+   * Feature scaling.
    * Mean normalization.
    *
    * @param a   the original data array (input).
