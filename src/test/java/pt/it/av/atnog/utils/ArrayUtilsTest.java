@@ -169,4 +169,12 @@ public class ArrayUtilsTest {
     double std = ArrayUtils.std(inc, 0, inc.length);
     assertTrue(MathUtils.equals(std, 3.0277, 0.0001));
   }
+
+  @Test
+  public void test_mm() {
+    double mm[] = {0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 8.5};
+    double r[] = new double[inc.length];
+    ArrayUtils.mm(inc, 0, r, 0, inc.length, 1);
+    assertTrue(Arrays.equals(mm, r));
+  }
 }

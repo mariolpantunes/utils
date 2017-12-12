@@ -842,4 +842,46 @@ public final class ArrayUtils {
       v += Math.pow(a[bA + i] - mean, 2.0);
     return v / (len - 1);
   }
+
+  /**
+   * Moving average.
+   * Compute the K centered moving average of a row vector.
+   * When there are fewer than K elements in the window at the endpoints, take the average over the
+   * elements that are available.
+   *
+   * @param a   the original data array (input).
+   * @param bA  the index where the data starts.
+   * @param r   the array that will store the results (output).
+   * @param bR  the index where the data can be stored.
+   * @param len the number of elements to be processed.
+   * @param k   moving average windows size.
+   */
+  public static void mm(final double a[], final int bA, final double r[], final int bR, final int len, final int k) {
+    // Main loop
+    for (int i = k; i < len - k; i++) {
+      r[i + bR] = mean(a, i + bA - k, k * 2 + 1);
+    }
+    // Left Extremity
+    for (int i = 0; i < k; i++) {
+      r[i + bR] = mean(a, bA, k + 1 + i);
+    }
+    // Right Extremity
+    for (int i = len - k; i < len; i++) {
+      r[i + bR] = mean(a, bA + i - k, len - i + k);
+    }
+  }
+
+  /**
+   * Moving average.
+   * Compute the K centered moving average of a row vector.
+   * When there are fewer than K elements in the window at the endpoints, take the average over the
+   * elements that are available.
+   *
+   * @param a the original data array (input).
+   * @param r the array that will store the results (output).
+   * @param k moving average windows size.
+   */
+  public static void mm(final double a[], final double r[], final int k) {
+    mm(a, 0, r, 0, a.length, k);
+  }
 }
