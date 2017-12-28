@@ -3,7 +3,7 @@ package pt.it.av.atnog.utils.structures;
 import pt.it.av.atnog.utils.bla.Vector;
 
 /**
- * Two-dimension point.
+ * Three-dimension point.
  * <p>
  * Used to test the clustering algorithms.
  * </p>
@@ -11,17 +11,20 @@ import pt.it.av.atnog.utils.bla.Vector;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Point2D extends Vector {
+public class Point3D extends Vector {
+
   /**
-   * 2D Point constructor.
+   * 3D Point constructor.
    *
-   * @param x coordinate of the point
-   * @param y coordinate of the point
+   * @param x coordinate of the point.
+   * @param y coordinate of the point.
+   * @param z coordinate of the point.
    */
-  public Point2D(double x, double y) {
-    super(2);
+  public Point3D(final double x, final double y, final double z) {
+    super(3);
     data[0] = x;
     data[1] = y;
+    data[2] = z;
   }
 
   /**
@@ -40,6 +43,15 @@ public class Point2D extends Vector {
    */
   public double y() {
     return data[1];
+  }
+
+  /**
+   * Returns the z coordinate of this point.
+   *
+   * @return the z coordinate of this point.
+   */
+  public double z() {
+    return data[2];
   }
 
   @Override

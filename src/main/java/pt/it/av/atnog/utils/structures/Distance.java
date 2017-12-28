@@ -12,11 +12,11 @@ package pt.it.av.atnog.utils.structures;
  * @version 1.0
  */
 public interface Distance<T> {
-    /**
-     * Returns the distance between two objects.
-     *
-     * @param d another object
-     * @return distance between two objects
-     */
-    double distanceTo(T d);
+  /**
+   * Returns the distance between two objects.
+   *
+   * @param d another object
+   * @return distance between two objects
+   */
+  double distanceTo(T d);
 }
