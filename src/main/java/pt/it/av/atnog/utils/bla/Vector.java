@@ -379,6 +379,23 @@ public class Vector<D extends Vector> implements Distance<D> {
     return rv;
   }
 
+  /**
+   * Returns true if all elements are zero, otherwise false.
+   *
+   * @return true if all elements are zero, otherwise false.
+   */
+  public boolean isZero() {
+    boolean rv = true;
+
+    for (int i = 0; i < len && rv; i++) {
+      if (data[bIdx + i] != 0.0) {
+        rv = false;
+      }
+    }
+
+    return rv;
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

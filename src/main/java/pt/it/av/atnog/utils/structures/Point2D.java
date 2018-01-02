@@ -44,6 +44,29 @@ public class Point2D extends Vector {
 
   @Override
   public String toString() {
-    return "(" + data[0] + ";" + data[1] + ")";
+    return "(" + data[0] + "," + data[1] + ")";
+  }
+
+  /**
+   * Return the quadrant of the {@link Point2D}.
+   *
+   * @return the quadrant of the {@link Point2D}.
+   */
+  public int quadrant() {
+    int rv = 0;
+
+    if (!isZero()) {
+      if (x() > 0 && y() > 0) {
+        rv = 1;
+      } else if (x() < 0 && y() > 0) {
+        rv = 2;
+      } else if (x() < 0 && y() < 0) {
+        rv = 3;
+      } else {
+        rv = 4;
+      }
+    }
+
+    return rv;
   }
 }

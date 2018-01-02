@@ -3,7 +3,6 @@ package pt.it.av.atnog.utils;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,7 @@ public class PrintUtils {
     w.append('[');
     int i = left;
     for (; i < right; i++)
-      w.append(a[i] + "; ");
+      w.append(a[i] + ", ");
     if (right >= left)
       w.append(Integer.toString(a[i]));
     w.append(']');
@@ -82,13 +81,15 @@ public class PrintUtils {
   }
 
   public static void array(double[] a, int left, int right, Writer w) throws IOException {
-    DecimalFormat format = new DecimalFormat("0.#");
+    //DecimalFormat format = new DecimalFormat("0.#");
     w.append('[');
     int i = left;
     for (; i < right; i++)
-      w.append(a[i] + "; ");
-    if (right >= left)
-      w.append(format.format(a[i]));
+      w.append(a[i] + ", ");
+    if (right >= left) {
+      w.append(Double.toString(a[i]));
+      //w.append(format.format(a[i]));
+    }
     w.append(']');
   }
 
@@ -122,7 +123,7 @@ public class PrintUtils {
     w.append('[');
     int i = left;
     for (; i < right; i++)
-      w.append(a[i] + "; ");
+      w.append(a[i] + ", ");
     if (right >= left)
       w.append(a[i].toString());
     w.append(']');
@@ -132,7 +133,7 @@ public class PrintUtils {
     w.append('[');
     int i = 0;
     for (int t = l.size() - 1; i < t; i++)
-      w.append(l.get(i).toString() + "; ");
+      w.append(l.get(i).toString() + ", ");
     if (!l.isEmpty())
       w.append(l.get(i).toString());
     w.append(']');
