@@ -1,8 +1,6 @@
 package pt.it.av.atnog.utils;
 
 import org.junit.Test;
-import pt.it.av.atnog.utils.structures.mutableNumber.MutableInteger;
-import pt.it.av.atnog.utils.structures.tuple.Pair;
 
 import java.util.Arrays;
 
@@ -42,8 +40,8 @@ public class ArrayUtilsTest {
 
   @Test
   public void test_minMax_small() {
-    Pair<MutableInteger, MutableInteger> mm = ArrayUtils.minMax(small);
-    double min = small[mm.a.intValue()], max = small[mm.b.intValue()];
+    int mm[] = ArrayUtils.minMax(small);
+    double min = small[mm[0]], max = small[mm[1]];
 
     assertTrue(min == -1.0);
     assertTrue(max == 1.0);
@@ -51,8 +49,8 @@ public class ArrayUtilsTest {
 
   @Test
   public void test_minMax_large() {
-    Pair<MutableInteger, MutableInteger> mm = ArrayUtils.minMax(large);
-    double min = large[mm.a.intValue()], max = large[mm.b.intValue()];
+    int mm[] = ArrayUtils.minMax(large);
+    double min = large[mm[0]], max = large[mm[1]];
 
     assertTrue(min == -100.0);
     assertTrue(max == 100.0);
@@ -176,5 +174,21 @@ public class ArrayUtilsTest {
     double r[] = new double[inc.length];
     ArrayUtils.mm(inc, 0, r, 0, inc.length, 1);
     assertTrue(Arrays.equals(mm, r));
+  }
+
+  @Test
+  public void test_slope_positive() {
+    double x[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, y[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    double lr[] = ArrayUtils.lr(x, y, 0, 0, x.length);
+    assertTrue(lr[0] == 1.0);
+    assertTrue(lr[1] == 0.0);
+  }
+
+  @Test
+  public void test_slope_negative() {
+    double x[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, y[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+    double lr[] = ArrayUtils.lr(x, y, 0, 0, x.length);
+    assertTrue(lr[0] == -1.0);
+    assertTrue(lr[1] == 9.0);
   }
 }

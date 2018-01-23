@@ -1,8 +1,5 @@
 package pt.it.av.atnog.utils;
 
-import pt.it.av.atnog.utils.structures.mutableNumber.MutableInteger;
-import pt.it.av.atnog.utils.structures.tuple.Pair;
-
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -422,7 +419,7 @@ public final class ArrayUtils {
    * @param array an array of double.
    * @return the index of the minimum and maximum elements in the array.
    */
-  public static Pair<MutableInteger, MutableInteger> minMax(final double array[]) {
+  public static int[] minMax(final double array[]) {
     return minMax(array, 0, array.length);
   }
 
@@ -434,8 +431,8 @@ public final class ArrayUtils {
    * @param len the lenght of the data.
    * @return the index of the minimum and maximum elements in the array.
    */
-  public static Pair<MutableInteger, MutableInteger> minMax(final double array[], final int bA,
-                                                            final int len) {
+  public static int[] minMax(final double array[], final int bA,
+                             final int len) {
     int minIdx = bA, maxIdx = bA, start = bA + 1;
     double min = array[bA], max = array[bA];
 
@@ -464,7 +461,8 @@ public final class ArrayUtils {
       }
     }
 
-    return new Pair<>(new MutableInteger(minIdx), new MutableInteger(maxIdx));
+    int rv[] = {minIdx, maxIdx};
+    return rv;
   }
   /**
    * Binary array fill.
@@ -704,8 +702,8 @@ public final class ArrayUtils {
    */
   public static void rescaling(final double[] a, final int bA, final double[] r, final int bR,
                                final int len, final double rl, final double rh) {
-    Pair<MutableInteger, MutableInteger> mm = minMax(a, bA, len);
-    double min = a[mm.a.intValue()], max = a[mm.b.intValue()], c = (rh - rl) / (max - min);
+    int mm[] = minMax(a, bA, len);
+    double min = a[mm[0]], max = a[mm[1]], c = (rh - rl) / (max - min);
 
     for (int i = 0; i < len; i++) {
       r[bR + i] = (c * (a[bA + i] - min)) + rl;
@@ -750,8 +748,8 @@ public final class ArrayUtils {
    */
   public static void meanNormalization(final double[] a, final int bA, final double[] r,
                                        final int bR, final int len) {
-    Pair<MutableInteger, MutableInteger> mm = minMax(a, bA, len);
-    double min = a[mm.a.intValue()], max = a[mm.b.intValue()],
+    int mm[] = minMax(a, bA, len);
+    double min = a[mm[0]], max = a[mm[1]],
         d = max - min, mean = mean(a, bA, len);
 
     for (int i = 0; i < len; i++) {
@@ -883,5 +881,69 @@ public final class ArrayUtils {
    */
   public static void mm(final double a[], final double r[], final int k) {
     mm(a, 0, r, 0, a.length, k);
+  }
+
+  /**
+   * Returns the slope of a simple linear regression.
+   *
+   * @param x
+   * @param y
+   * @param bX
+   * @param bYm
+   * @param l
+   * @return
+   */
+  public static double[] lr(final double x[], final double y[], final int bX, final int bY, final int l) {
+    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0, y2 = 0.0;
+    double rv[] = {0, 0};
+
+    for (int i = 0; i < l; i++) {
+      sx += x[i + bX];
+      sy += y[i + bY];
+      xy += x[i + bX] * y[i + bY];
+      x2 += Math.pow(x[i + bX], 2);
+      y2 += Math.pow(y[i + bY], 2);
+    }
+
+    double d = l * x2 - Math.pow(sx, 2.0);
+
+    rv[0] = (l * xy - sx * sy) / d;
+    rv[1] = (sy * x2 - sx * xy) / d;
+
+    return rv;
+  }
+
+  /**
+   * Returns Mean-Squared Error.
+   *
+   * @param x
+   * @param y
+   * @param bX
+   * @param bY
+   * @param l
+   * @return
+   */
+  public static double mse(final double x[], final double y[], final int bX, final int bY, final int l) {
+    double rv = 0.0;
+
+    for (int i = 0; i < l; i++) {
+      rv = Math.pow(x[bX + i] - y[bY + i], 2.0);
+    }
+
+    return rv / l;
+  }
+
+  /**
+   * Returns Root Mean Squared Error.
+   *
+   * @param x
+   * @param y
+   * @param bX
+   * @param bY
+   * @param l
+   * @return
+   */
+  public static double rmse(final double x[], final double y[], final int bX, final int bY, final int l) {
+    return Math.sqrt(mse(x, y, bX, bY, l));
   }
 }
