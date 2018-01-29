@@ -594,23 +594,30 @@ public final class ArrayUtils {
   }
 
   /**
-   *
-   * @param array
-   * @return
+   * Return the rank of an array of elements.
+   * @param array an array of elements.
+   * @param ranks an array that will be filled with the ranks.
    */
-  public static int[] rank(double array[]) {
+  public static void rank(final double array[], final int ranks[]) {
     double arraySorted[] = new double[array.length];
 
     System.arraycopy(array, 0, arraySorted, 0, array.length);
     Arrays.sort(arraySorted);
 
-    int rv[] = new int[array.length];
-
     for (int i = 0; i < array.length; i++) {
-      int rank = Arrays.binarySearch(arraySorted, array[i]);
-      rv[i] = rank;
+      ranks[i] = Arrays.binarySearch(arraySorted, array[i]);
     }
+  }
 
+  /**
+   * Return an array with the rank of an array of elements.
+   *
+   * @param array an array of elements.
+   * @return an array with the rank of an array of elements.
+   */
+  public static int[] rank(final double array[]) {
+    int rv[] = new int[array.length];
+    rank(array, rv);
     return rv;
   }
 
@@ -945,5 +952,89 @@ public final class ArrayUtils {
    */
   public static double rmse(final double x[], final double y[], final int bX, final int bY, final int l) {
     return Math.sqrt(mse(x, y, bX, bY, l));
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @param rv
+   * @param bX
+   * @param bY
+   * @param bR
+   * @param l
+   */
+  public static void cfd(final double[] x, final double[] y, final double[] rv,
+                         final int bX, final int bY, final int bR, final int l) {
+    for (int i = 1; i < l - 1; i++) {
+      rv[bR + i - 1] = (y[bY + i + 1] - y[bY + i - 1]) / ((x[bX + i] - x[bX + i - 1]) + (x[bX + i + 1] - x[bX + i]));
+    }
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @param bX
+   * @param bY
+   * @param l
+   * @return
+   */
+  public static double[] cfd(final double[] x, final double[] y, final int bX,
+                             final int bY, final int l) {
+    double rv[] = new double[l - 2];
+    cfd(x, y, rv, bX, bY, 0, l);
+    return rv;
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @return
+   */
+  public static double[] cfd(final double[] x, final double[] y) {
+    double rv[] = new double[y.length - 2];
+    cfd(x, y, rv, 0, 0, 0, y.length);
+    return rv;
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @param rv
+   * @param bX
+   * @param bY
+   * @param bR
+   * @param l
+   */
+  public static void csd(final double[] x, final double[] y, final double[] rv,
+                         final int bX, final int bY, final int bR, final int l) {
+    for (int i = 1; i < l - 1; i++) {
+      rv[bR + i - 1] = (y[bY + i + 1] - 2 * y[bY + i] + y[bY + i]) / ((x[bX + i] - x[bX + i - 1]) * (x[bX + i + 1] - x[bX + i]));
+    }
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @param bX
+   * @param bY
+   * @param l
+   * @return
+   */
+  public static double[] csd(final double[] x, final double[] y,
+                             final int bX, final int bY, final int l) {
+    double rv[] = new double[l - 2];
+    csd(x, y, rv, bX, bY, 0, l);
+    return rv;
+  }
+
+  /**
+   * @param x
+   * @param y
+   * @return
+   */
+  public static double[] csd(final double[] x, final double[] y) {
+    double rv[] = new double[y.length - 2];
+    csd(x, y, rv, 0, 0, 0, y.length);
+    return rv;
   }
 }
