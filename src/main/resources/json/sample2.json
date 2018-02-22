@@ -1,0 +1,10 @@
+{
+  "ContextDBAddr": "tcp://127.0.0.1:3333",
+  "IndexAddr": "tcp://127.0.0.1:3334",
+  "StorageAddr": "127.0.0.1",
+  "SemPubSubAddr": "tcp://127.0.0.1:3335",
+  "SemPubAddr": "tcp://127.0.0.1:3336",
+  "CacheSize": 128,
+  "CacheTimeOut": 2500,
+  "ContextDBNWorkers": 5
+}

@@ -25,4 +25,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Status
 [![Build Status](https://travis-ci.org/mariolpantunes/utils.svg?branch=master)](https://travis-ci.org/mariolpantunes/utils)
-[![Coverage Status](https://coveralls.io/repos/github/mariolpantunes/utils/badge.svg?branch=master)](https://coveralls.io/github/mariolpantunes/utils?branch=master)

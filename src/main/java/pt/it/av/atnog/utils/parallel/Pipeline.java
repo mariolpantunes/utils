@@ -5,6 +5,14 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
+ * Implementation of a simple multitask pipeline.
+ * <p>
+ *   Each {@link Task} can be added to the head or tail of the pipeline.
+ *   When the pipeline start it will run all the Tasks through the sequence where they were inserted.
+ *   The Tasks run in parallel inside its own {@link Worker}.
+ *   The Sink and Source {@link BlockingQueue} are used to dump and retrive values respectively.
+ * </p>
+ *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
@@ -15,45 +23,53 @@ public class Pipeline {
     private final List<BlockingQueue<Object>> queues;
 
     /**
-     *
+     * Constructor for the Pipeline class.
      */
     public Pipeline() {
         queues = new ArrayList<BlockingQueue<Object>>();
     }
 
     /**
-     * @param task
+     * Adds a {@link Task} on the head of the sequence.
+     *
+     * @param task {@link Task} to be added on the head of the sequence.
      */
     public void addFirst(Task task) {
         workers.addFirst(new Worker(task));
     }
 
-    /**
-     *
-     * @param task
-     */
+  /**
+   * Adds a {@link Task} on the tail of the sequence.
+   *
+   * @param task {@link Task} to be added on the tail of the sequence.
+   */
     public void addLast(Task task) {
         workers.addLast(new Worker(task));
     }
 
     /**
+     * Returns the Sink {@link BlockingQueue}.
+     * The Sink {@link BlockingQueue} is used to dump {@link Object} to process.
      *
-     * @return
+     * @return Sink {@link BlockingQueue}.
      */
     public BlockingQueue<Object> sink() {
         return sink;
     }
 
     /**
+     * Returns the Source {@link BlockingQueue}.
+     * The Source {@link BlockingQueue} is used to retrieve processed {@link Object}.
      *
-     * @return
+     * @return Source {@link BlockingQueue}.
      */
     public BlockingQueue<Object> source() {
         return source;
     }
 
     /**
-     *
+     * Causes the {@link Pipeline} to begin execution.
+     * Each {@link Worker} begins its execution and runs the process method of its {@link Task}.
      */
     public void start() {
         if (workers.size() > 0) {
@@ -83,8 +99,10 @@ public class Pipeline {
     }
 
     /**
+     * Waits for the {@link Pipeline} to stop working.
      *
-     * @throws InterruptedException
+     * @throws InterruptedException  if any thread has interrupted the current {@link Worker}.
+     * The interrupted status of the {@link Worker} is cleared when this exception is thrown.
      */
     public void join() throws InterruptedException {
         Stop stop = new Stop();
