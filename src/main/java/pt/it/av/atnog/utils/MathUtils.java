@@ -23,7 +23,7 @@ public final class MathUtils {
       1.50563273514931155834e-7
   };
   // log(2*PI)/2
-  private static final double LN_SQRT2PI = 0.9189385332046727418;
+  private static final double LN_SQRT2PI = Math.log(2.0*Math.PI)/2.0;
 
   /**
    * Utility class, lets make the constructor private.
@@ -98,7 +98,8 @@ public final class MathUtils {
 
   /**
    * The \(\Gamma(x)\) function is the extension of the factorial to real numbers \(n! == gamma(n+1)\).
-   * Gamma(x) grows very quickly (similar to x**x), that’s why lgamma(), which is the logarithm of the gamma function, is often used instead. In the discussion below, I’m only considering the lgamma(x) on the positive axis (x>0).
+   * \(\Gamma(x)\) grows very quickly (similar to \(x^x\)), that’s why lgamma(),
+   * which is the logarithm of the \(\Gamma\) function, is often used instead.
    *
    * @param x
    * @return

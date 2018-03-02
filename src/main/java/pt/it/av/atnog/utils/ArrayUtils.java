@@ -891,7 +891,47 @@ public final class ArrayUtils {
   }
 
   /**
-   * Returns the slope of a simple linear regression.
+   * Power regression.
+   * <p>
+   *   It computes the power equation (\(y = a \times x^b\) that minimizes the following cost:
+   *   \(Q=\sum_{i=0}^{n}(v_i-(u_i \times b + k))^2\)
+   *   Where \(v = ln(y)\), \(u = ln(x)\) and \(k = ln(a)\).
+   * </p>
+   *
+   * @param x
+   * @param y
+   * @param bX
+   * @param bYm
+   * @param l
+   * @return
+   */
+  public static double[] pr(final double x[], final double y[], final int bX, final int bY, final int l) {
+    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0, y2 = 0.0;
+    double rv[] = {0, 0};
+
+    for (int i = 0; i < l; i++) {
+      double u = Math.log(x[i + bX]), v = Math.log(y[i + bY]);
+      sx += u;
+      sy += v;
+      xy += u * v;
+      x2 += Math.pow(u, 2);
+      y2 += Math.pow(v, 2);
+    }
+
+    double d = l * x2 - Math.pow(sx, 2.0);
+
+    rv[0] = Math.exp((sy * x2 - sx * xy) / d);
+    rv[1] = (l * xy - sx * sy) / d;
+
+    return rv;
+  }
+
+  /**
+   * Linear regression.
+   * <p>
+   *   It computes the linear equation (\(y = x \times m + b\)) that minimizes the following cost:
+   *   \(Q=\sum_{i=0}^{n}(y_i-(x_i \times m + b))^2\)
+   * </p>
    *
    * @param x
    * @param y

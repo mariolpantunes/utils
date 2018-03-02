@@ -17,7 +17,7 @@ public class ArrayUtilsTest {
   private static double small[] = {1.0, 0.0, -1.0},
       large[] = {0.0, -1.0, 100.0, -100.0, 22.0, 55.0, 53.5, 20.1, 84.5, 10.2};
   private static int rankSmall[] = {2, 1, 0},
-  rankLarge[] = {2,1,9,0,5,7,6,4,8,3};
+      rankLarge[] = {2, 1, 9, 0, 5, 7, 6, 4, 8, 3};
   private static double A[] = {0, 1, 2, 3, 4, 5}, B[] = {2, 4, 6, 8, 10, 12};
 
   @Test
@@ -177,7 +177,7 @@ public class ArrayUtilsTest {
   }
 
   @Test
-  public void test_slope_positive() {
+  public void test_lr_slope_positive() {
     double x[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, y[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     double lr[] = ArrayUtils.lr(x, y, 0, 0, x.length);
     assertTrue(lr[0] == 1.0);
@@ -185,10 +185,30 @@ public class ArrayUtilsTest {
   }
 
   @Test
-  public void test_slope_negative() {
-    double x[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, y[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+  public void test_lr_slope_negative() {
+    double x[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+        y[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
     double lr[] = ArrayUtils.lr(x, y, 0, 0, x.length);
     assertTrue(lr[0] == -1.0);
     assertTrue(lr[1] == 9.0);
+  }
+
+  @Test
+  public void test_pr_positive() {
+    double x[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        y[] = {2, 8, 18, 32, 50, 72, 98, 128, 162, 200};
+    double pr[] = ArrayUtils.pr(x, y, 0, 0, x.length);
+    assertTrue(MathUtils.equals(pr[0], 2, 0.01));
+    assertTrue(MathUtils.equals(pr[1], 2, 0.01));
+  }
+
+  @Test
+  public void test_pr_negative() {
+    double x[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        y[] = {2, 0.5, 0.222222222222222, 0.125, 0.08, 0.055555555555556, 0.040816326530612,
+            0.03125, 0.024691358024691, 0.02};
+    double pr[] = ArrayUtils.pr(x, y, 0, 0, x.length);
+    assertTrue(MathUtils.equals(pr[0], 2, 0.01));
+    assertTrue(MathUtils.equals(pr[1], -2, 0.01));
   }
 }
