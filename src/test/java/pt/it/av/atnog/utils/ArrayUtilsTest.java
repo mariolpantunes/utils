@@ -211,4 +211,44 @@ public class ArrayUtilsTest {
     assertTrue(MathUtils.equals(pr[0], 2, 0.01));
     assertTrue(MathUtils.equals(pr[1], -2, 0.01));
   }
+
+  @Test
+  public void test_er_positive() {
+    double x[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        y[] = {5.436563657, 14.7781122, 40.17107385, 109.1963001, 296.8263182, 806.857587,
+            2193.266317, 5961.915974, 16206.16786, 44052.93159};
+    double er[] = ArrayUtils.er(x, y, 0, 0, x.length);
+    assertTrue(MathUtils.equals(er[0], 2, 0.01));
+    assertTrue(MathUtils.equals(er[1], 1, 0.01));
+  }
+
+  @Test
+  public void test_er_negative() {
+    double x[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        y[] = {0.735758882, 0.270670566, 0.099574137, 0.036631278, 0.013475894, 0.004957504,
+            0.001823764, 0.000670925, 0.00024682, 9.07999E-05};
+    double er[] = ArrayUtils.er(x, y, 0, 0, x.length);
+    assertTrue(MathUtils.equals(er[0], 2, 0.01));
+    assertTrue(MathUtils.equals(er[1], -1, 0.01));
+  }
+
+  @Test
+  public void test_lnr_positive() {
+    double x[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        y[] = {2, 3.386294361, 4.197224577, 4.772588722, 5.218875825, 5.583518938, 5.891820298,
+            6.158883083, 6.394449155, 6.605170186};
+    double lnr[] = ArrayUtils.lnr(x, y, 0, 0, x.length);
+    assertTrue(MathUtils.equals(lnr[0], 2, 0.01));
+    assertTrue(MathUtils.equals(lnr[1], 2, 0.01));
+  }
+
+  @Test
+  public void test_lnr_negative() {
+    double x[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        y[] = {2, 0.613705639, -0.197224577, -0.772588722, -1.218875825, -1.583518938, -1.891820298,
+            -2.158883083, -2.394449155, -2.605170186};
+    double lnr[] = ArrayUtils.lnr(x, y, 0, 0, x.length);
+    assertTrue(MathUtils.equals(lnr[0], -2, 0.01));
+    assertTrue(MathUtils.equals(lnr[1], 2, 0.01));
+  }
 }

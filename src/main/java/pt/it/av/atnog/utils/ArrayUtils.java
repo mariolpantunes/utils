@@ -891,17 +891,89 @@ public final class ArrayUtils {
   }
 
   /**
+   * Logarithmic regression.
+   * <p>
+   * It computes the logarithmic equation (\(y = a\lnb{x} + b\) that minimizes the following cost:
+   * \(Q=\sum_{i=0}^{n}(y_i-(a \times u_i  + b))^2\)
+   * Where \(v = ln(x)\).
+   * </p>
+   *
+   * @param x
+   * @param y
+   * @param bX
+   * @param bY
+   * @param l
+   * @return
+   */
+  public static double[] lnr(final double x[], final double y[], final int bX, final int bY, final int l) {
+    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0, y2 = 0.0;
+    double rv[] = {0, 0};
+
+    for (int i = 0; i < l; i++) {
+      double u = Math.log(x[i + bY]);
+      sx += u;
+      sy += y[i + bY];
+      xy += u * y[i + bY];
+      x2 += Math.pow(u, 2);
+      y2 += Math.pow(y[i + bY], 2);
+    }
+
+    double d = l * x2 - Math.pow(sx, 2.0);
+
+    rv[0] = (l * xy - sx * sy) / d;
+    rv[1] = (sy * x2 - sx * xy) / d;
+
+    return rv;
+  }
+
+  /**
+   * Exponential regression.
+   * <p>
+   * It computes the exponential equation (\(y = a \times e^{xb}\) that minimizes the following cost:
+   * \(Q=\sum_{i=0}^{n}(v_i-(b \times x_i + k))^2\)
+   * Where \(v = ln(y)\) and \(k = ln(a)\).
+   * </p>
+   *
+   * @param x
+   * @param y
+   * @param bX
+   * @param bY
+   * @param l
+   * @return
+   */
+  public static double[] er(final double x[], final double y[], final int bX, final int bY, final int l) {
+    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0, y2 = 0.0;
+    double rv[] = {0, 0};
+
+    for (int i = 0; i < l; i++) {
+      double v = Math.log(y[i + bY]);
+      sx += x[i + bX];
+      sy += v;
+      xy += x[i + bX] * v;
+      x2 += Math.pow(x[i + bX], 2);
+      y2 += Math.pow(v, 2);
+    }
+
+    double d = l * x2 - Math.pow(sx, 2.0);
+
+    rv[0] = Math.exp((sy * x2 - sx * xy) / d);
+    rv[1] = (l * xy - sx * sy) / d;
+
+    return rv;
+  }
+
+  /**
    * Power regression.
    * <p>
    *   It computes the power equation (\(y = a \times x^b\) that minimizes the following cost:
-   *   \(Q=\sum_{i=0}^{n}(v_i-(u_i \times b + k))^2\)
+   *   \(Q=\sum_{i=0}^{n}(v_i-(b \times u_i + k))^2\)
    *   Where \(v = ln(y)\), \(u = ln(x)\) and \(k = ln(a)\).
    * </p>
    *
    * @param x
    * @param y
    * @param bX
-   * @param bYm
+   * @param bY
    * @param l
    * @return
    */
@@ -936,7 +1008,7 @@ public final class ArrayUtils {
    * @param x
    * @param y
    * @param bX
-   * @param bYm
+   * @param bY
    * @param l
    * @return
    */
