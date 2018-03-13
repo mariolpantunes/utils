@@ -900,6 +900,22 @@ public final class ArrayUtils {
    *
    * @param x
    * @param y
+   * @return
+   */
+  public static double[] lnr(final double x[], final double y[]) {
+    return lnr(x, y, 0, 0, x.length);
+  }
+
+  /**
+   * Logarithmic regression.
+   * <p>
+   * It computes the logarithmic equation (\(y = a\lnb{x} + b\) that minimizes the following cost:
+   * \(Q=\sum_{i=0}^{n}(y_i-(a \times u_i  + b))^2\)
+   * Where \(v = ln(x)\).
+   * </p>
+   *
+   * @param x
+   * @param y
    * @param bX
    * @param bY
    * @param l
@@ -936,6 +952,22 @@ public final class ArrayUtils {
    *
    * @param x
    * @param y
+   * @return
+   */
+  public static double[] er(final double x[], final double y[]) {
+    return er(x, y, 0, 0, x.length);
+  }
+
+  /**
+   * Exponential regression.
+   * <p>
+   * It computes the exponential equation (\(y = a \times e^{xb}\) that minimizes the following cost:
+   * \(Q=\sum_{i=0}^{n}(v_i-(b \times x_i + k))^2\)
+   * Where \(v = ln(y)\) and \(k = ln(a)\).
+   * </p>
+   *
+   * @param x
+   * @param y
    * @param bX
    * @param bY
    * @param l
@@ -960,6 +992,22 @@ public final class ArrayUtils {
     rv[1] = (l * xy - sx * sy) / d;
 
     return rv;
+  }
+
+  /**
+   * Power regression.
+   * <p>
+   * It computes the power equation (\(y = a \times x^b\) that minimizes the following cost:
+   * \(Q=\sum_{i=0}^{n}(v_i-(b \times u_i + k))^2\)
+   * Where \(v = ln(y)\), \(u = ln(x)\) and \(k = ln(a)\).
+   * </p>
+   *
+   * @param x
+   * @param y
+   * @return
+   */
+  public static double[] pr(final double x[], final double y[]) {
+    return pr(x, y, 0, 0, x.length);
   }
 
   /**
@@ -1030,6 +1078,38 @@ public final class ArrayUtils {
     rv[1] = (sy * x2 - sx * xy) / d;
 
     return rv;
+  }
+
+  /**
+   * Coefficient of determination (\(R^2\)).
+   *
+   * @param y
+   * @param f
+   * @return
+   */
+  public static double r2(final double y[], final double f[]) {
+    return r2(y, f, 0, 0, y.length);
+  }
+
+  /**
+   * Coefficient of determination (\(R^2\)).
+   *
+   * @param y
+   * @param f
+   * @param bY
+   * @param bF
+   * @param l
+   * @return
+   */
+  public static double r2(final double y[], final double f[], final int bY, final int bF, final int l) {
+    double sst = 0.0, ssr = 0.0;
+
+    double ay = ArrayUtils.mean(y, bY, l);
+    for (int i = 0; i < l; i++) {
+      sst += Math.pow(y[bY + i] - ay, 2);
+      ssr += Math.pow(y[bY + i] - f[bF + i], 2);
+    }
+    return 1.0 - (ssr / sst);
   }
 
   /**
