@@ -594,6 +594,91 @@ public final class ArrayUtils {
   }
 
   /**
+   * Returns the index of the closest element to x.
+   * <p>
+   *   It assumes the array is not sorted, as such, it searches the complete array.
+   * </p>
+   *
+   * @param x the original value.
+   * @param array and array of doubles.
+   * @return the index of the closest element to x.
+   */
+  public static int findClose(double x, double array[]) {
+    return findClose(x,array,0,array.length);
+  }
+
+  /**
+   * Returns the index of the closest element to x.
+   * <p>
+   *   It assumes the array is not sorted, as such, it searches the complete array.
+   * </p>
+   *
+   * @param x the original value.
+   * @param array and array of doubles.
+   * @param bA the index where the data starts.
+   * @param l the length of the data.
+   * @return the index of the closest element to x.
+   */
+  public static int findClose(double x, double array[], int bA, int l) {
+    int rv = 0;
+    double err = Math.abs(array[0+bA] - x);
+
+    for (int i = 1; i < l; i++) {
+      double t = Math.abs(array[i+bA] - x);
+      if (t < err) {
+        rv = i;
+        err = t;
+      }
+    }
+
+    return rv;
+  }
+
+  /**
+   * Returns the index of the closest element to x.
+   * <p>
+   *   It assumes the array is sorted, as such, it stops whenever the distance increases.
+   * </p>
+   *
+   * @param x the original value.
+   * @param array and array of doubles.
+   * @return the index of the closest element to x.
+   */
+  public static int findCloseSorted(double x, double array[]) {
+    return findCloseSorted(x,array,0,array.length);
+  }
+
+  /**
+   * Returns the index of the closest element to x.
+   * <p>
+   *   It assumes the array is sorted, as such, it stops whenever the distance increases.
+   * </p>
+   *
+   * @param x the original value.
+   * @param array and array of doubles.
+   * @param bA the index where the data starts.
+   * @param l the length of the data.
+   * @return the index of the closest element to x.
+   */
+  public static int findCloseSorted(double x, double array[], int bA, int l) {
+    int rv = 0;
+    boolean found = false;
+    double err = Math.abs(array[0+bA] - x);
+
+    for (int i = 1; i < l && !found; i++) {
+      double t = Math.abs(array[i+bA] - x);
+      if (t < err) {
+        rv = i;
+        err = t;
+      } else if(t > err) {
+        found = true;
+      }
+    }
+
+    return rv;
+  }
+
+  /**
    * Return the rank of an array of elements.
    * @param array an array of elements.
    * @param ranks an array that will be filled with the ranks.
