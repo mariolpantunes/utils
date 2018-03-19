@@ -1314,4 +1314,50 @@ public final class ArrayUtils {
     csd(x, y, rv, 0, 0, 0, y.length);
     return rv;
   }
+
+  /**
+   * Return an array (out) with the same content that the input (in) array, but in reverse order.
+   * <p>
+   * This method implements a sequential method to reverse the input array.
+   * If the array is large enough, cache misses can degrade the performance.
+   * </p>
+   *
+   * @param in  the input array.
+   * @param out the output array.
+   * @param bI  the index of the first element of the input array.
+   * @param bO  the index of the first element of the output array.
+   * @param l   the number of elements to be reversed.
+   */
+  public static void reverse(final double[] in, final int bI, final double[] out, final int bO, final int l) {
+    for (int i = 0; i < l; i++) {
+      out[bO + i] = in[bI + l - (i + 1)];
+    }
+  }
+
+  /**
+   * Return an array (out) with the same content that the input (in) array, but in reverse order.
+   * <p>
+   * This method implements a sequential method to reverse the input array.
+   * If the array is large enough, cache misses can degrade the performance.
+   * </p>
+   *
+   * @param in the input array.
+   * @return an array (out) with the same content that the input (in) array, but in reverse order.
+   */
+  public static double[] reverse(final double[] in) {
+    double out[] = new double[in.length];
+    reverse(in, 0, out, 0, in.length);
+    return out;
+  }
+
+  /**
+   * @param a
+   * @param bIdx
+   * @param len
+   */
+  public static void random(final double a[], final int bIdx, final int len) {
+    for (int i = 0; i < len; i++) {
+      a[i + bIdx] = Math.random();
+    }
+  }
 }
