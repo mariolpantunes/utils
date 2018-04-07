@@ -226,6 +226,13 @@ public final class ArrayUtils {
     }
   }
 
+  public static void sqrt(final double[] a, final int bA, final double[] c,
+                          final int bC, final int len){
+    for (int i = 0; i < len; i++) {
+      c[bC + i] = Math.sqrt(a[bA + i]);
+    }
+  }
+
   /**
    * @param a
    * @param bA
