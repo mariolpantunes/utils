@@ -548,22 +548,24 @@ public final class ArrayUtils {
   public static double isoData(final double array[], final int b, final int l) {
     double t = mean(array, b, l), ot = 0;
 
-    while (t != ot) {
-      ot = t;
-      double mat = 0.0, mbt = 0.0;
-      int cat = 0, cbt = 0;
-      for (int i = 0; i < l; i++) {
-        if (array[b + i] > t) {
-          mat += array[b + i];
-          cat++;
-        } else {
-          mbt += array[b + i];
-          cbt++;
+    if(l > 1) {
+      while (t != ot) {
+        ot = t;
+        double mat = 0.0, mbt = 0.0;
+        int cat = 0, cbt = 0;
+        for (int i = 0; i < l; i++) {
+          if (array[b + i] > t) {
+            mat += array[b + i];
+            cat++;
+          } else {
+            mbt += array[b + i];
+            cbt++;
+          }
         }
+        mat /= cat;
+        mbt /= cbt;
+        t = (mat + mbt) / 2.0;
       }
-      mat /= cat;
-      mbt /= cbt;
-      t = (mat + mbt) / 2.0;
     }
 
     return t;
