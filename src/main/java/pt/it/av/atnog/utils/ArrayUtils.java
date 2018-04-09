@@ -1046,7 +1046,7 @@ public final class ArrayUtils {
    */
   public static double[] lnr(final double x[], final double y[], final int bX, final int bY, final int l) {
     double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0;
-    double rv[] = {0, 0};
+    double rv[] = {0.0, 0.0, 0.0};
 
     for (int i = 0; i < l; i++) {
       double u = Math.log(x[i + bY]);
@@ -1056,10 +1056,20 @@ public final class ArrayUtils {
       x2 += Math.pow(u, 2);
     }
 
-    double d = l * x2 - Math.pow(sx, 2.0);
+    double d = l * x2 - Math.pow(sx, 2.0),
+        m = (l * xy - sx * sy) / d,
+        b = (sy * x2 - sx * xy) / d,
+        my = sy / l, sse = 0.0, sst = 0.0;
 
-    rv[0] = (l * xy - sx * sy) / d;
-    rv[1] = (sy * x2 - sx * xy) / d;
+    for (int i = 0; i < l; i++) {
+      double u = Math.log(x[i + bY]), f = m * u + b;
+      sse += Math.pow(y[i + bY] - f, 2);
+      sst += Math.pow(y[i + bY] - my, 2);
+    }
+
+    rv[0] = m;
+    rv[1] = b;
+    rv[2] = 1 - (sse / sst);
 
     return rv;
   }
@@ -1097,7 +1107,7 @@ public final class ArrayUtils {
    */
   public static double[] er(final double x[], final double y[], final int bX, final int bY, final int l) {
     double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0;
-    double rv[] = {0, 0};
+    double rv[] = {0.0, 0.0, 0.0};
 
     for (int i = 0; i < l; i++) {
       double v = Math.log(y[i + bY]);
@@ -1107,10 +1117,20 @@ public final class ArrayUtils {
       x2 += Math.pow(x[i + bX], 2);
     }
 
-    double d = l * x2 - Math.pow(sx, 2.0);
+    double d = l * x2 - Math.pow(sx, 2.0),
+        m = (l * xy - sx * sy) / d,
+        b = (sy * x2 - sx * xy) / d,
+        my = sy / l, sse = 0.0, sst = 0.0;
 
-    rv[0] = Math.exp((sy * x2 - sx * xy) / d);
-    rv[1] = (l * xy - sx * sy) / d;
+    for (int i = 0; i < l; i++) {
+      double v = Math.log(y[i + bY]), f = m * x[i + bX] + b;
+      sse += Math.pow(v - f, 2);
+      sst += Math.pow(v - my, 2);
+    }
+
+    rv[0] = Math.exp(b);
+    rv[1] = m;
+    rv[2] = 1 - (sse / sst);
 
     return rv;
   }
@@ -1148,7 +1168,7 @@ public final class ArrayUtils {
    */
   public static double[] pr(final double x[], final double y[], final int bX, final int bY, final int l) {
     double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0;
-    double rv[] = {0, 0};
+    double rv[] = {0.0, 0.0, 0.0};
 
     for (int i = 0; i < l; i++) {
       double u = Math.log(x[i + bX]),
@@ -1162,13 +1182,22 @@ public final class ArrayUtils {
     //System.out.println();
     //System.out.println(sx+" "+sy+" "+xy+" "+x2);
 
-    double d = l * x2 - Math.pow(sx, 2.0);
-    /*if(d == 0) {
-      System.err.println("D=0 Singular Matrix");
-    }*/
+    double d = l * x2 - Math.pow(sx, 2.0),
+        m = (l * xy - sx * sy) / d,
+        b = (sy * x2 - sx * xy) / d,
+        my = sy / l, sse = 0.0, sst = 0.0;
 
-    rv[0] = Math.exp((sy * x2 - sx * xy) / d);
-    rv[1] = (l * xy - sx * sy) / d;
+    for (int i = 0; i < l; i++) {
+      double u = Math.log(x[i + bX]),
+          v = Math.log(y[i + bY]),
+          f = m * u + b;
+      sse += Math.pow(v - f, 2);
+      sst += Math.pow(v - my, 2);
+    }
+
+    rv[0] = Math.exp(b);
+    rv[1] = m;
+    rv[2] = 1 - (sse / sst);
 
     return rv;
   }
@@ -1189,7 +1218,7 @@ public final class ArrayUtils {
    */
   public static double[] lr(final double x[], final double y[], final int bX, final int bY, final int l) {
     double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0;
-    double rv[] = {0, 0};
+    double rv[] = {0, 0, 0};
 
     for (int i = 0; i < l; i++) {
       sx += x[i + bX];
@@ -1198,10 +1227,20 @@ public final class ArrayUtils {
       sy += y[i + bY];
     }
 
-    double d = l * x2 - Math.pow(sx, 2.0);
+    double d = l * x2 - Math.pow(sx, 2.0),
+        m = (l * xy - sx * sy) / d,
+        b = (sy * x2 - sx * xy) / d,
+        my = sy / l, sse = 0.0, sst = 0.0;
 
-    rv[0] = (l * xy - sx * sy) / d;
-    rv[1] = (sy * x2 - sx * xy) / d;
+    for (int i = 0; i < l; i++) {
+      double f = m * x[i + bX] + b;
+      sse += Math.pow(y[i + bY] - f, 2);
+      sst += Math.pow(y[i + bY] - my, 2);
+    }
+
+    rv[0] = m;
+    rv[1] = b;
+    rv[2] = 1 - (sse / sst);
 
     return rv;
   }

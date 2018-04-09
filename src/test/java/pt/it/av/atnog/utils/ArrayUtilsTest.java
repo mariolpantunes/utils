@@ -182,6 +182,7 @@ public class ArrayUtilsTest {
     double lr[] = ArrayUtils.lr(x, y, 0, 0, x.length);
     assertTrue(lr[0] == 1.0);
     assertTrue(lr[1] == 0.0);
+    assertTrue(lr[2] == 1.0);
   }
 
   @Test
@@ -191,6 +192,7 @@ public class ArrayUtilsTest {
     double lr[] = ArrayUtils.lr(x, y, 0, 0, x.length);
     assertTrue(lr[0] == -1.0);
     assertTrue(lr[1] == 9.0);
+    assertTrue(lr[2] == 1.0);
   }
 
   @Test
@@ -200,6 +202,7 @@ public class ArrayUtilsTest {
     double pr[] = ArrayUtils.pr(x, y, 0, 0, x.length);
     assertTrue(MathUtils.equals(pr[0], 2, 0.01));
     assertTrue(MathUtils.equals(pr[1], 2, 0.01));
+    assertTrue(MathUtils.equals(pr[2], 1, 0.01));
   }
 
   @Test
@@ -210,6 +213,7 @@ public class ArrayUtilsTest {
     double pr[] = ArrayUtils.pr(x, y, 0, 0, x.length);
     assertTrue(MathUtils.equals(pr[0], 2, 0.01));
     assertTrue(MathUtils.equals(pr[1], -2, 0.01));
+    assertTrue(MathUtils.equals(pr[2], 1, 0.01));
   }
 
   @Test
@@ -220,6 +224,7 @@ public class ArrayUtilsTest {
     double er[] = ArrayUtils.er(x, y, 0, 0, x.length);
     assertTrue(MathUtils.equals(er[0], 2, 0.01));
     assertTrue(MathUtils.equals(er[1], 1, 0.01));
+    assertTrue(MathUtils.equals(er[2], 1, 0.01));
   }
 
   @Test
@@ -230,6 +235,7 @@ public class ArrayUtilsTest {
     double er[] = ArrayUtils.er(x, y, 0, 0, x.length);
     assertTrue(MathUtils.equals(er[0], 2, 0.01));
     assertTrue(MathUtils.equals(er[1], -1, 0.01));
+    assertTrue(MathUtils.equals(er[2], 1, 0.01));
   }
 
   @Test
@@ -240,6 +246,7 @@ public class ArrayUtilsTest {
     double lnr[] = ArrayUtils.lnr(x, y, 0, 0, x.length);
     assertTrue(MathUtils.equals(lnr[0], 2, 0.01));
     assertTrue(MathUtils.equals(lnr[1], 2, 0.01));
+    assertTrue(MathUtils.equals(lnr[2], 1, 0.01));
   }
 
   @Test
@@ -250,6 +257,7 @@ public class ArrayUtilsTest {
     double lnr[] = ArrayUtils.lnr(x, y, 0, 0, x.length);
     assertTrue(MathUtils.equals(lnr[0], -2, 0.01));
     assertTrue(MathUtils.equals(lnr[1], 2, 0.01));
+    assertTrue(MathUtils.equals(lnr[2], 1, 0.01));
   }
 
   @Test
