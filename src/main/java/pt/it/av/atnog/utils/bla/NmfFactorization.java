@@ -1,6 +1,7 @@
 package pt.it.av.atnog.utils.bla;
 
 import pt.it.av.atnog.utils.ArrayUtils;
+import pt.it.av.atnog.utils.MathUtils;
 
 import java.util.Arrays;
 
@@ -18,7 +19,7 @@ public class NmfFactorization {
    * @return
    */
   public static Matrix[] nmf_mu(Matrix v, int k, int n, double e) {
-    double max = v.max(), eps = Math.ulp(1.0);
+    double max = v.max(), eps = MathUtils.eps();
     Matrix w = Matrix.random(v.rows, k, 0.0, max);
     Matrix h = Matrix.random(k, v.cols, 0.0, max);
 
@@ -63,7 +64,7 @@ public class NmfFactorization {
   }
 
   public static Matrix[] nmf_mu2(final Matrix v, final int k, final int n, final double e) {
-    double max = v.max(), eps = Math.ulp(1.0);
+    double max = v.max(), eps = MathUtils.eps();
     Matrix w = Matrix.random(v.rows, k, 0.0, max);
     Matrix h = Matrix.random(k, v.cols, 0.0, max);
 

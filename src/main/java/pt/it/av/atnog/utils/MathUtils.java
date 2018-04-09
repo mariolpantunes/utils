@@ -439,4 +439,11 @@ public final class MathUtils {
         TP += 1;
     return TP;
   }
+
+  /**
+   * @return
+   */
+  public static double eps() {
+    return Math.ulp(1.0);
+  }
 }

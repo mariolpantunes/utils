@@ -586,6 +586,35 @@ public final class ArrayUtils {
 
   /**
    * @param array
+   * @param p
+   * @param n
+   */
+  public static void replace(final double array[], final double p, final double n) {
+    for (int i = 0; i < array.length; i++) {
+      if (array[i] == p) {
+        array[i] = n;
+      }
+    }
+  }
+
+  /**
+   * @param array
+   * @param n
+   * @return
+   */
+  public static int indexOf(final double array[], final double n) {
+    int rv = -1;
+    for (int i = 0; i < array.length; i++) {
+      if (array[i] == n) {
+        rv = i;
+        break;
+      }
+    }
+    return rv;
+  }
+
+  /**
+   * @param array
    * @param e
    * @param <T>
    * @return
@@ -1016,7 +1045,7 @@ public final class ArrayUtils {
    * @return
    */
   public static double[] lnr(final double x[], final double y[], final int bX, final int bY, final int l) {
-    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0, y2 = 0.0;
+    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0;
     double rv[] = {0, 0};
 
     for (int i = 0; i < l; i++) {
@@ -1025,7 +1054,6 @@ public final class ArrayUtils {
       sy += y[i + bY];
       xy += u * y[i + bY];
       x2 += Math.pow(u, 2);
-      y2 += Math.pow(y[i + bY], 2);
     }
 
     double d = l * x2 - Math.pow(sx, 2.0);
@@ -1068,7 +1096,7 @@ public final class ArrayUtils {
    * @return
    */
   public static double[] er(final double x[], final double y[], final int bX, final int bY, final int l) {
-    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0, y2 = 0.0;
+    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0;
     double rv[] = {0, 0};
 
     for (int i = 0; i < l; i++) {
@@ -1077,7 +1105,6 @@ public final class ArrayUtils {
       sy += v;
       xy += x[i + bX] * v;
       x2 += Math.pow(x[i + bX], 2);
-      y2 += Math.pow(v, 2);
     }
 
     double d = l * x2 - Math.pow(sx, 2.0);
@@ -1120,19 +1147,25 @@ public final class ArrayUtils {
    * @return
    */
   public static double[] pr(final double x[], final double y[], final int bX, final int bY, final int l) {
-    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0, y2 = 0.0;
+    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0;
     double rv[] = {0, 0};
 
     for (int i = 0; i < l; i++) {
-      double u = Math.log(x[i + bX]), v = Math.log(y[i + bY]);
+      double u = Math.log(x[i + bX]),
+          v = Math.log(y[i + bY]);
+      //System.out.print("("+u+"; "+v+") ");
       sx += u;
       sy += v;
       xy += u * v;
       x2 += Math.pow(u, 2);
-      y2 += Math.pow(v, 2);
     }
+    //System.out.println();
+    //System.out.println(sx+" "+sy+" "+xy+" "+x2);
 
     double d = l * x2 - Math.pow(sx, 2.0);
+    /*if(d == 0) {
+      System.err.println("D=0 Singular Matrix");
+    }*/
 
     rv[0] = Math.exp((sy * x2 - sx * xy) / d);
     rv[1] = (l * xy - sx * sy) / d;
@@ -1155,15 +1188,14 @@ public final class ArrayUtils {
    * @return
    */
   public static double[] lr(final double x[], final double y[], final int bX, final int bY, final int l) {
-    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0, y2 = 0.0;
+    double sx = 0.0, sy = 0.0, xy = 0.0, x2 = 0.0;
     double rv[] = {0, 0};
 
     for (int i = 0; i < l; i++) {
       sx += x[i + bX];
-      sy += y[i + bY];
-      xy += x[i + bX] * y[i + bY];
       x2 += Math.pow(x[i + bX], 2);
-      y2 += Math.pow(y[i + bY], 2);
+      xy += x[i + bX] * y[i + bY];
+      sy += y[i + bY];
     }
 
     double d = l * x2 - Math.pow(sx, 2.0);
@@ -1196,14 +1228,14 @@ public final class ArrayUtils {
    * @return
    */
   public static double r2(final double y[], final double f[], final int bY, final int bF, final int l) {
-    double sst = 0.0, ssr = 0.0;
+    double sst = 0.0, sse = 0.0;
 
-    double ay = ArrayUtils.mean(y, bY, l);
+    double my = ArrayUtils.mean(y, bY, l);
     for (int i = 0; i < l; i++) {
-      sst += Math.pow(y[bY + i] - ay, 2);
-      ssr += Math.pow(y[bY + i] - f[bF + i], 2);
+      sst += Math.pow((y[bY + i] - my), 2);
+      sse += Math.pow((y[bY + i] - f[bF + i]), 2);
     }
-    return 1.0 - (ssr / sst);
+    return 1.0 - (sse / sst);
   }
 
   /**
