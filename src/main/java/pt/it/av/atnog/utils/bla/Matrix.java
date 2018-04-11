@@ -533,8 +533,6 @@ public class Matrix {
   /**
    *
    * @param k
-   * @param n
-   * @param e
    * @return
    */
   public Matrix[] nmf(final int k) {

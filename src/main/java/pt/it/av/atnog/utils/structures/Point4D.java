@@ -1,7 +1,5 @@
 package pt.it.av.atnog.utils.structures;
 
-import pt.it.av.atnog.utils.bla.Vector;
-
 /**
  * Four-dimension point.
  * <p>
@@ -11,8 +9,8 @@ import pt.it.av.atnog.utils.bla.Vector;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Point4D extends Vector {
-
+public class Point4D implements Distance<Point4D> {
+  private final double x, y, z, w;
   /**
    * 2D Point constructor.
    *
@@ -20,11 +18,10 @@ public class Point4D extends Vector {
    * @param y coordenate of the point
    */
   public Point4D(final double x, final double y, final double z, final double w) {
-    super(4);
-    data[0] = x;
-    data[1] = y;
-    data[2] = z;
-    data[3] = w;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.w = w;
   }
 
   /**
@@ -33,7 +30,7 @@ public class Point4D extends Vector {
    * @return the x coordinate of this point.
    */
   public double x() {
-    return data[0];
+    return x;
   }
 
   /**
@@ -42,7 +39,7 @@ public class Point4D extends Vector {
    * @return the y coordinate of this point.
    */
   public double y() {
-    return data[1];
+    return y;
   }
 
   /**
@@ -51,20 +48,36 @@ public class Point4D extends Vector {
    * @return the z coordinate of this point.
    */
   public double z() {
-    return data[2];
+    return z;
   }
 
   /**
-   * Returns the z coordinate of this point.
+   * Returns the w coordinate of this point.
    *
-   * @return the z coordinate of this point.
+   * @return the w coordinate of this point.
    */
   public double w() {
-    return data[3];
+    return w;
   }
 
   @Override
   public String toString() {
-    return "(" + data[0] + "," + data[1] + "," + data[2] + "," + data[3] + ")";
+    return "(" + x + "," + y + "," + z + "," + w + ")";
+  }
+
+  /**
+   * @return
+   */
+  public boolean isZero() {
+    boolean rv = false;
+    if (x == 0 && y == 0 && z == 0 && w == 0) {
+      rv = true;
+    }
+    return rv;
+  }
+
+  @Override
+  public double distanceTo(Point4D d) {
+    return Math.sqrt(Math.pow(d.x - x, 2) + Math.pow(d.y - y, 2) + Math.pow(d.z - z, 2) + Math.pow(d.w - w, 2));
   }
 }

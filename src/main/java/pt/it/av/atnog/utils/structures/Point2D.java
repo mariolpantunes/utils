@@ -1,7 +1,5 @@
 package pt.it.av.atnog.utils.structures;
 
-import pt.it.av.atnog.utils.bla.Vector;
-
 /**
  * Two-dimension point.
  * <p>
@@ -11,7 +9,9 @@ import pt.it.av.atnog.utils.bla.Vector;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Point2D extends Vector {
+public class Point2D implements Distance<Point2D> {
+  private final double x, y;
+
   /**
    * 2D Point constructor.
    *
@@ -19,9 +19,8 @@ public class Point2D extends Vector {
    * @param y coordinate of the point
    */
   public Point2D(double x, double y) {
-    super(2);
-    data[0] = x;
-    data[1] = y;
+    this.x = x;
+    this.y = y;
   }
 
   /**
@@ -30,7 +29,7 @@ public class Point2D extends Vector {
    * @return the x coordinate of this point.
    */
   public double x() {
-    return data[0];
+    return x;
   }
 
   /**
@@ -39,12 +38,23 @@ public class Point2D extends Vector {
    * @return the y coordinate of this point.
    */
   public double y() {
-    return data[1];
+    return y;
   }
 
   @Override
   public String toString() {
-    return "(" + data[0] + "," + data[1] + ")";
+    return "(" + x + "," + y + ")";
+  }
+
+  /**
+   * @return
+   */
+  public boolean isZero() {
+    boolean rv = false;
+    if (x == 0 && y == 0) {
+      rv = true;
+    }
+    return rv;
   }
 
   /**
@@ -68,5 +78,10 @@ public class Point2D extends Vector {
     }
 
     return rv;
+  }
+
+  @Override
+  public double distanceTo(Point2D d) {
+    return Math.sqrt(Math.pow(d.x - x, 2) + Math.pow(d.y - y, 2));
   }
 }

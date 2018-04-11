@@ -1,7 +1,5 @@
 package pt.it.av.atnog.utils.structures;
 
-import pt.it.av.atnog.utils.bla.Vector;
-
 /**
  * One-dimension point.
  * <p>
@@ -11,15 +9,15 @@ import pt.it.av.atnog.utils.bla.Vector;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Point1D extends Vector {
+public class Point1D implements Distance<Point1D> {
+  private final double x;
   /**
    * 1D Point constructor.
    *
    * @param x coordinate of the point
    */
   public Point1D(final double x) {
-    super(1);
-    data[0] = x;
+    this.x = x;
   }
 
   /**
@@ -28,11 +26,27 @@ public class Point1D extends Vector {
    * @return the x coordinate of this point.
    */
   public double x() {
-    return data[0];
+    return x;
+  }
+
+  /**
+   * @return
+   */
+  public boolean isZero() {
+    boolean rv = false;
+    if (x == 0) {
+      rv = true;
+    }
+    return rv;
   }
 
   @Override
   public String toString() {
-    return "(" + data[0] + ")";
+    return "(" + x + ")";
+  }
+
+  @Override
+  public double distanceTo(Point1D d) {
+    return Math.abs(d.x - x);
   }
 }

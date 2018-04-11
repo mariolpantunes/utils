@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Vector<D extends Vector> implements Distance<D> {
+public class Vector implements Distance<Vector> {
   private static int T = 256;
   private static int B = 128;
   protected int bIdx, len;
@@ -407,7 +407,7 @@ public class Vector<D extends Vector> implements Distance<D> {
   }
 
   @Override
-  public double distanceTo(D v) {
+  public double distanceTo(Vector v) {
     return euclideanDistance(v);
   }
 }

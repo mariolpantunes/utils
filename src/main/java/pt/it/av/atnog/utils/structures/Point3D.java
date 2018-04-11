@@ -1,7 +1,5 @@
 package pt.it.av.atnog.utils.structures;
 
-import pt.it.av.atnog.utils.bla.Vector;
-
 /**
  * Three-dimension point.
  * <p>
@@ -11,8 +9,8 @@ import pt.it.av.atnog.utils.bla.Vector;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Point3D extends Vector {
-
+public class Point3D implements Distance<Point3D> {
+  private final double x, y, z;
   /**
    * 3D Point constructor.
    *
@@ -21,10 +19,9 @@ public class Point3D extends Vector {
    * @param z coordinate of the point.
    */
   public Point3D(final double x, final double y, final double z) {
-    super(3);
-    data[0] = x;
-    data[1] = y;
-    data[2] = z;
+    this.x = x;
+    this.y = y;
+    this.z = z;
   }
 
   /**
@@ -33,7 +30,7 @@ public class Point3D extends Vector {
    * @return the x coordinate of this point.
    */
   public double x() {
-    return data[0];
+    return x;
   }
 
   /**
@@ -42,7 +39,7 @@ public class Point3D extends Vector {
    * @return the y coordinate of this point.
    */
   public double y() {
-    return data[1];
+    return y;
   }
 
   /**
@@ -51,11 +48,27 @@ public class Point3D extends Vector {
    * @return the z coordinate of this point.
    */
   public double z() {
-    return data[2];
+    return z;
   }
 
   @Override
   public String toString() {
-    return "(" + data[0] + "," + data[1] + "," + data[2] + ")";
+    return "(" + x + "," + y + "," + z + ")";
+  }
+
+  /**
+   * @return
+   */
+  public boolean isZero() {
+    boolean rv = false;
+    if (x == 0 && y == 0 && z == 0) {
+      rv = true;
+    }
+    return rv;
+  }
+
+  @Override
+  public double distanceTo(Point3D d) {
+    return Math.sqrt(Math.pow(d.x - x, 2) + Math.pow(d.y - y, 2) + Math.pow(d.z - z, 2));
   }
 }
