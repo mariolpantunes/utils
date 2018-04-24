@@ -3,6 +3,7 @@ package pt.it.av.atnog.utils.structures.bloom;
 import java.util.BitSet;
 import java.util.function.Predicate;
 
+//TODO: Optimize
 public class BloomFilter<T> implements Predicate<T> {
   private final BitSet filter;
   private final int k, m;
