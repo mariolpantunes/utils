@@ -15,7 +15,7 @@ public class BloomFilterTest {
         test[] = {"Rincewind", "Death", "TwoFlower", "Lord Vetinari", "Cohen the Barbarian",
             "Ysabell", "Conina", "Homer", "Bart", "Lisa", "Bender", "Fry", "Leela"};
 
-    BloomFilter<String> bf = new BloomFilter<>(12, 2, (String s) -> {
+    BloomFilter<String> bf = new BloomFilter<>(30, 3, (String s) -> {
       return HashUtils.fnv1a(s.getBytes());
     });
 

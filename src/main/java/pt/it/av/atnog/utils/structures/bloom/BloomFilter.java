@@ -3,7 +3,9 @@ package pt.it.av.atnog.utils.structures.bloom;
 import java.util.BitSet;
 import java.util.function.Predicate;
 
-//TODO: Optimize
+/**
+ * @param <T>
+ */
 public class BloomFilter<T> implements Predicate<T> {
   private final BitSet filter;
   private final int k, m;
@@ -49,8 +51,8 @@ public class BloomFilter<T> implements Predicate<T> {
    * @param e
    */
   public void add(T e) {
-    int h1 = e.hashCode() & 0x7fffffff;
-    long h2 = h.hash(e);
+    int h1 = e.hashCode() & 0x7fffffff,
+        h2 = h.hash(e);
 
     for (int i = 0; i < k; i++) {
       filter.set(hash(h1, h2, i, m));
@@ -66,8 +68,8 @@ public class BloomFilter<T> implements Predicate<T> {
    */
   public boolean contains(T e) {
     boolean rv = true;
-    int h1 = e.hashCode() & 0x7fffffff;
-    long h2 = h.hash(e);
+    int h1 = e.hashCode() & 0x7fffffff,
+        h2 = h.hash(e);
 
     for (int i = 0; i < k && rv; i++) {
       if (!filter.get(hash(h1, h2, i, m))) {
@@ -85,12 +87,12 @@ public class BloomFilter<T> implements Predicate<T> {
    * @param m
    * @return
    */
-  private int hash(final int h1, final long h2, final int i, final int m) {
-    long hash = (h1 + h2 * i) % m;
+  private int hash(final int h1, final int h2, final int i, final int m) {
+    long hash = h1 + h2 * i;
     //shift it right then left 32 bits, which zeroes the lower half of the long
     long tl = ((hash >> 32) << 32);
     int rv = (int)(hash - tl);
-    return  rv & 0x7fffffff;
+    return (rv & 0x7fffffff) % m;
   }
 
   /**
