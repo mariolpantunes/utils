@@ -86,8 +86,10 @@ public class CircularPriorityQueue<E> implements Queue<E> {
         ArrayUtils.swap(data, i / 2, i);
       }
     } else {
-      data[0] = e;
-      min_heapify(data, 0, size);
+      if (c.compare(data[0], e) < 0.0) {
+        data[0] = e;
+        min_heapify(data, 0, size);
+      }
     }
 
     return true;
