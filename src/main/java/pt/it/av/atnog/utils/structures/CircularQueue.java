@@ -123,8 +123,7 @@ public class CircularQueue<E> implements Queue<E> {
 
   @Override
   public boolean offer(E e) {
-    add(e);
-    return true;
+    return add(e);
   }
 
   @Override

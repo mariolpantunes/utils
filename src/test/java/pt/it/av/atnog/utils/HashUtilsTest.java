@@ -10,13 +10,14 @@ public class HashUtilsTest {
 
   @Test
   public void test_fnv1a_empty() {
-    long hash = HashUtils.fnv1a("".getBytes(StandardCharsets.US_ASCII));
+    int hash = HashUtils.fnv1a("".getBytes(StandardCharsets.US_ASCII));
+    System.out.println("Hash: " + hash);
     assertTrue(hash == 2166136261L);
   }
 
   @Test
   public void test_jenkins_empty() {
-    long hash = HashUtils.jenkins("".getBytes(StandardCharsets.US_ASCII));
+    int hash = HashUtils.jenkins("".getBytes(StandardCharsets.US_ASCII));
     assertTrue(hash == 0L);
   }
 }
