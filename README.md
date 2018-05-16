@@ -21,9 +21,9 @@ mvn javadoc:javadoc
 To use this library just add the following code to your Maven project:
 ```xml
 <dependency>
-<groupId>pt.it.av.atnog</groupId>
-<artifactId>utils</artifactId>
-<version>1.2</version>
+  <groupId>pt.it.av.atnog</groupId>
+  <artifactId>utils</artifactId>
+  <version>1.2</version>
 </dependency>
 ```
 
