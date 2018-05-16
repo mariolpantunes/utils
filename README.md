@@ -10,9 +10,21 @@ Currently, it requires Java 8.
 
 ## Installation
 
-The whole project was done in Maven, as such to install this library just run:
+The whole project was done in [Maven](https://maven.apache.org/), as such to install this library just run:
 ```
 mvn install
+```
+In order to generate the documentation for the project just run:
+```
+mvn javadoc:javadoc
+```
+To use this library just add the following code to your Maven project:
+```xml
+<dependency>
+<groupId>pt.it.av.atnog</groupId>
+<artifactId>utils</artifactId>
+<version>1.2</version>
+</dependency>
 ```
 
 ## Authors

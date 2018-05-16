@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures.queue;
 
 import pt.it.av.atnog.utils.Utils;
 
@@ -24,13 +24,23 @@ import java.util.Queue;
  * @version 1.0
  */
 public class CircularQueue<E> implements Queue<E> {
+  public static final int DEFAULT_SIZE = 10;
   private int head = 0, size = 0;
   private E data[];
 
+  /**
+   * Circular Queue constructor.<br>
+   * It constructs and queue with size {@link #DEFAULT_SIZE}.
+   */
   public CircularQueue() {
-    this(10);
+    this(DEFAULT_SIZE);
   }
 
+  /**
+   * Circular Queue constructor.
+   *
+   * @param size the upper limit size of the queue.
+   */
   public CircularQueue(int size) {
     this.data = Utils.cast(new Object[size]);
   }
@@ -79,8 +89,9 @@ public class CircularQueue<E> implements Queue<E> {
 
   @Override
   public boolean addAll(Collection<? extends E> c) {
-    for (E e : c)
+    for (E e : c) {
       this.add(e);
+    }
     return true;
   }
 
@@ -104,14 +115,17 @@ public class CircularQueue<E> implements Queue<E> {
   public boolean retainAll(Collection<?> c) {
     E tdata[] = Utils.cast(new Object[this.data.length]);
     int tsize = 0;
-    for (E e : this)
-      if (c.contains(e))
+    for (E e : this) {
+      if (c.contains(e)) {
         tdata[tsize++] = e;
+      }
+    }
+
     boolean rv = tsize != size;
-    this.data = null;
     this.data = tdata;
     this.size = tsize;
     this.head = 0;
+
     return rv;
   }
 
@@ -233,7 +247,7 @@ public class CircularQueue<E> implements Queue<E> {
 
   @Override
   public Iterator<E> iterator() {
-    return new CircularQueueIterator();
+    return new CircularQueueIterator(head, size);
   }
 
 
@@ -247,7 +261,7 @@ public class CircularQueue<E> implements Queue<E> {
 
   @Override
   public Object[] toArray() {
-    E rv[] = Utils.cast(new Object[data.length]);
+    E rv[] = Utils.cast(new Object[size]);
     int i = 0;
     for (E e : this)
       rv[i++] = e;
@@ -269,10 +283,24 @@ public class CircularQueue<E> implements Queue<E> {
   }
 
   /**
-   * CircularQueue iterator
+   * Circular Queue iterator.
+   * <p>
+   * Implements an interator that is able to transverse a circular queue.
+   * </p>
    */
   private class CircularQueueIterator implements Iterator<E> {
-    private int i = head, count = size;
+    private int i, count;
+
+    /**
+     * Circular Queue Iterator construtor.
+     *
+     * @param head the index of the head of the circular queue.
+     * @param size the number of elements in the circular queue.
+     */
+    public CircularQueueIterator(final int head, final int size) {
+      i = head;
+      count = size;
+    }
 
     @Override
     public boolean hasNext() {
@@ -281,9 +309,12 @@ public class CircularQueue<E> implements Queue<E> {
 
     @Override
     public E next() {
-      E rv = data[i];
-      i = (i + 1) % data.length;
-      count--;
+      E rv = null;
+      if (count > 0) {
+        rv = data[i];
+        i = (i + 1) % data.length;
+        count--;
+      }
       return rv;
     }
   }

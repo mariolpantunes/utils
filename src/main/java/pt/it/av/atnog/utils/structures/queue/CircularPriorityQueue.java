@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures.queue;
 
 import pt.it.av.atnog.utils.ArrayUtils;
 import pt.it.av.atnog.utils.Utils;
@@ -10,28 +10,29 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 
 /**
- * Queue implemented with a circular buffer.
+ * Circular Priority Queue implemented with a min heap.
  * <p>
  * This queue has a fixed size.
  * After filling the buffer, any subsequent add operation will overweight the oldest element.<br>
- * Currently this structure is used in two differente scenarios:
+ * The elements inside de queue are ordered based on natural order, or a {@link Comparator} class.
  * </p>
- * <ul>
- * <li>gather the gather neighborhoods of a elements and
- * <li>as a buffer to mediate the communication between producers and consumers
- * </ul>
  *
- * @param <E> the type of elements held by the collection
+ * @param <E> the type of elements held by the collection.
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
 public class CircularPriorityQueue<E> implements Queue<E> {
-  private final E data[];
+  public static final int DEFAULT_SIZE = 10;
   private final Comparator<E> c;
+  private E data[];
   private int size;
 
+  /**
+   * Circular Priority Queue constructor.<br>
+   * It constructs and queue with size {@link #DEFAULT_SIZE} and natural order {@link DefaultComparator}.
+   */
   public CircularPriorityQueue() {
-    this(10, new DefaultComparator());
+    this(DEFAULT_SIZE, new DefaultComparator());
   }
 
   public CircularPriorityQueue(int size) {
@@ -44,6 +45,15 @@ public class CircularPriorityQueue<E> implements Queue<E> {
     this.size = 0;
   }
 
+  /**
+   * Returns the maximum number of elements in the queue.
+   *
+   * @return the maximum number of elements in the queue
+   */
+  public int length() {
+    return data.length;
+  }
+
   @Override
   public int size() {
     return size;
@@ -54,24 +64,48 @@ public class CircularPriorityQueue<E> implements Queue<E> {
     return size == 0;
   }
 
+  /**
+   * Returns true if this collection is full.
+   *
+   * @return true if this collection is full
+   */
+  public boolean isFull() {
+    return size == data.length;
+  }
+
   @Override
   public boolean contains(Object o) {
-    return false;
+    boolean rv = false;
+
+    for (int i = 0; i < size && rv; i++) {
+      if (data[i].equals(o)) {
+        rv = true;
+      }
+    }
+
+    return rv;
   }
 
   @Override
   public Iterator<E> iterator() {
-    return null;
+    return new CircularPriorityQueueIterator(data, size);
   }
 
   @Override
   public Object[] toArray() {
-    return new Object[0];
+    E rv[] = Utils.cast(new Object[size]);
+    int i = 0;
+    for (E e : this)
+      rv[i++] = e;
+    return rv;
   }
 
   @Override
   public <T> T[] toArray(T[] a) {
-    return null;
+    int i = 0;
+    for (E e : this)
+      a[i++] = Utils.cast(e);
+    return a;
   }
 
   @Override
@@ -116,7 +150,11 @@ public class CircularPriorityQueue<E> implements Queue<E> {
 
   @Override
   public boolean containsAll(Collection<?> c) {
-    return false;
+    boolean rv = true;
+    Iterator it = c.iterator();
+    while (rv && it.hasNext())
+      rv = contains(it.next());
+    return rv;
   }
 
   @Override
@@ -138,7 +176,21 @@ public class CircularPriorityQueue<E> implements Queue<E> {
 
   @Override
   public boolean retainAll(Collection<?> c) {
-    return false;
+    E tdata[] = Utils.cast(new Object[this.data.length]);
+    int tsize = 0;
+    for (E e : this) {
+      if (c.contains(e)) {
+        tdata[tsize++] = e;
+      }
+    }
+    boolean rv = tsize != size;
+    for (int i = tsize / 2; i >= 1; i--) {
+      min_heapify(tdata, i, tsize);
+    }
+    this.data = tdata;
+    this.size = tsize;
+
+    return rv;
   }
 
   @Override
@@ -155,6 +207,7 @@ public class CircularPriorityQueue<E> implements Queue<E> {
   public E remove() {
     if (isEmpty())
       throw new NoSuchElementException();
+
     E rv = data[0];
     ArrayUtils.swap(data, 0, size - 1);
     min_heapify(data, 0, size - 1);
@@ -206,7 +259,12 @@ public class CircularPriorityQueue<E> implements Queue<E> {
     return sb.toString();
   }
 
-  void min_heapify(final E data[], int i, int size) {
+  /**
+   * @param data
+   * @param i
+   * @param size
+   */
+  private void min_heapify(final E data[], int i, int size) {
     int left = 2 * i, right = 2 * i + 1, smallest;
 
     if (left < size && c.compare(data[left], data[i]) < 0.0) {
@@ -226,11 +284,57 @@ public class CircularPriorityQueue<E> implements Queue<E> {
   }
 
   /**
+   * Default Comparator class.
+   * <p>
+   * It implements the natural ordering of the elements
+   * </p>
    *
+   * @param <E> the type of elements held by the collection.
    */
-  private static class DefaultComparator implements Comparator {
-    public int compare(Object o1, Object o2) {
+  private static class DefaultComparator<E> implements Comparator<E> {
+    @Override
+    public int compare(E o1, E o2) {
       return ((Comparable) o1).compareTo(o2);
+    }
+  }
+
+  /**
+   * Circular Priority Queue iterator.
+   * <p>
+   * Implements an interator that is able to transverse a min heap.
+   * </p>
+   */
+  private class CircularPriorityQueueIterator implements Iterator<E> {
+    private E data[];
+    private int size;
+
+    /**
+     * Circular Priority Queue Iterator construtor.
+     *
+     * @param data the min heap array.
+     * @param size the number of elements in the circular queue.
+     */
+    public CircularPriorityQueueIterator(final E data[], final int size) {
+      this.data = Utils.cast(new Object[size]);
+      this.size = size;
+      System.arraycopy(data, 0, this.data, 0, size);
+    }
+
+    @Override
+    public boolean hasNext() {
+      return size > 0;
+    }
+
+    @Override
+    public E next() {
+      E rv = null;
+      if (size > 0) {
+        rv = data[0];
+        ArrayUtils.swap(data, 0, size - 1);
+        min_heapify(data, 0, size - 1);
+        size--;
+      }
+      return rv;
     }
   }
 }

@@ -1,15 +1,16 @@
-package pt.it.av.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures.queue;
 
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit tests for CircularQueue.
+ * Unit tests for {@link CircularQueue}.
  *
  * @author Mário Antunes
  * @version 1.0
@@ -20,7 +21,7 @@ public class CircularQueueTest {
 
   @Test
   public void test_insert_full() {
-    CircularQueue<String> queue = new CircularQueue<>(3);
+    Queue<String> queue = new CircularQueue<>(3);
     for (String datum : data3) {
       queue.add(datum);
     }
@@ -35,7 +36,7 @@ public class CircularQueueTest {
 
   @Test
   public void test_insert_overfull() {
-    CircularQueue<String> queue = new CircularQueue<>(3);
+    Queue<String> queue = new CircularQueue<>(3);
     for (String datum : data5) {
       queue.add(datum);
     }
