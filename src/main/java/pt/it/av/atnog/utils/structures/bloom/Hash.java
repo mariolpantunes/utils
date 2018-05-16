@@ -5,5 +5,5 @@ package pt.it.av.atnog.utils.structures.bloom;
  * @version 1.0
  */
 public interface Hash<T> {
-  int hash(T e);
+  long hash(T e);
 }

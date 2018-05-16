@@ -21,23 +21,21 @@ public class HashUtils {
    * @return an 32 unsigned int hash
    * @see <a href="http://www.isthe.com/chongo/tech/comp/fnv/">FNV Hash</a>
    */
-  public static int fnv1a(byte array[]) {
+  public static long fnv1a(byte array[]) {
     long hash = FNV_OFFSET_32;
 
     for (int i = 0; i < array.length; i++) {
       hash = ((hash ^ (array[i])) * FNV_PRIME_32);
     }
 
-    long tl = ((hash >> 32) << 32);
-    int rv = (int) (hash - tl);
-    return rv & 0x7fffffff;
+    return hash;
   }
 
   /**
    * @param array
    * @return
    */
-  public static int jenkins(byte array[]) {
+  public static long jenkins(byte array[]) {
     long hash = 0;
 
     for (int i = 0; i < array.length; i++) {
@@ -50,8 +48,6 @@ public class HashUtils {
     hash ^= hash >> 11;
     hash += hash << 15;
 
-    long tl = ((hash >> 32) << 32);
-    int rv = (int) (hash - tl);
-    return rv & 0x7fffffff;
+    return hash;
   }
 }

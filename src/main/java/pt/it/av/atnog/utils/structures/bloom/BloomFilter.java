@@ -51,8 +51,9 @@ public class BloomFilter<T> implements Predicate<T> {
    * @param e
    */
   public void add(T e) {
-    int h1 = e.hashCode() & 0x7fffffff,
-        h2 = h.hash(e);
+    int h1 = e.hashCode() & 0x7fffffff;
+    long hash = h.hash(e), tl = ((hash >> 32) << 32);
+    int h2 = (int) (hash - tl) & 0x7fffffff;
 
     for (int i = 0; i < k; i++) {
       filter.set(hash(h1, h2, i, m));
@@ -68,8 +69,9 @@ public class BloomFilter<T> implements Predicate<T> {
    */
   public boolean contains(T e) {
     boolean rv = true;
-    int h1 = e.hashCode() & 0x7fffffff,
-        h2 = h.hash(e);
+    int h1 = e.hashCode() & 0x7fffffff;
+    long hash = h.hash(e), tl = ((hash >> 32) << 32);
+    int h2 = (int) (hash - tl) & 0x7fffffff;
 
     for (int i = 0; i < k && rv; i++) {
       if (!filter.get(hash(h1, h2, i, m))) {
