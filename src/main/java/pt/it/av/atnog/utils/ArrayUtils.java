@@ -19,9 +19,10 @@ public final class ArrayUtils {
 
   /**
    * Sum two arrays element-wise.
-   * The elements from A are added with B and stored in C.
    * <p>
+   * The elements from A are added with B and stored in C, acording to the following expression:
    * $$c = \sum_{i = 0}^{len}$$
+   * </p>
    *
    * @param a   first vector
    * @param bA  index of the first vector
@@ -41,7 +42,9 @@ public final class ArrayUtils {
 
   /**
    * Sum a scalar with an array.
+   * <p>
    * The scalar B is added with A and stored in C.
+   * </p>
    *
    * @param a   first vector
    * @param bA  index of the first vector
@@ -532,21 +535,56 @@ public final class ArrayUtils {
   }
 
   /**
-   * @param array
-   * @return
+   * Returns the ideal threshold to divide the values into two classes.
+   * <p>
+   * Iterative procedure based on the isodata algorithm of:
+   * <ul>
+   * <li>Ridler, TW & Calvard, S (1978), "Picture thresholding using an iterative selection method",
+   * IEEE Transactions on Systems, Man and Cybernetics 8: 630-632
+   * </ul></p>
+   * <p>
+   * The procedure divides the values into high and low categories by taking an initial threshold
+   * (usually the mean).
+   * Then the averages of the values at or below the threshold and above are computed.
+   * The averages of those two values are computed, the threshold is incremented and the process is
+   * repeated until the threshold is larger than the composite average.
+   * That is:
+   * $$threshold = \frac{(average\ low + average\ high)}{2}$$
+   * </p>
+   *
+   * @param array array an array of values (scores).
+   * @return The ideal threshold to divide the values into two classes.
    */
   public static double isoData(final double array[]) {
     return isoData(array, 0, array.length);
   }
 
   /**
-   * @param array
-   * @param b
-   * @param l
-   * @return
+   * Returns the ideal threshold to divide the values into two classes.
+   * <p>
+   * Iterative procedure based on the isodata algorithm of:
+   * <ul>
+   * <li>Ridler, TW & Calvard, S (1978), "Picture thresholding using an iterative selection method",
+   * IEEE Transactions on Systems, Man and Cybernetics 8: 630-632
+   * </ul></p>
+   * <p>
+   * The procedure divides the values into high and low categories by taking an initial threshold
+   * (usually the mean).
+   * Then the averages of the values at or below the threshold and above are computed.
+   * The averages of those two values are computed, the threshold is incremented and the process is
+   * repeated until the threshold is larger than the composite average.
+   * That is:
+   * $$threshold = \frac{(average\ low + average\ high)}{2}$$
+   * </p>
+   *
+   * @param array an array of values (scores).
+   * @param b the index where the values start.
+   * @param l the lenght of array of values.
+   * @return The ideal threshold to divide the values into two classes.
    */
   public static double isoData(final double array[], final int b, final int l) {
-    double t = mean(array, b, l), ot = 0;
+    double t = mean(array, b, l),
+        ot = 0;
 
     if(l > 1) {
       while (t != ot) {
@@ -842,7 +880,9 @@ public final class ArrayUtils {
 
   /**
    * Feature scaling.
+   * <p>
    * The simplest method is rescaling the range of features to scale the range in [0, 1].
+   * </p>
    *
    * @param a   the original data array (input).
    * @param bA  the index where the data starts.
@@ -857,7 +897,9 @@ public final class ArrayUtils {
 
   /**
    * Feature scaling.
+   * <p>
    * The simplest method is rescaling the range of features to scale the range in [0, 1].
+   * </p>
    *
    * @param a the original data array (input).
    * @param r the array that will store the results (output).
