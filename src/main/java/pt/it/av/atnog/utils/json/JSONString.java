@@ -12,32 +12,37 @@ import java.io.Writer;
  * @version 1.0
  */
 public class JSONString implements JSONValue {
-    protected final String s;
+  protected final String s;
 
-    public JSONString(final String s) {
-        this.s = StringUtils.unescape(s);
-    }
+  public JSONString(final String s) {
+    this.s = StringUtils.unescape(s);
+  }
 
-    public final String value() {
-        return s;
-    }
+  public final String value() {
+    return s;
+  }
 
-    @Override
-    public void write(Writer w) throws IOException {
-        w.append("\"" + StringUtils.escape(s) + "\"");
-    }
+  @Override
+  public void write(Writer w) throws IOException {
+    w.append("\"" + StringUtils.escape(s) + "\"");
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        boolean rv = false;
-        if (o != null) {
-            if (o == this)
-                rv = true;
-            else if (o instanceof JSONString) {
-                JSONString j = (JSONString) o;
-                rv = s.equals(j.s);
-            }
-        }
-        return rv;
+  @Override
+  public boolean equals(Object o) {
+    boolean rv = false;
+    if (o != null) {
+      if (o == this)
+        rv = true;
+      else if (o instanceof JSONString) {
+        JSONString j = (JSONString) o;
+        rv = s.equals(j.s);
+      }
     }
+    return rv;
+  }
+
+  @Override
+  public String toString() {
+    return "\"" + StringUtils.escape(s) + "\"";
+  }
 }

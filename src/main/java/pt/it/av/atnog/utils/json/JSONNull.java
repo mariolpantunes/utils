@@ -11,21 +11,26 @@ import java.io.Writer;
  */
 public class JSONNull implements JSONValue {
 
-    @Override
-    public void write(Writer w) throws IOException {
-        w.append("null");
-    }
+  @Override
+  public void write(Writer w) throws IOException {
+    w.append("null");
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        boolean rv = false;
-        if (o != null) {
-            if (o == this)
-                rv = true;
-            else if (o instanceof JSONNull) {
-                rv = true;
-            }
-        }
-        return rv;
+  @Override
+  public boolean equals(Object o) {
+    boolean rv = false;
+    if (o != null) {
+      if (o == this)
+        rv = true;
+      else if (o instanceof JSONNull) {
+        rv = true;
+      }
     }
+    return rv;
+  }
+
+  @Override
+  public String toString() {
+    return "null";
+  }
 }

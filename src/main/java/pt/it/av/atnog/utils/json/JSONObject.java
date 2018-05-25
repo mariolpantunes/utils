@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -379,6 +380,17 @@ public class JSONObject extends HashMap<String, JSONValue> implements JSONValue 
       entry.getValue().write(w);
     }
     w.append("}");
+  }
+
+  @Override
+  public String toString() {
+    StringWriter w = new StringWriter();
+    try {
+      write(w);
+    } catch (IOException e) {
+      // should not occur...
+    }
+    return w.toString();
   }
 
   private enum STATE {BEGIN, ROOT, OBJECT, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, STRING, ARRAY, END, ERROR}

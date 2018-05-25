@@ -1,6 +1,7 @@
 package pt.it.av.atnog.utils.json;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
@@ -47,5 +48,16 @@ public class JSONArray extends ArrayList<JSONValue> implements JSONValue {
     if (t >= 0)
       get(i).write(w);
     w.append("]");
+  }
+
+  @Override
+  public String toString() {
+    StringWriter w = new StringWriter();
+    try {
+      write(w);
+    } catch (IOException e) {
+      // should not occur...
+    }
+    return w.toString();
   }
 }
