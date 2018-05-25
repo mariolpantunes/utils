@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Created by mantunes on 3/30/15.
+ * JSON Number.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
-public class JSONNumber extends JSONValue {
+public class JSONNumber implements JSONValue {
     protected final double n;
 
     public JSONNumber(double n) {

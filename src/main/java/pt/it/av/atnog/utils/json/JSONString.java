@@ -6,11 +6,12 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Created by mantunes on 3/28/15.
+ * JSON String.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
-public class JSONString extends JSONValue {
+public class JSONString implements JSONValue {
     protected final String s;
 
     public JSONString(final String s) {

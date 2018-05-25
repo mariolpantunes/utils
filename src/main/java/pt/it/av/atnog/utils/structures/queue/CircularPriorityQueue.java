@@ -32,11 +32,11 @@ public class CircularPriorityQueue<E> implements Queue<E> {
    * It constructs and queue with size {@link #DEFAULT_SIZE} and natural order {@link DefaultComparator}.
    */
   public CircularPriorityQueue() {
-    this(DEFAULT_SIZE, new DefaultComparator());
+    this(DEFAULT_SIZE, new DefaultComparator<E>());
   }
 
   public CircularPriorityQueue(int size) {
-    this(size, new DefaultComparator());
+    this(size, new DefaultComparator<E>());
   }
 
   public CircularPriorityQueue(int size, Comparator<E> c) {
@@ -294,7 +294,8 @@ public class CircularPriorityQueue<E> implements Queue<E> {
   private static class DefaultComparator<E> implements Comparator<E> {
     @Override
     public int compare(E o1, E o2) {
-      return ((Comparable) o1).compareTo(o2);
+      Comparable<E> c1 = Utils.cast(o1);
+      return (c1.compareTo(o2));
     }
   }
 

@@ -4,70 +4,99 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Created by mantunes on 26/03/2015.
+ * JSON Value.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
-public abstract class JSONValue {
-    /**
-     * @param w
-     * @throws IOException
-     */
-    public abstract void write(Writer w) throws IOException;
+public interface JSONValue {
+  /**
+   * @param w
+   * @throws IOException
+   */
+  void write(Writer w) throws IOException;
 
-    /**
-     *
-     * @return
-     */
-    public JSONObject asObject() {
-        return (JSONObject) this;
-    }
+  /**
+   * @return
+   */
+  default JSONObject asObject() {
+    return (JSONObject) this;
+  }
 
-    /**
-     *
-     * @return
-     */
-    public JSONArray asArray() {
-        return (JSONArray) this;
-    }
+  /**
+   * @return
+   */
+  default JSONArray asArray() {
+    return (JSONArray) this;
+  }
 
-    public String asString() {
-        return ((JSONString) this).s;
-    }
+  /**
+   * @return
+   */
+  default String asString() {
+    return ((JSONString) this).s;
+  }
 
-    public double asNumber() {
-        return ((JSONNumber) this).n;
-    }
+  /**
+   * @return
+   */
+  default double asNumber() {
+    return ((JSONNumber) this).n;
+  }
 
-    public int asInt() {
-        return (int) ((JSONNumber) this).n;
-    }
+  /**
+   * @return
+   */
+  default int asInt() {
+    return (int) ((JSONNumber) this).n;
+  }
 
-    public long asLong() {
-        return (long) ((JSONNumber) this).n;
-    }
+  /**
+   * @return
+   */
+  default long asLong() {
+    return (long) ((JSONNumber) this).n;
+  }
 
-    public float asFloat() {
-        return (float) ((JSONNumber) this).n;
-    }
+  /**
+   * @return
+   */
+  default float asFloat() {
+    return (float) ((JSONNumber) this).n;
+  }
 
-    public double asDouble() {
-        return asNumber();
-    }
+  /**
+   * @return
+   */
+  default double asDouble() {
+    return asNumber();
+  }
 
-    public boolean asBoolean() {
-        return ((JSONBoolean) this).b;
-    }
+  /**
+   * @return
+   */
+  default boolean asBoolean() {
+    return ((JSONBoolean) this).b;
+  }
 
-    public boolean isObject() {
-        return this instanceof JSONObject;
-    }
+  /**
+   * @return
+   */
+  default boolean isObject() {
+    return this instanceof JSONObject;
+  }
 
-    public boolean isArray() {
-        return this instanceof JSONArray;
-    }
+  /**
+   * @return
+   */
+  default boolean isArray() {
+    return this instanceof JSONArray;
+  }
 
-    public boolean isString() {
-        return this instanceof JSONString;
-    }
+  /**
+   * @return
+   */
+  default boolean isString() {
+    return this instanceof JSONString;
+  }
 }

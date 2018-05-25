@@ -9,7 +9,10 @@ import java.io.StringWriter;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by mantunes on 24/05/2015.
+ * {@link JSONObject} unit tests.
+ *
+ * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
 public class JSONObjectTest {
     @Test

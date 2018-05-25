@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Created by mantunes on 5/5/15.
+ * JSON Null.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
-public class JSONNull extends JSONValue {
+public class JSONNull implements JSONValue {
 
     @Override
     public void write(Writer w) throws IOException {

@@ -4,10 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,14 +13,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by mantunes on 26/03/2015.
- * TODO: Review this code to extends map instead of implement an interface.
+ * JSON Object.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
-public class JSONObject extends JSONValue implements Map<String, JSONValue> {
+public class JSONObject extends HashMap<String, JSONValue> implements JSONValue {
   private static final int LENGTH = 128;
-  private final Map<String, JSONValue> map = new HashMap<>();
 
   public static JSONObject read(String s) throws IOException {
     BufferedReader r = new BufferedReader(new StringReader(s));
@@ -292,6 +289,10 @@ public class JSONObject extends JSONValue implements Map<String, JSONValue> {
     return rv;
   }
 
+  /**
+   * @param sb
+   * @return
+   */
   private static JSONValue factory(StringBuilder sb) {
     JSONValue rv = null;
     String s = sb.toString().trim();
@@ -314,91 +315,56 @@ public class JSONObject extends JSONValue implements Map<String, JSONValue> {
     return rv;
   }
 
-  public boolean contains(String name) {
-    return map.containsKey(name);
+  /**
+   * @param key
+   * @param value
+   * @return
+   */
+  public JSONValue put(final String key, final int value) {
+    return put(key, new JSONNumber(value));
   }
 
-  @Override
-  public boolean containsKey(Object key) {
-    return map.containsKey(key);
+  /**
+   *
+   * @param key
+   * @param value
+   * @return
+   */
+  public JSONValue put(final String key, final double value) {
+    return put(key, new JSONNumber(value));
   }
 
-  public void put(String name, double value) {
-    map.put(name, new JSONNumber(value));
+  /**
+   *
+   * @param key
+   * @param value
+   * @return
+   */
+  public JSONValue put(final String key, final String value) {
+    return put(key, new JSONString(value));
   }
 
-  public void put(String name, String value) {
-    map.put(name, new JSONString(value));
-  }
-
-  public void put(String name, boolean value) {
-    map.put(name, new JSONBoolean(value));
-  }
-
+  /**
+   *
+   * @return
+   */
   public Set<String> names() {
-    return map.keySet();
+    return keySet();
   }
 
-  @Override
-  public Set<String> keySet() {
-    return map.keySet();
+  /**
+   *
+   * @param key
+   * @return
+   */
+  public boolean contains(String key) {
+    return containsKey(key);
   }
 
-  @Override
-  public void clear() {
-    map.clear();
-  }
-
-  @Override
-  public Collection<JSONValue> values() {
-    return null;
-  }
-
-  @Override
-  public Set<Entry<String, JSONValue>> entrySet() {
-    return null;
-  }
-
-  @Override
-  public int size() {
-    return map.size();
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return map.isEmpty();
-  }
-
-  @Override
-  public boolean containsValue(Object value) {
-    return map.containsValue(value);
-  }
-
-  @Override
-  public JSONValue get(Object key) {
-    return map.get(key);
-  }
-
-  @Override
-  public JSONValue put(String key, JSONValue value) {
-    return map.put(key, value);
-  }
-
-  @Override
-  public JSONValue remove(Object key) {
-    return map.remove(key);
-  }
-
-  @Override
-  public void putAll(Map<? extends String, ? extends JSONValue> m) {
-    map.putAll(m);
-  }
-
-  //TODO: JSONENCODE the names...
   @Override
   public void write(Writer w) throws IOException {
     w.append("{");
-    Set<Map.Entry<String, JSONValue>> s = map.entrySet();
+    Set<Map.Entry<String, JSONValue>> s = entrySet();
     Iterator<Map.Entry<String, JSONValue>> it = s.iterator();
     int t = s.size() - 1;
     for (int i = 0; i < t; i++) {
@@ -413,37 +379,6 @@ public class JSONObject extends JSONValue implements Map<String, JSONValue> {
       entry.getValue().write(w);
     }
     w.append("}");
-  }
-
-  @Override
-  public String toString() {
-    String s = "";
-    try {
-      StringWriter sw = new StringWriter();
-      write(sw);
-      s = sw.toString();
-      sw.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return s.toString();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    boolean rv = false;
-    if (o != null) {
-      if (o == this)
-        rv = true;
-      else if (o instanceof JSONObject) {
-        JSONObject j = (JSONObject) o;
-        if (j.size() == size()) {
-          rv = map.equals(j.map);
-        } else
-          rv = false;
-      }
-    }
-    return rv;
   }
 
   private enum STATE {BEGIN, ROOT, OBJECT, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, STRING, ARRAY, END, ERROR}

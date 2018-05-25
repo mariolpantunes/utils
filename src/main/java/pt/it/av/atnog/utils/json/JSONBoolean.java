@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Created by mantunes on 5/5/15.
+ * JSON Boolean
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @version 1.0
  */
-public class JSONBoolean extends JSONValue {
+public class JSONBoolean implements JSONValue {
     protected final boolean b;
 
     public JSONBoolean(final boolean b) {
