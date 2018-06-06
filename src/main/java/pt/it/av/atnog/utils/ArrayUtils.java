@@ -600,9 +600,18 @@ public final class ArrayUtils {
             cbt++;
           }
         }
-        mat /= cat;
-        mbt /= cbt;
-        t = (mat + mbt) / 2.0;
+
+        if (cat == 0 || cbt == 0) {
+          t = ot;
+        } else {
+          mat /= cat;
+          mbt /= cbt;
+          t = (mat + mbt) / 2.0;
+        }
+
+        //mat = (cat > 0) ? mat / cat: 0.0;
+        //mbt = (cbt > 0) ? mbt / cbt: 0.0;
+        //t = (mat + mbt) / 2.0;
       }
     }
 
