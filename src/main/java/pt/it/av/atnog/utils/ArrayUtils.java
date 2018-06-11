@@ -1261,4 +1261,73 @@ public final class ArrayUtils {
       a[i + bIdx] = Math.random();
     }
   }
+
+  /**
+   * @param a
+   * @return
+   */
+  public static boolean allEqual(final double a[]) {
+    return allEqual(a, 0, a.length);
+  }
+
+  /**
+   * @param a
+   * @param bIdx
+   * @param len
+   * @return
+   */
+  public static boolean allEqual(final double a[], final int bIdx, final int len) {
+    return equalTo(a, bIdx, len, a[bIdx], 0);
+  }
+
+  /**
+   * @param a
+   * @param n
+   * @param eps
+   * @return
+   */
+  public static boolean equalTo(final double a[], final double n, final double eps) {
+    return equalTo(a, 0, a.length, n, eps);
+  }
+
+  /**
+   * @param a
+   * @param bIdx
+   * @param len
+   * @param n
+   * @param eps
+   * @return
+   */
+  public static boolean equalTo(final double a[], final int bIdx, final int len,
+                                final double n, final double eps) {
+    boolean rv = true;
+    for (int i = 0; rv && i < len; i++) {
+      rv = MathUtils.equals(n, a[bIdx + i], eps);
+    }
+    return rv;
+  }
+
+  public static boolean allDifferent(final double a[]) {
+    return allDifferent(a, 0, a.length);
+  }
+
+  /**
+   * @param a
+   * @param bIdx
+   * @param len
+   * @return
+   */
+  public static boolean allDifferent(final double a[], final int bIdx, final int len) {
+    boolean rv = true;
+
+    double t[] = new double[len];
+    System.arraycopy(a, bIdx, t, 0, len);
+    Arrays.sort(t);
+
+    for (int i = 0; rv && i < len - 1; i++) {
+      rv = t[i] != t[i + 1];
+    }
+
+    return rv;
+  }
 }

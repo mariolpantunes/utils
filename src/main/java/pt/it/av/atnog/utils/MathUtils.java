@@ -211,7 +211,7 @@ public final class MathUtils {
    * most by {@code eps}, otherwise returns {@code false}
    */
   public static boolean equals(final double a, final double b, final double eps) {
-    return Math.abs(a - b) < eps;
+    return Math.abs(a - b) <= eps;
   }
 
   /**

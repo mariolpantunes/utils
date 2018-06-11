@@ -22,6 +22,12 @@ public class Utils {
     return (T) o;
   }
 
+  /**
+   * @param a
+   * @param b
+   * @param <T>
+   * @return
+   */
   public static <T extends Comparable<T>> T min(T a, T b) {
     T rv = b;
     if (a.compareTo(b) < 0)
@@ -29,6 +35,14 @@ public class Utils {
     return rv;
   }
 
+  /**
+   *
+   * @param a
+   * @param b
+   * @param c
+   * @param <T>
+   * @return
+   */
   public static <T> T min(T a, T b, Comparator<T> c) {
     T rv = b;
     if (c.compare(a, b) < 0)
@@ -36,6 +50,13 @@ public class Utils {
     return rv;
   }
 
+  /**
+   *
+   * @param a
+   * @param b
+   * @param <T>
+   * @return
+   */
   public static <T extends Comparable<T>> T max(T a, T b) {
     T rv = b;
     if (a.compareTo(b) > 0)
@@ -43,6 +64,14 @@ public class Utils {
     return rv;
   }
 
+  /**
+   *
+   * @param a
+   * @param b
+   * @param c
+   * @param <T>
+   * @return
+   */
   public static <T> T max(T a, T b, Comparator<T> c) {
     T rv = b;
     if (c.compare(a, b) > 0)
@@ -50,6 +79,11 @@ public class Utils {
     return rv;
   }
 
+  /**
+   *
+   * @param e
+   * @return
+   */
   public static String stackTrace(Exception e) {
     final StringWriter sw = new StringWriter();
     final PrintWriter pw = new PrintWriter(sw, true);
@@ -57,6 +91,13 @@ public class Utils {
     return sw.getBuffer().toString();
   }
 
+  /**
+   *
+   * @param a
+   * @param b
+   * @param <T>
+   * @return
+   */
   public static <T> List<T> intertwine(List<T> a, List<T> b) {
     List<T> rv = new ArrayList<>();
 
@@ -75,6 +116,12 @@ public class Utils {
     return rv;
   }
 
+  /**
+   *
+   * @param it
+   * @param <T>
+   * @return
+   */
   public static <T> List<T> iterator2List(Iterator<T> it) {
     List<T> rv = new ArrayList<>();
     while (it.hasNext())

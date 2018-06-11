@@ -189,4 +189,28 @@ public class ArrayUtilsTest {
     ArrayUtils.reverse(in, 0, out, 0, in.length);
     assertArrayEquals(r, out, 0.0);
   }
+
+  @Test
+  public void test_all_equal_equal() {
+    double a[] = {1.0, 1.0, 1.0, 1.0, 1.0};
+    assertEquals(true, ArrayUtils.allEqual(a));
+  }
+
+  @Test
+  public void test_all_equal_different() {
+    double a[] = {1.1, 1.2, 1.3, 1.4, 1.5};
+    assertEquals(false, ArrayUtils.allEqual(a));
+  }
+
+  @Test
+  public void test_all_different_equal() {
+    double a[] = {1.1, 1.2, 1.3, 1.0, 1.0};
+    assertEquals(false, ArrayUtils.allDifferent(a));
+  }
+
+  @Test
+  public void ttest_all_different_different() {
+    double a[] = {1.1, 1.2, 1.3, 1.4, 1.5};
+    assertEquals(true, ArrayUtils.allDifferent(a));
+  }
 }
