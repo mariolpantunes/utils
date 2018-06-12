@@ -1276,7 +1276,13 @@ public final class ArrayUtils {
    * @return
    */
   public static boolean allEqual(final double a[], final int bIdx, final int len) {
-    return equalTo(a, bIdx, len, a[bIdx], 0);
+    boolean rv = true;
+
+    for (int i = 0; rv && i < len - 1; i++) {
+      rv = a[i] == a[i + 1];
+    }
+
+    return rv;
   }
 
   /**

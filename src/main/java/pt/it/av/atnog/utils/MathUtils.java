@@ -215,6 +215,22 @@ public final class MathUtils {
   }
 
   /**
+   * Returns {@code true} if {@code a} is similar to {@code b} diverging at
+   * most by a dynamic {@link MathUtils#eps} based on the numbers and the machine precision ,
+   * otherwise returns {@code false}.
+   *
+   * @param a first number
+   * @param b second number
+   * @return {@code true} if {@code a} is similar to {@code b} diverging at most by a dynamic
+   * {@link MathUtils#eps} based on the numbers and the machine precision , otherwise returns
+   * {@code false}.
+   */
+  public static boolean equals(double a, double b) {
+    if (a == b) return true;
+    return Math.abs(a - b) < eps() * Math.max(Math.abs(a), Math.abs(b));
+  }
+
+  /**
    * Returns the factorial of {@code n} (n!).
    *
    * @param n value to compute the factorial
@@ -444,6 +460,6 @@ public final class MathUtils {
    * @return
    */
   public static double eps() {
-    return Math.ulp(1.0);
+    return StrictMath.ulp(1.0);
   }
 }
