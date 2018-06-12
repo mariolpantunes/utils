@@ -230,7 +230,7 @@ public final class ArrayUtils {
   }
 
   public static void sqrt(final double[] a, final int bA, final double[] c,
-                          final int bC, final int len){
+                          final int bC, final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = Math.sqrt(a[bA + i]);
     }
@@ -375,8 +375,8 @@ public final class ArrayUtils {
    * Returns the index of the minimium number in the array.
    *
    * @param array an array of doubles
-   * @param b start index of the array
-   * @param l array's length
+   * @param b     start index of the array
+   * @param l     array's length
    * @return the index of the minimium number in the array.
    */
   public static int min(final double array[], final int b, final int l) {
@@ -436,9 +436,9 @@ public final class ArrayUtils {
   /**
    * Returns the index of the minimum and maximum elements in the array.
    *
-   * @param array   an array of doubles.
-   * @param bA  the index that starts the array values.
-   * @param len the lenght of the data.
+   * @param array an array of doubles.
+   * @param bA    the index that starts the array values.
+   * @param len   the lenght of the data.
    * @return the index of the minimum and maximum elements in the array.
    */
   public static int[] minMax(final double array[], final int bA,
@@ -474,6 +474,7 @@ public final class ArrayUtils {
     int rv[] = {minIdx, maxIdx};
     return rv;
   }
+
   /**
    * Binary array fill.
    *
@@ -509,7 +510,6 @@ public final class ArrayUtils {
   }
 
   /**
-   *
    * @param a
    * @return
    */
@@ -518,7 +518,6 @@ public final class ArrayUtils {
   }
 
   /**
-   *
    * @param a
    * @param b
    * @param l
@@ -578,40 +577,40 @@ public final class ArrayUtils {
    * </p>
    *
    * @param array an array of values (scores).
-   * @param b the index where the values start.
-   * @param l the lenght of array of values.
+   * @param bIdx     the index where the values start.
+   * @param len     the lenght of array of values.
    * @return The ideal threshold to divide the values into two classes.
    */
-  public static double isoData(final double array[], final int b, final int l) {
-    double t = mean(array, b, l),
-        ot = 0;
+  public static double isoData(final double array[], final int bIdx, final int len) {
+    double t = array[bIdx];
 
-    if(l > 1) {
-      while (t != ot) {
-        ot = t;
-        double mat = 0.0, mbt = 0.0;
-        int cat = 0, cbt = 0;
-        for (int i = 0; i < l; i++) {
-          if (array[b + i] > t) {
-            mat += array[b + i];
-            cat++;
-          } else {
-            mbt += array[b + i];
-            cbt++;
+    if (len > 1) {
+      if (!allEqual(array, bIdx, len)) {
+        double pt = 0;
+        t = mean(array, bIdx, len);
+
+        while (t != pt) {
+          pt = t;
+          double mat = 0.0, mbt = 0.0;
+          int cat = 0, cbt = 0;
+          for (int i = 0; i < len; i++) {
+            if (array[bIdx + i] > t) {
+              mat += array[bIdx + i];
+              cat++;
+            } else {
+              mbt += array[bIdx + i];
+              cbt++;
+            }
           }
-        }
 
-        if (cat == 0 || cbt == 0) {
-          t = ot;
-        } else {
           mat /= cat;
           mbt /= cbt;
           t = (mat + mbt) / 2.0;
-        }
 
-        //mat = (cat > 0) ? mat / cat: 0.0;
-        //mbt = (cbt > 0) ? mbt / cbt: 0.0;
-        //t = (mat + mbt) / 2.0;
+          //mat = (cat > 0) ? mat / cat: 0.0;
+          //mbt = (cbt > 0) ? mbt / cbt: 0.0;
+          //t = (mat + mbt) / 2.0;
+        }
       }
     }
 
@@ -681,35 +680,35 @@ public final class ArrayUtils {
   /**
    * Returns the index of the closest element to x.
    * <p>
-   *   It assumes the array is not sorted, as such, it searches the complete array.
+   * It assumes the array is not sorted, as such, it searches the complete array.
    * </p>
    *
-   * @param x the original value.
+   * @param x     the original value.
    * @param array and array of doubles.
    * @return the index of the closest element to x.
    */
   public static int findClose(double x, double array[]) {
-    return findClose(x,array,0,array.length);
+    return findClose(x, array, 0, array.length);
   }
 
   /**
    * Returns the index of the closest element to x.
    * <p>
-   *   It assumes the array is not sorted, as such, it searches the complete array.
+   * It assumes the array is not sorted, as such, it searches the complete array.
    * </p>
    *
-   * @param x the original value.
+   * @param x     the original value.
    * @param array and array of doubles.
-   * @param bA the index where the data starts.
-   * @param l the length of the data.
+   * @param bA    the index where the data starts.
+   * @param l     the length of the data.
    * @return the index of the closest element to x.
    */
   public static int findClose(double x, double array[], int bA, int l) {
     int rv = 0;
-    double err = Math.abs(array[0+bA] - x);
+    double err = Math.abs(array[0 + bA] - x);
 
     for (int i = 1; i < l; i++) {
-      double t = Math.abs(array[i+bA] - x);
+      double t = Math.abs(array[i + bA] - x);
       if (t < err) {
         rv = i;
         err = t;
@@ -722,40 +721,40 @@ public final class ArrayUtils {
   /**
    * Returns the index of the closest element to x.
    * <p>
-   *   It assumes the array is sorted, as such, it stops whenever the distance increases.
+   * It assumes the array is sorted, as such, it stops whenever the distance increases.
    * </p>
    *
-   * @param x the original value.
+   * @param x     the original value.
    * @param array and array of doubles.
    * @return the index of the closest element to x.
    */
   public static int findCloseSorted(double x, double array[]) {
-    return findCloseSorted(x,array,0,array.length);
+    return findCloseSorted(x, array, 0, array.length);
   }
 
   /**
    * Returns the index of the closest element to x.
    * <p>
-   *   It assumes the array is sorted, as such, it stops whenever the distance increases.
+   * It assumes the array is sorted, as such, it stops whenever the distance increases.
    * </p>
    *
-   * @param x the original value.
+   * @param x     the original value.
    * @param array and array of doubles.
-   * @param bA the index where the data starts.
-   * @param l the length of the data.
+   * @param bA    the index where the data starts.
+   * @param l     the length of the data.
    * @return the index of the closest element to x.
    */
   public static int findCloseSorted(double x, double array[], int bA, int l) {
     int rv = 0;
     boolean found = false;
-    double err = Math.abs(array[0+bA] - x);
+    double err = Math.abs(array[0 + bA] - x);
 
     for (int i = 1; i < l && !found; i++) {
-      double t = Math.abs(array[i+bA] - x);
+      double t = Math.abs(array[i + bA] - x);
       if (t < err) {
         rv = i;
         err = t;
-      } else if(t > err) {
+      } else if (t > err) {
         found = true;
       }
     }
@@ -765,6 +764,7 @@ public final class ArrayUtils {
 
   /**
    * Return the rank of an array of elements.
+   *
    * @param array an array of elements.
    * @param ranks an array that will be filled with the ranks.
    */
@@ -1063,7 +1063,6 @@ public final class ArrayUtils {
   public static void mm(final double a[], final double r[], final int k) {
     mm(a, 0, r, 0, a.length, k);
   }
-
 
 
   /**
