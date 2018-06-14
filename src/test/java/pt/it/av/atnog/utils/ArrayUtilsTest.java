@@ -132,9 +132,21 @@ public class ArrayUtilsTest {
   }
 
   @Test
-  public void test_isoData() {
+  public void test_isoData_large() {
     int t = (int) Math.round(ArrayUtils.isoData(large));
     assertEquals(33, t);
+  }
+
+  @Test
+  public void test_isoData_one() {
+    int t = (int) Math.round(ArrayUtils.isoData(new double[]{1.0}));
+    assertEquals(1, t);
+  }
+
+  @Test
+  public void test_isoData_two() {
+    int t = (int) Math.round(ArrayUtils.isoData(new double[]{1.0, 3.0}));
+    assertEquals(2, t);
   }
 
   @Test(timeout = 1000)

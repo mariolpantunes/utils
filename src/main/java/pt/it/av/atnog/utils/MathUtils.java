@@ -22,8 +22,26 @@ public final class MathUtils {
       9.984369578019570859563e-6,
       1.50563273514931155834e-7
   };
+
   // log(2*PI)/2
-  private static final double LN_SQRT2PI = Math.log(2.0*Math.PI)/2.0;
+  private static final double LN_SQRT2PI = Math.log(2.0 * Math.PI) / 2.0;
+
+  private static final float floatEpsilon;
+  private static final double doubleEpsilon;
+
+  static {
+    float feps = 0.5f;
+    while (1 + feps > 1) {
+      feps /= 2.0f;
+    }
+    floatEpsilon = feps;
+
+    double deps = 0.5;
+    while (1 + deps > 1) {
+      deps /= 2.0;
+    }
+    doubleEpsilon = deps;
+  }
 
   /**
    * Utility class, lets make the constructor private.
@@ -211,7 +229,13 @@ public final class MathUtils {
    * most by {@code eps}, otherwise returns {@code false}
    */
   public static boolean equals(final double a, final double b, final double eps) {
-    return Math.abs(a - b) <= eps;
+    boolean rv = false;
+    if (a == b) {
+      rv = true;
+    } else {
+      rv = Math.abs(a - b) <= eps;
+    }
+    return rv;
   }
 
   /**
@@ -226,8 +250,13 @@ public final class MathUtils {
    * {@code false}.
    */
   public static boolean equals(double a, double b) {
-    if (a == b) return true;
-    return Math.abs(a - b) < eps() * Math.max(Math.abs(a), Math.abs(b));
+    boolean rv = false;
+    if (a == b) {
+      rv = true;
+    } else {
+      rv = Math.abs(a - b) < Math.max(StrictMath.ulp(Math.abs(a)), StrictMath.ulp(Math.abs(b)));
+    }
+    return rv;
   }
 
   /**
@@ -460,6 +489,20 @@ public final class MathUtils {
    * @return
    */
   public static double eps() {
-    return StrictMath.ulp(1.0);
+    return doubleEpsilon;
+  }
+
+  /**
+   * @return
+   */
+  public static double epsDouble() {
+    return doubleEpsilon;
+  }
+
+  /**
+   * @return
+   */
+  public static float epsFloat() {
+    return floatEpsilon;
   }
 }

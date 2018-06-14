@@ -585,10 +585,9 @@ public final class ArrayUtils {
     double t = array[bIdx];
 
     if (len > 1) {
-      if (!allEqual(array, bIdx, len)) {
+      t = mean(array, bIdx, len);
+      if (len > 2) {
         double pt = 0;
-        t = mean(array, bIdx, len);
-
         while (t != pt) {
           pt = t;
           double mat = 0.0, mbt = 0.0;
@@ -603,13 +602,9 @@ public final class ArrayUtils {
             }
           }
 
-          mat /= cat;
-          mbt /= cbt;
+          mat = (cat > 0) ? mat / cat : pt;
+          mbt = (cbt > 0) ? mbt / cbt : pt;
           t = (mat + mbt) / 2.0;
-
-          //mat = (cat > 0) ? mat / cat: 0.0;
-          //mbt = (cbt > 0) ? mbt / cbt: 0.0;
-          //t = (mat + mbt) / 2.0;
         }
       }
     }
@@ -1279,7 +1274,7 @@ public final class ArrayUtils {
     boolean rv = true;
 
     for (int i = 0; rv && i < len - 1; i++) {
-      rv = a[i] == a[i + 1];
+      rv = MathUtils.equals(a[i], a[i + 1]);
     }
 
     return rv;
@@ -1330,7 +1325,7 @@ public final class ArrayUtils {
     Arrays.sort(t);
 
     for (int i = 0; rv && i < len - 1; i++) {
-      rv = t[i] != t[i + 1];
+      rv = !MathUtils.equals(t[i], t[i + 1]);
     }
 
     return rv;
