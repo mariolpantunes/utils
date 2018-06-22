@@ -1,7 +1,9 @@
-package pt.it.av.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures.point;
+
+import pt.it.av.atnog.utils.structures.Distance;
 
 /**
- * Three-dimension point.
+ * Four-dimension point.
  * <p>
  * Used to test the clustering algorithms.
  * </p>
@@ -9,19 +11,19 @@ package pt.it.av.atnog.utils.structures;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Point3D implements Distance<Point3D> {
-  private final double x, y, z;
+public class Point4D implements Distance<Point4D> {
+  private final double x, y, z, w;
   /**
-   * 3D Point constructor.
+   * 2D Point constructor.
    *
-   * @param x coordinate of the point.
-   * @param y coordinate of the point.
-   * @param z coordinate of the point.
+   * @param x coordenate of the point
+   * @param y coordenate of the point
    */
-  public Point3D(final double x, final double y, final double z) {
+  public Point4D(final double x, final double y, final double z, final double w) {
     this.x = x;
     this.y = y;
     this.z = z;
+    this.w = w;
   }
 
   /**
@@ -51,9 +53,18 @@ public class Point3D implements Distance<Point3D> {
     return z;
   }
 
+  /**
+   * Returns the w coordinate of this point.
+   *
+   * @return the w coordinate of this point.
+   */
+  public double w() {
+    return w;
+  }
+
   @Override
   public String toString() {
-    return "(" + x + "," + y + "," + z + ")";
+    return "(" + x + "," + y + "," + z + "," + w + ")";
   }
 
   /**
@@ -61,14 +72,14 @@ public class Point3D implements Distance<Point3D> {
    */
   public boolean isZero() {
     boolean rv = false;
-    if (x == 0 && y == 0 && z == 0) {
+    if (x == 0 && y == 0 && z == 0 && w == 0) {
       rv = true;
     }
     return rv;
   }
 
   @Override
-  public double distanceTo(Point3D d) {
-    return Math.sqrt(Math.pow(d.x - x, 2) + Math.pow(d.y - y, 2) + Math.pow(d.z - z, 2));
+  public double distanceTo(Point4D d) {
+    return Math.sqrt(Math.pow(d.x - x, 2) + Math.pow(d.y - y, 2) + Math.pow(d.z - z, 2) + Math.pow(d.w - w, 2));
   }
 }

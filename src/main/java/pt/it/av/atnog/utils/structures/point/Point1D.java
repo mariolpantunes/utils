@@ -1,4 +1,6 @@
-package pt.it.av.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures.point;
+
+import pt.it.av.atnog.utils.structures.Distance;
 
 /**
  * One-dimension point.

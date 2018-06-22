@@ -1,4 +1,4 @@
-package pt.it.av.atnog.utils.structures;
+package pt.it.av.atnog.utils.structures.tree;
 
 import pt.it.av.atnog.utils.SortUtils;
 import pt.it.av.atnog.utils.Utils;

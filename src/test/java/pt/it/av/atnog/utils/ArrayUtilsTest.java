@@ -221,8 +221,20 @@ public class ArrayUtilsTest {
   }
 
   @Test
-  public void ttest_all_different_different() {
+  public void test_all_different_different() {
     double a[] = {1.1, 1.2, 1.3, 1.4, 1.5};
     assertEquals(true, ArrayUtils.allDifferent(a));
+  }
+
+  @Test
+  public void test_median_small() {
+    double m = ArrayUtils.median(small);
+    assertEquals(0.0, m, 0.0);
+  }
+
+  @Test
+  public void test_median_large() {
+    double m = ArrayUtils.median(large);
+    assertEquals(21.05, m, 0.0);
   }
 }

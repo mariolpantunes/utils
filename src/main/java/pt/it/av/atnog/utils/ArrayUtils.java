@@ -372,6 +372,19 @@ public final class ArrayUtils {
   }
 
   /**
+   * Swaps two elements in the array.
+   *
+   * @param array an array of doubles.
+   * @param i     index of the first element.
+   * @param j     index of the second element.
+   */
+  public static void swap(final double[] array, final int i, final int j) {
+    double tmp = array[i];
+    array[i] = array[j];
+    array[j] = tmp;
+  }
+
+  /**
    * Returns the index of the minimium number in the array.
    *
    * @param array an array of doubles
@@ -1329,5 +1342,42 @@ public final class ArrayUtils {
     }
 
     return rv;
+  }
+
+  /**
+   * @param a
+   * @param bIdx
+   * @param len
+   * @return
+   */
+  public static double median(final double a[], final int bIdx, final int len) {
+    double rv = 0.0;
+
+    if (len == 1) {
+      rv = a[bIdx];
+    } else if (len == 2) {
+      rv = (a[bIdx] + a[bIdx + 1]) / 2.0;
+    } else if (len == 3) {
+      rv = Math.max(Math.min(a[bIdx], a[bIdx + 1]), Math.min(Math.max(a[bIdx], a[bIdx + 1]), a[bIdx + 2]));
+    } else {
+      double buff[] = new double[len];
+      System.arraycopy(a, bIdx, buff, 0, len);
+      int middle = len / 2;
+      rv = SortUtils.qselect(buff, middle);
+      if (len % 2 == 0) {
+        double tmp = SortUtils.qselect(buff, middle - 1);
+        rv = (rv + tmp) / 2.0;
+      }
+    }
+
+    return rv;
+  }
+
+  /**
+   * @param a
+   * @return
+   */
+  public static double median(final double a[]) {
+    return median(a, 0, a.length);
   }
 }
