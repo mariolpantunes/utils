@@ -113,6 +113,8 @@ public class CircularPriorityQueue<E> implements Queue<E> {
     if (e == null)
       throw new NullPointerException();
 
+    boolean rv = true;
+
     if (size < data.length) {
       data[size] = e;
       size++;
@@ -123,10 +125,12 @@ public class CircularPriorityQueue<E> implements Queue<E> {
       if (c.compare(data[0], e) < 0.0) {
         data[0] = e;
         min_heapify(data, 0, size);
+      } else {
+        rv = false;
       }
     }
 
-    return true;
+    return rv;
   }
 
   @Override
@@ -159,10 +163,11 @@ public class CircularPriorityQueue<E> implements Queue<E> {
 
   @Override
   public boolean addAll(Collection<? extends E> c) {
+    boolean rv = false;
     for (E e : c) {
-      add(e);
+      rv = add(e) || rv;
     }
-    return true;
+    return rv;
   }
 
   @Override
