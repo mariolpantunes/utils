@@ -1,6 +1,13 @@
-package pt.it.av.atnog.utils.parallel;
+package pt.it.av.atnog.utils.parallel.pipeline;
 
-import java.util.*;
+import pt.it.av.atnog.utils.parallel.Task;
+import pt.it.av.atnog.utils.parallel.Worker;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -105,7 +112,7 @@ public class Pipeline {
      * The interrupted status of the {@link Worker} is cleared when this exception is thrown.
      */
     public void join() throws InterruptedException {
-        Stop stop = new Stop();
+      Worker.Stop stop = Worker.stop();
         sink.put(stop);
         Iterator<Worker> it = workers.iterator();
         for (int i = 0; i < queues.size(); i++) {

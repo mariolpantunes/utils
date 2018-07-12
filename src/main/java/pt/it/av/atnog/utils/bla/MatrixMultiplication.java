@@ -1,6 +1,7 @@
 package pt.it.av.atnog.utils.bla;
 
-import pt.it.av.atnog.utils.parallel.ThreadPool;
+import pt.it.av.atnog.utils.parallel.threadPool.StaticThreadPool;
+import pt.it.av.atnog.utils.parallel.threadPool.ThreadPool;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -80,7 +81,7 @@ public class MatrixMultiplication {
   }
 
   protected static double[] pmul(double a[], double b[], double c[], int m, int n, int p) {
-    ThreadPool tp = new ThreadPool((Object o, List<Object> l) -> {
+    ThreadPool tp = new StaticThreadPool((Object o, List<Object> l) -> {
       int i = (Integer) o;
       int in = i * n;
       for (int k = 0; k < p; k++) {
@@ -106,7 +107,7 @@ public class MatrixMultiplication {
   }
 
   protected static double[] pmult(double a[], double bt[], double c[], int m, int n, int p) {
-    ThreadPool tp = new ThreadPool((Object o, List<Object> l) -> {
+    ThreadPool tp = new StaticThreadPool((Object o, List<Object> l) -> {
       int i = (Integer) o;
       int ip = i * p;
       for (int j = 0; j < n; j++) {
