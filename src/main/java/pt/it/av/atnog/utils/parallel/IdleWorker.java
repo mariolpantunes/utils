@@ -57,9 +57,9 @@ public class IdleWorker implements Runnable {
    *
    */
   public void start() {
+    ts = Instant.now().toEpochMilli();
     thread = new Thread(this);
     thread.start();
-    ts = Instant.now().toEpochMilli();
   }
 
   /**

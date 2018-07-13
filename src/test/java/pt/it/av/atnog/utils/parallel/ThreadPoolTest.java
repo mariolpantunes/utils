@@ -103,14 +103,14 @@ public class ThreadPoolTest {
     }
   }
 
-  @Test(timeout = 20000)
+  @Test(timeout = 3000)
   public void test_dynamic_tp_idle() {
     Task t = (Object o, List<Object> l) -> {
       Integer i = (Integer) o;
       l.add(i + RV);
     };
 
-    ThreadPool tp = new DynamicThreadPool(t, 1);
+    ThreadPool tp = new DynamicThreadPool(t, 100);
 
     BlockingQueue<Object> source = tp.source();
     BlockingQueue<Object> sink = tp.sink();
@@ -122,9 +122,8 @@ public class ThreadPoolTest {
     try {
       for (int i = 0; i < IT; i++) {
         sink.put(0);
-        Thread.sleep(1000);
+        Thread.sleep(100);
         assertTrue(tp.aWorkers() < tp.nWorkers());
-        //System.err.println("I = "+i+" AW = "+tp.aWorkers()+ " NW = "+tp.nWorkers());
       }
     } catch (InterruptedException e) {
       e.printStackTrace();

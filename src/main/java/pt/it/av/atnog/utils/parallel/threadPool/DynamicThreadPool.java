@@ -47,7 +47,7 @@ public class DynamicThreadPool implements ThreadPool, Runnable {
     this.t = t;
     this.nWorkers = nWorkers;
     workers = new IdleWorker[nWorkers];
-    this.maxIdleTime = maxIdleTime * 1000;
+    this.maxIdleTime = maxIdleTime;
     for (int i = 0; i < nWorkers; i++) {
       IdleWorker iw = new IdleWorker(t, source, freeWorkers);
       idleWorkers.add(iw);
@@ -109,7 +109,7 @@ public class DynamicThreadPool implements ThreadPool, Runnable {
         if (in != null) {
           if (!in.equals(Worker.stop())) {
             IdleWorker w = null;
-            if (!idleWorkers.isEmpty()) {
+            if (freeWorkers.isEmpty() && !idleWorkers.isEmpty()) {
               // Grab a idle worker
               w = idleWorkers.take();
               w.start();
