@@ -17,8 +17,7 @@ public class ThreadPoolTest {
 
   @Test(timeout = 3000)
   public void test_static_tp() {
-    Function t = (Object o, List<Object> l) -> {
-      Integer i = (Integer) o;
+    Function<Integer, Object> t = (Integer i, List<Object> l) -> {
       l.add(i + RV);
     };
 
@@ -61,8 +60,7 @@ public class ThreadPoolTest {
 
   @Test(timeout = 3000)
   public void test_dynamic_tp() {
-    Function t = (Object o, List<Object> l) -> {
-      Integer i = (Integer) o;
+    Function<Integer, Object> t = (Integer i, List<Object> l) -> {
       l.add(i + RV);
     };
 
@@ -105,8 +103,7 @@ public class ThreadPoolTest {
 
   @Test(timeout = 3000)
   public void test_dynamic_tp_idle() {
-    Function t = (Object o, List<Object> l) -> {
-      Integer i = (Integer) o;
+    Function<Integer, Object> t = (Integer i, List<Object> l) -> {
       l.add(i + RV);
     };
 

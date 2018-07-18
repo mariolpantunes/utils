@@ -1,13 +1,15 @@
 package pt.it.av.tnav.utils.parallel;
 
+import pt.it.av.tnav.utils.Utils;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Semaphore;
 
-public class IdleWorker implements Runnable {
-  private final Function t;
+public class IdleWorker<I, O> implements Runnable {
+  private final Function<I, O> t;
   private final BlockingQueue<Object> source;
   private final BlockingQueue<IdleWorker> freeWorkers;
   private final Semaphore mutex = new Semaphore(1), slots = new Semaphore(1),
@@ -21,7 +23,7 @@ public class IdleWorker implements Runnable {
    * @param source
    * @param freeWorkers
    */
-  public IdleWorker(Function t, BlockingQueue<Object> source, BlockingQueue<IdleWorker> freeWorkers) {
+  public IdleWorker(Function<I, O> t, BlockingQueue<Object> source, BlockingQueue<IdleWorker> freeWorkers) {
     this.t = t;
     this.source = source;
     this.freeWorkers = freeWorkers;
@@ -95,7 +97,7 @@ public class IdleWorker implements Runnable {
   @Override
   public void run() {
     boolean done = false;
-    List<Object> out = new ArrayList<>();
+    List<O> out = new ArrayList<>();
     while (!done) {
       try {
         Object in = getWork();
@@ -103,7 +105,7 @@ public class IdleWorker implements Runnable {
           idle.acquire();
           ts = Instant.now().toEpochMilli();
           idle.release();
-          t.process(in, out);
+          t.process(Utils.cast(in), out);
           if (!out.isEmpty()) {
             try {
               for (Object o : out)

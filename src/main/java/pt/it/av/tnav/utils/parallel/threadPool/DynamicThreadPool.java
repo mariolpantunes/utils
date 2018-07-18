@@ -10,9 +10,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class DynamicThreadPool implements ThreadPool, Runnable {
+public class DynamicThreadPool<I, O> implements ThreadPool<I, O>, Runnable {
   private static final long MAX_IDLE_TIME = 60 * 1000;
-  private final Function t;
+  private final Function<I, O> t;
   private final int nWorkers;
   private final long maxIdleTime;
   private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>(),
@@ -26,7 +26,7 @@ public class DynamicThreadPool implements ThreadPool, Runnable {
   /**
    * @param t
    */
-  public DynamicThreadPool(final Function t) {
+  public DynamicThreadPool(final Function<I, O> t) {
     this(t, Runtime.getRuntime().availableProcessors(), MAX_IDLE_TIME);
   }
 
@@ -34,7 +34,7 @@ public class DynamicThreadPool implements ThreadPool, Runnable {
    * @param t
    * @param maxIdleTime
    */
-  public DynamicThreadPool(final Function t, final long maxIdleTime) {
+  public DynamicThreadPool(final Function<I, O> t, final long maxIdleTime) {
     this(t, Runtime.getRuntime().availableProcessors(), maxIdleTime);
   }
 
@@ -43,13 +43,13 @@ public class DynamicThreadPool implements ThreadPool, Runnable {
    * @param nWorkers
    * @param maxIdleTime
    */
-  public DynamicThreadPool(final Function t, final int nWorkers, final long maxIdleTime) {
+  public DynamicThreadPool(final Function<I, O> t, final int nWorkers, final long maxIdleTime) {
     this.t = t;
     this.nWorkers = nWorkers;
     workers = new IdleWorker[nWorkers];
     this.maxIdleTime = maxIdleTime;
     for (int i = 0; i < nWorkers; i++) {
-      IdleWorker iw = new IdleWorker(t, source, freeWorkers);
+      IdleWorker iw = new IdleWorker<I, O>(t, source, freeWorkers);
       idleWorkers.add(iw);
       workers[i] = iw;
     }

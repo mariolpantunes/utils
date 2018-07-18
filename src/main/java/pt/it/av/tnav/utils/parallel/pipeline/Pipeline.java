@@ -26,7 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Pipeline {
     private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>(),
             source = new LinkedBlockingQueue<>();
-    private final Deque<Worker> workers = new ArrayDeque<>();
+  private final Deque<Worker<Object, Object>> workers = new ArrayDeque<>();
     private final List<BlockingQueue<Object>> queues;
 
     /**
@@ -41,8 +41,8 @@ public class Pipeline {
      *
      * @param function {@link Function} to be added on the head of the sequence.
      */
-    public void addFirst(Function function) {
-      workers.addFirst(new Worker(function));
+    public void addFirst(Function<Object, Object> function) {
+      workers.addFirst(new Worker<Object, Object>(function));
     }
 
   /**
@@ -50,9 +50,9 @@ public class Pipeline {
    *
    * @param function {@link Function} to be added on the tail of the sequence.
    */
-  public void addLast(Function function) {
-    workers.addLast(new Worker(function));
-    }
+  public void addLast(Function<Object, Object> function) {
+    workers.addLast(new Worker<Object, Object>(function));
+  }
 
     /**
      * Returns the Sink {@link BlockingQueue}.
@@ -85,8 +85,8 @@ public class Pipeline {
                 for (int i = 0; i < workers.size() - 1; i++)
                     queues.add(new LinkedBlockingQueue<Object>());
             }
-            Iterator<Worker> it = workers.iterator();
-            Worker w = it.next();
+          Iterator<Worker<Object, Object>> it = workers.iterator();
+          Worker<Object, Object> w = it.next();
             if (workers.size() > 1) {
                 w.connect(sink, queues.get(0));
                 w.start();
@@ -114,7 +114,7 @@ public class Pipeline {
     public void join() throws InterruptedException {
       Worker.Stop stop = Worker.stop();
         sink.put(stop);
-        Iterator<Worker> it = workers.iterator();
+      Iterator<Worker<Object, Object>> it = workers.iterator();
         for (int i = 0; i < queues.size(); i++) {
             it.next().join();
             queues.get(i).put(stop);

@@ -42,8 +42,13 @@ public class PipelineTest {
 
     pipeline.start();
 
-    for (Integer i : input)
-      sink.add(i);
+    try {
+      for (Integer i : input) {
+        sink.put(i);
+      }
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
 
     int idx = 0;
     try {
@@ -80,8 +85,13 @@ public class PipelineTest {
 
     pipeline.start();
 
-    for (Integer i : input)
-      sink.add(i);
+    try {
+      for (Integer i : input) {
+        sink.put(i);
+      }
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
 
     int idx = 0;
     try {
@@ -123,8 +133,13 @@ public class PipelineTest {
 
     pipeline.start();
 
-    for (Integer i : input)
-      sink.add(i);
+    try {
+      for (Integer i : input) {
+        sink.put(i);
+      }
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
 
     int idx = 0;
     try {

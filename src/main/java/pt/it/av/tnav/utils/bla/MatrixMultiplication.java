@@ -81,17 +81,17 @@ public class MatrixMultiplication {
   }
 
   protected static double[] pmul(double a[], double b[], double c[], int m, int n, int p) {
-    ThreadPool tp = new StaticThreadPool((Object o, List<Object> l) -> {
-      int i = (Integer) o;
-      int in = i * n;
-      for (int k = 0; k < p; k++) {
-        int kn = k * n;
-        double v = a[i * p + k];
-        for (int j = 0; j < n; j++) {
-          c[in + j] += v * b[kn + j];
-        }
-      }
-    });
+    ThreadPool<Integer, Object> tp = new StaticThreadPool<Integer, Object>(
+        (Integer i, List<Object> l) -> {
+          int in = i * n;
+          for (int k = 0; k < p; k++) {
+            int kn = k * n;
+            double v = a[i * p + k];
+            for (int j = 0; j < n; j++) {
+              c[in + j] += v * b[kn + j];
+            }
+          }
+        });
 
     BlockingQueue<Object> sink = tp.sink();
     tp.start();
@@ -107,18 +107,18 @@ public class MatrixMultiplication {
   }
 
   protected static double[] pmult(double a[], double bt[], double c[], int m, int n, int p) {
-    ThreadPool tp = new StaticThreadPool((Object o, List<Object> l) -> {
-      int i = (Integer) o;
-      int ip = i * p;
-      for (int j = 0; j < n; j++) {
-        double v = 0.0;
-        int jp = j * p;
-        for (int k = 0; k < p; k++) {
-          v += a[ip + k] * bt[jp + k];
-        }
-        c[i * n + j] = v;
-      }
-    });
+    ThreadPool<Integer, Object> tp = new StaticThreadPool<Integer, Object>(
+        (Integer i, List<Object> l) -> {
+          int ip = i * p;
+          for (int j = 0; j < n; j++) {
+            double v = 0.0;
+            int jp = j * p;
+            for (int k = 0; k < p; k++) {
+              v += a[ip + k] * bt[jp + k];
+            }
+            c[i * n + j] = v;
+          }
+        });
 
     BlockingQueue<Object> sink = tp.sink();
     tp.start();

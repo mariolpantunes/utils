@@ -1,5 +1,6 @@
 package pt.it.av.tnav.utils.parallel.threadPool;
 
+import pt.it.av.tnav.utils.Utils;
 import pt.it.av.tnav.utils.parallel.Function;
 import pt.it.av.tnav.utils.parallel.Worker;
 
@@ -10,17 +11,17 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class StaticThreadPool implements ThreadPool {
-  private final Function t;
+public class StaticThreadPool<I, O> implements ThreadPool<I, O> {
+  private final Function<I, O> t;
   private final int nWorkers;
-  private final Worker workers[];
-  private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>(),
-      source = new LinkedBlockingQueue<>();
+  private final Worker<I, O> workers[];
+  private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>();
+  private final BlockingQueue<Object> source = new LinkedBlockingQueue<>();
 
   /**
    * @param t
    */
-  public StaticThreadPool(final Function t) {
+  public StaticThreadPool(final Function<I, O> t) {
     this(t, Runtime.getRuntime().availableProcessors());
   }
 
@@ -28,12 +29,12 @@ public class StaticThreadPool implements ThreadPool {
    * @param t
    * @param nCores
    */
-  public StaticThreadPool(final Function t, int nWorkers) {
+  public StaticThreadPool(final Function<I, O> t, int nWorkers) {
     this.t = t;
     this.nWorkers = nWorkers;
-    this.workers = new Worker[nWorkers];
+    this.workers = Utils.cast(new Worker[nWorkers]);
     for (int i = 0; i < nWorkers; i++) {
-      workers[i] = new Worker(t, sink, source);
+      workers[i] = new Worker<I, O>(t, sink, source);
     }
   }
 
