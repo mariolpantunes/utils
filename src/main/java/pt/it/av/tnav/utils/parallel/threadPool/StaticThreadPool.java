@@ -15,8 +15,8 @@ public class StaticThreadPool<I, O> implements ThreadPool<I, O> {
   private final Function<I, O> t;
   private final int nWorkers;
   private final Worker<I, O> workers[];
-  private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>();
-  private final BlockingQueue<Object> source = new LinkedBlockingQueue<>();
+  private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>(),
+      source = new LinkedBlockingQueue<>();
 
   /**
    * @param t
