@@ -669,11 +669,27 @@ public final class ArrayUtils {
 
   /**
    * @param array
+   * @param n
+   * @return
+   */
+  public static <T> int indexOf(final T array[], final T e) {
+    int rv = -1;
+    for (int i = 0; i < array.length; i++) {
+      if (array[i].equals(e)) {
+        rv = i;
+        break;
+      }
+    }
+    return rv;
+  }
+
+  /**
+   * @param array
    * @param e
    * @param <T>
    * @return
    */
-  public static <T> boolean contains(T array[], T e) {
+  public static <T> boolean contains(final T array[], final T e) {
     boolean rv = false;
 
     for (int i = 0; i < array.length && !rv; i++) {
