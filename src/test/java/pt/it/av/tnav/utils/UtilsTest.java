@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -32,6 +33,37 @@ public class UtilsTest {
     R.add("C");
     R.add("C");
 
-    assertTrue(Utils.intertwine(A, B).equals(R));
+    assertEquals(R, Utils.intertwine(A, B));
+  }
+
+  @Test
+  public void test_equals_true() {
+    List<String> l1 = new ArrayList<>(),
+        l2 = new ArrayList<>();
+    l1.add("a");
+    l1.add("b");
+    l1.add("c");
+
+    l2.add("c");
+    l2.add("a");
+    l2.add("b");
+
+    assertEquals(true, Utils.equals(l1, l2));
+  }
+
+  @Test
+  public void test_equals_false() {
+    List<String> l1 = new ArrayList<>(),
+        l2 = new ArrayList<>();
+    l1.add("a");
+    l1.add("b");
+    l1.add("c");
+
+    l2.add("a");
+    l2.add("b");
+    l2.add("c");
+    l2.add("d");
+
+    assertEquals(false, Utils.equals(l1, l2));
   }
 }

@@ -100,4 +100,9 @@ public class MutableInteger extends MutableNumber<MutableInteger> implements Com
   public boolean isRealNumber() {
     return true;
   }
+
+  @Override
+  public String toString() {
+    return Integer.toString(value);
+  }
 }

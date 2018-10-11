@@ -100,4 +100,9 @@ public class MutableDouble extends MutableNumber<MutableDouble> implements Compa
   public boolean isRealNumber() {
     return true;
   }
+
+  @Override
+  public String toString() {
+    return Double.toString(value);
+  }
 }

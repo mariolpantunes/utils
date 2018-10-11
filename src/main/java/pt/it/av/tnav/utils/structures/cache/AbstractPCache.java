@@ -34,9 +34,10 @@ public abstract class AbstractPCache<K,T> implements Cache<K,T>{
     synchronized(key.toString().intern()) {
       if (Files.isReadable(file)) {
         try{
-          BufferedReader in =new BufferedReader(new InputStreamReader(
+          BufferedReader in = new BufferedReader(new InputStreamReader(
               new GZIPInputStream(Files.newInputStream(file)), "UTF-8"));
           rv = load(in);
+          in.close();
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -46,6 +47,7 @@ public abstract class AbstractPCache<K,T> implements Cache<K,T>{
           BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
               new GZIPOutputStream(Files.newOutputStream(file)), "UTF-8"));
           store(rv, out);
+          out.close();
         } catch (IOException e) {
           e.printStackTrace();
         }

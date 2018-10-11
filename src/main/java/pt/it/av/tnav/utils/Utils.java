@@ -128,4 +128,25 @@ public class Utils {
       rv.add(it.next());
     return rv;
   }
+
+  /**
+   *
+   * @param l1
+   * @param l2
+   * @param <T>
+   * @return
+   */
+  public static <T> boolean equals(List<T> l1, List<T> l2) {
+    boolean rv = false;
+
+    if(l1 == null && l2 == null) {
+      rv = true;
+    } else if (l1.size() != l2.size()) {
+      rv = false;
+    } else {
+      rv = l1.containsAll(l2);
+    }
+
+    return rv;
+  }
 }
