@@ -1,5 +1,6 @@
 package pt.it.av.tnav.utils.ws.search;
 
+import pt.it.av.tnav.utils.CollectionsUtils;
 import pt.it.av.tnav.utils.Utils;
 
 import java.io.UnsupportedEncodingException;
@@ -41,7 +42,7 @@ public abstract class WebSearchEngine implements SearchEngine {
 
   @Override
   public List<Result> search(final String q) {
-    return Utils.iterator2List(searchIt(q));
+    return CollectionsUtils.iterator2List(searchIt(q));
   }
 
   @Override

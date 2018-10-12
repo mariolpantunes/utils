@@ -21,7 +21,7 @@ public class ThreadPoolTest {
       l.add(i + RV);
     };
 
-    ThreadPool tp = new StaticThreadPool(t);
+    ThreadPool<Integer, Object> tp = new StaticThreadPool<Integer, Object>(t);
 
     BlockingQueue<Object> source = tp.source();
     BlockingQueue<Object> sink = tp.sink();
@@ -64,7 +64,7 @@ public class ThreadPoolTest {
       l.add(i + RV);
     };
 
-    ThreadPool tp = new DynamicThreadPool(t);
+    ThreadPool<Integer, Object> tp = new DynamicThreadPool<>(t);
 
     BlockingQueue<Object> source = tp.source();
     BlockingQueue<Object> sink = tp.sink();
@@ -107,7 +107,7 @@ public class ThreadPoolTest {
       l.add(i + RV);
     };
 
-    ThreadPool tp = new DynamicThreadPool(t, 100);
+    ThreadPool<Integer, Object> tp = new DynamicThreadPool<>(t, 100);
 
     BlockingQueue<Object> source = tp.source();
     BlockingQueue<Object> sink = tp.sink();

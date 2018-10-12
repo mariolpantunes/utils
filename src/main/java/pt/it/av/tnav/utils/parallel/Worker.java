@@ -90,13 +90,10 @@ public class Worker<I, O> implements Runnable {
     @Override
     public boolean equals(Object o) {
       boolean rv = false;
-      // null check
       if (o != null) {
         if (this == o) {
-          // self check
           rv = true;
         } else if (getClass() == o.getClass()) {
-          // type check and cast
           rv = true;
         }
       }

@@ -1,8 +1,11 @@
 package pt.it.av.tnav.utils;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -15,55 +18,23 @@ import static org.junit.Assert.assertTrue;
  * @version 1.0
  */
 public class UtilsTest {
-  @Test
-  public void test_intertwine() {
-    List<String> A = new ArrayList<>(), B = new ArrayList<>(), R = new ArrayList<>();
-    A.add("A");
-    A.add("B");
-    A.add("C");
+  public static Integer z, o;
 
-    B.add("A");
-    B.add("B");
-    B.add("C");
-
-    R.add("A");
-    R.add("A");
-    R.add("B");
-    R.add("B");
-    R.add("C");
-    R.add("C");
-
-    assertEquals(R, Utils.intertwine(A, B));
+  @BeforeClass
+  public static void setup() {
+    z = new Integer(0);
+    o = new Integer(1);
   }
 
   @Test
-  public void test_equals_true() {
-    List<String> l1 = new ArrayList<>(),
-        l2 = new ArrayList<>();
-    l1.add("a");
-    l1.add("b");
-    l1.add("c");
-
-    l2.add("c");
-    l2.add("a");
-    l2.add("b");
-
-    assertEquals(true, Utils.equals(l1, l2));
+  public void test_max() {
+    assertEquals(o, Utils.max(z,o));
+    assertEquals(o, Utils.max(z,o, Comparator.naturalOrder()));
   }
 
   @Test
-  public void test_equals_false() {
-    List<String> l1 = new ArrayList<>(),
-        l2 = new ArrayList<>();
-    l1.add("a");
-    l1.add("b");
-    l1.add("c");
-
-    l2.add("a");
-    l2.add("b");
-    l2.add("c");
-    l2.add("d");
-
-    assertEquals(false, Utils.equals(l1, l2));
+  public void test_min() {
+    assertEquals(z, Utils.min(z,o));
+    assertEquals(z, Utils.min(z,o, Comparator.naturalOrder()));
   }
 }

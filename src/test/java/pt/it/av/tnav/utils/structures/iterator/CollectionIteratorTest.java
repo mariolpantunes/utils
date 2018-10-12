@@ -2,6 +2,7 @@ package pt.it.av.tnav.utils.structures.iterator;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import pt.it.av.tnav.utils.CollectionsUtils;
 import pt.it.av.tnav.utils.Utils;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class CollectionIteratorTest {
 
         its.add(A.iterator());
         it = new CollectionIterator<String>(its);
-        list = Utils.iterator2List(it);
+        list = CollectionsUtils.iterator2List(it);
         rv.add("A");
         rv.add("D");
         rv.add("F");
@@ -58,7 +59,7 @@ public class CollectionIteratorTest {
         rv.clear();
         its.add(B.iterator());
         it = new CollectionIterator<>(its);
-        list = Utils.iterator2List(it);
+        list = CollectionsUtils.iterator2List(it);
         rv.add("B");
         rv.add("E");
 
@@ -68,7 +69,7 @@ public class CollectionIteratorTest {
         rv.clear();
         its.add(C.iterator());
         it = new CollectionIterator<>(its);
-        list = Utils.iterator2List(it);
+        list = CollectionsUtils.iterator2List(it);
         rv.add("C");
 
         assertTrue(list.equals(rv));
@@ -83,7 +84,7 @@ public class CollectionIteratorTest {
         its.add(A.iterator());
         its.add(B.iterator());
         it = new CollectionIterator<String>(its);
-        list = Utils.iterator2List(it);
+        list = CollectionsUtils.iterator2List(it);
         rv.add("A");
         rv.add("B");
         rv.add("D");
@@ -97,7 +98,7 @@ public class CollectionIteratorTest {
         its.add(B.iterator());
         its.add(A.iterator());
         it = new CollectionIterator<>(its);
-        list = Utils.iterator2List(it);
+        list = CollectionsUtils.iterator2List(it);
         rv.add("B");
         rv.add("A");
         rv.add("E");
@@ -111,7 +112,7 @@ public class CollectionIteratorTest {
         its.add(C.iterator());
         its.add(A.iterator());
         it = new CollectionIterator<>(its);
-        list = Utils.iterator2List(it);
+        list = CollectionsUtils.iterator2List(it);
         rv.add("C");
         rv.add("A");
         rv.add("D");
@@ -130,7 +131,7 @@ public class CollectionIteratorTest {
         its.add(B.iterator());
         its.add(C.iterator());
         it = new CollectionIterator<>(its);
-        list = Utils.iterator2List(it);
+        list = CollectionsUtils.iterator2List(it);
         rv.add("A");
         rv.add("B");
         rv.add("C");
@@ -149,7 +150,7 @@ public class CollectionIteratorTest {
 
         its.add(rv.iterator());
         it = new CollectionIterator<>(its);
-        list = Utils.iterator2List(it);
+        list = CollectionsUtils.iterator2List(it);
 
         assertTrue(list.equals(rv));
     }

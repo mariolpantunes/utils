@@ -2,6 +2,7 @@ package pt.it.av.tnav.utils.structures.iterator;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import pt.it.av.tnav.utils.CollectionsUtils;
 import pt.it.av.tnav.utils.Utils;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class LimitIteratorTest {
         LimitIterator<String> it = new LimitIterator<>(list.iterator(), 10);
 
         assertTrue(it.hasNext());
-        List l = Utils.iterator2List(it);
+        List l = CollectionsUtils.iterator2List(it);
         assertTrue(l.equals(list));
         assertTrue(!it.hasNext());
     }
@@ -46,7 +47,7 @@ public class LimitIteratorTest {
         LimitIterator<String> it = new LimitIterator<>(list.iterator(), 3);
 
         assertTrue(it.hasNext());
-        List l = Utils.iterator2List(it);
+        List l = CollectionsUtils.iterator2List(it);
         assertTrue(l.equals(list.subList(0, 3)));
         assertTrue(!it.hasNext());
     }
