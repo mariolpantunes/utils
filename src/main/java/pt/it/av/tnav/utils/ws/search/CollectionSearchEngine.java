@@ -20,6 +20,11 @@ import java.util.List;
 public class CollectionSearchEngine implements SearchEngine {
   private final List<SearchEngine> se;
 
+  /**
+   * Collection Search Engine constructor.
+   *
+   * @param se {@link List} of {@link SearchEngine}
+   */
   public CollectionSearchEngine(final List<SearchEngine> se) {
     this.se = se;
   }

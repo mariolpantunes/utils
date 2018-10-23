@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.GZIPInputStream;
@@ -24,6 +25,10 @@ public abstract class AbstractPCache<K,T> implements Cache<K,T>{
 
   public AbstractPCache(final Path pCache) {
     this.pCache = pCache;
+    File directory = pCache.toFile();
+    if(!directory.exists()) {
+      directory.mkdir();
+    }
   }
 
   @Override

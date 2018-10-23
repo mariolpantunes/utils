@@ -21,32 +21,32 @@ import java.util.Iterator;
  */
 public class Yacy extends WebSearchEngine {
   private static final String DEFAULT_URL = "http://hrun.hopto.org/yacy/";
-  private static final int DEFAULT_RETRIES = 3;
-  private final int retries;
+  private static final int MAX_RESULTS = 50;
 
   /**
-   *
+   * Yacy constructor.
    */
   public Yacy() {
-    super(DEFAULT_URL);
-    this.retries = DEFAULT_RETRIES;
+    super(DEFAULT_URL, MAX_RESULTS);
   }
 
   /**
-   * @param url
+   * Yacy constructor.
+   *
+   * @param url web service address
    */
   public Yacy(final String url) {
-    super(url);
-    this.retries = DEFAULT_RETRIES;
+    super(url, MAX_RESULTS);
   }
 
   /**
-   * @param url
-   * @param maxResults
+   * Yacy constructor.
+   *
+   * @param url        web service address
+   * @param maxResults maximum number of results
    */
   public Yacy(final String url, final int maxResults) {
     super(url, maxResults);
-    this.retries = DEFAULT_RETRIES;
   }
 
   @Override
@@ -54,12 +54,29 @@ public class Yacy extends WebSearchEngine {
     return new YacyResultIterator(q, skip);
   }
 
+  /**
+   * Yacy Results Iterator.
+   * <p>
+   * The result pages are consomed continuously.
+   * Fetch one page of results and iterates over them, before fetching another result's page.
+   * This way the network calls are spread throught time, improving latency to the user.
+   * </p>
+   *
+   * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+   * @version 1.0
+   */
   private class YacyResultIterator implements Iterator<Result> {
     private final int skip;
     private final String q;
     private Iterator<JSONValue> it = null;
     private boolean done = false;
 
+    /**
+     * Yacy Iteratror constructor.
+     *
+     * @param q    web search query
+     * @param skip number of results to skip
+     */
     public YacyResultIterator(final String q, final int skip) {
       this.q = q;
       this.skip = skip;
@@ -68,42 +85,29 @@ public class Yacy extends WebSearchEngine {
     @Override
     public boolean hasNext() {
       if (it == null) {
-
-        JSONObject json = null;
-        boolean http = false;
-
-        for (int i = 0; i < retries && !http; i++) {
-          try {
-            json = Http.getJson(url + "/yacysearch.json?resource=global&contentdom=text" +
-                "&lr=lang_en&startRecord=" + (skip + 1) + "&query=" + q).get("channels").asArray().get(0).asObject();
-            http = true;
-          } catch (Exception e) {
-            try {
-              Thread.sleep(1000 * (i + 1));
-            } catch (InterruptedException ie) {
-
+        try {
+          JSONObject json = Http.getJson(url + "/yacysearch.json?resource=global&contentdom=text" +
+              "&lr=lang_en&startRecord=" + (skip + 1) + "&query=" + q).get("channels").asArray().get(0).asObject();
+          if (json != null) {
+            int numberResults = Integer.parseInt(json.get("totalResults").asString());
+            if (skip >= numberResults) {
+              done = true;
             }
-          }
-        }
-
-        if (json != null) {
-          //TODO: fix this...
-          //int numberResults = Integer.parseInt(json.get("totalResults").asString());
-          //if (skip >= numberResults) {
-          //  done = true;
-          //}
-          JSONArray array = json.get("items").asArray();
-          it = array.iterator();
-          if (!it.hasNext()) {
+            JSONArray array = json.get("items").asArray();
+            it = array.iterator();
+            if (!it.hasNext()) {
+              done = true;
+            }
+          } else {
             done = true;
           }
-        } else {
+        } catch (Exception e) {
+          //e.printStackTrace();
           done = true;
         }
       } else {
         done = !it.hasNext();
       }
-
       return !done;
     }
 

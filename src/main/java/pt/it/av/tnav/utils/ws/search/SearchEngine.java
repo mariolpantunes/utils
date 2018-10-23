@@ -37,12 +37,12 @@ public interface SearchEngine {
   /**
    * Represents a single result from the search engine.
    * <p>
-   *   It is composed by three elements:
-   *   <p><ul>
-   *     <li>{@link name} name of the resource.
-   *     <li>{@link snippet} snippet provided by the search engine.
-   *     <li>{@link uri} uri of the resource.
-   *   </ul><p>
+   * It is composed by three elements:
+   * <ul>
+   * <li>{@link name} name of the resource.
+   * <li>{@link snippet} snippet provided by the search engine.
+   * <li>{@link uri} uri of the resource.
+   * </ul>
    * </p>
    */
   class Result {
@@ -51,7 +51,7 @@ public interface SearchEngine {
     /**
      * Result contructor.
      *
-     * @param name   name of the resource.
+     * @param name    name of the resource.
      * @param snippet snippet provided by the search engine.
      * @param uri     uri of the resource.
      */
@@ -73,6 +73,30 @@ public interface SearchEngine {
       sb.append("URI: ");
       sb.append(uri);
       return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      boolean rv = false;
+      if (o != null) {
+        if (o == this)
+          rv = true;
+        else if (o instanceof Result) {
+          Result r = (Result) o;
+          rv = this.name.equals(r.name) && this.snippet.equals(r.snippet) && this.uri.equals(r.uri);
+        }
+      }
+
+      return rv;
+    }
+
+    @Override
+    public int hashCode() {
+      int prime = 31, result = 1;
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
+      result = prime * result + ((snippet == null) ? 0 : snippet.hashCode());
+      result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+      return result;
     }
   }
 }

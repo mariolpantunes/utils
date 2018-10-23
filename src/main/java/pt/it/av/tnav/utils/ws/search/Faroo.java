@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 /**
  * Faroo search engine.
+ * @deprecated Apparently the service is down.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
@@ -32,9 +33,11 @@ public class Faroo extends WebSearchEngine {
 
   /**
    * Fast Faroo search iterator.
-   * <p>The result pages are consomed continuously.
+   * <p>
+   * The result pages are consomed continuously.
    * Fetch one page of results and iterates over them, before fetching another result's page.
-   * This way the network calls are spread throught time, improving latency to the user.</p>
+   * This way the network calls are spread throught time, improving latency to the user.
+   * </p>
    */
   private class FarooResultIterator implements Iterator<Result> {
     private final int skip;
