@@ -1512,7 +1512,7 @@ public final class ArrayUtils {
     boolean rv = true;
 
     for (int i = 0; i < len && rv; i++) {
-      if (MathUtils.equals(a[i + aIdx], b[i + bIdx], eps)) {
+      if (!MathUtils.equals(a[i + aIdx], b[i + bIdx], eps)) {
         rv = false;
       }
     }
@@ -1544,7 +1544,7 @@ public final class ArrayUtils {
     boolean rv = true;
 
     for (int i = 0; i < len && rv; i++) {
-      if (a[i + aIdx] == b[i + bIdx]) {
+      if (a[i + aIdx] != b[i + bIdx]) {
         rv = false;
       }
     }
