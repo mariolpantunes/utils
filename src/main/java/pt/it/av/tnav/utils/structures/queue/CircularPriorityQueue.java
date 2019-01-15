@@ -3,11 +3,7 @@ package pt.it.av.tnav.utils.structures.queue;
 import pt.it.av.tnav.utils.ArrayUtils;
 import pt.it.av.tnav.utils.Utils;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Circular Priority Queue implemented with a min heap.

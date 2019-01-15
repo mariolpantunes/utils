@@ -505,4 +505,31 @@ public final class MathUtils {
   public static float epsFloat() {
     return floatEpsilon;
   }
+
+  /**
+   * @param n
+   * @return
+   */
+  public static boolean isEven(final int n) {
+    return (n % 2 == 0) ? true : false;
+  }
+
+  /**
+   * @param n
+   * @return
+   */
+  public static boolean isOdd(final int n) {
+    return !isEven(n);
+  }
+
+  /**
+   * Numerically stable nth root.
+   *
+   * @param base
+   * @param n
+   * @return
+   */
+  public static double nthRoot(final double base, final double n) {
+    return Math.pow(Math.E, Math.log(base) / n);
+  }
 }

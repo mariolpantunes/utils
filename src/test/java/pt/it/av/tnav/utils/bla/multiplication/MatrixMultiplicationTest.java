@@ -1,4 +1,4 @@
-package pt.it.av.tnav.utils.bla;
+package pt.it.av.tnav.utils.bla.multiplication;
 
 import org.junit.Test;
 import pt.it.av.tnav.utils.ArrayUtils;

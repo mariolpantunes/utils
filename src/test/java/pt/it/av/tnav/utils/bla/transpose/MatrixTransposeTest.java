@@ -1,6 +1,7 @@
-package pt.it.av.tnav.utils.bla;
+package pt.it.av.tnav.utils.bla.transpose;
 
 import org.junit.Test;
+import pt.it.av.tnav.utils.ArrayUtils;
 
 import java.util.Arrays;
 
@@ -40,19 +41,17 @@ public class MatrixTransposeTest {
 
   @Test
   public void test_transpose_inplace_follow_cycles_large() {
-    Matrix M = Matrix.random(N,N);
-    Matrix MT = new Matrix(M.cols, M.rows);
-    MatrixTranspose.ntr(M.data, MT.data, M.rows, M.cols);
-    MatrixTranspose.infotr(M.data, M.rows, M.cols);
-    assertTrue(Arrays.equals(M.data, MT.data));
+    double m[] = ArrayUtils.random(N * N), mt[] = ArrayUtils.random(N * N);
+    MatrixTranspose.ntr(m, mt, N, N);
+    MatrixTranspose.infotr(m, N, N);
+    assertTrue(Arrays.equals(m, mt));
   }
 
   @Test
   public void test_transpose_cache_oblivious_large() {
-    Matrix M = Matrix.random(N,N), MT = new Matrix(M.cols, M.rows);
-    MatrixTranspose.ntr(M.data, MT.data, M.rows, M.cols);
-    Matrix m = new Matrix(M.cols, M.rows);
-    MatrixTranspose.cotr(M.data, m.data, M.rows, M.cols, BLK);
-    assertTrue(Arrays.equals(MT.data, m.data));
+    double m[] = ArrayUtils.random(N * N), mt[] = ArrayUtils.random(N * N), mt2[] = ArrayUtils.random(N * N);
+    MatrixTranspose.ntr(m, mt, N, N);
+    MatrixTranspose.cotr(m, mt2, N, N, BLK);
+    assertTrue(Arrays.equals(mt, mt2));
   }
 }

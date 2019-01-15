@@ -1,5 +1,8 @@
 package pt.it.av.tnav.utils.bla;
 
+import pt.it.av.tnav.utils.bla.multiplication.MatrixMultiplication;
+import pt.it.av.tnav.utils.bla.transpose.MatrixTranspose;
+
 /******************************************************************************
  *  Compilation:  javac MatrixMultiplication.java
  *  Execution:    java MatrixMultiplication
@@ -237,14 +240,14 @@ public class MM {
 
 
     start = System.nanoTime();
-    NmfFactorization.nmf_mu(V, N / 3, 1000, 0.01);
+    NMF.nmf_mu(V, N / 3, 1000, 0.01);
     stop = System.nanoTime();
     elapsed = (stop - start) / 1000000000.0;
     System.out.println("Order nmfv1:   " + elapsed + " seconds");
 
 
     start = System.nanoTime();
-    NmfFactorization.nmf_mu2(V, N / 3, 1000, 0.01);
+    NMF.nmf_mu2(V, N / 3, 1000, 0.01);
     stop = System.nanoTime();
     elapsed = (stop - start) / 1000000000.0;
     System.out.println("Order nmfv2:   " + elapsed + " seconds");*/

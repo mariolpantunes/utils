@@ -236,6 +236,7 @@ public final class ArrayUtils {
     }
   }
 
+  // TODO: improve minkowskiDistance
   /**
    * @param a
    * @param bA
@@ -252,7 +253,7 @@ public final class ArrayUtils {
     for (int i = 0; i < len; i++) {
       sum += Math.pow(Math.abs(a[bA + i] - b[bB + i]), p);
     }
-    return Math.pow(sum, 1.0 / p);
+    return MathUtils.nthRoot(sum, p);
   }
 
   /**
@@ -272,6 +273,11 @@ public final class ArrayUtils {
     }
     return Math.sqrt(sum);
   }
+
+  public static double euclideanDistance(final double[] a, final double[] b) {
+    return euclideanDistance(a, 0, b, 0, a.length);
+  }
+
 
   /**
    * @param a
@@ -411,7 +417,7 @@ public final class ArrayUtils {
   }
 
   /**
-   * Returns the index of the maximum number in the array.
+   * Returns the index of the number with higher value in the array.
    *
    * @param array an array of doubles
    * @param b     start index of the array
@@ -427,12 +433,38 @@ public final class ArrayUtils {
   }
 
   /**
-   * Returns the index of the maximum number in the array.
+   * Returns the index of the number with higher value in the array.
    *
    * @param array an array of doubles
    * @return the index of the maximum number in the array.
    */
   public static int max(final double array[]) {
+    return max(array, 0, array.length);
+  }
+
+  /**
+   * Returns the index of the number with higher value (absolute) in the array.
+   *
+   * @param array an array of doubles
+   * @param b     start index of the array
+   * @param l     array's length
+   * @return the index of the maximum number in the array.
+   */
+  public static int maxAbs(final double array[], final int b, final int l) {
+    int rv = 0;
+    for (int i = 1; i < l; i++)
+      if (Math.abs(array[i + b]) > Math.abs(array[rv + b]))
+        rv = i;
+    return rv + b;
+  }
+
+  /**
+   * Returns the index of the number with higher value (absolute) in the array.
+   *
+   * @param array an array of doubles
+   * @return the index of the maximum number in the array.
+   */
+  public static int maxAbs(final double array[]) {
     return max(array, 0, array.length);
   }
 
@@ -517,6 +549,24 @@ public final class ArrayUtils {
 
     for (int i = 0; i < n; i++) {
       rv[i] = ThreadLocalRandom.current().nextDouble();
+    }
+
+    return rv;
+  }
+
+  /**
+   * Returns a double array filled with random values in the range [min, max).
+   *
+   * @param n   size of the array
+   * @param min
+   * @param max
+   * @return a double array filled with random values in the range [min, max)
+   */
+  public static double[] random(final int n, final double min, final double max) {
+    double rv[] = new double[n];
+
+    for (int i = 0; i < n; i++) {
+      rv[i] = ThreadLocalRandom.current().nextDouble(min, max);
     }
 
     return rv;
@@ -1003,8 +1053,14 @@ public final class ArrayUtils {
     }
   }
 
+  //TODO: Check the necessity of using Math.abs
   /**
    * Returns the norm p from a array of data.
+   * <p>The implementation is numerically stable.</p>
+   *
+   * @see <a href="https://timvieira.github.io/blog/post/2014/11/10/numerically-stable-p-norms/">
+   *   Numerically stable p-norms
+   *   </a>
    *
    * @param a
    * @param bA
@@ -1012,10 +1068,38 @@ public final class ArrayUtils {
    * @param p
    * @return
    */
-  public static double norm(final double a[], final int bA, final int len, final int p) {
+  public static double norm(final double a[], final int bIdx, final int len, final int p) {
     double norm = 0.0;
-    for (int i = 0; i < len; i++)
-      norm = MathUtils.norm(norm, a[bA + i], p);
+
+    if (p == 1) {
+      for (int i = 0; i < len; i++) {
+        norm += Math.abs(a[i + bIdx]);
+      }
+    } else {
+      double max = Math.abs(a[ArrayUtils.maxAbs(a, bIdx, len)]);
+
+      if (p == 2) {
+        for (int i = 0; i < len; i++) {
+          norm += Math.pow(a[i + bIdx] / max, 2.0);
+        }
+        norm = Math.sqrt(norm);
+      } else {
+
+        if (MathUtils.isEven(p)) {
+          for (int i = 0; i < len; i++) {
+            norm += Math.pow(a[i + bIdx] / max, p);
+          }
+        } else {
+          for (int i = 0; i < len; i++) {
+            norm += Math.pow(Math.abs(a[i + bIdx]) / max, p);
+          }
+        }
+
+        norm = MathUtils.nthRoot(norm, p);
+      }
+
+      norm *= max;
+    }
     return norm;
   }
 
@@ -1395,5 +1479,76 @@ public final class ArrayUtils {
    */
   public static double median(final double a[]) {
     return median(a, 0, a.length);
+  }
+
+  /**
+   * @param a
+   * @param bidx
+   * @param len
+   * @return
+   */
+  public static int subarrayHashCode(final double a[], final int bIdx, final int len) {
+    int prime = 31, result = 1;
+
+    for (int i = 0; i < len; i++) {
+      result = prime * result + Double.hashCode(a[i + bIdx]);
+    }
+
+    return result;
+  }
+
+  /**
+   * @param a
+   * @param aIdx
+   * @param b
+   * @param bIdx
+   * @param len
+   * @param eps
+   * @return
+   */
+  public static boolean equals(final double a[], final int aIdx, final double b[],
+                               final int bIdx, final int len, final double eps) {
+
+    boolean rv = true;
+
+    for (int i = 0; i < len && rv; i++) {
+      if (MathUtils.equals(a[i + aIdx], b[i + bIdx], eps)) {
+        rv = false;
+      }
+    }
+
+    return rv;
+  }
+
+  /**
+   * @param a
+   * @param b
+   * @param eps
+   * @return
+   */
+  public static boolean equals(final double a[], final double b[], final double eps) {
+    return equals(a, 0, b, 0, a.length, eps);
+  }
+
+  /**
+   * @param a
+   * @param aIdx
+   * @param b
+   * @param bIdx
+   * @param len
+   * @return
+   */
+  public static boolean equals(final double a[], final int aIdx, final double b[],
+                               final int bIdx, final int len) {
+
+    boolean rv = true;
+
+    for (int i = 0; i < len && rv; i++) {
+      if (a[i + aIdx] == b[i + bIdx]) {
+        rv = false;
+      }
+    }
+
+    return rv;
   }
 }

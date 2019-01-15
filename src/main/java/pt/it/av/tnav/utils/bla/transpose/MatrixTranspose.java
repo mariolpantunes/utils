@@ -1,4 +1,4 @@
-package pt.it.av.tnav.utils.bla;
+package pt.it.av.tnav.utils.bla.transpose;
 
 import pt.it.av.tnav.utils.structures.tuple.Quad;
 
@@ -12,6 +12,12 @@ import java.util.Deque;
  * @version 1.0
  */
 public class MatrixTranspose {
+  /**
+   *
+   */
+  private MatrixTranspose() {
+  }
+
   private static int BLK = 64;
 
   /**
@@ -25,8 +31,8 @@ public class MatrixTranspose {
    * @param cols number of columns
    * @return {@link at} array filled with the tranpose matrix
    */
-  protected static double[] cotr(final double a[], final double at[],
-                                 final int rows, final int cols) {
+  public static double[] cotr(final double a[], final double at[],
+                              final int rows, final int cols) {
     return cotr(a, at, rows, cols, BLK);
   }
 
@@ -42,8 +48,8 @@ public class MatrixTranspose {
    * @param blk block size threshold to stop division and solve transpose
    * @return {@link at} array filled with the tranpose matrix
    */
-  protected static double[] cotr(final double a[], final double at[],
-                                 final int rows, final int cols, final int blk) {
+  public static double[] cotr(final double a[], final double at[],
+                              final int rows, final int cols, final int blk) {
     double tmp[] = new double[blk * blk];
     Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<Quad<Integer, Integer, Integer, Integer>>();
     stack.push(new Quad<>(0, rows, 0, cols));
@@ -76,7 +82,7 @@ public class MatrixTranspose {
    * @param n number of rows and columns
    * @return the transpose matrix
    */
-  protected static double[] insqtr(double a[], int n) {
+  public static double[] insqtr(double a[], int n) {
     for (int r = 0; r < n - 1; r++)
       for (int c = r + 1; c < n; c++) {
         double tmp = a[r * n + c];
@@ -96,7 +102,7 @@ public class MatrixTranspose {
    * @param cols number of columns
    * @return the transpose matrix
    */
-  protected static double[] infotr(double a[], int rows, int cols) {
+  public static double[] infotr(double a[], int rows, int cols) {
     boolean visited[] = new boolean[a.length];
     int q = rows * cols - 1;
     for (int i = 1; i < a.length - 1; i++) {
@@ -131,8 +137,8 @@ public class MatrixTranspose {
    * @param cols number of columns
    * @return {@link at} array filled with the tranpose matrix
    */
-  protected static double[] ntr(final double a[], final double at[],
-                                final int rows, final int cols) {
+  public static double[] ntr(final double a[], final double at[],
+                             final int rows, final int cols) {
     for (int i = 0; i < a.length; i++) {
       int r = i / cols, c = i % cols;
       at[c*rows+r] = a[i];

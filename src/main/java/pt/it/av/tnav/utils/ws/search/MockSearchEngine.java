@@ -1,8 +1,5 @@
 package pt.it.av.tnav.utils.ws.search;
 
-import pt.it.av.tnav.utils.ws.search.SearchEngine;
-
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 

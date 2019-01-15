@@ -1,7 +1,12 @@
 package pt.it.av.tnav.utils.bla;
 
 import pt.it.av.tnav.utils.ArrayUtils;
+import pt.it.av.tnav.utils.bla.factorization.NMF;
+import pt.it.av.tnav.utils.bla.multiplication.MatrixMultiplication;
+import pt.it.av.tnav.utils.bla.transpose.MatrixTranspose;
+import pt.it.av.tnav.utils.structures.Distance;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -10,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
-public class Matrix {
+public class Matrix implements Distance<Matrix> {
   protected final double data[];
   protected int rows, cols;
 
@@ -20,7 +25,7 @@ public class Matrix {
    * @param rows number of rows in the matrix
    * @param cols number of columns in the matrix
    */
-  public Matrix(int rows, int cols) {
+  public Matrix(final int rows, final int cols) {
     this.rows = rows;
     this.cols = cols;
     this.data = new double[rows * cols];
@@ -34,7 +39,7 @@ public class Matrix {
    * @param cols number of columns in the matrix
    * @param data 1D double array with matrix values
    */
-  public Matrix(int rows, int cols, double data[]) {
+  public Matrix(final int rows, final int cols, final double data[]) {
     this.rows = rows;
     this.cols = cols;
     this.data = data;
@@ -70,7 +75,7 @@ public class Matrix {
    * @param cols number of columns in the matrix
    * @return an identity matrix
    */
-  public static Matrix identity(int rows, int cols) {
+  public static Matrix identity(final int rows, final int cols) {
     Matrix C = new Matrix(rows, cols);
     int min = (rows < cols) ? rows : cols;
     for (int i = 0; i < min; i++)
@@ -85,7 +90,7 @@ public class Matrix {
    * @param cols number of columns in the matrix
    * @return a matrix filled with random numbers
    */
-  public static Matrix random(int rows, int cols) {
+  public static Matrix random(final int rows, final int cols) {
     Matrix C = new Matrix(rows, cols);
     for (int n = 0, length = rows * cols; n < length; n++)
       C.data[n] = ThreadLocalRandom.current().nextDouble();
@@ -101,10 +106,11 @@ public class Matrix {
    * @param max  maximal value of the range, exclusive
    * @return a matrix filled with random integers
    */
-  public static Matrix random(int rows, int cols, int min, int max) {
+  public static Matrix random(final int rows, final int cols, final int min, final int max) {
     Matrix C = new Matrix(rows, cols);
-    for (int n = 0; n < rows * cols; n++)
+    for (int n = 0; n < rows * cols; n++) {
       C.data[n] = ThreadLocalRandom.current().nextInt(min, max);
+    }
     return C;
   }
 
@@ -117,11 +123,11 @@ public class Matrix {
    * @param max  maximal value of the range, exclusive
    * @return a matrix filled with random integers
    */
-  public static Matrix random(int rows, int cols, double min, double max) {
+  public static Matrix random(final int rows, final int cols, final double min, final double max) {
     Matrix C = new Matrix(rows, cols);
-    for (int n = 0; n < rows * cols; n++)
+    for (int n = 0; n < rows * cols; n++) {
       C.data[n] = ThreadLocalRandom.current().nextDouble(min, max);
-    ;
+    }
     return C;
   }
 
@@ -527,7 +533,7 @@ public class Matrix {
    * @return
    */
   public Matrix[] nmf(final int k, final int n, final double e) {
-    return NmfFactorization.nmf_mu2(this, k, n, e);
+    return NMF.nmf_mu(data, rows, cols, k, n, e);
   }
 
   /**
@@ -536,7 +542,7 @@ public class Matrix {
    * @return
    */
   public Matrix[] nmf(final int k) {
-    return NmfFactorization.nmf_mu2(this, k, 30, 0.01);
+    return NMF.nmf_mu(data, rows, cols, k, 30, 0.01);
   }
 
   /**
@@ -578,14 +584,35 @@ public class Matrix {
       else if (o instanceof Matrix) {
         Matrix B = (Matrix) o;
         if (rows == B.rows && cols == B.cols) {
-          rv = true;
-          for (int i = 0; i < data.length && rv == true; i++)
-            if (Double.compare(data[i], B.data[i]) != 0)
-              rv = false;
+          rv = Arrays.equals(data, B.data);
         }
       }
     }
     return rv;
+  }
+
+  /**
+   * @param M
+   * @param eps
+   * @return
+   */
+  public boolean equals(Matrix M, double eps) {
+    boolean rv = false;
+
+    if (rows == M.rows && cols == M.cols) {
+      rv = ArrayUtils.equals(data, M.data, eps);
+    }
+
+    return rv;
+  }
+
+  @Override
+  public int hashCode() {
+    int prime = 31, result = 1;
+    result = prime * result + (int) rows;
+    result = prime * result + (int) cols;
+    result = prime * result + data.hashCode();
+    return result;
   }
 
   @Override
@@ -597,5 +624,10 @@ public class Matrix {
       sb.append("\n");
     }
     return sb.toString();
+  }
+
+  @Override
+  public double distanceTo(Matrix M) {
+    return ArrayUtils.euclideanDistance(data, M.data);
   }
 }
