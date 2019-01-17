@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link CollectionsUtils}.
@@ -47,7 +47,7 @@ public class CollectionsUtilsTest {
     l2.add("a");
     l2.add("b");
 
-    assertEquals(true, CollectionsUtils.equals(l1, l2));
+    assertTrue(CollectionsUtils.equals(l1, l2));
   }
 
   @Test
@@ -63,6 +63,6 @@ public class CollectionsUtilsTest {
     l2.add("c");
     l2.add("d");
 
-    assertEquals(false, CollectionsUtils.equals(l1, l2));
+    assertFalse(CollectionsUtils.equals(l1, l2));
   }
 }

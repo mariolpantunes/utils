@@ -160,12 +160,12 @@ public final class ArrayUtils {
    * Divide an array by a scalar.
    * The elements from A are divided by the scalar b and stored in C.
    *
-   * @param a   first vector
-   * @param bA  index of the first vector
+   * @param a   first array
+   * @param bA  index of the first array
    * @param b   scalar
-   * @param c   resulting vector
+   * @param c   resulting array
    * @param bC  index of the resulting vector
-   * @param len array's len
+   * @param len array's length
    */
   public static void div(final double[] a, final int bA, final double b,
                          final double[] c, final int bC, final int len) {
@@ -220,7 +220,7 @@ public final class ArrayUtils {
    * @param b   scalar
    * @param c   resulting vector
    * @param bC  index of the resulting vector
-   * @param len array's len
+   * @param len array's length
    */
   public static void pow(final double[] a, final int bA, final double b,
                          final double[] c, final int bC, final int len) {
@@ -236,24 +236,57 @@ public final class ArrayUtils {
     }
   }
 
-  // TODO: improve minkowskiDistance
   /**
-   * @param a
-   * @param bA
-   * @param b
-   * @param bB
-   * @param len
-   * @param p
-   * @return
+   * Returns the Minkowski distance between two arrays:
+   * \(D(a,b) = \left( \sum_{i=0}^{len}|a_{i+bA}-b_{i+bB}|^p \right) ^\frac{1}{p}\)
+   * <p>The Minkowski distance is a metric in a normed vector space which can be considered as
+   * a generalization of both the Euclidean distance and the Manhattan distance.</p>
+   *
+   * @param a the first array
+   * @param bA index of the first array
+   * @param b the second array
+   * @param bB index of the second array
+   * @param len array's length
+   * @param p order (p = 0 reprenset infinity)
+   * @return the Minkowski distance between two arrays
    */
-  public static double minkowskiDistance(final double[] a, final int bA,
-                                         final double[] b, final int bB,
-                                         final int len, final int p) {
-    double sum = 0.0;
-    for (int i = 0; i < len; i++) {
-      sum += Math.pow(Math.abs(a[bA + i] - b[bB + i]), p);
+  public static double minkowskiDistance(final double[] a, final int bA, final double[] b,
+                                         final int bB, final int len, final int p) {
+    double rv = 0.0, diff[] = new double[len], max = 0.0;
+
+    max = Math.abs(a[bA] - b[bB]);
+    diff[0] = max;
+    for (int i = 1; i < len; i++) {
+      diff[i] = Math.abs(a[i + bA] - b[i + bB]);
+      if (diff[i] > max) {
+        max = diff[i];
+      }
     }
-    return MathUtils.nthRoot(sum, p);
+
+    if (p == 0) {
+      rv = max;
+    } else if (p == 1) {
+      rv = ArrayUtils.sum(diff, 0, diff.length);
+    } else {
+      rv = norm2(diff, p, max);
+    }
+
+    return rv;
+  }
+
+  /**
+   * Returns the Minkowski distance between two arrays:
+   * \(D(a,b) = \left( \sum_{i=0}^{len}|a_{i+bA}-b_{i+bB}|^p \right) ^\frac{1}{p}\)
+   * <p>The Minkowski distance is a metric in a normed vector space which can be considered as
+   * a generalization of both the Euclidean distance and the Manhattan distance.</p>
+   *
+   * @param a the first array
+   * @param b the second array
+   * @param p order (p = 0 reprenset infinity)
+   * @return the Minkowski distance between two arrays
+   */
+  public static double minkowskiDistance(final double[] a, final double[] b, final int p) {
+    return minkowskiDistance(a, 0, b, 0, a.length, p);
   }
 
   /**
@@ -264,16 +297,16 @@ public final class ArrayUtils {
    * @param len
    * @return
    */
-  public static double euclideanDistance(final double[] a, final int bA,
-                                         final double[] b, final int bB,
-                                         final int len) {
-    double sum = 0.0;
-    for (int i = 0; i < len; i++) {
-      sum += Math.pow(a[bA + i] - b[bB + i], 2.0);
-    }
-    return Math.sqrt(sum);
+  public static double euclideanDistance(final double[] a, final int bA, final double[] b,
+                                         final int bB, final int len) {
+    return minkowskiDistance(a, bA, b, bB, len, 2);
   }
 
+  /**
+   * @param a
+   * @param b
+   * @return
+   */
   public static double euclideanDistance(final double[] a, final double[] b) {
     return euclideanDistance(a, 0, b, 0, a.length);
   }
@@ -287,14 +320,9 @@ public final class ArrayUtils {
    * @param len
    * @return
    */
-  public static double manhattanDistance(final double[] a, final int bA,
-                                         final double[] b, final int bB,
-                                         final int len) {
-    double sum = 0.0;
-    for (int i = 0; i < len; i++) {
-      sum += Math.abs(a[bA + i] - b[bB + i]);
-    }
-    return sum;
+  public static double manhattanDistance(final double[] a, final int bA, final double[] b,
+                                         final int bB, final int len) {
+    return minkowskiDistance(a, bA, b, bB, len, 1);
   }
 
   /**
@@ -1053,9 +1081,49 @@ public final class ArrayUtils {
     }
   }
 
-  //TODO: Check the necessity of using Math.abs
   /**
-   * Returns the norm p from a array of data.
+   *
+   * @param a
+   * @param bIdx
+   * @param len
+   * @param p
+   * @param max
+   * @return
+   */
+  private static double norm2(final double a[], final int bIdx, final int len, final int p,
+                              final double max) {
+
+    double rv = 0.0;
+    if (p == 2) {
+      for (int i = 0; i < len; i++) {
+        rv += Math.pow(a[i + bIdx] / max, 2.0);
+      }
+      rv = Math.sqrt(rv);
+    } else {
+      for (int i = 0; i < len; i++) {
+        rv += Math.pow(a[i + bIdx] / max, p);
+      }
+      rv = MathUtils.nthRoot(rv, p);
+    }
+
+    rv *= max;
+
+    return rv;
+  }
+
+  /**
+   * @param a
+   * @param p
+   * @param max
+   * @return
+   */
+  private static double norm2(final double a[], final int p, final double max) {
+    return norm2(a, 0, a.length, p, max);
+  }
+
+  /**
+   * Returns the norm p from a array of data: \(\left \| x \right \|_p = \left( \sum_{i=0}^{len}
+   * |a_{i+bA}|^p \right) ^\frac{1}{p}\)
    * <p>The implementation is numerically stable.</p>
    *
    * @see <a href="https://timvieira.github.io/blog/post/2014/11/10/numerically-stable-p-norms/">
@@ -1077,28 +1145,7 @@ public final class ArrayUtils {
       }
     } else {
       double max = Math.abs(a[ArrayUtils.maxAbs(a, bIdx, len)]);
-
-      if (p == 2) {
-        for (int i = 0; i < len; i++) {
-          norm += Math.pow(a[i + bIdx] / max, 2.0);
-        }
-        norm = Math.sqrt(norm);
-      } else {
-
-        if (MathUtils.isEven(p)) {
-          for (int i = 0; i < len; i++) {
-            norm += Math.pow(a[i + bIdx] / max, p);
-          }
-        } else {
-          for (int i = 0; i < len; i++) {
-            norm += Math.pow(Math.abs(a[i + bIdx]) / max, p);
-          }
-        }
-
-        norm = MathUtils.nthRoot(norm, p);
-      }
-
-      norm *= max;
+      norm = norm2(a, bIdx, len, p, max);
     }
     return norm;
   }
