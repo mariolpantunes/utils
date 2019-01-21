@@ -12,7 +12,6 @@ import static org.junit.Assert.assertTrue;
  * @version 1.0
  */
 public class NMFTest {
-
   @Test
   public void test_identity_nmf() {
     Matrix V = Matrix.identity(5);

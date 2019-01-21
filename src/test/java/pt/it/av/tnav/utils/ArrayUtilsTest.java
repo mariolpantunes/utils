@@ -243,4 +243,11 @@ public class ArrayUtilsTest {
     d = ArrayUtils.minkowskiDistance(nones, zeros, 3);
     assertEquals(1.442, d, 0.001);
   }
+
+  @Test
+  public void test_euclidean_distance() {
+    double a[] = {25.0, 15.0, -5.0, 15.0, 18.0, 0.0, -5.0, 0.0, 11.0},
+        d = ArrayUtils.euclideanDistance(a, a);
+    assertEquals(0.0, d, 0.001);
+  }
 }

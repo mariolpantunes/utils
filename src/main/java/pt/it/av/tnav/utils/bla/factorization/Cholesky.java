@@ -20,7 +20,14 @@ public class Cholesky {
         for (int j = 0; j < k; j++) {
           sum += c[i * cols + j] * c[k * cols + j];
         }
-        c[i * cols + k] = (i == k) ? Math.sqrt(data[i * cols + i] - sum) : (1.0 / c[k * cols + k] * (data[i * cols + k] - sum));
+        if (i == k) {
+          c[i * cols + k] = Math.sqrt(data[i * cols + i] - sum);
+        } else {
+          c[i * cols + k] = (data[i * cols + k] - sum);
+          if (c[k * cols + k] != 0) {
+            c[i * cols + k] /= c[k * cols + k];
+          }
+        }
       }
     }
 

@@ -1,6 +1,7 @@
 package pt.it.av.tnav.utils.bla;
 
 import pt.it.av.tnav.utils.ArrayUtils;
+import pt.it.av.tnav.utils.bla.factorization.Cholesky;
 import pt.it.av.tnav.utils.bla.factorization.NMF;
 import pt.it.av.tnav.utils.bla.multiplication.MatrixMultiplication;
 import pt.it.av.tnav.utils.bla.transpose.MatrixTranspose;
@@ -542,7 +543,11 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] nmf(final int k) {
-    return NMF.nmf_mu(data, rows, cols, k, 30, 0.01);
+    return NMF.nmf_mu(data, rows, cols, k, 100, 0.01);
+  }
+
+  public Matrix chol() {
+    return Cholesky.chol(data, rows, cols);
   }
 
   /**

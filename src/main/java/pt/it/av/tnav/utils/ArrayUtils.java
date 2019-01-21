@@ -268,7 +268,7 @@ public final class ArrayUtils {
     } else if (p == 1) {
       rv = ArrayUtils.sum(diff, 0, diff.length);
     } else {
-      rv = norm2(diff, p, max);
+      rv = (max > 0) ? norm2(diff, p, max) : 0.0;
     }
 
     return rv;
@@ -1145,7 +1145,7 @@ public final class ArrayUtils {
       }
     } else {
       double max = Math.abs(a[ArrayUtils.maxAbs(a, bIdx, len)]);
-      norm = norm2(a, bIdx, len, p, max);
+      norm = (max > 0) ? norm2(a, bIdx, len, p, max) : 0.0;
     }
     return norm;
   }
