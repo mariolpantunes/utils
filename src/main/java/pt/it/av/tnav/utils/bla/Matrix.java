@@ -3,6 +3,7 @@ package pt.it.av.tnav.utils.bla;
 import pt.it.av.tnav.utils.ArrayUtils;
 import pt.it.av.tnav.utils.bla.factorization.Cholesky;
 import pt.it.av.tnav.utils.bla.factorization.NMF;
+import pt.it.av.tnav.utils.bla.factorization.QR;
 import pt.it.av.tnav.utils.bla.multiplication.MatrixMultiplication;
 import pt.it.av.tnav.utils.bla.transpose.MatrixTranspose;
 import pt.it.av.tnav.utils.structures.Distance;
@@ -130,36 +131,6 @@ public class Matrix implements Distance<Matrix> {
       C.data[n] = ThreadLocalRandom.current().nextDouble(min, max);
     }
     return C;
-  }
-
-  /**
-   * @param M
-   * @param H
-   * @param r
-   * @param c
-   * @return
-   */
-  private static boolean householder(Matrix M, Matrix H, int r, int c) {
-    boolean rv = false;
-    Vector v = M.vector(r, c);
-    double d = v.norm(2);
-    if (d != v.data[v.bIdx]) {
-      rv = true;
-      if (v.data[v.bIdx] > 0)
-        d = -d;
-      v.data[v.bIdx] -= d;
-      double f1 = Math.sqrt(-2 * v.data[v.bIdx] * d);
-      v = v.div(f1);
-      for (int i = c; i < M.cols; i++)
-        M.data[r * M.cols + i] = 0.0;
-      M.data[r * M.cols + c] = d;
-      for (int i = r + 1; i < M.rows; i++)
-        M.uSubRow(i, c, v.mul(2.0 * v.innerProduct(M.vector(i, c))));
-      if (H != null)
-        for (int i = 0; i < H.rows; i++)
-          H.uSubRow(i, c, v.mul(2.0 * v.innerProduct(H.vector(i, c))));
-    }
-    return rv;
   }
 
   private static double[] rot(double a, double b) {
@@ -412,10 +383,10 @@ public class Matrix implements Distance<Matrix> {
    */
   public Matrix triangular() {
     Matrix T = transpose();
-    for (int k = 0; k < rows - 1; k++)
-      householder(T, null, k, k);
-    T.uTranspose();
-    return T;
+    for (int k = 0; k < rows - 1; k++) {
+      QR.householder(T.data, null, T.rows, T.cols, k, k);
+    }
+    return T.uTranspose();
   }
 
   /**
@@ -423,13 +394,14 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] qr() {
-    Matrix QR[] = new Matrix[2];
-    QR[0] = Matrix.identity(rows);
-    QR[1] = transpose();
-    for (int k = 0; k < rows - 1; k++)
-      householder(QR[1], QR[0], k, k);
-    QR[1].uTranspose();
-    return QR;
+    Matrix q = Matrix.identity(rows);
+    Matrix r = transpose();
+
+    for (int k = 0; k < rows - 1; k++) {
+      QR.householder(q.data, r.data, rows, cols, k, k);
+    }
+
+    return new Matrix[]{q, r.uTranspose()};
   }
 
   /**
@@ -439,18 +411,17 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] bidiagonal() {
-    Matrix UBV[] = new Matrix[3];
-    UBV[0] = Matrix.identity(rows);
-    UBV[1] = transpose();
-    UBV[2] = Matrix.identity(cols);
+    Matrix U = Matrix.identity(rows), B = transpose(), V = Matrix.identity(cols);
+
     for (int k = 0; k < rows - 1; k++) {
-      householder(UBV[1], UBV[0], k, k);
-      UBV[1].uTranspose();
-      householder(UBV[1], UBV[2], k, k + 1);
-      UBV[1].uTranspose();
+      QR.householder(B.data, U.data, rows, cols, k, k);
+      B.uTranspose();
+      //QR.householder(B.data, V.data, rows, cols, k, k + 1);
+      QR.householder(B.data, V.data, cols, rows, k, k + 1);
+      B.uTranspose();
     }
-    UBV[1].uTranspose();
-    return UBV;
+
+    return new Matrix[]{U, B.uTranspose(), V};
   }
 
   private double[] diagArray(int n) {
@@ -499,7 +470,7 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   *
+   * Returns the derterminante of a {@link Matrix}.
    * @return
    */
   public double det() {
@@ -514,9 +485,11 @@ public class Matrix implements Distance<Matrix> {
     else {
       Matrix T = transpose();
       int hh = 0;
-      for (int k = 0; k < rows - 1; k++)
-        if (householder(T, null, k, k))
+      for (int k = 0; k < rows - 1; k++) {
+        if (QR.householder(T.data, null, T.rows, T.cols, k, k)) {
           hh++;
+        }
+      }
       T.uTranspose();
       rv = 1.0;
       for (int i = 0; i < T.rows; i++)
@@ -534,7 +507,8 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] nmf(final int k, final int n, final double e) {
-    return NMF.nmf_mu(data, rows, cols, k, n, e);
+    double wh[][] = NMF.nmf_mu(data, rows, cols, k, n, e);
+    return new Matrix[]{new Matrix(rows, k, wh[0]), new Matrix(k, cols, wh[1])};
   }
 
   /**
@@ -543,11 +517,14 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] nmf(final int k) {
-    return NMF.nmf_mu(data, rows, cols, k, 100, 0.01);
+    return nmf(k, 100, 0.01);
   }
 
+  /**
+   * @return
+   */
   public Matrix chol() {
-    return Cholesky.chol(data, rows, cols);
+    return new Matrix(rows, cols, Cholesky.chol(data, rows, cols));
   }
 
   /**
@@ -568,14 +545,30 @@ public class Matrix implements Distance<Matrix> {
     return new Vector(data, 0, rows * cols);
   }
 
+  /**
+   *
+   * @param b
+   * @param p
+   * @return
+   */
   public double minkowskiDistance(Matrix b, int p) {
     return ArrayUtils.minkowskiDistance(data, 0, b.data, 0, data.length, p);
   }
 
+  /**
+   *
+   * @param b
+   * @return
+   */
   public double euclideanDistance(Matrix b) {
     return ArrayUtils.euclideanDistance(data, 0, b.data, 0, data.length);
   }
 
+  /**
+   * Returns the Manhattan Distance betweem this {@link Matrix} with {@link Matrix} B
+   * @param b
+   * @return
+   */
   public double manhattanDistance(Matrix b) {
     return ArrayUtils.manhattanDistance(data, 0, b.data, 0, data.length);
   }

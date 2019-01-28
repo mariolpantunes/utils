@@ -347,9 +347,8 @@ public final class ArrayUtils {
    * @param len
    * @return
    */
-  public static double dotProduct(final double[] a, final int bA,
-                                  final double[] b, final int bB,
-                                  final int len) {
+  public static double dotProduct(final double[] a, final int bA, final double[] b,
+                                  final int bB, final int len) {
     double rv = 0.0;
     for (int i = 0; i < len; i++) {
       rv += a[bA + i] * b[bB + i];

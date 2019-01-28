@@ -29,4 +29,12 @@ public class CholeskyTest {
     Matrix VT = L.mul(L.transpose());
     assertTrue(V.equals(VT, 0.00001));
   }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_identity_chol_3() {
+    double data[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    Matrix V = new Matrix(3, 3, data);
+    Matrix L = V.chol();
+    Matrix VT = L.mul(L.transpose());
+  }
 }

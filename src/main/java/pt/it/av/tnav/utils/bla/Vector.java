@@ -252,13 +252,14 @@ public class Vector implements Distance<Vector> {
     return this;
   }
 
-  public double innerProduct(Vector b) {
-    double c = 0.0;
-    for (int i = 0; i < len; i++)
-      c += data[bIdx + i] * b.data[b.bIdx + i];
-    return c;
+  public double dotProduct(Vector b) {
+    if (len != b.len) {
+      throw new IllegalArgumentException("The vectors do not have the same lenght.");
+    }
+    return ArrayUtils.dotProduct(data, bIdx, b.data, b.bIdx, len);
   }
 
+  //TODO
   public Matrix outerProduct(Vector b) {
     Matrix C = new Matrix(len, b.len);
     int k = 0;
@@ -287,7 +288,7 @@ public class Vector implements Distance<Vector> {
   }
 
   public double cosine(Vector b) {
-    double rv = 0.0, dp = innerProduct(b);
+    double rv = 0.0, dp = dotProduct(b);
     if (dp > 0)
       rv = dp / (norm(2) * b.norm(2));
     return rv;

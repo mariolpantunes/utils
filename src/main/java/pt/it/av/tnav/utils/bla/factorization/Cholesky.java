@@ -1,6 +1,5 @@
 package pt.it.av.tnav.utils.bla.factorization;
 
-import pt.it.av.tnav.utils.bla.Matrix;
 
 /**
  * Cholesky factorization.
@@ -11,7 +10,7 @@ public class Cholesky {
   private Cholesky() {
   }
 
-  public static Matrix chol(final double data[], final int rows, final int cols) {
+  public static double[] chol(final double data[], final int rows, final int cols) {
     double c[] = new double[data.length];
 
     for (int i = 0; i < rows; i++) {
@@ -20,17 +19,24 @@ public class Cholesky {
         for (int j = 0; j < k; j++) {
           sum += c[i * cols + j] * c[k * cols + j];
         }
+
         if (i == k) {
-          c[i * cols + k] = Math.sqrt(data[i * cols + i] - sum);
+          double t = data[i * cols + i] - sum;
+          if (t > 0) {
+            c[i * cols + k] = Math.sqrt(t);
+          } else {
+            throw new IllegalArgumentException("The input is not a positive-definite matrix.");
+          }
         } else {
-          c[i * cols + k] = (data[i * cols + k] - sum);
           if (c[k * cols + k] != 0) {
-            c[i * cols + k] /= c[k * cols + k];
+            c[i * cols + k] = (data[i * cols + k] - sum) / c[k * cols + k];
+          } else {
+            throw new IllegalArgumentException("The input is not a positive-definite matrix.");
           }
         }
       }
     }
 
-    return new Matrix(rows, cols, c);
+    return c;
   }
 }

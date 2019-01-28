@@ -2,7 +2,6 @@ package pt.it.av.tnav.utils.bla.factorization;
 
 import pt.it.av.tnav.utils.ArrayUtils;
 import pt.it.av.tnav.utils.MathUtils;
-import pt.it.av.tnav.utils.bla.Matrix;
 import pt.it.av.tnav.utils.bla.multiplication.MatrixMultiplication;
 import pt.it.av.tnav.utils.bla.transpose.MatrixTranspose;
 
@@ -15,6 +14,9 @@ import java.util.Arrays;
  */
 public class NMF {
 
+  /**
+   *
+   */
   private NMF() {
   }
 
@@ -27,10 +29,9 @@ public class NMF {
    * @param e
    * @return
    */
-  public static Matrix[] nmf_mu(final double data[], final int rows, final int cols, int k, int n, double e) {
+  public static double[][] nmf_mu(final double data[], final int rows, final int cols, int k, int n,
+                                  double e) {
     double max = data[ArrayUtils.max(data)], min = data[ArrayUtils.min(data)], eps = MathUtils.eps();
-    //Matrix w = Matrix.random(rows, k, 0.0, max);
-    //Matrix h = Matrix.random(k, cols, 0.0, max);
 
     double w[] = ArrayUtils.random(rows * k, min, max), h[] = ArrayUtils.random(k * cols, min, max),
         wh[] = new double[data.length], wt[] = new double[w.length],
@@ -70,6 +71,6 @@ public class NMF {
       cost = ArrayUtils.euclideanDistance(data, 0, wh, 0, data.length);
     }
 
-    return new Matrix[]{new Matrix(rows, k, w), new Matrix(k, cols, h)};
+    return new double[][]{w, h};
   }
 }
