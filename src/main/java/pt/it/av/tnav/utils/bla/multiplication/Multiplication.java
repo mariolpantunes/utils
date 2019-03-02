@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Several implementation of matrix multiplication.
+ * Several implementations of matrix multiplication.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class MatrixMultiplication {
+public class Multiplication {
 
-  private MatrixMultiplication() {
+  private Multiplication() {
   }
 
   private static final int P_MUL_SIZE = 4096;

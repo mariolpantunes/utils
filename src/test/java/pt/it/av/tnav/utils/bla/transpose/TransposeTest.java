@@ -2,18 +2,17 @@ package pt.it.av.tnav.utils.bla.transpose;
 
 import org.junit.Test;
 import pt.it.av.tnav.utils.ArrayUtils;
+import pt.it.av.tnav.utils.MathUtils;
 
-import java.util.Arrays;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
- * Unit test for {@link MatrixTranspose}.
+ * Unit test for {@link Transpose}.
  *
  * @author Mário Antunes
  * @version 1.0
  */
-public class MatrixTransposeTest {
+public class TransposeTest {
   private static final int N = 128, BLK = 32;
   private static double A[] = {1, 2, 3, 4, 5, 6}, AT[] = {1, 3, 5, 2, 4, 6},
       B[] = {0, 5, 10, 1, 6, 11, 2, 7, 12, 3, 8, 13, 4, 9, 14},
@@ -22,10 +21,10 @@ public class MatrixTransposeTest {
   @Test
   public void test_naive() {
     double at[] = new double[A.length], bt[] = new double[B.length];
-    MatrixTranspose.ntr(A, at, 3,2);
-    assertTrue(Arrays.equals(at, AT));
-    MatrixTranspose.ntr(B, bt, 5,3);
-    assertTrue(Arrays.equals(bt, BT));
+    Transpose.ntr(A, at, 3, 2);
+    assertArrayEquals(AT, at, MathUtils.eps());
+    Transpose.ntr(B, bt, 5, 3);
+    assertArrayEquals(BT, bt, MathUtils.eps());
   }
 
   @Test
@@ -33,25 +32,26 @@ public class MatrixTransposeTest {
     double a[] = new double[A.length], b[] = new double[B.length];
     System.arraycopy(A,0, a,0, A.length);
     System.arraycopy(B,0, b,0, B.length);
-    MatrixTranspose.infotr(a, 3, 2);
-    assertTrue(Arrays.equals(a, AT));
-    MatrixTranspose.infotr(b, 5, 3);
-    assertTrue(Arrays.equals(b, BT));
+    Transpose.infotr(a, 3, 2);
+    assertArrayEquals(AT, a, MathUtils.eps());
+    Transpose.infotr(b, 5, 3);
+    assertArrayEquals(BT, b, MathUtils.eps());
   }
 
   @Test
   public void test_transpose_inplace_follow_cycles_large() {
-    double m[] = ArrayUtils.random(N * N), mt[] = ArrayUtils.random(N * N);
-    MatrixTranspose.ntr(m, mt, N, N);
-    MatrixTranspose.infotr(m, N, N);
-    assertTrue(Arrays.equals(m, mt));
+    double m[] = ArrayUtils.random(N * N), mt[] = new double[N * N];
+    Transpose.ntr(m, mt, N, N);
+    Transpose.infotr(m, N, N);
+    assertArrayEquals(mt, m, MathUtils.eps());
   }
 
   @Test
   public void test_transpose_cache_oblivious_large() {
-    double m[] = ArrayUtils.random(N * N), mt[] = ArrayUtils.random(N * N), mt2[] = ArrayUtils.random(N * N);
-    MatrixTranspose.ntr(m, mt, N, N);
-    MatrixTranspose.cotr(m, mt2, N, N, BLK);
-    assertTrue(Arrays.equals(mt, mt2));
+    double m[] = ArrayUtils.random(N * N), mt[] = new double[N * N],
+        mt2[] = new double[N * N];
+    Transpose.ntr(m, mt, N, N);
+    Transpose.cotr(m, mt2, N, N);
+    assertArrayEquals(mt, mt2, MathUtils.eps());
   }
 }

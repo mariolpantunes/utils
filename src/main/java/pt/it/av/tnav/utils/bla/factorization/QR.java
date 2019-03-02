@@ -1,6 +1,7 @@
 package pt.it.av.tnav.utils.bla.factorization;
 
 import pt.it.av.tnav.utils.ArrayUtils;
+import pt.it.av.tnav.utils.bla.transpose.Transpose;
 
 /**
  * QR factorization.
@@ -13,6 +14,23 @@ public class QR {
 
   /**
    * @param m
+   * @param rows
+   * @param cols
+   * @return
+   */
+  public static double[][] qr(final double[] m, final int rows, final int cols) {
+    double[] q = ArrayUtils.identity(rows, cols), r = new double[rows * cols];
+    Transpose.transpose(m, r, rows, cols);
+
+    for (int k = 0; k < rows - 1; k++) {
+      QR.householder(r, q, cols, rows, rows, cols, k, k);
+    }
+
+    return new double[][]{q, Transpose.uTranspose(r, cols, rows)};
+  }
+
+  /**
+   * @param m
    * @param h
    * @param rows
    * @param cols
@@ -20,50 +38,36 @@ public class QR {
    * @param c
    * @return
    */
-  public static boolean householder(final double m[], final double h[], final int rows,
-                                    final int cols, final int r, final int c) {
-    boolean rv = false;
-
-    //Vector v = M.vector(r, c);
-
-    int bIdx = r * cols + c, len = cols - c;
-
-    //return new Vector(data, , cols - column);
-    //double d = v.norm(2);
+  public static void householder(final double[] m, final double[] h, final int mRows,
+                                 final int mCols, final int hRows, final int hCols,
+                                 final int r, final int c) {
+    int bIdx = r * mCols + c, len = mCols - c;
     double d = ArrayUtils.norm(m, bIdx, len, 2);
 
     if (d != m[bIdx]) {
-      rv = true;
-      /*if (m[bIdx] > 0) {
-        d = -d;
-      }*/
       d = (m[bIdx] > 0) ? -d : d;
       m[bIdx] -= d;
+      double[] v = new double[len];
       double f1 = Math.sqrt(-2 * m[bIdx] * d);
-      //v = v.div(f1);
-      ArrayUtils.div(m, bIdx, f1, m, bIdx, len);
-      for (int i = c; i < cols; i++) {
-        m[r * cols + i] = 0.0;
+      ArrayUtils.div(m, bIdx, f1, v, 0, len);
+      for (int i = c; i < mCols; i++) {
+        m[r * mCols + i] = 0.0;
       }
-      m[r * cols + c] = d;
-      double t[] = new double[len];
-      for (int i = r + 1; i < rows; i++) {
-        //M.uSubRow(i, c, v.mul(2.0 * v.innerProduct(M.vector(i, c))));
-        double s = 2.0 * ArrayUtils.dotProduct(m, bIdx, m, i * cols + c, len);
-        ArrayUtils.mul(m, bIdx, s, t, 0, len);
-        ArrayUtils.sub(m, i * cols + c, t, 0, m, i * cols + c, len);
+      m[r * mCols + c] = d;
+
+      double[] t = new double[len];
+
+      for (int i = r + 1; i < mRows; i++) {
+        double s = 2.0 * ArrayUtils.dotProduct(v, 0, m, i * mCols + c, len);
+        ArrayUtils.mul(v, 0, s, t, 0, len);
+        ArrayUtils.sub(m, i * mCols + c, t, 0, m, i * mCols + c, len);
       }
-      if (h != null) {
-        //for (int i = 0; i < H.rows; i++) {
-        for (int i = 0; i < rows; i++) {
-          //H.uSubRow(i, c, v.mul(2.0 * v.innerProduct(H.vector(i, c))));
-          double s = 2.0 * ArrayUtils.dotProduct(h, bIdx, h, i * cols + c, len);
-          ArrayUtils.mul(m, bIdx, s, t, 0, len);
-          ArrayUtils.sub(h, i * cols + c, t, 0, h, i * cols + c, len);
-        }
+
+      for (int i = 0; i < hRows; i++) {
+        double s = 2.0 * ArrayUtils.dotProduct(v, 0, h, i * hCols + c, len);
+        ArrayUtils.mul(v, 0, s, t, 0, len);
+        ArrayUtils.sub(h, i * hCols + c, t, 0, h, i * hCols + c, len);
       }
     }
-
-    return rv;
   }
 }

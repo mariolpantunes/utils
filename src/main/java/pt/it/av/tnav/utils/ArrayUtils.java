@@ -1597,4 +1597,24 @@ public final class ArrayUtils {
 
     return rv;
   }
+
+  /**
+   * Returns an identity matrix (an array that represents a matrix in row-major order) with size:
+   * Rows x Cols.
+   *
+   * @param rows number of rows in the matrix
+   * @param cols number of columns in the matrix
+   * @return an identity matrix (an array that represents a matrix in row-major order) with size:
+   * Rows x Cols
+   */
+  public static double[] identity(final int rows, final int cols) {
+    double m[] = new double[rows * cols];
+
+    int min = (rows < cols) ? rows : cols;
+    for (int i = 0; i < min; i++) {
+      m[i * cols + i] = 1.0;
+    }
+
+    return m;
+  }
 }

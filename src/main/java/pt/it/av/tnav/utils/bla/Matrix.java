@@ -4,8 +4,9 @@ import pt.it.av.tnav.utils.ArrayUtils;
 import pt.it.av.tnav.utils.bla.factorization.Cholesky;
 import pt.it.av.tnav.utils.bla.factorization.NMF;
 import pt.it.av.tnav.utils.bla.factorization.QR;
-import pt.it.av.tnav.utils.bla.multiplication.MatrixMultiplication;
-import pt.it.av.tnav.utils.bla.transpose.MatrixTranspose;
+import pt.it.av.tnav.utils.bla.multiplication.Multiplication;
+import pt.it.av.tnav.utils.bla.properties.Properties;
+import pt.it.av.tnav.utils.bla.transpose.Transpose;
 import pt.it.av.tnav.utils.structures.Distance;
 
 import java.util.Arrays;
@@ -18,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
 public class Matrix implements Distance<Matrix> {
-  protected final double data[];
+  protected final double[] data;
   protected int rows, cols;
 
   /**
@@ -41,7 +42,7 @@ public class Matrix implements Distance<Matrix> {
    * @param cols number of columns in the matrix
    * @param data 1D double array with matrix values
    */
-  public Matrix(final int rows, final int cols, final double data[]) {
+  public Matrix(final int rows, final int cols, final double[] data) {
     this.rows = rows;
     this.cols = cols;
     this.data = data;
@@ -75,14 +76,14 @@ public class Matrix implements Distance<Matrix> {
    *
    * @param rows number of rows in the matrix
    * @param cols number of columns in the matrix
-   * @return an identity matrix
+   * @return an identity matrix with size: Rows x Cols
    */
   public static Matrix identity(final int rows, final int cols) {
-    Matrix C = new Matrix(rows, cols);
-    int min = (rows < cols) ? rows : cols;
-    for (int i = 0; i < min; i++)
-      C.data[i * C.cols + i] = 1.0;
-    return C;
+    return new Matrix(rows, cols, ArrayUtils.identity(rows, cols));
+  }
+
+  public static Matrix zero(final int rows, final int cols) {
+    return new Matrix(rows, cols);
   }
 
   /**
@@ -131,32 +132,6 @@ public class Matrix implements Distance<Matrix> {
       C.data[n] = ThreadLocalRandom.current().nextDouble(min, max);
     }
     return C;
-  }
-
-  private static double[] rot(double a, double b) {
-    double csr[] = new double[3];
-    if (b == 0) {
-      csr[0] = Math.copySign(1, a);
-      csr[1] = 0;
-      csr[2] = Math.abs(a);
-    } else if (a == 0) {
-      csr[0] = 0;
-      csr[1] = Math.copySign(1, b);
-      csr[2] = Math.abs(b);
-    } else if (Math.abs(b) > Math.abs(a)) {
-      double t = a / b;
-      double u = Math.copySign(Math.sqrt(1 + t * t), b);
-      csr[1] = -1 / u;
-      csr[0] = -csr[1] * t;
-      csr[2] = b * u;
-    } else {
-      double t = b / a;
-      double u = Math.copySign(Math.sqrt(1 + t * t), a);
-      csr[0] = 1 / u;
-      csr[1] = -csr[0] * t;
-      csr[2] = a * u;
-    }
-    return csr;
   }
 
   /**
@@ -228,32 +203,113 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   * @return
+   * Returns <code>true</code> if the matrix is linear; <code>false</code> otherwise.
+   * @return <code>true</code> if the matrix is linear; <code>false</code> otherwise
    */
-  private boolean isLinear() {
-    return rows == 1 || cols == 1;
+  public boolean isLinear() {
+    return Properties.isLinear(rows, cols);
   }
 
   /**
-   * @return
+   * Returns <code>true</code> if the matrix is a row matrix; <code>false</code> otherwise.
+   * @return <code>true</code> if the matrix is a row matrix; <code>false</code> otherwise
    */
-  private boolean isSquare() {
-    return rows == cols;
+  public boolean isRow() {
+    return Properties.isRow(rows, cols);
   }
 
   /**
-   * Returns the transpose matrix.
-   * This function uses a cache oblivious algorithm to transpose the original matrix into a new one.
+   * Returns <code>true</code> if the matrix is a column matrix; <code>false</code> otherwise.
+   * @return <code>true</code> if the matrix is a column matrix; <code>false</code> otherwise
+   */
+  public boolean isColumn() {
+    return Properties.isColumn(rows, cols);
+  }
+
+  /**
+   * Returns <code>true</code> if the matrix is a 1x1 matrix; <code>false</code> otherwise.
    *
-   * @return the transpose matrix
+   * @return <code>true</code> if the matrix is a 1x1 matrix; <code>false</code> otherwise
+   */
+  public boolean is1x1() {
+    return Properties.is1x1(rows, cols);
+  }
+
+  /**
+   * Returns <code>true</code> if the matrix is square; <code>false</code> otherwise.
+   *
+   * @return <code>true</code> if the matrix is square; <code>false</code> otherwise
+   */
+  public boolean isSquare() {
+    return Properties.isSquare(rows, cols);
+  }
+
+  /**
+   * Returns <code>true</code> if the matrix is zero; <code>false</code> otherwise.
+   *
+   * @return <code>true</code> if the matrix is zero; <code>false</code> otherwise
+   */
+  public boolean isZero() {
+    return Properties.isZero(data);
+  }
+
+  /**
+   * Returns <code>true</code> if the matrix is the identity; <code>false</code> otherwise.
+   *
+   * @return <code>true</code> if the matrix is the identity; <code>false</code> otherwise
+   */
+  public boolean isIdentity() {
+    return Properties.isIdentity(data, rows, cols);
+  }
+
+  /**
+   * Returns <code>true</code> if the matrix is a scalar matrix; <code>false</code> otherwise.
+   *
+   * @return <code>true</code> if the matrix is a scalar matrix; <code>false</code> otherwise
+   */
+  public boolean isScalar() {
+    return Properties.isScalar(data, rows, cols);
+  }
+
+  /**
+   * Returns <code>true</code> if the matrix is a diagonal matrix; <code>false</code> otherwise.
+   *
+   * @return <code>true</code> if the matrix is a diagonal matrix; <code>false</code> otherwise
+   */
+  public boolean isDiagonal() {
+    return Properties.isDiagonal(data, rows, cols);
+  }
+
+  /**
+   * Returns <code>true</code> if the matrix is a upper triangular matrix; <code>false</code>
+   * otherwise.
+   *
+   * @return <code>true</code> if the matrix is a upper triangular matrix; <code>false</code>
+   * otherwise.
+   */
+  public boolean isUpperTriangular() {
+    return Properties.isUpperTriangular(data, rows, cols);
+  }
+
+  /**
+   * Returns <code>true</code> if the matrix is a lower triangular matrix; <code>false</code>
+   * otherwise.
+   *
+   * @return <code>true</code> if the matrix is a lower triangular matrix; <code>false</code>
+   * otherwise.
+   */
+  public boolean isLowerTriangular() {
+    return Properties.isLowerTriangular(data, rows, cols);
+  }
+
+  /**
+   * Returns the transpose {@link Matrix}.
+   *
+   * @return the transpose {@link Matrix}
    */
   public Matrix transpose() {
-    Matrix T = new Matrix(cols, rows);
-    if (isLinear())
-      System.arraycopy(data, 0, T.data, 0, data.length);
-    else
-      MatrixTranspose.cotr(data, T.data, rows, cols);
-    return T;
+    double[] t = new double[this.data.length];
+    return new Matrix(cols, rows, Transpose.transpose(data, t, rows, cols));
   }
 
   /**
@@ -264,12 +320,7 @@ public class Matrix implements Distance<Matrix> {
    * @return the transpose matrix
    */
   public Matrix uTranspose() {
-    if (!isLinear()) {
-      if (isSquare())
-        MatrixTranspose.insqtr(data, rows);
-      else
-        MatrixTranspose.infotr(data, rows, cols);
-    }
+    Transpose.uTranspose(data, rows, cols);
     int t = rows;
     this.rows = cols;
     this.cols = t;
@@ -373,35 +424,29 @@ public class Matrix implements Distance<Matrix> {
    */
   public Matrix mul(Matrix B) {
     Matrix C = new Matrix(rows, B.cols);
-    MatrixMultiplication.mul(data, B.data, C.data, rows, B.cols, cols);
+    Multiplication.mul(data, B.data, C.data, rows, B.cols, cols);
     return C;
   }
 
   /**
-   *
+   * TODO: Finish this with other version of HouseHolder...
    * @return
    */
-  public Matrix triangular() {
+  /*public Matrix triangular() {
     Matrix T = transpose();
     for (int k = 0; k < rows - 1; k++) {
-      QR.householder(T.data, null, T.rows, T.cols, k, k);
+      QR.householder(T.data, T.rows, T.cols, k, k);
     }
     return T.uTranspose();
-  }
+  }*/
 
   /**
    *
    * @return
    */
   public Matrix[] qr() {
-    Matrix q = Matrix.identity(rows);
-    Matrix r = transpose();
-
-    for (int k = 0; k < rows - 1; k++) {
-      QR.householder(q.data, r.data, rows, cols, k, k);
-    }
-
-    return new Matrix[]{q, r.uTranspose()};
+    double[][] qr = QR.qr(data, rows, cols);
+    return new Matrix[]{new Matrix(rows, cols, qr[0]), new Matrix(rows, cols, qr[1])};
   }
 
   /**
@@ -414,10 +459,10 @@ public class Matrix implements Distance<Matrix> {
     Matrix U = Matrix.identity(rows), B = transpose(), V = Matrix.identity(cols);
 
     for (int k = 0; k < rows - 1; k++) {
-      QR.householder(B.data, U.data, rows, cols, k, k);
+      QR.householder(B.data, U.data, rows, cols, cols, rows, k, k);
       B.uTranspose();
       //QR.householder(B.data, V.data, rows, cols, k, k + 1);
-      QR.householder(B.data, V.data, cols, rows, k, k + 1);
+      QR.householder(B.data, V.data, cols, rows, cols, rows, k, k + 1);
       B.uTranspose();
     }
 
@@ -425,7 +470,7 @@ public class Matrix implements Distance<Matrix> {
   }
 
   private double[] diagArray(int n) {
-    double d[];
+    double[] d;
     if (n >= 0) {
       int size = Math.min(rows, cols - n);
       d = new double[size];
@@ -486,9 +531,10 @@ public class Matrix implements Distance<Matrix> {
       Matrix T = transpose();
       int hh = 0;
       for (int k = 0; k < rows - 1; k++) {
-        if (QR.householder(T.data, null, T.rows, T.cols, k, k)) {
+        // TODO: Fix this...
+        /*if (QR.householder(T.data, null, T.rows, T.cols, k, k)) {
           hh++;
-        }
+        }*/
       }
       T.uTranspose();
       rv = 1.0;
@@ -507,7 +553,7 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] nmf(final int k, final int n, final double e) {
-    double wh[][] = NMF.nmf_mu(data, rows, cols, k, n, e);
+    double[][] wh = NMF.nmf_mu(data, rows, cols, k, n, e);
     return new Matrix[]{new Matrix(rows, k, wh[0]), new Matrix(k, cols, wh[1])};
   }
 
