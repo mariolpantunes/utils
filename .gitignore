@@ -22,3 +22,7 @@ hs_err_pid*
 # Maven
 dependency-reduced-pom.xml
 target
+
+#Personal
+ws.json
+Test.java
