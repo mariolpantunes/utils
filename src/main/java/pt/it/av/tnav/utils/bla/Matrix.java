@@ -178,7 +178,11 @@ public class Matrix implements Distance<Matrix> {
    * @param scalar value
    */
   public void set(int r, int c, double scalar) {
-    data[r * cols + c] = scalar;
+    if (r >= 0 && r < this.rows && c >= 0 && c < this.cols) {
+      data[r * cols + c] = scalar;
+    } else {
+      throw new IndexOutOfBoundsException(String.format("Matrix %dx%d -> [%d, %d]", this.rows, this.cols, r, c));
+    }
   }
 
   /**
@@ -198,8 +202,12 @@ public class Matrix implements Distance<Matrix> {
    * @param c column
    * @return the value in r-row, c-column
    */
-  public double get(int r, int c) {
-    return data[r * cols + c];
+  public double get(final int r, final int c) {
+    if (r >= 0 && r < this.rows && c >= 0 && c < this.cols) {
+      return data[r * cols + c];
+    } else {
+      throw new IndexOutOfBoundsException(String.format("Matrix %dx%d -> [%d, %d]", this.rows, this.cols, r, c));
+    }
   }
 
   /**
