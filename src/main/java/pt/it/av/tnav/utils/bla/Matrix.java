@@ -383,21 +383,44 @@ public class Matrix implements Distance<Matrix> {
     return this;
   }
 
+  /**
+   * Return a matrix multiplied by a scalar.
+   * 
+   * @param scalar
+   * @return a matrix multiplied by a scalar
+   */
   public Matrix mul(double scalar) {
     Matrix C = new Matrix(rows, cols);
     ArrayUtils.mul(data, 0, scalar, C.data, 0, data.length);
     return C;
   }
 
+  /**
+   * Updates the matrix by multiplying all the values by a scalar.
+   * 
+   * @param scalar scalar to be used
+   */
   public Matrix uMul(double scalar) {
     ArrayUtils.mul(data, 0, scalar, this.data, 0, data.length);
     return this;
   }
 
   /**
-   * @param column
-   * @param scalar
-   * @return
+   * Updates the matrix by dividing all the values by a scalar.
+   * 
+   * @param scalar scalar to be used
+   */
+  public Matrix uDiv(double scalar) {
+    ArrayUtils.div(data, 0, scalar, this.data, 0, data.length);
+    return this;
+  }
+
+  /**
+   * Return a matrix where one column was updated by adding a scalar.
+   * 
+   * @param column the index of the column
+   * @param scalar scalar to be used
+   * @return a matrix where one column was updated by adding a scalar
    */
   public Matrix addColumn(int column, double scalar) {
     Matrix C = new Matrix(rows, cols + 1);
