@@ -295,8 +295,8 @@ public class Http {
    * @return
    * @throws IOException
    */
-  public static JSONObject getJson(String url, String xMashapeKey) throws IOException {
-    return getJson(url, xMashapeKey, DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
+  public static JSONObject getJson(String url, String XRapidAPIKey) throws IOException {
+    return getJson(url, XRapidAPIKey, DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
   }
 
   /**
@@ -307,7 +307,7 @@ public class Http {
    * @return
    * @throws IOException
    */
-  public static JSONObject getJson(final String url, final String xMashapeKey,
+  public static JSONObject getJson(final String url, final String XRapidAPIKey,
                                    final int timeout, final int retries) {
     JSONObject rv = null;
     HttpURLConnection conn = null;
@@ -320,7 +320,7 @@ public class Http {
       conn.setReadTimeout(timeout);
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Content-Type", "application/json");
-      conn.setRequestProperty("X-Mashape-Key", xMashapeKey);
+      conn.setRequestProperty("X-RapidAPI-Key", XRapidAPIKey);
       conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
       conn.setRequestProperty("User-Agent", "");
       conn.connect();

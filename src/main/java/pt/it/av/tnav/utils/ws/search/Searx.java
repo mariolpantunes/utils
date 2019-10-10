@@ -14,7 +14,7 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class Searx extends WebSearchEngine {
-  private static final String DEFAULT_URL = "http://hrun.hopto.org/searx/";
+  private static final String DEFAULT_URL = "https://searx.ro/";
 
   /**
    * Searx constructor.
