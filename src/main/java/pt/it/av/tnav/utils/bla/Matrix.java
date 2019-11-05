@@ -13,8 +13,8 @@ import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * General purpose Matrix.
- * Implements several functions used in linear algebra and machine learning.
+ * General purpose Matrix. Implements several functions used in linear algebra
+ * and machine learning.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  */
@@ -35,8 +35,8 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   * Creates a matrix from a 1D double array with size: Rows x Cols.
-   * Does not copy the array's content (shallow copy).
+   * Creates a matrix from a 1D double array with size: Rows x Cols. Does not copy
+   * the array's content (shallow copy).
    *
    * @param rows number of rows in the matrix
    * @param cols number of columns in the matrix
@@ -49,8 +49,8 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   * Creates a matrix from another matrix.
-   * Implements a copy-constructor (deep copy).
+   * Creates a matrix from another matrix. Implements a copy-constructor (deep
+   * copy).
    *
    * @param A another matrix
    */
@@ -86,6 +86,12 @@ public class Matrix implements Distance<Matrix> {
     return new Matrix(rows, cols);
   }
 
+  public static Matrix ones(final int rows, final int cols) {
+    Matrix RV = new Matrix(rows, cols);
+    Arrays.fill(RV.data, 1.0);
+    return RV;
+  }
+
   /**
    * Returns a matrix filled with random numbers between [0, 1[.
    *
@@ -101,7 +107,8 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   * Returns a matrix filled with random integers between [{@code min}, {@code max}[.
+   * Returns a matrix filled with random integers between [{@code min},
+   * {@code max}[.
    *
    * @param rows number of rows in the matrix
    * @param cols number of columns in the matrix
@@ -118,7 +125,8 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   * Returns a matrix filled with random integers doubles [{@code min}, {@code max}[.
+   * Returns a matrix filled with random integers doubles [{@code min},
+   * {@code max}[.
    *
    * @param rows number of rows in the matrix
    * @param cols number of columns in the matrix
@@ -170,6 +178,10 @@ public class Matrix implements Distance<Matrix> {
     return cols;
   }
 
+  public int size() {
+    return rows * cols;
+  }
+
   /**
    * Set r-row, c-column value.
    *
@@ -182,6 +194,14 @@ public class Matrix implements Distance<Matrix> {
       data[r * cols + c] = scalar;
     } else {
       throw new IndexOutOfBoundsException(String.format("Matrix %dx%d -> [%d, %d]", this.rows, this.cols, r, c));
+    }
+  }
+
+  public void set(final int idx, final double scalar) {
+    if (idx >= 0 && idx < data.length) {
+      data[idx] = scalar;
+    } else {
+      throw new IndexOutOfBoundsException(String.format("Matrix %dx%d -> [%d]", this.rows, this.cols, idx));
     }
   }
 
@@ -210,50 +230,72 @@ public class Matrix implements Distance<Matrix> {
     }
   }
 
+  public double get(final int idx) {
+    if (idx >= 0 && idx < data.length) {
+      return data[idx];
+    } else {
+      throw new IndexOutOfBoundsException(String.format("Matrix %dx%d -> [%d]", this.rows, this.cols, idx));
+    }
+  }
+
   /**
-   * Returns <code>true</code> if the matrix is linear; <code>false</code> otherwise.
-   * @return <code>true</code> if the matrix is linear; <code>false</code> otherwise
+   * Returns <code>true</code> if the matrix is linear; <code>false</code>
+   * otherwise.
+   * 
+   * @return <code>true</code> if the matrix is linear; <code>false</code>
+   *         otherwise
    */
   public boolean isLinear() {
     return Properties.isLinear(rows, cols);
   }
 
   /**
-   * Returns <code>true</code> if the matrix is a row matrix; <code>false</code> otherwise.
-   * @return <code>true</code> if the matrix is a row matrix; <code>false</code> otherwise
+   * Returns <code>true</code> if the matrix is a row matrix; <code>false</code>
+   * otherwise.
+   * 
+   * @return <code>true</code> if the matrix is a row matrix; <code>false</code>
+   *         otherwise
    */
   public boolean isRow() {
     return Properties.isRow(rows, cols);
   }
 
   /**
-   * Returns <code>true</code> if the matrix is a column matrix; <code>false</code> otherwise.
-   * @return <code>true</code> if the matrix is a column matrix; <code>false</code> otherwise
+   * Returns <code>true</code> if the matrix is a column matrix;
+   * <code>false</code> otherwise.
+   * 
+   * @return <code>true</code> if the matrix is a column matrix;
+   *         <code>false</code> otherwise
    */
   public boolean isColumn() {
     return Properties.isColumn(rows, cols);
   }
 
   /**
-   * Returns <code>true</code> if the matrix is a 1x1 matrix; <code>false</code> otherwise.
+   * Returns <code>true</code> if the matrix is a 1x1 matrix; <code>false</code>
+   * otherwise.
    *
-   * @return <code>true</code> if the matrix is a 1x1 matrix; <code>false</code> otherwise
+   * @return <code>true</code> if the matrix is a 1x1 matrix; <code>false</code>
+   *         otherwise
    */
   public boolean is1x1() {
     return Properties.is1x1(rows, cols);
   }
 
   /**
-   * Returns <code>true</code> if the matrix is square; <code>false</code> otherwise.
+   * Returns <code>true</code> if the matrix is square; <code>false</code>
+   * otherwise.
    *
-   * @return <code>true</code> if the matrix is square; <code>false</code> otherwise
+   * @return <code>true</code> if the matrix is square; <code>false</code>
+   *         otherwise
    */
   public boolean isSquare() {
     return Properties.isSquare(rows, cols);
   }
 
   /**
-   * Returns <code>true</code> if the matrix is zero; <code>false</code> otherwise.
+   * Returns <code>true</code> if the matrix is zero; <code>false</code>
+   * otherwise.
    *
    * @return <code>true</code> if the matrix is zero; <code>false</code> otherwise
    */
@@ -262,49 +304,55 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   * Returns <code>true</code> if the matrix is the identity; <code>false</code> otherwise.
+   * Returns <code>true</code> if the matrix is the identity; <code>false</code>
+   * otherwise.
    *
-   * @return <code>true</code> if the matrix is the identity; <code>false</code> otherwise
+   * @return <code>true</code> if the matrix is the identity; <code>false</code>
+   *         otherwise
    */
   public boolean isIdentity() {
     return Properties.isIdentity(data, rows, cols);
   }
 
   /**
-   * Returns <code>true</code> if the matrix is a scalar matrix; <code>false</code> otherwise.
+   * Returns <code>true</code> if the matrix is a scalar matrix;
+   * <code>false</code> otherwise.
    *
-   * @return <code>true</code> if the matrix is a scalar matrix; <code>false</code> otherwise
+   * @return <code>true</code> if the matrix is a scalar matrix;
+   *         <code>false</code> otherwise
    */
   public boolean isScalar() {
     return Properties.isScalar(data, rows, cols);
   }
 
   /**
-   * Returns <code>true</code> if the matrix is a diagonal matrix; <code>false</code> otherwise.
+   * Returns <code>true</code> if the matrix is a diagonal matrix;
+   * <code>false</code> otherwise.
    *
-   * @return <code>true</code> if the matrix is a diagonal matrix; <code>false</code> otherwise
+   * @return <code>true</code> if the matrix is a diagonal matrix;
+   *         <code>false</code> otherwise
    */
   public boolean isDiagonal() {
     return Properties.isDiagonal(data, rows, cols);
   }
 
   /**
-   * Returns <code>true</code> if the matrix is a upper triangular matrix; <code>false</code>
-   * otherwise.
+   * Returns <code>true</code> if the matrix is a upper triangular matrix;
+   * <code>false</code> otherwise.
    *
-   * @return <code>true</code> if the matrix is a upper triangular matrix; <code>false</code>
-   * otherwise.
+   * @return <code>true</code> if the matrix is a upper triangular matrix;
+   *         <code>false</code> otherwise.
    */
   public boolean isUpperTriangular() {
     return Properties.isUpperTriangular(data, rows, cols);
   }
 
   /**
-   * Returns <code>true</code> if the matrix is a lower triangular matrix; <code>false</code>
-   * otherwise.
+   * Returns <code>true</code> if the matrix is a lower triangular matrix;
+   * <code>false</code> otherwise.
    *
-   * @return <code>true</code> if the matrix is a lower triangular matrix; <code>false</code>
-   * otherwise.
+   * @return <code>true</code> if the matrix is a lower triangular matrix;
+   *         <code>false</code> otherwise.
    */
   public boolean isLowerTriangular() {
     return Properties.isLowerTriangular(data, rows, cols);
@@ -322,8 +370,8 @@ public class Matrix implements Distance<Matrix> {
 
   /**
    * Re-organizes the internal representation and returns the transpose matrix.
-   * The tranpose is done in-place with minimal auxiliar memory.
-   * It is slower than the regular transpose method.
+   * The tranpose is done in-place with minimal auxiliar memory. It is slower than
+   * the regular transpose method.
    *
    * @return the transpose matrix
    */
@@ -461,15 +509,14 @@ public class Matrix implements Distance<Matrix> {
 
   /**
    * TODO: Finish this with other version of HouseHolder...
+   * 
    * @return
    */
-  /*public Matrix triangular() {
-    Matrix T = transpose();
-    for (int k = 0; k < rows - 1; k++) {
-      QR.householder(T.data, T.rows, T.cols, k, k);
-    }
-    return T.uTranspose();
-  }*/
+  /*
+   * public Matrix triangular() { Matrix T = transpose(); for (int k = 0; k < rows
+   * - 1; k++) { QR.householder(T.data, T.rows, T.cols, k, k); } return
+   * T.uTranspose(); }
+   */
 
   /**
    *
@@ -477,12 +524,11 @@ public class Matrix implements Distance<Matrix> {
    */
   public Matrix[] qr() {
     double[][] qr = QR.qr(data, rows, cols);
-    return new Matrix[]{new Matrix(rows, cols, qr[0]), new Matrix(rows, cols, qr[1])};
+    return new Matrix[] { new Matrix(rows, cols, qr[0]), new Matrix(rows, cols, qr[1]) };
   }
 
   /**
-   * TODO: Review this method
-   * Need to add urls and other links
+   * TODO: Review this method Need to add urls and other links
    *
    * @return
    */
@@ -492,12 +538,12 @@ public class Matrix implements Distance<Matrix> {
     for (int k = 0; k < rows - 1; k++) {
       QR.householder(B.data, U.data, rows, cols, cols, rows, k, k);
       B.uTranspose();
-      //QR.householder(B.data, V.data, rows, cols, k, k + 1);
+      // QR.householder(B.data, V.data, rows, cols, k, k + 1);
       QR.householder(B.data, V.data, cols, rows, cols, rows, k, k + 1);
       B.uTranspose();
     }
 
-    return new Matrix[]{U, B.uTranspose(), V};
+    return new Matrix[] { U, B.uTranspose(), V };
   }
 
   private double[] diagArray(int n) {
@@ -533,20 +579,19 @@ public class Matrix implements Distance<Matrix> {
 
     // TODO: bidiag to diag
     double diag[] = UDV[1].diagArray(0);
-    double lambda[] = new double[diag.length],
-        mu[] = new double[diag.length];
-    //PrintUtils.printArray(diag);
+    double lambda[] = new double[diag.length], mu[] = new double[diag.length];
+    // PrintUtils.printArray(diag);
     lambda[diag.length - 1] = Math.abs(diag[diag.length - 1]);
 
     for (int i = diag.length - 1; i > 0; i--)
       lambda[i] = Math.abs(diag[i]) * lambda[i + 1];
-
 
     return UDV;
   }
 
   /**
    * Returns the derterminante of a {@link Matrix}.
+   * 
    * @return
    */
   public double det() {
@@ -563,9 +608,9 @@ public class Matrix implements Distance<Matrix> {
       int hh = 0;
       for (int k = 0; k < rows - 1; k++) {
         // TODO: Fix this...
-        /*if (QR.householder(T.data, null, T.rows, T.cols, k, k)) {
-          hh++;
-        }*/
+        /*
+         * if (QR.householder(T.data, null, T.rows, T.cols, k, k)) { hh++; }
+         */
       }
       T.uTranspose();
       rv = 1.0;
@@ -585,7 +630,7 @@ public class Matrix implements Distance<Matrix> {
    */
   public Matrix[] nmf(final int k, final int n, final double e) {
     double[][] wh = NMF.nmf_mu(data, rows, cols, k, n, e);
-    return new Matrix[]{new Matrix(rows, k, wh[0]), new Matrix(k, cols, wh[1])};
+    return new Matrix[] { new Matrix(rows, k, wh[0]), new Matrix(k, cols, wh[1]) };
   }
 
   /**
@@ -595,6 +640,16 @@ public class Matrix implements Distance<Matrix> {
    */
   public Matrix[] nmf(final int k) {
     return nmf(k, 100, 0.01);
+  }
+
+  /**
+   *
+   * @param k
+   * @return
+   */
+  public Matrix[] nmf(final int k, Matrix Mask) {
+    double[][] wh = NMF.nmf_mu_imputation(data, Mask.data, rows, cols, k, 1000, 0.01);
+    return new Matrix[] { new Matrix(rows, k, wh[0]), new Matrix(k, cols, wh[1]) };
   }
 
   /**
@@ -642,7 +697,9 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   * Returns the Manhattan Distance betweem this {@link Matrix} with {@link Matrix} B
+   * Returns the Manhattan Distance betweem this {@link Matrix} with
+   * {@link Matrix} B
+   * 
    * @param b
    * @return
    */
@@ -679,6 +736,16 @@ public class Matrix implements Distance<Matrix> {
     }
 
     return rv;
+  }
+
+  public Matrix mask() {
+    Matrix RV = new Matrix(this.rows, this.cols);
+    for (int i = 0; i < this.data.length; i++) {
+      if (data[i] != 0.0) {
+        RV.data[i] = 1.0;
+      }
+    }
+    return RV;
   }
 
   @Override

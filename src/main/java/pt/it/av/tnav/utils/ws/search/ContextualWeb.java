@@ -14,8 +14,7 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class ContextualWeb extends WebSearchEngine {
-  private static final String DEFAULT_URL =
-      "https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/WebSearchAPI";
+  private static final String DEFAULT_URL = "https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/WebSearchAPI";
   private final String rapidAPI_Key;
 
   /**
@@ -32,7 +31,7 @@ public class ContextualWeb extends WebSearchEngine {
    * Contextual Web constructor.
    *
    * @param rapidAPI_Key web service key
-   * @param url web service address
+   * @param url          web service address
    */
   public ContextualWeb(final String rapidAPI_Key, final String url) {
     super(url);
@@ -43,14 +42,13 @@ public class ContextualWeb extends WebSearchEngine {
    * Contextual Web constructor.
    *
    * @param rapidAPI_Key web service key
-   * @param url web service address
-   * @param maxResults maximum number of results
+   * @param url          web service address
+   * @param maxResults   maximum number of results
    */
   public ContextualWeb(final String rapidAPI_Key, final String url, final int maxResults) {
     super(url, maxResults);
     this.rapidAPI_Key = rapidAPI_Key;
   }
-
 
   @Override
   protected Iterator<Result> resultsIterator(final String q, final int skip, final int pageno) {
@@ -60,9 +58,9 @@ public class ContextualWeb extends WebSearchEngine {
   /**
    * Contextual Web search iterator.
    * <p>
-   *   The result pages are consomed continuously.
-   *   Fetch one page of results and iterates over them, before fetching another result's page.
-   *   This way the network calls are spread throught time, improving latency to the user.
+   * The result pages are consomed continuously. Fetch one page of results and
+   * iterates over them, before fetching another result's page. This way the
+   * network calls are spread throught time, improving latency to the user.
    * </p>
    *
    * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
@@ -77,13 +75,13 @@ public class ContextualWeb extends WebSearchEngine {
     /**
      * Contextual Web Iteratror constructor.
      *
-     * @param q web search query
-     * @param skip number of results to skip
+     * @param q      web search query
+     * @param skip   number of results to skip
      * @param pageno page number
      */
     public CWResultIterator(final String q, final int skip, final int pageno) {
       this.q = q;
-      this.skip= skip;
+      this.skip = skip;
       this.pageno = pageno;
     }
 
@@ -91,7 +89,9 @@ public class ContextualWeb extends WebSearchEngine {
     public boolean hasNext() {
       if (it == null) {
         try {
-          JSONObject json = Http.getJson(url + "?q="+q+"&pageNumber="+pageno+"&pageSize=50&autoCorrect=False&safeSearch=False", rapidAPI_Key);
+          JSONObject json = Http.getJson(
+              url + "?q=" + q + "&pageNumber=" + pageno + "&pageSize=50&autoCorrect=False&safeSearch=False",
+              rapidAPI_Key);
           if (json != null) {
             int totalCount = json.get("totalCount").asInt();
             if (skip >= totalCount) {
@@ -120,11 +120,15 @@ public class ContextualWeb extends WebSearchEngine {
       Result rv = null;
       if (!done) {
         JSONObject json = it.next().asObject();
-        String name = json.get("title").asString(), uri = json.get("url").asString();
-        if (json.contains("description")) {
-          rv = new Result(name, json.get("description").asString(), uri);
+        if (json != null) {
+          String name = json.get("title").asString(), uri = json.get("url").asString();
+          if (json.contains("description")) {
+            rv = new Result(name, json.get("description").asString(), uri);
+          } else {
+            rv = new Result(name, name, uri);
+          }
         } else {
-          rv = new Result(name, name, uri);
+          done = true;
         }
       }
       return rv;
