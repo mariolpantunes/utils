@@ -101,7 +101,7 @@ public class NMF {
     for (int i = 0; i < n && cost > e; i++) {
       // update feature matrix.
       Transpose.cotr(w, wt, rows, k);
-      Multiplication.mul(wt, z, hn, k, cols, rows);
+      Multiplication.mul(wt, data, hn, k, cols, rows);
       Multiplication.mul(wt, wh, hd, k, cols, rows);
 
       ArrayUtils.add(hd, 0, eps, hd, 0, hd.length);
@@ -111,7 +111,7 @@ public class NMF {
       Arrays.fill(hn, 0.0);
       Arrays.fill(hd, 0.0);
 
-      Multiplication.mult(z, h, wn, rows, k, cols);
+      Multiplication.mult(data, h, wn, rows, k, cols);
       Multiplication.mult(h, h, hht, k, k, cols);
       Multiplication.mul(w, hht, wd, rows, k, k);
 
@@ -136,5 +136,16 @@ public class NMF {
     //System.out.println(PrintUtils.array(data));
     //System.out.println(PrintUtils.array(z));
     return new double[][] { w, h };
+  }
+
+  public static double[][] hals(final double m[], final int rows, final int cols, final int k,
+  final int n) {
+    double alpha = 1, delta = 0.01, relTol = 1e-5;
+    double max = m[ArrayUtils.max(m)], min = m[ArrayUtils.min(m)], eps = MathUtils.eps();
+    double u[] = ArrayUtils.random(rows * k, min, max), v[] = ArrayUtils.random(k * cols, min, max),
+    A[] = {00,00};
+    
+    
+    return new double[][] { u, v };
   }
 }

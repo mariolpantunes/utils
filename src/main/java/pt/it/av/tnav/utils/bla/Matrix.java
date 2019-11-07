@@ -2,6 +2,7 @@ package pt.it.av.tnav.utils.bla;
 
 import pt.it.av.tnav.utils.ArrayUtils;
 import pt.it.av.tnav.utils.bla.factorization.Cholesky;
+import pt.it.av.tnav.utils.bla.factorization.LS;
 import pt.it.av.tnav.utils.bla.factorization.NMF;
 import pt.it.av.tnav.utils.bla.factorization.QR;
 import pt.it.av.tnav.utils.bla.multiplication.Multiplication;
@@ -648,8 +649,13 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] nmf(final int k, Matrix Mask) {
-    double[][] wh = NMF.nmf_mu_imputation(data, Mask.data, rows, cols, k, 1000, 0.01);
+    double[][] wh = NMF.nmf_mu_imputation(data, Mask.data, rows, cols, k, 100, 0.1);
     return new Matrix[] { new Matrix(rows, k, wh[0]), new Matrix(k, cols, wh[1]) };
+  }
+
+  public Matrix[] ls(final int k) {
+    double[][] pq = LS.ls(data, rows, cols, k, 300);
+    return new Matrix[] { new Matrix(rows, k, pq[0]), new Matrix(cols, k, pq[1]).transpose() };
   }
 
   /**

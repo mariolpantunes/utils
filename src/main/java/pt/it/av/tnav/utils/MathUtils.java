@@ -533,4 +533,11 @@ public final class MathUtils {
   public static double nthRoot(final double base, final double n) {
     return Math.pow(Math.E, Math.log(base) / n);
   }
+
+  /**
+   * 
+   */
+  public static double gaussian(final double mean, final double std) {
+    return ThreadLocalRandom.current().nextGaussian()*std+mean;
+  }
 }

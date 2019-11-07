@@ -1,3 +1,9 @@
+# vscode:
+.classpath
+.project
+.settings
+.vscode
+
 # Jetbrains Idea:
 .idea
 *.iml

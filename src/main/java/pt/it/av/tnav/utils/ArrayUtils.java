@@ -54,7 +54,7 @@ public final class ArrayUtils {
    * @param len array's len
    */
   public static void add(final double[] a, final int bA, final double b,
-                         final double[] c, final int bC, final int len) {
+  final double[] c, final int bC, final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] + b;
     }
@@ -72,9 +72,8 @@ public final class ArrayUtils {
    * @param bC  index of the resulting vector
    * @param len array's len
    */
-  public static void sub(final double[] a, final int bA, final double[] b,
-                         final int bB, final double[] c, final int bC,
-                         final int len) {
+  public static void sub(final double[] a, final int bA, final double[] b, final int bB,
+  final double[] c, final int bC, final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] - b[bB + i];
     }
@@ -92,9 +91,18 @@ public final class ArrayUtils {
    * @param len array's len
    */
   public static void sub(final double[] a, final int bA, final double b,
-                         final double[] c, final int bC, final int len) {
+  final double[] c, final int bC, final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] - b;
+    }
+  }
+
+  public static void wsub(final double[] a, final int bA, final double[] b, final int bB,
+  final double[] c, final int bC, final double w0, final double w1, final int len) {
+    for (int i = 0; i < len; i++) {
+      double v1 = (w0 * a[bA + i]);
+      double v2 = (w1 * b[bB + i]);
+      c[bC + i] = v1 - v2;
     }
   }
 
@@ -576,6 +584,16 @@ public final class ArrayUtils {
 
     for (int i = 0; i < n; i++) {
       rv[i] = ThreadLocalRandom.current().nextDouble();
+    }
+
+    return rv;
+  }
+
+  public static double[] gaussian(final int n, final double mean, final double std) {
+    double rv[] = new double[n];
+
+    for (int i = 0; i < n; i++) {
+      rv[i] = MathUtils.gaussian(mean, std);
     }
 
     return rv;
@@ -1616,5 +1634,50 @@ public final class ArrayUtils {
     }
 
     return m;
+  }
+
+  public static int count(final double data[], final double scalar, final int idx, final int len) {
+    int rv = 0;
+    for (int i = 0; i < len; i++) {
+      if (data[i + idx] == 0) {
+        rv += 1;
+      }
+    }
+    return rv;
+  }
+
+  public static double[] select_different(final double data[], final double scalar, final int idx, final int len) {
+    double rv[] = new double[len - count(data, scalar, idx, len)];
+    
+    for (int i = 0; i < len; i++) {
+      if (data[i + idx] != 0) {
+        rv[i] = data[i+idx];
+      }
+    }
+
+    return rv;
+  }
+
+  public static double[] select_different(final double data[], final double scalar) {
+    return select_different(data, scalar, 0, data.length);
+  }
+
+  /**
+   * 
+   * @param r
+   * @param c
+   * @param cols
+   * @return
+   */
+  public static int rc2idx(final int r, final int c, final int cols) {
+    return (r * cols) + c;
+  }
+
+  public static int idx2r(final int idx, final int cols) {
+    return idx/cols;
+  }
+
+  public static int idx2c(final int idx, final int cols) {
+    return idx % cols;
   }
 }

@@ -44,7 +44,6 @@ public class PrintUtils {
   }
 
   public static void array(int[] a, int left, int right, Writer w) throws IOException {
-
     w.append('[');
     int i = left;
     for (; i < right; i++)
@@ -52,6 +51,31 @@ public class PrintUtils {
     if (right >= left)
       w.append(Integer.toString(a[i]));
     w.append(']');
+  }
+
+  public static void matrix(double a[], int rows, int cols, Writer w) throws IOException {
+    w.append('[');
+    for(int r = 0; r < rows; r++) {
+      w.append('[');
+      for(int c = 0; c < cols - 1; c++) {
+        w.append(a[r * cols + c] + ", ");
+      }
+      w.append(Double.toString(a[r * cols+(cols-1)]));
+      w.append(']');
+      w.append(System.getProperty( "line.separator" ));
+    }
+    w.append(']');
+  }
+
+  public static String matrix(double a[], int rows, int cols) {
+    StringWriter w = new StringWriter();
+    try {
+      matrix(a, rows, cols, w);
+      w.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return w.toString();
   }
 
   public static String array(double[] a) {
