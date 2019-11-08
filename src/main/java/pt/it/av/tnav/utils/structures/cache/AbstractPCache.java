@@ -28,18 +28,21 @@ public abstract class AbstractPCache<K, T> implements Cache<K, T> {
     Path file = pCache.resolve(key + ".gz");
 
     synchronized (key.toString().intern()) {
+
       if (Files.isReadable(file)) {
         try {
-          BufferedReader in = new BufferedReader(
-              new InputStreamReader(new GZIPInputStream(Files.newInputStream(file)), "UTF-8"));
-          rv = load(in);
-          in.close();
-        } catch (IOException e) {
-          rv = null;
+          BufferedReader in = null;
+          in = new BufferedReader(new InputStreamReader(new GZIPInputStream(Files.newInputStream(file)), "UTF-8"));
           try {
-            Files.delete(file);
-          } catch (IOException ex) {
-            ex.printStackTrace();
+            rv = load(in);
+          }  finally {
+            in.close();
+          }
+        } catch (IOException ex) {
+          System.err.println("Problem occured : " + ex.getMessage());
+          rv = null;
+          try {Files.delete(file);} catch(IOException e) {
+            System.err.println("Problem occured : " + e.getMessage());
           }
         }
       }
@@ -47,10 +50,8 @@ public abstract class AbstractPCache<K, T> implements Cache<K, T> {
       if (rv != null) {
         rv = buid(key);
         try {
-          BufferedWriter out = new BufferedWriter(
-              new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(file)), "UTF-8"));
-          store(rv, out);
-          out.close();
+          BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(file)), "UTF-8"));
+          try{store(rv, out);}finally{out.close();}
         } catch (IOException e) {
           e.printStackTrace();
         }
