@@ -47,7 +47,7 @@ public abstract class AbstractPCache<K, T> implements Cache<K, T> {
         }
       }
 
-      if (rv != null) {
+      if (rv == null) {
         rv = buid(key);
         try {
           BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(file)), "UTF-8"));
