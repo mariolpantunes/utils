@@ -121,11 +121,15 @@ public class ContextualWeb extends WebSearchEngine {
       if (!done) {
         JSONObject json = it.next().asObject();
         if (json != null) {
+          try{
           String name = json.get("title").asString(), uri = json.get("url").asString();
           if (json.contains("description")) {
             rv = new Result(name, json.get("description").asString(), uri);
           } else {
             rv = new Result(name, name, uri);
+          }} catch(Exception e) {
+            System.err.println(e);
+            System.err.println(json);
           }
         } else {
           done = true;
