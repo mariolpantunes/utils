@@ -11,13 +11,13 @@ import java.util.zip.GZIPOutputStream;
  * @author Mário Antunes
  * @version 1.0
  */
-public abstract class AbstractPCache<K,T> implements Cache<K,T>{
+public abstract class AbstractPCache<K, T> implements Cache<K, T> {
   private final Path pCache;
 
   public AbstractPCache(final Path pCache) {
     this.pCache = pCache;
     File directory = pCache.toFile();
-    if(!directory.exists()) {
+    if (!directory.exists()) {
       directory.mkdir();
     }
   }
@@ -27,25 +27,36 @@ public abstract class AbstractPCache<K,T> implements Cache<K,T>{
     T rv = null;
     Path file = pCache.resolve(key + ".gz");
 
-    synchronized(key.toString().intern()) {
+    synchronized (key.toString().intern()) {
       if (Files.isReadable(file)) {
-        try{
-          BufferedReader in = new BufferedReader(new InputStreamReader(
-              new GZIPInputStream(Files.newInputStream(file)), "UTF-8"));
+        try {
+          BufferedReader in = new BufferedReader(
+              new InputStreamReader(new GZIPInputStream(Files.newInputStream(file)), "UTF-8"));
           rv = load(in);
           in.close();
         } catch (IOException e) {
-          e.printStackTrace();
+          rv = null;
+          try {
+            Files.delete(file);
+          } catch (IOException ex) {
+            ex.printStackTrace();
+          }
         }
-      } else {
+      }
+
+      if (rv != null) {
         rv = buid(key);
         try {
-          BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-              new GZIPOutputStream(Files.newOutputStream(file)), "UTF-8"));
+          BufferedWriter out = new BufferedWriter(
+              new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(file)), "UTF-8"));
           store(rv, out);
           out.close();
         } catch (IOException e) {
-          e.printStackTrace();
+          try {
+            Files.delete(file);
+          } catch (IOException ex) {
+            ex.printStackTrace();
+          }
         }
       }
     }

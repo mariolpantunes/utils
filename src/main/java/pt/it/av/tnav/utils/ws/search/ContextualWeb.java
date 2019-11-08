@@ -120,19 +120,21 @@ public class ContextualWeb extends WebSearchEngine {
       Result rv = null;
       if (!done) {
         JSONObject json = it.next().asObject();
-        if (json != null) {
-          try{
-          String name = json.get("title").asString(), uri = json.get("url").asString();
-          if (json.contains("description")) {
-            rv = new Result(name, json.get("description").asString(), uri);
-          } else {
-            rv = new Result(name, name, uri);
-          }} catch(Exception e) {
-            System.err.println(e);
-            System.err.println(json);
+        try {
+          String name = json.get("title").asString(), uri="", description=null;
+          
+          if(json.contains("uri")) {
+            uri = json.get("url").asString();
           }
-        } else {
-          done = true;
+          
+          if (json.contains("description")) {
+            description = json.get("description").asString();
+          } 
+
+          rv = new Result(name, description, uri);
+        } catch (Exception e) {
+          System.err.println(e);
+          System.err.println(json);
         }
       }
       return rv;
