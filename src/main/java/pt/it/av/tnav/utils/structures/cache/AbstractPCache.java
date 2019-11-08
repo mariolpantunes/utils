@@ -52,11 +52,7 @@ public abstract class AbstractPCache<K, T> implements Cache<K, T> {
           store(rv, out);
           out.close();
         } catch (IOException e) {
-          try {
-            Files.delete(file);
-          } catch (IOException ex) {
-            ex.printStackTrace();
-          }
+          e.printStackTrace();
         }
       }
     }
