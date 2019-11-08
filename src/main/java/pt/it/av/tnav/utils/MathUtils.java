@@ -390,8 +390,7 @@ public final class MathUtils {
    * @param s2
    * @return
    */
-  public static double standartDeviation(final double s0,
-                                         final double s1, final double s2) {
+  public static double std(final double s0,final double s1, final double s2) {
     return Math.sqrt((s0 * s2 - s1 * s1) / (s0 * (s0 - 1)));
   }
 
@@ -428,8 +427,7 @@ public final class MathUtils {
    * @param b
    * @return
    */
-  public static double fmeasure(final double TP, final double FP,
-                                final double FN, final double b) {
+  public static double fmeasure(final double TP, final double FP, final double FN, final double b) {
     return fmeasure(precision(TP, FP), recall(TP, FN), b);
   }
 
@@ -439,12 +437,11 @@ public final class MathUtils {
    * @param b
    * @return
    */
-  public static double fmeasure(final double precision,
-                                final double recall, final double b) {
+  public static double fmeasure(final double p, final double r, final double b) {
     double rv = 0;
-    if (precision > 0 || recall > 0)
-      rv = ((1.0 + Math.pow(b, 2.0)) * precision * recall)
-          / ((Math.pow(b, 2.0) * precision) + recall);
+    if (p > 0 || r > 0) {
+      rv = ((1.0 + Math.pow(b, 2.0)) * p * r) / ((Math.pow(b, 2.0) * p) + r);
+    }
     return rv;
   }
 

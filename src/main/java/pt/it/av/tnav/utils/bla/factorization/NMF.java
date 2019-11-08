@@ -49,7 +49,8 @@ public class NMF {
       Multiplication.mul(wt, data, hn, k, cols, rows);
       Multiplication.mul(wt, wh, hd, k, cols, rows);
 
-      ArrayUtils.add(hd, 0, eps, hd, 0, hd.length);
+      //ArrayUtils.add(hd, 0, eps, hd, 0, hd.length);
+      ArrayUtils.set_neg(hd, eps);
       ArrayUtils.mulDiv(h, 0, hn, 0, hd, 0, h, 0, k * cols);
 
       Arrays.fill(wh, 0.0);
@@ -60,8 +61,8 @@ public class NMF {
       Multiplication.mult(h, h, hht, k, k, cols);
       Multiplication.mul(w, hht, wd, rows, k, k);
 
-      ArrayUtils.add(wd, 0, eps, wd, 0, wd.length);
-
+      //ArrayUtils.add(wd, 0, eps, wd, 0, wd.length);
+      ArrayUtils.set_neg(wd, eps);
       ArrayUtils.mulDiv(w, 0, wn, 0, wd, 0, w, 0, k * rows);
 
       Arrays.fill(wd, 0.0);
@@ -104,7 +105,8 @@ public class NMF {
       Multiplication.mul(wt, data, hn, k, cols, rows);
       Multiplication.mul(wt, wh, hd, k, cols, rows);
 
-      ArrayUtils.add(hd, 0, eps, hd, 0, hd.length);
+      //ArrayUtils.add(hd, 0, eps, hd, 0, hd.length);
+      ArrayUtils.set_neg(hd, eps);
       ArrayUtils.mulDiv(h, 0, hn, 0, hd, 0, h, 0, k * cols);
 
       Arrays.fill(wh, 0.0);
@@ -115,7 +117,8 @@ public class NMF {
       Multiplication.mult(h, h, hht, k, k, cols);
       Multiplication.mul(w, hht, wd, rows, k, k);
 
-      ArrayUtils.add(wd, 0, eps, wd, 0, wd.length);
+      //ArrayUtils.add(wd, 0, eps, wd, 0, wd.length);
+      ArrayUtils.set_neg(wd, eps);
 
       ArrayUtils.mulDiv(w, 0, wn, 0, wd, 0, w, 0, k * rows);
 
