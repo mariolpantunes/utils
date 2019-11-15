@@ -32,10 +32,9 @@ public class Pair<A, B> {
     if (o != null) {
       if (o == this)
         rv = true;
-      else if (o instanceof Pair) {
-        Pair p = (Pair) o;
-        rv = this.a.equals(p.a) &&
-            this.b.equals(p.b);
+      else if (o instanceof Pair<?, ?>) {
+        Pair<?, ?> p = (Pair<?, ?>) o;
+        rv = this.a.equals(p.a) && this.b.equals(p.b);
       }
     }
 

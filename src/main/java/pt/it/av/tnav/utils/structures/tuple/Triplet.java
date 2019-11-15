@@ -36,8 +36,8 @@ public class Triplet<A, B, C> {
     if (o != null) {
       if (o == this)
         rv = true;
-      else if (o instanceof Triplet) {
-        Triplet q = (Triplet) o;
+      else if (o instanceof Triplet<?,?,?>) {
+        Triplet<?,?,?> q = (Triplet<?,?,?>) o;
         rv = a.equals(q.a) && b.equals(q.b) && c.equals(q.c);
       }
     }

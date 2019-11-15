@@ -11,17 +11,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 public final class MathUtils {
-  private static final double L9[] = {
-      0.99999999999980993227684700473478,
-      676.520368121885098567009190444019,
-      -1259.13921672240287047156078755283,
-      771.3234287776530788486528258894,
-      -176.61502916214059906584551354,
-      12.507343278686904814458936853,
-      -0.13857109526572011689554707,
-      9.984369578019570859563e-6,
-      1.50563273514931155834e-7
-  };
+  private static final double L9[] = { 0.99999999999980993227684700473478, 676.520368121885098567009190444019,
+      -1259.13921672240287047156078755283, 771.3234287776530788486528258894, -176.61502916214059906584551354,
+      12.507343278686904814458936853, -0.13857109526572011689554707, 9.984369578019570859563e-6,
+      1.50563273514931155834e-7 };
 
   // log(2*PI)/2
   private static final double LN_SQRT2PI = Math.log(2.0 * Math.PI) / 2.0;
@@ -62,13 +55,13 @@ public final class MathUtils {
 
   /**
    * Generator of Poisson-distributed random variables (Junhao, based on Knuth).
-   * This algorithm is not optimal, if performance is an issue an
-   * alternative should be used.
-   * Returns number from a possion distribution with mean lambda.
+   * This algorithm is not optimal, if performance is an issue an alternative
+   * should be used. Returns number from a possion distribution with mean lambda.
    *
    * @param lambda mean of the poisson distribution
    * @return number from a possion distribution with mean lambda
-   * @see <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson distribution</a>
+   * @see <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson
+   *      distribution</a>
    */
   public static long poisonDistSmall(final long lambda, final double step) {
     double ll = lambda, p = 1.0;
@@ -95,11 +88,8 @@ public final class MathUtils {
    * @see
    */
   private static long poisonDistLarge(final long lambda) {
-    double c = 0.767 - 3.36 / lambda,
-        b = Math.PI / Math.sqrt(3.0 * lambda),
-        a = b * lambda,
-        k = Math.log(c / b) - lambda,
-        z = 0.0, y = 0.0;
+    double c = 0.767 - 3.36 / lambda, b = Math.PI / Math.sqrt(3.0 * lambda), a = b * lambda,
+        k = Math.log(c / b) - lambda, z = 0.0, y = 0.0;
     long x = 0;
 
     do {
@@ -115,9 +105,10 @@ public final class MathUtils {
   }
 
   /**
-   * The \(\Gamma(x)\) function is the extension of the factorial to real numbers \(n! == gamma(n+1)\).
-   * \(\Gamma(x)\) grows very quickly (similar to \(x^x\)), that’s why lgamma(),
-   * which is the logarithm of the \(\Gamma\) function, is often used instead.
+   * The \(\Gamma(x)\) function is the extension of the factorial to real numbers
+   * \(n! == gamma(n+1)\). \(\Gamma(x)\) grows very quickly (similar to \(x^x\)),
+   * that’s why lgamma(), which is the logarithm of the \(\Gamma\) function, is
+   * often used instead.
    *
    * @param x
    * @return
@@ -168,47 +159,139 @@ public final class MathUtils {
   }
 
   /**
-   * TODO
-   * Returns the greatest common divisor (gcd) of {@code a} and {@code b}.
-   * The gcd between two numbers is the largest positive integer that divides
-   * the numbers without a remainder.
+   * Returns the greatest common divisor (gcd) of {@code a} and {@code b}. The gcd
+   * between two numbers is the largest positive integer that divides the numbers
+   * without a remainder.
+   * 
+   * The implementation follows the Euclidean algorithm.
    *
-   * @param a first number
-   * @param b second number
+   * @param n1 first number
+   * @param n2 second number
    * @return the greatest common divisor between {@code a} and {@code b}
+   * @see <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean algorithm</a>
    */
-  public static long gcd(final long a, final long b) {
-    long absA = Math.abs(a), absB = Math.abs(b), r, i;
-    while (b > 0) {
-      r = absA % absB;
-      absA = b;
-      absB = r;
+  public static long gcd_euclidean(final long n1, final long n2) {
+    if(n1 < 0 || n2 < 0) {
+      throw new IllegalArgumentException();
     }
-    return absA;
+
+    long a = n1, b = n2;
+
+    // GCD(0, b) == b; GCD(a, 0) == a,
+    // GCD(0, 0) == 0
+    if (a == 0)
+      return b;
+    if (b == 0)
+      return a;
+
+    while (b > 0) {
+      long r = a % b;
+      a = b;
+      b = r;
+    }
+    
+    return a;
   }
 
   /**
-   * Returns the greatest common divisor (gcd) of {@code a} and {@code b}.
-   * The gcd between two numbers is the largest positive integer that divides
-   * the numbers without a remainder.
+   * Returns the greatest common divisor (gcd) of {@code a} and {@code b}. The gcd
+   * between two numbers is the largest positive integer that divides the numbers
+   * without a remainder.
+   * 
+   * The implementation follows the Euclidean algorithm.
    *
-   * @param a first number
-   * @param b second number
+   * @param n1 first number
+   * @param n2 second number
    * @return the greatest common divisor between {@code a} and {@code b}
+   * @see <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean algorithm</a>
    */
-  public static int gcd(final int a, final int b) {
-    int absA = Math.abs(a), absB = Math.abs(b), r, i;
-    while (b > 0) {
-      r = absA % absB;
-      absA = b;
-      absB = r;
+  public static int gcd_euclidean(final int n1, final int n2) {
+    if(n1 < 0 || n2 < 0) {
+      throw new IllegalArgumentException();
     }
-    return absA;
+
+    int a = n1, b = n2;
+
+    // GCD(0, b) == b; GCD(a, 0) == a,
+    // GCD(0, 0) == 0
+    if (a == 0)
+      return b;
+    if (b == 0)
+      return a;
+
+    while (b > 0) {
+      int r = a % b;
+      a = b;
+      b = r;
+    }
+
+    return a;
   }
 
   /**
-   * Returns p-norm between two numbers.
-   * 2-norm is called the Euclidean norm.
+   * Returns the greatest common divisor (gcd) of {@code a} and {@code b}. The gcd
+   * between two numbers is the largest positive integer that divides the numbers
+   * without a remainder.
+   * 
+   * The implementation follows the Binary GCD algorithm.
+   *
+   * @param n1 first number
+   * @param n2 second number
+   * @return the greatest common divisor between {@code a} and {@code b}
+   * @see <a href="https://en.wikipedia.org/wiki/Binary_GCD_algorithm">Binary GCD algorithm</a>
+   */
+  public static int gcd_binary(final int n1, final int n2) {
+    if(n1 < 0 || n2 < 0) {
+      throw new IllegalArgumentException();
+    }
+
+    int a = n1, b = n2;
+    
+    // GCD(0, b) == b; GCD(a, 0) == a,
+    // GCD(0, 0) == 0
+    if (a == 0)
+      return b;
+    if (b == 0)
+      return a;
+
+    // Finding K, where K is the greatest
+    // power of 2 that divides both a and b
+    int k;
+    for (k = 0; ((a | b) & 1) == 0; ++k) {
+      a >>= 1;
+      b >>= 1;
+    }
+
+    // Dividing a by 2 until a becomes odd
+    while ((a & 1) == 0)
+      a >>= 1;
+
+    // From here on, 'a' is always odd.
+    do {
+      // If b is even, remove
+      // all factor of 2 in b
+      while ((b & 1) == 0)
+        b >>= 1;
+
+      // Now a and b are both odd. Swap
+      // if necessary so a <= b, then set
+      // b = b - a (which is even)
+      if (a > b) {
+        // Swap u and v.
+        int temp = a;
+        a = b;
+        b = temp;
+      }
+
+      b = (b - a);
+    } while (b != 0);
+
+    // restore common factors of 2
+    return a << k;
+  }
+
+  /**
+   * Returns p-norm between two numbers. 2-norm is called the Euclidean norm.
    *
    * @param x first number
    * @param y second number
@@ -220,14 +303,14 @@ public final class MathUtils {
   }
 
   /**
-   * Returns {@code true} if {@code a} is similar to {@code b} diverging at
-   * most by {@code eps}, otherwise returns {@code false}.
+   * Returns {@code true} if {@code a} is similar to {@code b} diverging at most
+   * by {@code eps}, otherwise returns {@code false}.
    *
    * @param a   first number
    * @param b   second number
    * @param eps small error epsilon
-   * @return {@code true} if {@code a} is similar to {@code b} diverging at
-   * most by {@code eps}, otherwise returns {@code false}
+   * @return {@code true} if {@code a} is similar to {@code b} diverging at most
+   *         by {@code eps}, otherwise returns {@code false}
    */
   public static boolean equals(final double a, final double b, final double eps) {
     boolean rv = false;
@@ -240,15 +323,15 @@ public final class MathUtils {
   }
 
   /**
-   * Returns {@code true} if {@code a} is similar to {@code b} diverging at
-   * most by a dynamic {@link MathUtils#eps} based on the numbers and the machine precision ,
-   * otherwise returns {@code false}.
+   * Returns {@code true} if {@code a} is similar to {@code b} diverging at most
+   * by a dynamic {@link MathUtils#eps} based on the numbers and the machine
+   * precision , otherwise returns {@code false}.
    *
    * @param a first number
    * @param b second number
-   * @return {@code true} if {@code a} is similar to {@code b} diverging at most by a dynamic
-   * {@link MathUtils#eps} based on the numbers and the machine precision , otherwise returns
-   * {@code false}.
+   * @return {@code true} if {@code a} is similar to {@code b} diverging at most
+   *         by a dynamic {@link MathUtils#eps} based on the numbers and the
+   *         machine precision , otherwise returns {@code false}.
    */
   public static boolean equals(double a, double b) {
     boolean rv = false;
@@ -271,14 +354,13 @@ public final class MathUtils {
   }
 
   /**
-   * Returns the binomial coefficient C({@code n}, {@code k}), this is the
-   * number of combinations of n items taken k at a time.
-   * Fast implementation that cannot cause an arithmetic overflow unless the
-   * final result is too large to be represented.
-   * Algorithm based on Lilavati work, a treatise on arithmetic written about
-   * 850 years ago in India.
-   * The algorithm also appears in the article on "Algebra" from the first
-   * edition of the Encyclopaedia Britannica, published in 1768.
+   * Returns the binomial coefficient C({@code n}, {@code k}), this is the number
+   * of combinations of n items taken k at a time. Fast implementation that cannot
+   * cause an arithmetic overflow unless the final result is too large to be
+   * represented. Algorithm based on Lilavati work, a treatise on arithmetic
+   * written about 850 years ago in India. The algorithm also appears in the
+   * article on "Algebra" from the first edition of the Encyclopaedia Britannica,
+   * published in 1768.
    *
    * @param n first number
    * @param k second number
@@ -302,9 +384,9 @@ public final class MathUtils {
   }
 
   /**
-   * Returns the binomial coefficient C({@code n}, {@code k}), this is the
-   * number of combinations of n items taken k at a time.
-   * The final result is returned using a BigDecimal class.
+   * Returns the binomial coefficient C({@code n}, {@code k}), this is the number
+   * of combinations of n items taken k at a time. The final result is returned
+   * using a BigDecimal class.
    *
    * @param n first number
    * @param k second number
@@ -330,10 +412,9 @@ public final class MathUtils {
   }
 
   /**
-   * Returns the permutation P({@code n}, {@code k}).
-   * The notion of permutation relates to the act of arranging all the members
-   * of a set into some sequence or order,
-   * or if the set is already ordered, rearranging.
+   * Returns the permutation P({@code n}, {@code k}). The notion of permutation
+   * relates to the act of arranging all the members of a set into some sequence
+   * or order, or if the set is already ordered, rearranging.
    *
    * @param n first number
    * @param k second number
@@ -345,32 +426,32 @@ public final class MathUtils {
 
   /**
    * Auxiliar funtion, used to speedup the computation of factorial and
-   * permutauons.
-   * This algorithm is based on binary splitting method.
+   * permutauons. This algorithm is based on binary splitting method.
    *
    * @param a first number
    * @param b second number
    * @return binary split for factorial and permutations
-   * @see <a href="http://www.luschny.de/math/factorial/FastFactorialFunctions.htm">FastFactorialFunctions</a>
+   * @see <a href=
+   *      "http://www.luschny.de/math/factorial/FastFactorialFunctions.htm">FastFactorialFunctions</a>
    */
   public static double product(final double a, final double b) {
     int d = (int) Math.floor(a - b);
     double m = Math.floor(a / 2.0 + b / 2.0), rv = 0.0;
     switch (d) {
-      case 0:
-        rv = 1.0;
-        break;
-      case 1:
-        rv = a;
-        break;
-      case 2:
-        rv = a * (a - 1.0);
-        break;
-      case 3:
-        rv = a * (a - 1.0) * (a - 2.0);
-        break;
-      default:
-        rv = product(a, m) * product(m, b);
+    case 0:
+      rv = 1.0;
+      break;
+    case 1:
+      rv = a;
+      break;
+    case 2:
+      rv = a * (a - 1.0);
+      break;
+    case 3:
+      rv = a * (a - 1.0) * (a - 2.0);
+      break;
+    default:
+      rv = product(a, m) * product(m, b);
     }
     return rv;
   }
@@ -390,7 +471,7 @@ public final class MathUtils {
    * @param s2
    * @return
    */
-  public static double std(final double s0,final double s1, final double s2) {
+  public static double std(final double s0, final double s1, final double s2) {
     return Math.sqrt((s0 * s2 - s1 * s1) / (s0 * (s0 - 1)));
   }
 
@@ -535,6 +616,6 @@ public final class MathUtils {
    * 
    */
   public static double gaussian(final double mean, final double std) {
-    return ThreadLocalRandom.current().nextGaussian()*std+mean;
+    return ThreadLocalRandom.current().nextGaussian() * std + mean;
   }
 }

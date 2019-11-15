@@ -42,8 +42,8 @@ public class Quad<A, B, C, D> {
     if (o != null) {
       if (o == this)
         rv = true;
-      else if (o instanceof Quad) {
-        Quad q = (Quad) o;
+      else if (o instanceof Quad<?,?,?,?>) {
+        Quad<?,?,?,?> q = (Quad<?,?,?,?>) o;
         rv = a.equals(q.a) && b.equals(q.b) && c.equals(q.c) && d.equals(q.d);
       }
     }

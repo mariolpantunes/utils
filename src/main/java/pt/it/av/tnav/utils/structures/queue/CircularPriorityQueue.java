@@ -151,7 +151,7 @@ public class CircularPriorityQueue<E> implements Queue<E> {
   @Override
   public boolean containsAll(Collection<?> c) {
     boolean rv = true;
-    Iterator it = c.iterator();
+    Iterator<?> it = c.iterator();
     while (rv && it.hasNext())
       rv = contains(it.next());
     return rv;
@@ -246,17 +246,18 @@ public class CircularPriorityQueue<E> implements Queue<E> {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("[");
-    Iterator it = iterator();
-    for (int i = 0; i < size - 1; i++) {
-      sb.append(data[i]);
-      sb.append(", ");
+    Iterator<E> it = iterator();
+    if(it.hasNext()) {
+      E e = it.next();
+      while(it.hasNext()){
+        sb.append(e);
+        sb.append(", ");
+        e = it.next();
+      }
+      sb.append(e);
     }
-
-    if (size > 0) {
-      sb.append(data[size - 1]);
-    }
-
     sb.append(']');
+
     return sb.toString();
   }
 

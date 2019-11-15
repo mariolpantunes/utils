@@ -68,7 +68,7 @@ public class MatrixPoint<E> implements Distance<MatrixPoint<E>>, Similarity<Matr
       if (o == this)
         rv = true;
       else if (o instanceof MatrixPoint) {
-        MatrixPoint mp = (MatrixPoint) o;
+        MatrixPoint<?> mp = (MatrixPoint<?>) o;
         rv = e.equals(mp.e);
       }
     }
