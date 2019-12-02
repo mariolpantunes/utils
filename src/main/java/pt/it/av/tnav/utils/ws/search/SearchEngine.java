@@ -39,9 +39,9 @@ public interface SearchEngine {
    * <p>
    * It is composed by three elements:
    * <ul>
-   * <li>{@link name} name of the resource.
-   * <li>{@link snippet} snippet provided by the search engine.
-   * <li>{@link uri} uri of the resource.
+   * <li>{@link String} name of the resource.
+   * <li>{@link String} snippet provided by the search engine.
+   * <li>{@link String} uri of the resource.
    * </ul>
    * </p>
    */
