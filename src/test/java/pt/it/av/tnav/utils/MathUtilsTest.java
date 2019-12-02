@@ -13,6 +13,12 @@ import static org.junit.Assert.assertEquals;
  * @version 1.0
  */
 public class MathUtilsTest {
+
+  @Test
+  public void test_gcd_int() {
+    assertEquals(17, MathUtils.gcd(17, 34));
+  } 
+
   @Test
   public void test_lgamma() {
     assertEquals(12.801827, MathUtils.lgamma(10), 3);

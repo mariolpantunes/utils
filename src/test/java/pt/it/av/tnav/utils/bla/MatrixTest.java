@@ -56,27 +56,6 @@ public class MatrixTest {
     }
 
     @Test
-    public void test_transpose_large() {
-        Matrix B = Matrix.random(128, 64, 1, 10);
-        //Matrix Bt = MatrixTranspose.ntr(B);
-        //assertTrue(Bt.equals(B.cotr()));
-    }
-
-    @Test
-    public void test_uTranspose_rect_large() {
-        Matrix B = Matrix.random(128, 64, 1, 10);
-        //Matrix Bt = MatrixTranspose.ntr(B);
-        //assertTrue(Bt.equals(B.uTranspose()));
-    }
-
-    @Test
-    public void test_uTranspose_square_large() {
-        Matrix B = Matrix.random(128, 128, 1, 10);
-        //Matrix Bt = MatrixTranspose.ntr(B);
-        //assertTrue(Bt.equals(B.uTranspose()));
-    }
-
-    @Test
     public void test_add() {
         assertTrue(AplusB.equals(A.add(B)));
     }
@@ -90,13 +69,6 @@ public class MatrixTest {
     public void test_mul_small() {
         assertTrue(AAt.equals(A.mul(At)));
     }
-
-    //@Test
-    //public void test_mul_large() {
-    //   Matrix A = Matrix.random(256, 512, -10, 10), B = Matrix.random(512, 256, -10, 10);
-    //   Matrix R1 = A.mul(B), R2 = Naive.mul(A, B);
-    //   assertTrue(R1.equals(R2));
-    //}
 
     @Test
     public void test_diag() {

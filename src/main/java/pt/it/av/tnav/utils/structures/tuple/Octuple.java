@@ -33,8 +33,8 @@ public class Octuple<A, B, C, D, E, F, G, H> {
 
   @Override
   public String toString() {
-    return "(" + a.toString() + ", " + b.toString() + ", " + c.toString() + ", " + d.toString() +
-        e.toString() + ", " + f.toString() + "," + g.toString() + ", " + h.toString() + ")";
+    return "(" + a.toString() + ", " + b.toString() + ", " + c.toString() + ", " + d.toString() + e.toString() + ", "
+        + f.toString() + "," + g.toString() + ", " + h.toString() + ")";
   }
 
   @Override
@@ -57,10 +57,10 @@ public class Octuple<A, B, C, D, E, F, G, H> {
     if (o != null) {
       if (o == this)
         rv = true;
-      else if (o instanceof Octuple) {
-        Octuple oc = (Octuple) o;
-        rv = a.equals(oc.a) && b.equals(oc.b) && c.equals(oc.c) && d.equals(oc.d) &&
-            e.equals(oc.e) && f.equals(oc.f) && g.equals(oc.g) && h.equals(oc.h);
+      else if (o instanceof Octuple<?, ?, ?, ?, ?, ?, ?, ?>) {
+        Octuple<?, ?, ?, ?, ?, ?, ?, ?> oc = (Octuple<?, ?, ?, ?, ?, ?, ?, ?>) o;
+        rv = a.equals(oc.a) && b.equals(oc.b) && c.equals(oc.c) && d.equals(oc.d) && e.equals(oc.e) && f.equals(oc.f)
+            && g.equals(oc.g) && h.equals(oc.h);
       }
     }
     return rv;

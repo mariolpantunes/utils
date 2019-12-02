@@ -5,7 +5,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Operations over arrays of doubles.
- * <p>These operations are common to Matrix and Vector classes.</p>
+ * <p>
+ * These operations are common to Matrix and Vector classes.
+ * </p>
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
@@ -20,8 +22,8 @@ public final class ArrayUtils {
   /**
    * Sum two arrays element-wise.
    * <p>
-   * The elements from A are added with B and stored in C, acording to the following expression:
-   * $$c = \sum_{i = 0}^{len}$$
+   * The elements from A are added with B and stored in C, acording to the
+   * following expression: $$c = \sum_{i = 0}^{len}$$
    * </p>
    *
    * @param a   first vector
@@ -32,9 +34,8 @@ public final class ArrayUtils {
    * @param bC  index of the resulting vector
    * @param len array's len
    */
-  public static void add(final double[] a, final int bA, final double[] b,
-                         final int bB, final double[] c, final int bC,
-                         final int len) {
+  public static void add(final double[] a, final int bA, final double[] b, final int bB, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] + b[bB + i];
     }
@@ -53,16 +54,16 @@ public final class ArrayUtils {
    * @param bC  index of the resulting vector
    * @param len array's len
    */
-  public static void add(final double[] a, final int bA, final double b,
-                         final double[] c, final int bC, final int len) {
+  public static void add(final double[] a, final int bA, final double b, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] + b;
     }
   }
 
   /**
-   * Substratc two arrays element-wise.
-   * The elements from B are subtracted from A and stored in C.
+   * Substratc two arrays element-wise. The elements from B are subtracted from A
+   * and stored in C.
    *
    * @param a   first vector
    * @param bA  index of the first vector
@@ -72,17 +73,16 @@ public final class ArrayUtils {
    * @param bC  index of the resulting vector
    * @param len array's len
    */
-  public static void sub(final double[] a, final int bA, final double[] b,
-                         final int bB, final double[] c, final int bC,
-                         final int len) {
+  public static void sub(final double[] a, final int bA, final double[] b, final int bB, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] - b[bB + i];
     }
   }
 
   /**
-   * Substratc a scalar from an array.
-   * The scalar B are subtracted from A and stored in C.
+   * Substratc a scalar from an array. The scalar B are subtracted from A and
+   * stored in C.
    *
    * @param a   first vector
    * @param bA  index of the first vector
@@ -91,16 +91,25 @@ public final class ArrayUtils {
    * @param bC  index of the resulting vector
    * @param len array's len
    */
-  public static void sub(final double[] a, final int bA, final double b,
-                         final double[] c, final int bC, final int len) {
+  public static void sub(final double[] a, final int bA, final double b, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] - b;
     }
   }
 
+  public static void wsub(final double[] a, final int bA, final double[] b, final int bB, final double[] c,
+      final int bC, final double w0, final double w1, final int len) {
+    for (int i = 0; i < len; i++) {
+      double v1 = (w0 * a[bA + i]);
+      double v2 = (w1 * b[bB + i]);
+      c[bC + i] = v1 - v2;
+    }
+  }
+
   /**
-   * Multiply two arrays element-wise.
-   * The elements from A are multiplied with B and stored in C.
+   * Multiply two arrays element-wise. The elements from A are multiplied with B
+   * and stored in C.
    *
    * @param a   first vector
    * @param bA  index of the first vector
@@ -110,17 +119,16 @@ public final class ArrayUtils {
    * @param bC  index of the resulting vector
    * @param len array's len
    */
-  public static void mul(final double[] a, final int bA, final double[] b,
-                         final int bB, final double[] c, final int bC,
-                         final int len) {
+  public static void mul(final double[] a, final int bA, final double[] b, final int bB, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] * b[bB + i];
     }
   }
 
   /**
-   * Multiply a scalar with an array.
-   * The scalar B are subtracted from A and stored in C.
+   * Multiply a scalar with an array. The scalar B are subtracted from A and
+   * stored in C.
    *
    * @param a   first vector
    * @param bA  index of the first vector
@@ -129,16 +137,16 @@ public final class ArrayUtils {
    * @param bC  index of the resulting vector
    * @param len array's len
    */
-  public static void mul(final double[] a, final int bA, final double b,
-                         final double[] c, final int bC, final int len) {
+  public static void mul(final double[] a, final int bA, final double b, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] * b;
     }
   }
 
   /**
-   * Divide two arrays element-wise.
-   * The elements from A are divided by B and stored in C.
+   * Divide two arrays element-wise. The elements from A are divided by B and
+   * stored in C.
    *
    * @param a   first vector
    * @param bA  index of the first vector
@@ -148,27 +156,26 @@ public final class ArrayUtils {
    * @param bC  index of the resulting vector
    * @param len array's len
    */
-  public static void div(final double[] a, final int bA, final double[] b,
-                         final int bB, final double[] c,
-                         final int bC, final int len) {
+  public static void div(final double[] a, final int bA, final double[] b, final int bB, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] / b[bB + i];
     }
   }
 
   /**
-   * Divide an array by a scalar.
-   * The elements from A are divided by the scalar b and stored in C.
+   * Divide an array by a scalar. The elements from A are divided by the scalar b
+   * and stored in C.
    *
-   * @param a   first vector
-   * @param bA  index of the first vector
+   * @param a   first array
+   * @param bA  index of the first array
    * @param b   scalar
-   * @param c   resulting vector
+   * @param c   resulting array
    * @param bC  index of the resulting vector
-   * @param len array's len
+   * @param len array's length
    */
-  public static void div(final double[] a, final int bA, final double b,
-                         final double[] c, final int bC, final int len) {
+  public static void div(final double[] a, final int bA, final double b, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = a[bA + i] / b;
     }
@@ -185,9 +192,8 @@ public final class ArrayUtils {
    * @param bR
    * @param len
    */
-  public static void mulDiv(final double[] a, final int bA, final double[] b,
-                            final int bB, final double[] c, final int bC,
-                            final double[] r, final int bR, final int len) {
+  public static void mulDiv(final double[] a, final int bA, final double[] b, final int bB, final double[] c,
+      final int bC, final double[] r, final int bR, final int len) {
     for (int i = 0; i < len; i++) {
       r[bR + i] = a[bA + i] * (b[bB + i] / c[bC + i]);
     }
@@ -204,9 +210,8 @@ public final class ArrayUtils {
    * @param bC  index of the resulting vector
    * @param len array's len
    */
-  public static void pow(final double[] a, final int bA,
-                         final double[] b, final int bB,
-                         final double[] c, final int bC, final int len) {
+  public static void pow(final double[] a, final int bA, final double[] b, final int bB, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = Math.pow(a[bA + i], b[bB + i]);
     }
@@ -220,39 +225,78 @@ public final class ArrayUtils {
    * @param b   scalar
    * @param c   resulting vector
    * @param bC  index of the resulting vector
-   * @param len array's len
+   * @param len array's length
    */
-  public static void pow(final double[] a, final int bA, final double b,
-                         final double[] c, final int bC, final int len) {
+  public static void pow(final double[] a, final int bA, final double b, final double[] c, final int bC,
+      final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = Math.pow(a[bA + i], b);
     }
   }
 
-  public static void sqrt(final double[] a, final int bA, final double[] c,
-                          final int bC, final int len) {
+  public static void sqrt(final double[] a, final int bA, final double[] c, final int bC, final int len) {
     for (int i = 0; i < len; i++) {
       c[bC + i] = Math.sqrt(a[bA + i]);
     }
   }
 
   /**
-   * @param a
-   * @param bA
-   * @param b
-   * @param bB
-   * @param len
-   * @param p
-   * @return
+   * Returns the Minkowski distance between two arrays: \(D(a,b) = \left(
+   * \sum_{i=0}^{len}|a_{i+bA}-b_{i+bB}|^p \right) ^\frac{1}{p}\)
+   * <p>
+   * The Minkowski distance is a metric in a normed vector space which can be
+   * considered as a generalization of both the Euclidean distance and the
+   * Manhattan distance.
+   * </p>
+   *
+   * @param a   the first array
+   * @param bA  index of the first array
+   * @param b   the second array
+   * @param bB  index of the second array
+   * @param len array's length
+   * @param p   order (p = 0 reprenset infinity)
+   * @return the Minkowski distance between two arrays
    */
-  public static double minkowskiDistance(final double[] a, final int bA,
-                                         final double[] b, final int bB,
-                                         final int len, final int p) {
-    double sum = 0.0;
-    for (int i = 0; i < len; i++) {
-      sum += Math.pow(Math.abs(a[bA + i] - b[bB + i]), p);
+  public static double minkowskiDistance(final double[] a, final int bA, final double[] b, final int bB, final int len,
+      final int p) {
+    double rv = 0.0, diff[] = new double[len], max = 0.0;
+
+    max = Math.abs(a[bA] - b[bB]);
+    diff[0] = max;
+    for (int i = 1; i < len; i++) {
+      diff[i] = Math.abs(a[i + bA] - b[i + bB]);
+      if (diff[i] > max) {
+        max = diff[i];
+      }
     }
-    return Math.pow(sum, 1.0 / p);
+
+    if (p == 0) {
+      rv = max;
+    } else if (p == 1) {
+      rv = ArrayUtils.sum(diff, 0, diff.length);
+    } else {
+      rv = (max > 0) ? norm2(diff, p, max) : 0.0;
+    }
+
+    return rv;
+  }
+
+  /**
+   * Returns the Minkowski distance between two arrays: \(D(a,b) = \left(
+   * \sum_{i=0}^{len}|a_{i+bA}-b_{i+bB}|^p \right) ^\frac{1}{p}\)
+   * <p>
+   * The Minkowski distance is a metric in a normed vector space which can be
+   * considered as a generalization of both the Euclidean distance and the
+   * Manhattan distance.
+   * </p>
+   *
+   * @param a the first array
+   * @param b the second array
+   * @param p order (p = 0 reprenset infinity)
+   * @return the Minkowski distance between two arrays
+   */
+  public static double minkowskiDistance(final double[] a, final double[] b, final int p) {
+    return minkowskiDistance(a, 0, b, 0, a.length, p);
   }
 
   /**
@@ -263,14 +307,18 @@ public final class ArrayUtils {
    * @param len
    * @return
    */
-  public static double euclideanDistance(final double[] a, final int bA,
-                                         final double[] b, final int bB,
-                                         final int len) {
-    double sum = 0.0;
-    for (int i = 0; i < len; i++) {
-      sum += Math.pow(a[bA + i] - b[bB + i], 2.0);
-    }
-    return Math.sqrt(sum);
+  public static double euclideanDistance(final double[] a, final int bA, final double[] b, final int bB,
+      final int len) {
+    return minkowskiDistance(a, bA, b, bB, len, 2);
+  }
+
+  /**
+   * @param a
+   * @param b
+   * @return
+   */
+  public static double euclideanDistance(final double[] a, final double[] b) {
+    return euclideanDistance(a, 0, b, 0, a.length);
   }
 
   /**
@@ -281,14 +329,9 @@ public final class ArrayUtils {
    * @param len
    * @return
    */
-  public static double manhattanDistance(final double[] a, final int bA,
-                                         final double[] b, final int bB,
-                                         final int len) {
-    double sum = 0.0;
-    for (int i = 0; i < len; i++) {
-      sum += Math.abs(a[bA + i] - b[bB + i]);
-    }
-    return sum;
+  public static double manhattanDistance(final double[] a, final int bA, final double[] b, final int bB,
+      final int len) {
+    return minkowskiDistance(a, bA, b, bB, len, 1);
   }
 
   /**
@@ -313,9 +356,7 @@ public final class ArrayUtils {
    * @param len
    * @return
    */
-  public static double dotProduct(final double[] a, final int bA,
-                                  final double[] b, final int bB,
-                                  final int len) {
+  public static double dotProduct(final double[] a, final int bA, final double[] b, final int bB, final int len) {
     double rv = 0.0;
     for (int i = 0; i < len; i++) {
       rv += a[bA + i] * b[bB + i];
@@ -323,10 +364,8 @@ public final class ArrayUtils {
     return rv;
   }
 
-
   /**
-   * Shuffles the content of an array.
-   * Based on Fisher–Yates algorithm.
+   * Shuffles the content of an array. Based on Fisher–Yates algorithm.
    *
    * @param array an array of type {@link T}
    * @param <T>   type of elements in the array.
@@ -341,8 +380,7 @@ public final class ArrayUtils {
   }
 
   /**
-   * Shuffles the content of an array.
-   * Based on Fisher–Yates algorithm.
+   * Shuffles the content of an array. Based on Fisher–Yates algorithm.
    *
    * @param array an array of integers
    */
@@ -411,7 +449,7 @@ public final class ArrayUtils {
   }
 
   /**
-   * Returns the index of the maximum number in the array.
+   * Returns the index of the number with higher value in the array.
    *
    * @param array an array of doubles
    * @param b     start index of the array
@@ -427,12 +465,38 @@ public final class ArrayUtils {
   }
 
   /**
-   * Returns the index of the maximum number in the array.
+   * Returns the index of the number with higher value in the array.
    *
    * @param array an array of doubles
    * @return the index of the maximum number in the array.
    */
   public static int max(final double array[]) {
+    return max(array, 0, array.length);
+  }
+
+  /**
+   * Returns the index of the number with higher value (absolute) in the array.
+   *
+   * @param array an array of doubles
+   * @param b     start index of the array
+   * @param l     array's length
+   * @return the index of the maximum number in the array.
+   */
+  public static int maxAbs(final double array[], final int b, final int l) {
+    int rv = 0;
+    for (int i = 1; i < l; i++)
+      if (Math.abs(array[i + b]) > Math.abs(array[rv + b]))
+        rv = i;
+    return rv + b;
+  }
+
+  /**
+   * Returns the index of the number with higher value (absolute) in the array.
+   *
+   * @param array an array of doubles
+   * @return the index of the maximum number in the array.
+   */
+  public static int maxAbs(final double array[]) {
     return max(array, 0, array.length);
   }
 
@@ -454,8 +518,7 @@ public final class ArrayUtils {
    * @param len   the lenght of the data.
    * @return the index of the minimum and maximum elements in the array.
    */
-  public static int[] minMax(final double array[], final int bA,
-                             final int len) {
+  public static int[] minMax(final double array[], final int bA, final int len) {
     int minIdx = bA, maxIdx = bA, start = bA + 1;
     double min = array[bA], max = array[bA];
 
@@ -484,7 +547,7 @@ public final class ArrayUtils {
       }
     }
 
-    int rv[] = {minIdx, maxIdx};
+    int rv[] = { minIdx, maxIdx };
     return rv;
   }
 
@@ -522,6 +585,34 @@ public final class ArrayUtils {
     return rv;
   }
 
+  public static double[] gaussian(final int n, final double mean, final double std) {
+    double rv[] = new double[n];
+
+    for (int i = 0; i < n; i++) {
+      rv[i] = MathUtils.gaussian(mean, std);
+    }
+
+    return rv;
+  }
+
+  /**
+   * Returns a double array filled with random values in the range [min, max).
+   *
+   * @param n   size of the array
+   * @param min
+   * @param max
+   * @return a double array filled with random values in the range [min, max)
+   */
+  public static double[] random(final int n, final double min, final double max) {
+    double rv[] = new double[n];
+
+    for (int i = 0; i < n; i++) {
+      rv[i] = ThreadLocalRandom.current().nextDouble(min, max);
+    }
+
+    return rv;
+  }
+
   /**
    * @param a
    * @return
@@ -551,17 +642,18 @@ public final class ArrayUtils {
    * <p>
    * Iterative procedure based on the isodata algorithm of:
    * <ul>
-   * <li>Ridler, TW & Calvard, S (1978), "Picture thresholding using an iterative selection method",
-   * IEEE Transactions on Systems, Man and Cybernetics 8: 630-632
-   * </ul></p>
+   * <li>Ridler, TW & Calvard, S (1978), "Picture thresholding using an iterative
+   * selection method", IEEE Transactions on Systems, Man and Cybernetics 8:
+   * 630-632
+   * </ul>
+   * </p>
    * <p>
-   * The procedure divides the values into high and low categories by taking an initial threshold
-   * (usually the mean).
-   * Then the averages of the values at or below the threshold and above are computed.
-   * The averages of those two values are computed, the threshold is incremented and the process is
-   * repeated until the threshold is larger than the composite average.
-   * That is:
-   * $$threshold = \frac{(average\ low + average\ high)}{2}$$
+   * The procedure divides the values into high and low categories by taking an
+   * initial threshold (usually the mean). Then the averages of the values at or
+   * below the threshold and above are computed. The averages of those two values
+   * are computed, the threshold is incremented and the process is repeated until
+   * the threshold is larger than the composite average. That is: $$threshold =
+   * \frac{(average\ low + average\ high)}{2}$$
    * </p>
    *
    * @param array array an array of values (scores).
@@ -576,22 +668,23 @@ public final class ArrayUtils {
    * <p>
    * Iterative procedure based on the isodata algorithm of:
    * <ul>
-   * <li>Ridler, TW & Calvard, S (1978), "Picture thresholding using an iterative selection method",
-   * IEEE Transactions on Systems, Man and Cybernetics 8: 630-632
-   * </ul></p>
+   * <li>Ridler, TW & Calvard, S (1978), "Picture thresholding using an iterative
+   * selection method", IEEE Transactions on Systems, Man and Cybernetics 8:
+   * 630-632
+   * </ul>
+   * </p>
    * <p>
-   * The procedure divides the values into high and low categories by taking an initial threshold
-   * (usually the mean).
-   * Then the averages of the values at or below the threshold and above are computed.
-   * The averages of those two values are computed, the threshold is incremented and the process is
-   * repeated until the threshold is larger than the composite average.
-   * That is:
-   * $$threshold = \frac{(average\ low + average\ high)}{2}$$
+   * The procedure divides the values into high and low categories by taking an
+   * initial threshold (usually the mean). Then the averages of the values at or
+   * below the threshold and above are computed. The averages of those two values
+   * are computed, the threshold is incremented and the process is repeated until
+   * the threshold is larger than the composite average. That is: $$threshold =
+   * \frac{(average\ low + average\ high)}{2}$$
    * </p>
    *
    * @param array an array of values (scores).
-   * @param bIdx     the index where the values start.
-   * @param len     the lenght of array of values.
+   * @param bIdx  the index where the values start.
+   * @param len   the lenght of array of values.
    * @return The ideal threshold to divide the values into two classes.
    */
   public static double isoData(final double array[], final int bIdx, final int len) {
@@ -745,7 +838,8 @@ public final class ArrayUtils {
   /**
    * Returns the index of the closest element to x.
    * <p>
-   * It assumes the array is sorted, as such, it stops whenever the distance increases.
+   * It assumes the array is sorted, as such, it stops whenever the distance
+   * increases.
    * </p>
    *
    * @param x     the original value.
@@ -759,7 +853,8 @@ public final class ArrayUtils {
   /**
    * Returns the index of the closest element to x.
    * <p>
-   * It assumes the array is sorted, as such, it stops whenever the distance increases.
+   * It assumes the array is sorted, as such, it stops whenever the distance
+   * increases.
    * </p>
    *
    * @param x     the original value.
@@ -889,8 +984,8 @@ public final class ArrayUtils {
   }
 
   /**
-   * Feature scaling.
-   * The simplest method is rescaling the range of features to scale the range in [rl, rh].
+   * Feature scaling. The simplest method is rescaling the range of features to
+   * scale the range in [rl, rh].
    * https://stats.stackexchange.com/questions/178626/how-to-normalize-data-between-1-and-1
    *
    * @param a   the original data array (input).
@@ -901,8 +996,8 @@ public final class ArrayUtils {
    * @param rl  the lower limit of the range.
    * @param rh  the higher limit of the range.
    */
-  public static void rescaling(final double[] a, final int bA, final double[] r, final int bR,
-                               final int len, final double rl, final double rh) {
+  public static void rescaling(final double[] a, final int bA, final double[] r, final int bR, final int len,
+      final double rl, final double rh) {
     int mm[] = minMax(a, bA, len);
     double min = a[mm[0]], max = a[mm[1]], c = (rh - rl) / (max - min);
 
@@ -914,7 +1009,8 @@ public final class ArrayUtils {
   /**
    * Feature scaling.
    * <p>
-   * The simplest method is rescaling the range of features to scale the range in [0, 1].
+   * The simplest method is rescaling the range of features to scale the range in
+   * [0, 1].
    * </p>
    *
    * @param a   the original data array (input).
@@ -923,15 +1019,15 @@ public final class ArrayUtils {
    * @param bR  the index where the data can be stored.
    * @param len the number of elements to be processed.
    */
-  public static void rescaling(final double[] a, final int bA, final double[] r, final int bR,
-                               final int len) {
+  public static void rescaling(final double[] a, final int bA, final double[] r, final int bR, final int len) {
     rescaling(a, bA, r, bR, len, 0, 1);
   }
 
   /**
    * Feature scaling.
    * <p>
-   * The simplest method is rescaling the range of features to scale the range in [0, 1].
+   * The simplest method is rescaling the range of features to scale the range in
+   * [0, 1].
    * </p>
    *
    * @param a the original data array (input).
@@ -942,8 +1038,7 @@ public final class ArrayUtils {
   }
 
   /**
-   * Feature scaling.
-   * Mean normalization.
+   * Feature scaling. Mean normalization.
    *
    * @param a   the original data array (input).
    * @param bA  the index where the data starts.
@@ -951,11 +1046,9 @@ public final class ArrayUtils {
    * @param bR  the index where the data can be stored.
    * @param len the number of elements to be processed.
    */
-  public static void meanNormalization(final double[] a, final int bA, final double[] r,
-                                       final int bR, final int len) {
+  public static void meanNormalization(final double[] a, final int bA, final double[] r, final int bR, final int len) {
     int mm[] = minMax(a, bA, len);
-    double min = a[mm[0]], max = a[mm[1]],
-        d = max - min, mean = mean(a, bA, len);
+    double min = a[mm[0]], max = a[mm[1]], d = max - min, mean = mean(a, bA, len);
 
     for (int i = 0; i < len; i++) {
       r[bR + i] = (a[bA + i] - mean) / d;
@@ -963,9 +1056,9 @@ public final class ArrayUtils {
   }
 
   /**
-   * Feature scaling.
-   * Standardization (or Z-score normalization), features will be rescaled so that they’ll have the
-   * properties of a standard normal distribution with u = 0 and std = 1
+   * Feature scaling. Standardization (or Z-score normalization), features will be
+   * rescaled so that they’ll have the properties of a standard normal
+   * distribution with u = 0 and std = 1
    *
    * @param a   the original data array (input).
    * @param bA  the index where the data starts.
@@ -973,8 +1066,7 @@ public final class ArrayUtils {
    * @param bR  the index where the data can be stored.
    * @param len the number of elements to be processed.
    */
-  public static void standardization(final double[] a, final int bA, final double[] r,
-                                     final int bR, final int len) {
+  public static void standardization(final double[] a, final int bA, final double[] r, final int bR, final int len) {
     double mean = mean(a, bA, len), std = std(a, bA, len);
 
     for (int i = 0; i < len; i++) {
@@ -983,11 +1075,10 @@ public final class ArrayUtils {
   }
 
   /**
-   * Feature scaling.
-   * Scaling to unit length.
-   * Another option that is widely used in machine-learning is to scale the components of a feature
-   * vector such that the complete vector has length one.
-   * This usually means dividing each component by the Euclidean length of the vector.
+   * Feature scaling. Scaling to unit length. Another option that is widely used
+   * in machine-learning is to scale the components of a feature vector such that
+   * the complete vector has length one. This usually means dividing each
+   * component by the Euclidean length of the vector.
    *
    * @param a   the original data array (input).
    * @param bA  the index where the data starts.
@@ -995,8 +1086,7 @@ public final class ArrayUtils {
    * @param bR  the index where the data can be stored.
    * @param len the number of elements to be processed.
    */
-  public static void scalingUnitLength(final double[] a, final int bA, final double[] r,
-                                       final int bR, final int len) {
+  public static void scalingUnitLength(final double[] a, final int bA, final double[] r, final int bR, final int len) {
     double norm = norm(a, bA, len, 2);
     for (int i = 0; i < len; i++) {
       r[bR + i] = a[bA + i] / norm;
@@ -1004,7 +1094,54 @@ public final class ArrayUtils {
   }
 
   /**
-   * Returns the norm p from a array of data.
+   *
+   * @param a
+   * @param bIdx
+   * @param len
+   * @param p
+   * @param max
+   * @return
+   */
+  private static double norm2(final double a[], final int bIdx, final int len, final int p, final double max) {
+
+    double rv = 0.0;
+    if (p == 2) {
+      for (int i = 0; i < len; i++) {
+        rv += Math.pow(a[i + bIdx] / max, 2.0);
+      }
+      rv = Math.sqrt(rv);
+    } else {
+      for (int i = 0; i < len; i++) {
+        rv += Math.pow(a[i + bIdx] / max, p);
+      }
+      rv = MathUtils.nthRoot(rv, p);
+    }
+
+    rv *= max;
+
+    return rv;
+  }
+
+  /**
+   * @param a
+   * @param p
+   * @param max
+   * @return
+   */
+  private static double norm2(final double a[], final int p, final double max) {
+    return norm2(a, 0, a.length, p, max);
+  }
+
+  /**
+   * Returns the norm p from a array of data: \(\left \| x \right \|_p = \left(
+   * \sum_{i=0}^{len} |a_{i+bA}|^p \right) ^\frac{1}{p}\)
+   * <p>
+   * The implementation is numerically stable.
+   * </p>
+   *
+   * @see <a href=
+   *      "https://timvieira.github.io/blog/post/2014/11/10/numerically-stable-p-norms/">
+   *      Numerically stable p-norms </a>
    *
    * @param a
    * @param bA
@@ -1012,10 +1149,17 @@ public final class ArrayUtils {
    * @param p
    * @return
    */
-  public static double norm(final double a[], final int bA, final int len, final int p) {
+  public static double norm(final double a[], final int bIdx, final int len, final int p) {
     double norm = 0.0;
-    for (int i = 0; i < len; i++)
-      norm = MathUtils.norm(norm, a[bA + i], p);
+
+    if (p == 1) {
+      for (int i = 0; i < len; i++) {
+        norm += Math.abs(a[i + bIdx]);
+      }
+    } else {
+      double max = Math.abs(a[ArrayUtils.maxAbs(a, bIdx, len)]);
+      norm = (max > 0) ? norm2(a, bIdx, len, p, max) : 0.0;
+    }
     return norm;
   }
 
@@ -1047,10 +1191,9 @@ public final class ArrayUtils {
   }
 
   /**
-   * Moving average.
-   * Compute the K centered moving average of a row vector.
-   * When there are fewer than K elements in the window at the endpoints, take the average over the
-   * elements that are available.
+   * Moving average. Compute the K centered moving average of a row vector. When
+   * there are fewer than K elements in the window at the endpoints, take the
+   * average over the elements that are available.
    *
    * @param a   the original data array (input).
    * @param bA  the index where the data starts.
@@ -1075,10 +1218,9 @@ public final class ArrayUtils {
   }
 
   /**
-   * Moving average.
-   * Compute the K centered moving average of a row vector.
-   * When there are fewer than K elements in the window at the endpoints, take the average over the
-   * elements that are available.
+   * Moving average. Compute the K centered moving average of a row vector. When
+   * there are fewer than K elements in the window at the endpoints, take the
+   * average over the elements that are available.
    *
    * @param a the original data array (input).
    * @param r the array that will store the results (output).
@@ -1087,7 +1229,6 @@ public final class ArrayUtils {
   public static void mm(final double a[], final double r[], final int k) {
     mm(a, 0, r, 0, a.length, k);
   }
-
 
   /**
    * Coefficient of determination (\(R^2\)).
@@ -1164,8 +1305,8 @@ public final class ArrayUtils {
    * @param bR
    * @param l
    */
-  public static void cfd(final double[] x, final double[] y, final double[] rv,
-                         final int bX, final int bY, final int bR, final int l) {
+  public static void cfd(final double[] x, final double[] y, final double[] rv, final int bX, final int bY,
+      final int bR, final int l) {
     for (int i = 1; i < l - 1; i++) {
       rv[bR + i - 1] = (y[bY + i + 1] - y[bY + i - 1]) / ((x[bX + i] - x[bX + i - 1]) + (x[bX + i + 1] - x[bX + i]));
     }
@@ -1179,8 +1320,7 @@ public final class ArrayUtils {
    * @param l
    * @return
    */
-  public static double[] cfd(final double[] x, final double[] y, final int bX,
-                             final int bY, final int l) {
+  public static double[] cfd(final double[] x, final double[] y, final int bX, final int bY, final int l) {
     double rv[] = new double[l - 2];
     cfd(x, y, rv, bX, bY, 0, l);
     return rv;
@@ -1206,10 +1346,11 @@ public final class ArrayUtils {
    * @param bR
    * @param l
    */
-  public static void csd(final double[] x, final double[] y, final double[] rv,
-                         final int bX, final int bY, final int bR, final int l) {
+  public static void csd(final double[] x, final double[] y, final double[] rv, final int bX, final int bY,
+      final int bR, final int l) {
     for (int i = 1; i < l - 1; i++) {
-      rv[bR + i - 1] = (y[bY + i + 1] - 2 * y[bY + i] + y[bY + i]) / ((x[bX + i] - x[bX + i - 1]) * (x[bX + i + 1] - x[bX + i]));
+      rv[bR + i - 1] = (y[bY + i + 1] - 2 * y[bY + i] + y[bY + i])
+          / ((x[bX + i] - x[bX + i - 1]) * (x[bX + i + 1] - x[bX + i]));
     }
   }
 
@@ -1221,8 +1362,7 @@ public final class ArrayUtils {
    * @param l
    * @return
    */
-  public static double[] csd(final double[] x, final double[] y,
-                             final int bX, final int bY, final int l) {
+  public static double[] csd(final double[] x, final double[] y, final int bX, final int bY, final int l) {
     double rv[] = new double[l - 2];
     csd(x, y, rv, bX, bY, 0, l);
     return rv;
@@ -1240,10 +1380,11 @@ public final class ArrayUtils {
   }
 
   /**
-   * Return an array (out) with the same content that the input (in) array, but in reverse order.
+   * Return an array (out) with the same content that the input (in) array, but in
+   * reverse order.
    * <p>
-   * This method implements a sequential method to reverse the input array.
-   * If the array is large enough, cache misses can degrade the performance.
+   * This method implements a sequential method to reverse the input array. If the
+   * array is large enough, cache misses can degrade the performance.
    * </p>
    *
    * @param in  the input array.
@@ -1259,14 +1400,16 @@ public final class ArrayUtils {
   }
 
   /**
-   * Return an array (out) with the same content that the input (in) array, but in reverse order.
+   * Return an array (out) with the same content that the input (in) array, but in
+   * reverse order.
    * <p>
-   * This method implements a sequential method to reverse the input array.
-   * If the array is large enough, cache misses can degrade the performance.
+   * This method implements a sequential method to reverse the input array. If the
+   * array is large enough, cache misses can degrade the performance.
    * </p>
    *
    * @param in the input array.
-   * @return an array (out) with the same content that the input (in) array, but in reverse order.
+   * @return an array (out) with the same content that the input (in) array, but
+   *         in reverse order.
    */
   public static double[] reverse(final double[] in) {
     double out[] = new double[in.length];
@@ -1327,8 +1470,7 @@ public final class ArrayUtils {
    * @param eps
    * @return
    */
-  public static boolean equalTo(final double a[], final int bIdx, final int len,
-                                final double n, final double eps) {
+  public static boolean equalTo(final double a[], final int bIdx, final int len, final double n, final double eps) {
     boolean rv = true;
     for (int i = 0; rv && i < len; i++) {
       rv = MathUtils.equals(n, a[bIdx + i], eps);
@@ -1395,5 +1537,142 @@ public final class ArrayUtils {
    */
   public static double median(final double a[]) {
     return median(a, 0, a.length);
+  }
+
+  /**
+   * @param a
+   * @param bidx
+   * @param len
+   * @return
+   */
+  public static int subarrayHashCode(final double a[], final int bIdx, final int len) {
+    int prime = 31, result = 1;
+
+    for (int i = 0; i < len; i++) {
+      result = prime * result + Double.hashCode(a[i + bIdx]);
+    }
+
+    return result;
+  }
+
+  /**
+   * @param a
+   * @param aIdx
+   * @param b
+   * @param bIdx
+   * @param len
+   * @param eps
+   * @return
+   */
+  public static boolean equals(final double a[], final int aIdx, final double b[], final int bIdx, final int len,
+      final double eps) {
+
+    boolean rv = true;
+
+    for (int i = 0; i < len && rv; i++) {
+      if (!MathUtils.equals(a[i + aIdx], b[i + bIdx], eps)) {
+        rv = false;
+      }
+    }
+
+    return rv;
+  }
+
+  /**
+   * @param a
+   * @param b
+   * @param eps
+   * @return
+   */
+  public static boolean equals(final double a[], final double b[], final double eps) {
+    return equals(a, 0, b, 0, a.length, eps);
+  }
+
+  /**
+   * @param a
+   * @param aIdx
+   * @param b
+   * @param bIdx
+   * @param len
+   * @return
+   */
+  public static boolean equals(final double a[], final int aIdx, final double b[], final int bIdx, final int len) {
+    boolean rv = true;
+
+    for (int i = 0; i < len && rv; i++) {
+      if (a[i + aIdx] != b[i + bIdx]) {
+        rv = false;
+      }
+    }
+
+    return rv;
+  }
+
+  /**
+   * Returns an identity matrix (an array that represents a matrix in row-major
+   * order) with size: Rows x Cols.
+   *
+   * @param rows number of rows in the matrix
+   * @param cols number of columns in the matrix
+   * @return an identity matrix (an array that represents a matrix in row-major
+   *         order) with size: Rows x Cols
+   */
+  public static double[] identity(final int rows, final int cols) {
+    double m[] = new double[rows * cols];
+
+    int min = (rows < cols) ? rows : cols;
+    for (int i = 0; i < min; i++) {
+      m[i * cols + i] = 1.0;
+    }
+
+    return m;
+  }
+
+  public static int count(final double data[], final double scalar, final int idx, final int len) {
+    int rv = 0;
+    for (int i = 0; i < len; i++) {
+      if (data[i + idx] == 0) {
+        rv += 1;
+      }
+    }
+    return rv;
+  }
+
+  /**
+   * 
+   * @param data
+   * @param scalar
+   * @param idx
+   * @param len
+   */
+  public static void set_neg(final double data[], final double scalar, final int idx, final int len) {
+    for (int i = 0; i < len; i++) {
+      if (data[i + idx] <= 0) {
+        data[i + idx] = scalar;
+      }
+    }
+  }
+
+  public static void set_neg(final double data[], final double scalar) {
+    set_neg(data, scalar, 0, data.length);
+  }
+
+  /**
+   * 
+   * @param r
+   * @param c
+   * @param cols
+   * @return
+   */
+  public static int rc2idx(final int r, final int c, final int cols) {
+    return (r * cols) + c;
+  }
+
+  public static int idx2r(final int idx, final int cols) {
+    return idx / cols;
+  }
+
+  public static int idx2c(final int idx, final int cols) {
+    return idx % cols;
   }
 }

@@ -29,7 +29,7 @@ To use this library just add the following code to your Maven project:
 
 ## Authors
 
-* **[Mário Antunes](https://github.com/mariolpantunes)**
+* **Mário Antunes** - [mariolpantunes](https://github.com/mariolpantunes)
 
 ## License
 

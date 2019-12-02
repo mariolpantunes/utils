@@ -1,6 +1,7 @@
 package pt.it.av.tnav.utils.structures.point;
 
 import pt.it.av.tnav.utils.bla.Matrix;
+import pt.it.av.tnav.utils.bla.factorization.NMF;
 import pt.it.av.tnav.utils.structures.Distance;
 import pt.it.av.tnav.utils.structures.Similarity;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Helper class used to cluster points.
  * <p>
  * The distance and similarities are store in a matrix.
- * This way latent models ({@link pt.it.av.tnav.utils.bla.NmfFactorization}) can be used to improve
+ * This way latent models ({@link NMF}) can be used to improve
  * performance.
  * </p>
  *
@@ -67,7 +68,7 @@ public class MatrixPoint<E> implements Distance<MatrixPoint<E>>, Similarity<Matr
       if (o == this)
         rv = true;
       else if (o instanceof MatrixPoint) {
-        MatrixPoint mp = (MatrixPoint) o;
+        MatrixPoint<?> mp = (MatrixPoint<?>) o;
         rv = e.equals(mp.e);
       }
     }

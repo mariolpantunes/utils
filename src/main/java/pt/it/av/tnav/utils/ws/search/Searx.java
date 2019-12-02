@@ -14,7 +14,7 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class Searx extends WebSearchEngine {
-  private static final String DEFAULT_URL = "http://hrun.hopto.org/searx/";
+  private static final String DEFAULT_URL = "https://searx.ro/";
 
   /**
    * Searx constructor.
@@ -59,7 +59,7 @@ public class Searx extends WebSearchEngine {
    * @version 1.0
    */
   private class SearxResultIterator implements Iterator<Result> {
-    private final int skip, pageno;
+    private final int pageno;
     private final String q;
     private Iterator<JSONValue> it = null;
     private boolean done = false;
@@ -73,7 +73,6 @@ public class Searx extends WebSearchEngine {
      */
     public SearxResultIterator(final String q, final int skip, final int pageno) {
       this.q = q;
-      this.skip = skip;
       this.pageno = pageno;
     }
 

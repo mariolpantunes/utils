@@ -10,8 +10,8 @@ import java.util.Queue;
 /**
  * Queue implemented with a circular buffer.
  * <p>
- * This queue has a fixed size.
- * After filling the buffer, any subsequent add operation will overweight the oldest element.<br>
+ * This queue has a fixed size. After filling the buffer, any subsequent add
+ * operation will overweight the oldest element.<br>
  * Currently this structure is used in two differente scenarios:
  * </p>
  * <ul>
@@ -81,7 +81,7 @@ public class CircularQueue<E> implements Queue<E> {
   @Override
   public boolean containsAll(Collection<?> c) {
     boolean rv = true;
-    Iterator it = c.iterator();
+    Iterator<?> it = c.iterator();
     while (rv && it.hasNext())
       rv = contains(it.next());
     return rv;
@@ -163,16 +163,18 @@ public class CircularQueue<E> implements Queue<E> {
 
   @Override
   public E element() {
-    if (isEmpty())
+    if (isEmpty()) {
       throw new NoSuchElementException();
+    }
     return data[head];
   }
 
   @Override
   public E peek() {
     E rv = null;
-    if (!isEmpty())
+    if (!isEmpty()) {
       rv = data[head];
+    }
     return rv;
   }
 
@@ -191,8 +193,8 @@ public class CircularQueue<E> implements Queue<E> {
   }
 
   /**
-   * Returns the middle element in the queue.
-   * It is usefull to gather neighborhoods of elements.
+   * Returns the middle element in the queue. It is usefull to gather
+   * neighborhoods of elements.
    *
    * @return the middle element in the queue
    * @throws NoSuchElementException if this queue is empty
@@ -204,13 +206,14 @@ public class CircularQueue<E> implements Queue<E> {
   }
 
   /**
-   * Returns the middle elements in the queue.
-   * It is usefull to gather neighborhoods of elements.
-   * Copies the references of the middle elements to the array.
+   * Returns the middle elements in the queue. It is usefull to gather
+   * neighborhoods of elements. Copies the references of the middle elements to
+   * the array.
    *
    * @param array where the references from the middle objects are stored
    * @throws NoSuchElementException   if this queue is empty
-   * @throws IllegalArgumentException if the parity of the array and the queue are not the same
+   * @throws IllegalArgumentException if the parity of the array and the queue are
+   *                                  not the same
    */
   public void middle(E array[]) {
     if (isEmpty())
@@ -234,7 +237,7 @@ public class CircularQueue<E> implements Queue<E> {
   @Override
   public boolean contains(Object o) {
     boolean rv = false;
-    Iterator it = iterator();
+    Iterator<?> it = iterator();
     while (rv && it.hasNext())
       rv = it.next().equals(o);
     return rv;
@@ -249,7 +252,6 @@ public class CircularQueue<E> implements Queue<E> {
   public Iterator<E> iterator() {
     return new CircularQueueIterator(head, size);
   }
-
 
   @Override
   public <T> T[] toArray(T[] a) {
@@ -272,7 +274,7 @@ public class CircularQueue<E> implements Queue<E> {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("[");
-    Iterator it = iterator();
+    Iterator<E> it = iterator();
     while (it.hasNext()) {
       sb.append(it.next());
       if (it.hasNext())

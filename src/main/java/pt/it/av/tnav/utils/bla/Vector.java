@@ -252,13 +252,14 @@ public class Vector implements Distance<Vector> {
     return this;
   }
 
-  public double innerProduct(Vector b) {
-    double c = 0.0;
-    for (int i = 0; i < len; i++)
-      c += data[bIdx + i] * b.data[b.bIdx + i];
-    return c;
+  public double dotProduct(Vector b) {
+    if (len != b.len) {
+      throw new IllegalArgumentException("The vectors do not have the same lenght.");
+    }
+    return ArrayUtils.dotProduct(data, bIdx, b.data, b.bIdx, len);
   }
 
+  //TODO
   public Matrix outerProduct(Vector b) {
     Matrix C = new Matrix(len, b.len);
     int k = 0;
@@ -287,7 +288,7 @@ public class Vector implements Distance<Vector> {
   }
 
   public double cosine(Vector b) {
-    double rv = 0.0, dp = innerProduct(b);
+    double rv = 0.0, dp = dotProduct(b);
     if (dp > 0)
       rv = dp / (norm(2) * b.norm(2));
     return rv;
@@ -348,37 +349,6 @@ public class Vector implements Distance<Vector> {
     return r / (len - 1);
   }
 
-  //TODO: Finish this method...
-
-  /**
-   * @param b
-   * @param eps
-   * @return
-   */
-  public boolean equals(Vector b, double eps) {
-    boolean rv = false;
-    return rv;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    boolean rv = false;
-    if (o != null) {
-      if (o == this)
-        rv = true;
-      else if (o instanceof Vector) {
-        Vector b = (Vector) o;
-        if (len == b.len) {
-          rv = true;
-          for (int i = 0; i < len && rv == true; i++)
-            if (Double.compare(data[bIdx + i], b.data[b.bIdx + i]) != 0)
-              rv = false;
-        }
-      }
-    }
-    return rv;
-  }
-
   /**
    * Returns true if all elements are zero, otherwise false.
    *
@@ -404,6 +374,46 @@ public class Vector implements Distance<Vector> {
       sb.append(data[bIdx + i] + ", ");
     sb.append(data[bIdx + len - 1] + "]");
     return sb.toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    boolean rv = false;
+    if (o != null) {
+      if (o == this) {
+        rv = true;
+      } else if (o instanceof Vector) {
+        Vector v = (Vector) o;
+        if (len == v.len) {
+          rv = ArrayUtils.equals(data, bIdx, v.data, v.bIdx, len);
+        }
+      }
+    }
+
+    return rv;
+  }
+
+  /**
+   * @param v
+   * @param eps
+   * @return
+   */
+  public boolean equals(Vector v, double eps) {
+    boolean rv = false;
+
+    if (len == v.len) {
+      rv = ArrayUtils.equals(data, bIdx, v.data, v.bIdx, len, eps);
+    }
+
+    return rv;
+  }
+
+  @Override
+  public int hashCode() {
+    int prime = 31, result = 1;
+    result = prime * result + (int) bIdx;
+    result = prime * result + (int) len;
+    return result;
   }
 
   @Override

@@ -1,4 +1,4 @@
-package pt.it.av.tnav.utils.bla;
+package pt.it.av.tnav.utils.bla.multiplication;
 
 import pt.it.av.tnav.utils.parallel.threadPool.StaticThreadPool;
 import pt.it.av.tnav.utils.parallel.threadPool.ThreadPool;
@@ -7,12 +7,15 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Several implementation of matrix multiplication.
+ * Several implementations of matrix multiplication.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class MatrixMultiplication {
+public class Multiplication {
+
+  private Multiplication() {
+  }
 
   private static final int P_MUL_SIZE = 4096;
   private static final int BLK = 64;
@@ -25,7 +28,7 @@ public class MatrixMultiplication {
    * @param n
    * @param p
    */
-  protected static void ijk(double a[], double b[], double c[], int m, int n, int p) {
+  public static void ijk(double a[], double b[], double c[], int m, int n, int p) {
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < n; j++) {
         double v = 0.0;
@@ -45,7 +48,7 @@ public class MatrixMultiplication {
    * @param n
    * @param p
    */
-  protected static void ikj(double a[], double b[], double c[], int m, int n, int p) {
+  public static void ikj(double a[], double b[], double c[], int m, int n, int p) {
     for (int i = 0; i < m; i++) {
       int in = i * n;
       for (int k = 0; k < p; k++) {
@@ -66,7 +69,7 @@ public class MatrixMultiplication {
    * @param n
    * @param p
    */
-  protected static double[] ijkt(double a[], double bt[], double c[], int m, int n, int p) {
+  public static double[] ijkt(double a[], double bt[], double c[], int m, int n, int p) {
     for (int i = 0; i < m; i++) {
       for (int j = 0; j < n; j++) {
         double v = 0.0;
@@ -80,7 +83,7 @@ public class MatrixMultiplication {
     return c;
   }
 
-  protected static double[] pmul(double a[], double b[], double c[], int m, int n, int p) {
+  public static double[] pmul(double a[], double b[], double c[], int m, int n, int p) {
     ThreadPool<Integer, Object> tp = new StaticThreadPool<Integer, Object>(
         (Integer i, List<Object> l) -> {
           int in = i * n;
@@ -106,7 +109,7 @@ public class MatrixMultiplication {
     return c;
   }
 
-  protected static double[] pmult(double a[], double bt[], double c[], int m, int n, int p) {
+  public static double[] pmult(double a[], double bt[], double c[], int m, int n, int p) {
     ThreadPool<Integer, Object> tp = new StaticThreadPool<Integer, Object>(
         (Integer i, List<Object> l) -> {
           int ip = i * p;
@@ -133,9 +136,9 @@ public class MatrixMultiplication {
     return c;
   }
 
-  private static void comulr(double a[], double b[], double c[], int a_rb, int a_re,
-                             int a_cb, int a_ce, int b_rb, int b_re, int b_cb, int b_ce,
-                             int n, int p, int blk) {
+  public static void comulr(double a[], double b[], double c[], int a_rb, int a_re,
+                            int a_cb, int a_ce, int b_rb, int b_re, int b_cb, int b_ce,
+                            int n, int p, int blk) {
     if ((a_re - a_rb) <= blk && (a_ce - a_cb) <= blk) {
       for (int i = a_rb; i < a_re; i++) {
         int in = i * n;
@@ -160,12 +163,12 @@ public class MatrixMultiplication {
     }
   }
 
-  protected static double[] comul(double a[], double b[], double c[], int m, int n, int p, int blk) {
+  public static double[] comul(double a[], double b[], double c[], int m, int n, int p, int blk) {
     comulr(a, b, c, 0, m, 0, p, 0, p, 0, n, n, p, blk);
     return c;
   }
 
-  protected static double[] comul(double a[], double b[], double c[], int m, int n, int p) {
+  public static double[] comul(double a[], double b[], double c[], int m, int n, int p) {
     return comul(a, b, c, m, n, p, BLK);
   }
 
@@ -196,12 +199,12 @@ public class MatrixMultiplication {
     }
   }
 
-  protected static double[] comult(double a[], double b[], double c[], int m, int n, int p, int blk) {
+  public static double[] comult(double a[], double b[], double c[], int m, int n, int p, int blk) {
     comultr(a, b, c, 0, m, 0, p, 0, p, 0, n, n, p, blk);
     return c;
   }
 
-  protected static double[] comult(double a[], double b[], double c[], int m, int n, int p) {
+  public static double[] comult(double a[], double b[], double c[], int m, int n, int p) {
     return comult(a, b, c, m, n, p, BLK);
   }
 
@@ -214,7 +217,7 @@ public class MatrixMultiplication {
    * @param p
    * @return
    */
-  protected static double[] mul(double a[], double b[], double c[], int m, int n, int p) {
+  public static double[] mul(double a[], double b[], double c[], int m, int n, int p) {
     double rv[] = null;
     if (c.length < P_MUL_SIZE) {
       rv = comul(a, b, c, m, n, p);
@@ -233,7 +236,7 @@ public class MatrixMultiplication {
    * @param p
    * @return
    */
-  protected static double[] mult(double a[], double b[], double c[], int m, int n, int p) {
+  public static double[] mult(double a[], double b[], double c[], int m, int n, int p) {
     double rv[] = null;
     if (c.length < P_MUL_SIZE) {
       rv = ijkt(a, b, c, m, n, p);

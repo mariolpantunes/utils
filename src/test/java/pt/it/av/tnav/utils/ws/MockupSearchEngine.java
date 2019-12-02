@@ -2,11 +2,7 @@ package pt.it.av.tnav.utils.ws;
 
 import pt.it.av.tnav.utils.ws.search.WebSearchEngine;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Mockup for a instance of {@link WebSearchEngine}.

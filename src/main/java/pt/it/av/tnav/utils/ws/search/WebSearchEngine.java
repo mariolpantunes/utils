@@ -1,7 +1,6 @@
 package pt.it.av.tnav.utils.ws.search;
 
 import pt.it.av.tnav.utils.CollectionsUtils;
-import pt.it.av.tnav.utils.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

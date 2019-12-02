@@ -1,32 +1,38 @@
-package pt.it.av.tnav.utils.bla;
+package pt.it.av.tnav.utils.bla.transpose;
 
+import pt.it.av.tnav.utils.bla.properties.Properties;
 import pt.it.av.tnav.utils.structures.tuple.Quad;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
- * Several implementations
+ * Several implementations of matrix transpose operation.
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class MatrixTranspose {
+public class Transpose {
   private static int BLK = 64;
+
+  /**
+   *
+   */
+  private Transpose() {
+  }
 
   /**
    * Cache-oblivious implemention of matrix tranpose.
    * Uses the default block size.
    * Returns {@link at} array filled with the tranpose matrix.
    *
-   * @param a array representing the matrix
-   * @param at array representing the transpose matrix
+   * @param a    array representing the matrix
    * @param rows number of rows
    * @param cols number of columns
    * @return {@link at} array filled with the tranpose matrix
    */
-  protected static double[] cotr(final double a[], final double at[],
-                                 final int rows, final int cols) {
+  public static double[] cotr(final double a[], final double at[],
+                              final int rows, final int cols) {
     return cotr(a, at, rows, cols, BLK);
   }
 
@@ -35,15 +41,14 @@ public class MatrixTranspose {
    * Cache-oblivious implemention of matrix tranpose.
    * Returns {@link at} array filled with the tranpose matrix.
    *
-   * @param a array representing the matrix
-   * @param at array representing the transpose matrix
+   * @param a    array representing the matrix
    * @param rows number of rows
    * @param cols number of columns
-   * @param blk block size threshold to stop division and solve transpose
+   * @param blk  block size threshold to stop division and solve transpose
    * @return {@link at} array filled with the tranpose matrix
    */
-  protected static double[] cotr(final double a[], final double at[],
-                                 final int rows, final int cols, final int blk) {
+  public static double[] cotr(final double a[], final double at[],
+                              final int rows, final int cols, final int blk) {
     double tmp[] = new double[blk * blk];
     Deque<Quad<Integer, Integer, Integer, Integer>> stack = new ArrayDeque<Quad<Integer, Integer, Integer, Integer>>();
     stack.push(new Quad<>(0, rows, 0, cols));
@@ -76,7 +81,7 @@ public class MatrixTranspose {
    * @param n number of rows and columns
    * @return the transpose matrix
    */
-  protected static double[] insqtr(double a[], int n) {
+  public static double[] insqtr(double a[], int n) {
     for (int r = 0; r < n - 1; r++)
       for (int c = r + 1; c < n; c++) {
         double tmp = a[r * n + c];
@@ -87,16 +92,17 @@ public class MatrixTranspose {
   }
 
   /**
+   * Return the transpose matrix (an array that represents a matrix in row-major order).
    * In-place implemention of matrix tranpose.
    * Implementation baes on follow-cycles algorithm.
    * Requires minimal auxilar memory
    *
-   * @param a array representing the matrix
+   * @param a    array representing the matrix
    * @param rows number of rows
    * @param cols number of columns
    * @return the transpose matrix
    */
-  protected static double[] infotr(double a[], int rows, int cols) {
+  public static double[] infotr(double a[], int rows, int cols) {
     boolean visited[] = new boolean[a.length];
     int q = rows * cols - 1;
     for (int i = 1; i < a.length - 1; i++) {
@@ -125,18 +131,60 @@ public class MatrixTranspose {
    * This implementation is only intendendet to be used in unit testing.
    * Returns {@link at} array filled with the tranpose matrix.
    *
-   * @param a array with the original matrix
-   * @param at array placeholder for the transpose matrix
+   * @param a    array with the original matrix
+   * @param at   array placeholder for the transpose matrix
    * @param rows number of rows
    * @param cols number of columns
    * @return {@link at} array filled with the tranpose matrix
    */
-  protected static double[] ntr(final double a[], final double at[],
-                                final int rows, final int cols) {
+  public static double[] ntr(final double a[], final double at[],
+                             final int rows, final int cols) {
+
     for (int i = 0; i < a.length; i++) {
       int r = i / cols, c = i % cols;
-      at[c*rows+r] = a[i];
+      at[c * rows + r] = a[i];
     }
+
     return at;
+  }
+
+  /**
+   * Return the transpose matrix (an array that represents a matrix in row-major order).
+   *
+   * @param a    array with the original matrix
+   * @param rows number of rows
+   * @param cols number of columns
+   * @return the transpose matrix (an array that represents a matrix in row-major order)
+   */
+  public static double[] transpose(final double a[], final double at[],
+                                   final int rows, final int cols) {
+    if (Properties.isLinear(rows, cols)) {
+      System.arraycopy(a, 0, at, 0, a.length);
+    } else {
+      Transpose.cotr(a, at, rows, cols);
+    }
+
+    return at;
+  }
+
+  /**
+   * Re-organizes the internal representation and returns the transpose matrix.
+   * The tranpose is done in-place with minimal auxiliar memory.
+   * It is slower than the regular transpose method.
+   *
+   * @param a    array with the original matrix
+   * @param rows number of rows
+   * @param cols number of columns
+   */
+  public static double[] uTranspose(final double a[], final int rows, final int cols) {
+    if (!Properties.isLinear(rows, cols)) {
+      if (Properties.isSquare(rows, cols)) {
+        Transpose.insqtr(a, rows);
+      } else {
+        Transpose.infotr(a, rows, cols);
+      }
+    }
+
+    return a;
   }
 }

@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link HashUtils}.
@@ -17,12 +17,12 @@ public class HashUtilsTest {
   @Test
   public void test_fnv1a_empty() {
     long hash = HashUtils.fnv1a("".getBytes(StandardCharsets.US_ASCII));
-    assertTrue(hash == 2166136261L);
+    assertEquals(2166136261L, hash);
   }
 
   @Test
   public void test_jenkins_empty() {
     long hash = HashUtils.jenkins("".getBytes(StandardCharsets.US_ASCII));
-    assertTrue(hash == 0);
+    assertEquals(0, hash);
   }
 }
