@@ -18,6 +18,7 @@ public class NMFTest {
     Matrix WH[] = V.nmf(5);
     Matrix wh = WH[0].mul(WH[1]);
     double cost = V.distanceTo(wh);
+    System.out.println(wh);
     assertTrue(cost <= 1.0);
   }
 
@@ -36,35 +37,35 @@ public class NMFTest {
     double bestPress = Double.MAX_VALUE;
 
     Matrix Mask = Matrix.ones(V.rows(), V.columns());
-
-    System.out.println(Mask);
+    //Matrix Mask = V.mask();
+    //System.out.println(Mask);
 
     for (int i = 1; i <= k; i++) {
 
       double press = 0.0;
 
       for (int j = 0; j < Mask.size(); j++) {
-        // Mask.set(j, 0);
+        //Mask.set(j, 0);
         Matrix WH[] = V.nmf(i, Mask);
         Matrix wh = WH[0].mul(WH[1]);
-        System.out.println(wh);
+        //System.out.println(wh);
         // System.out.println("Original Value: "+V.get(j)+" Predicted one: "+wh.get(j)+"
         // E = "+Math.pow(V.get(j)-wh.get(j), 2.0));
         press += Math.pow(V.get(j) - wh.get(j), 2.0);
         // System.out.println(Mask);
-        // Mask.set(j, 1);
+        //Mask.set(j, 1);
       }
 
-      System.out.println("Best PRESS =" + bestPress);
-      System.out.println("PRESS =" + press);
-      System.out.println();
+      //System.out.println("Best PRESS =" + bestPress);
+      //System.out.println("PRESS =" + press);
+      //System.out.println();
       if (bestPress > press) {
         bestPress = press;
         bestK = i;
       }
     }
 
-    System.out.println("Best K =" + bestK);
+    System.out.println("Best K = " + bestK);
 
     Matrix WH[] = V.nmf(bestK);
     Matrix wh = WH[0].mul(WH[1]);

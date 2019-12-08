@@ -2,7 +2,6 @@ package pt.it.av.tnav.utils.bla.factorization;
 
 import pt.it.av.tnav.utils.ArrayUtils;
 import pt.it.av.tnav.utils.MathUtils;
-import pt.it.av.tnav.utils.PrintUtils;
 import pt.it.av.tnav.utils.bla.multiplication.Multiplication;
 import pt.it.av.tnav.utils.bla.transpose.Transpose;
 
@@ -47,6 +46,7 @@ public class NMF {
       // update feature matrix.
       Transpose.cotr(w, wt, rows, k);
       Multiplication.mul(wt, data, hn, k, cols, rows);
+      
       Multiplication.mul(wt, wh, hd, k, cols, rows);
 
       //ArrayUtils.add(hd, 0, eps, hd, 0, hd.length);
