@@ -182,24 +182,6 @@ public final class ArrayUtils {
   }
 
   /**
-   * @param a
-   * @param bA
-   * @param b
-   * @param bB
-   * @param c
-   * @param bC
-   * @param r
-   * @param bR
-   * @param len
-   */
-  public static void mulDiv(final double[] a, final int bA, final double[] b, final int bB, final double[] c,
-      final int bC, final double[] r, final int bR, final int len) {
-    for (int i = 0; i < len; i++) {
-      r[bR + i] = a[bA + i] * (b[bB + i] / c[bC + i]);
-    }
-  }
-
-  /**
    * The elements of A are powered by B and stored in C.
    *
    * @param a   first vector

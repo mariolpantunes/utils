@@ -16,7 +16,7 @@ public class MathUtilsTest {
 
   @Test
   public void test_gcd_int() {
-    assertEquals(17, MathUtils.gcd(17, 34));
+    assertEquals(17, MathUtils.gcd_euclidean(17, 34));
   } 
 
   @Test

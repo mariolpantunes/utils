@@ -21,6 +21,25 @@ public class NMF {
   }
 
   /**
+   * @param a
+   * @param bA
+   * @param b
+   * @param bB
+   * @param c
+   * @param bC
+   * @param r
+   * @param bR
+   * @param len
+   */
+  private static void mulDiv(final double[] a, final int bA, final double[] b, final int bB, final double[] c,
+      final int bC, final double[] r, final int bR, final int len) {
+    double beta = 0.001;
+    for (int i = 0; i < len; i++) {
+      r[bR + i] = a[bA + i] * ((b[bB + i] - beta*a[bA + i])  / c[bC + i]);
+    }
+  }
+
+  /**
    * @param data
    * @param rows
    * @param cols
@@ -46,11 +65,12 @@ public class NMF {
       // update feature matrix.
       Transpose.cotr(w, wt, rows, k);
       Multiplication.mul(wt, data, hn, k, cols, rows);
+      
       Multiplication.mul(wt, wh, hd, k, cols, rows);
 
       //ArrayUtils.add(hd, 0, eps, hd, 0, hd.length);
       ArrayUtils.set_neg(hd, eps);
-      ArrayUtils.mulDiv(h, 0, hn, 0, hd, 0, h, 0, k * cols);
+      mulDiv(h, 0, hn, 0, hd, 0, h, 0, k * cols);
 
       Arrays.fill(wh, 0.0);
       Arrays.fill(hn, 0.0);
@@ -62,7 +82,7 @@ public class NMF {
 
       //ArrayUtils.add(wd, 0, eps, wd, 0, wd.length);
       ArrayUtils.set_neg(wd, eps);
-      ArrayUtils.mulDiv(w, 0, wn, 0, wd, 0, w, 0, k * rows);
+      mulDiv(w, 0, wn, 0, wd, 0, w, 0, k * rows);
 
       Arrays.fill(wd, 0.0);
 
@@ -106,7 +126,7 @@ public class NMF {
 
       //ArrayUtils.add(hd, 0, eps, hd, 0, hd.length);
       ArrayUtils.set_neg(hd, eps);
-      ArrayUtils.mulDiv(h, 0, hn, 0, hd, 0, h, 0, k * cols);
+      mulDiv(h, 0, hn, 0, hd, 0, h, 0, k * cols);
 
       Arrays.fill(wh, 0.0);
       Arrays.fill(hn, 0.0);
@@ -118,9 +138,7 @@ public class NMF {
 
       //ArrayUtils.add(wd, 0, eps, wd, 0, wd.length);
       ArrayUtils.set_neg(wd, eps);
-
-      ArrayUtils.mulDiv(w, 0, wn, 0, wd, 0, w, 0, k * rows);
-
+      mulDiv(w, 0, wn, 0, wd, 0, w, 0, k * rows);
       Arrays.fill(wd, 0.0);
 
       // compute WH matrix
