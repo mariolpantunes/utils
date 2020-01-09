@@ -2,7 +2,6 @@ package pt.it.av.tnav.utils.bla.factorization;
 
 import pt.it.av.tnav.utils.ArrayUtils;
 import pt.it.av.tnav.utils.MathUtils;
-import pt.it.av.tnav.utils.PrintUtils;
 import pt.it.av.tnav.utils.bla.multiplication.Multiplication;
 import pt.it.av.tnav.utils.bla.transpose.Transpose;
 
@@ -141,7 +140,7 @@ public class NMF {
     return new double[][] { w, h };
   }
 
-  public static double[][] hals(final double m[], final int rows, final int cols, final int k,
+  /*public static double[][] hals(final double m[], final int rows, final int cols, final int k,
   final int n) {
     double alpha = 1, delta = 0.01, relTol = 1e-5;
     double max = m[ArrayUtils.max(m)], min = m[ArrayUtils.min(m)], eps = MathUtils.eps();
@@ -150,5 +149,5 @@ public class NMF {
     
     
     return new double[][] { u, v };
-  }
+  }*/
 }
