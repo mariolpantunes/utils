@@ -431,14 +431,14 @@ public class KDTree<E extends Vector> implements Collection<E> {
       for (int i = 0; i < prefix; i++)
         sb.append(" ");
       String nodeTxt = node.toString();
-      sb.append("|--" + nodeTxt + "\n");
+      sb.append("|--" + nodeTxt + System.lineSeparator());
       prefix += nodeTxt.length() + 3;
       print(node.left, sb, prefix + 3);
       print(node.right, sb, prefix + 3);
     } else {
       for (int i = 0; i < prefix; i++)
         sb.append(" ");
-      sb.append("|--NULL\n");
+      sb.append("|--NULL" + System.lineSeparator());
     }
   }
 

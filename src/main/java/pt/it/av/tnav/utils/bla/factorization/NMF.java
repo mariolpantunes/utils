@@ -2,6 +2,7 @@ package pt.it.av.tnav.utils.bla.factorization;
 
 import pt.it.av.tnav.utils.ArrayUtils;
 import pt.it.av.tnav.utils.MathUtils;
+import pt.it.av.tnav.utils.PrintUtils;
 import pt.it.av.tnav.utils.bla.multiplication.Multiplication;
 import pt.it.av.tnav.utils.bla.transpose.Transpose;
 
@@ -33,7 +34,7 @@ public class NMF {
    */
   private static void mulDiv(final double[] a, final int bA, final double[] b, final int bB, final double[] c,
       final int bC, final double[] r, final int bR, final int len) {
-    double beta = 0.001;
+    double beta = 0.01;
     for (int i = 0; i < len; i++) {
       r[bR + i] = a[bA + i] * ((b[bB + i] - beta*a[bA + i])  / c[bC + i]);
     }
@@ -51,7 +52,6 @@ public class NMF {
   public static double[][] nmf_mu(final double data[], final int rows, final int cols, final int k, final int n,
       final double e) {
     double max = data[ArrayUtils.max(data)], min = data[ArrayUtils.min(data)], eps = MathUtils.eps();
-
     double w[] = ArrayUtils.random(rows * k, min, max), h[] = ArrayUtils.random(k * cols, min, max),
         wh[] = new double[data.length], wt[] = new double[w.length], hn[] = new double[k * cols],
         hd[] = new double[k * cols], wn[] = new double[rows * k], hht[] = new double[k * k],
@@ -97,10 +97,16 @@ public class NMF {
   public static double[][] nmf_mu_imputation(final double data[], final double mask[], final int rows, final int cols, final int k,
       final int n, final double e) {
     double max = data[ArrayUtils.max(data)], min = data[ArrayUtils.min(data)], eps = MathUtils.eps();
-    double w[] = ArrayUtils.random(rows * k, min, max), h[] = ArrayUtils.random(k * cols, min, max),
+    //double w[] = ArrayUtils.gaussian(rows * k, 0, 1.0/(double)k), h[] = ArrayUtils.gaussian(k * cols, 0.0, 1.0/(double) k),
+    //double w[] = ArrayUtils.random(rows * k, min, max), h[] = ArrayUtils.random(k * cols, min, max),
+    double w[] = ArrayUtils.random(rows * k), h[] = ArrayUtils.random(k * cols),
     wh[] = new double[data.length], wt[] = new double[w.length], hn[] = new double[k * cols],
     hd[] = new double[k * cols], wn[] = new double[rows * k], hht[] = new double[k * k],
     wd[] = new double[rows * k];
+
+    double scale =  Math.sqrt(ArrayUtils.mean(data) / k);
+    ArrayUtils.mul(w, 0, scale, w, 0, w.length);
+    ArrayUtils.mul(h, 0, scale, h, 0, h.length);
       
     double z[] = new double[data.length];
 
@@ -111,17 +117,18 @@ public class NMF {
       if(mask[i] == 1) {
         z[i] = data[i];
       } else {
+        //z[i] = Math.min(wh[i], data[ArrayUtils.max(data)]);
         z[i] = wh[i];
       }
     }
 
-    //System.out.println(PrintUtils.array(data));
-    //System.out.println(PrintUtils.array(z));
+    System.out.println(PrintUtils.array(data));
+    System.out.println(PrintUtils.array(z));
     double cost = ArrayUtils.euclideanDistance(z, 0, wh, 0, z.length);
     for (int i = 0; i < n && cost > e; i++) {
       // update feature matrix.
       Transpose.cotr(w, wt, rows, k);
-      Multiplication.mul(wt, data, hn, k, cols, rows);
+      Multiplication.mul(wt, z, hn, k, cols, rows);
       Multiplication.mul(wt, wh, hd, k, cols, rows);
 
       //ArrayUtils.add(hd, 0, eps, hd, 0, hd.length);
@@ -132,7 +139,7 @@ public class NMF {
       Arrays.fill(hn, 0.0);
       Arrays.fill(hd, 0.0);
 
-      Multiplication.mult(data, h, wn, rows, k, cols);
+      Multiplication.mult(z, h, wn, rows, k, cols);
       Multiplication.mult(h, h, hht, k, k, cols);
       Multiplication.mul(w, hht, wd, rows, k, k);
 
@@ -150,7 +157,9 @@ public class NMF {
           z[j] = wh[j];
         }
       }
+      
       cost = ArrayUtils.euclideanDistance(data, 0, z, 0, z.length);
+      System.out.println(PrintUtils.array(z)+" = "+cost);
       //System.out.println("IT = "+i);
     }
     //System.out.println(PrintUtils.array(data));

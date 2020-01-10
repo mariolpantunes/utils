@@ -640,7 +640,8 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] nmf(final int k) {
-    return nmf(k, 100, 0.01);
+    System.out.println("Conventional");
+    return nmf(k, 200, 0.01);
   }
 
   /**
@@ -648,13 +649,14 @@ public class Matrix implements Distance<Matrix> {
    * @param k
    * @return
    */
-  public Matrix[] nmf(final int k, Matrix Mask) {
-    double[][] wh = NMF.nmf_mu_imputation(data, Mask.data, rows, cols, k, 100, 0.1);
+  public Matrix[] nmf(final int k, Matrix M) {
+    System.out.println("Imputation");
+    double[][] wh = NMF.nmf_mu_imputation(data, M.data, rows, cols, k, 200, 0.01);
     return new Matrix[] { new Matrix(rows, k, wh[0]), new Matrix(k, cols, wh[1]) };
   }
 
   public Matrix[] ls(final int k) {
-    double[][] pq = LS.ls(data, rows, cols, k, 300);
+    double[][] pq = LS.ls(data, rows, cols, k, 200);
     return new Matrix[] { new Matrix(rows, k, pq[0]), new Matrix(cols, k, pq[1]).transpose() };
   }
 
@@ -767,9 +769,12 @@ public class Matrix implements Distance<Matrix> {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (int r = 0; r < rows; r++) {
-      for (int c = 0; c < cols; c++)
+      for (int c = 0; c < cols; c++) {
         sb.append(String.format("%.5f ", data[r * cols + c]));
-      sb.append("\n");
+      }
+      if(rows-r > 1) {
+        sb.append(System.lineSeparator());
+      }
     }
     return sb.toString();
   }

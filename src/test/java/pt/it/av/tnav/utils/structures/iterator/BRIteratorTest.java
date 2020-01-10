@@ -23,7 +23,7 @@ public class BRIteratorTest {
     public static void setup() {
         br0 = new BufferedReader(new StringReader(""));
         br1 = new BufferedReader(new StringReader("single"));
-        brn = new BufferedReader(new StringReader("one\ntwo\nthree"));
+        brn = new BufferedReader(new StringReader("one"+System.lineSeparator()+"two"+System.lineSeparator()+"three"));
     }
 
     @Test
