@@ -272,6 +272,51 @@ public final class ArrayUtils {
    * Manhattan distance.
    * </p>
    *
+   * @param a   the first array
+   * @param bA  begin index of the first array
+   * @param b   the second array
+   * @param bB  begin index of the second array
+   * @param len array's length
+   * @param m   mask array
+   * @param bM  begin index of the mask array
+   * @param p   order (p = 0 reprenset infinity)
+   * @return the Minkowski distance between two arrays
+   */
+  public static double minkowskiDistance(final double[] a, final int bA, final double[] b, final int bB, 
+      final double[] m, final int bM, final int len, final int p) {
+    double rv = 0.0, diff[] = new double[len], max = 0.0;
+
+    max = Math.abs(a[bA] - b[bB]);
+    diff[0] = max;
+    for (int i = 1; i < len; i++) {
+      if (m[i + bM] != 0) {
+        diff[i] = Math.abs(a[i + bA] - b[i + bB]);
+        if (diff[i] > max) {
+          max = diff[i];
+        }
+      }
+    }
+
+    if (p == 0) {
+      rv = max;
+    } else if (p == 1) {
+      rv = ArrayUtils.sum(diff, 0, diff.length);
+    } else {
+      rv = (max > 0) ? norm2(diff, p, max) : 0.0;
+    }
+
+    return rv;
+  }
+
+  /**
+   * Returns the Minkowski distance between two arrays: \(D(a,b) = \left(
+   * \sum_{i=0}^{len}|a_{i+bA}-b_{i+bB}|^p \right) ^\frac{1}{p}\)
+   * <p>
+   * The Minkowski distance is a metric in a normed vector space which can be
+   * considered as a generalization of both the Euclidean distance and the
+   * Manhattan distance.
+   * </p>
+   *
    * @param a the first array
    * @param b the second array
    * @param p order (p = 0 reprenset infinity)
@@ -295,12 +340,32 @@ public final class ArrayUtils {
   }
 
   /**
+   * 
+   * @param a
+   * @param bA
+   * @param b
+   * @param bB
+   * @param m   Mask
+   * @param bM  begin of mask array
+   * @param len
+   * @return
+   */
+  public static double euclideanDistance(final double[] a, final int bA, final double[] b, final int bB,
+      final double[] m, final int bM, final int len) {
+    return minkowskiDistance(a, bA, b, bB, m, bM, len, 2);
+  }
+
+  /**
    * @param a
    * @param b
    * @return
    */
   public static double euclideanDistance(final double[] a, final double[] b) {
     return euclideanDistance(a, 0, b, 0, a.length);
+  }
+
+  public static double euclideanDistance(final double[] a, final double[] b, final double[] m) {
+    return euclideanDistance(a, 0, b, 0, m, 0, a.length);
   }
 
   /**

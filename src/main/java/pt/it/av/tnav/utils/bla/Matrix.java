@@ -640,8 +640,7 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] nmf(final int k) {
-    System.out.println("Conventional");
-    return nmf(k, 200, 0.01);
+    return nmf(k, 200, 0.1);
   }
 
   /**
@@ -650,8 +649,7 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] nmf(final int k, Matrix M) {
-    System.out.println("Imputation");
-    double[][] wh = NMF.nmf_mu_imputation(data, M.data, rows, cols, k, 200, 0.01);
+    double[][] wh = NMF.nmf_mu_imputation(data, M.data, rows, cols, k, 200, 0.1);
     return new Matrix[] { new Matrix(rows, k, wh[0]), new Matrix(k, cols, wh[1]) };
   }
 
@@ -782,5 +780,9 @@ public class Matrix implements Distance<Matrix> {
   @Override
   public double distanceTo(Matrix M) {
     return ArrayUtils.euclideanDistance(data, M.data);
+  }
+
+  public double distanceTo(Matrix M, Matrix Mask) {
+    return ArrayUtils.euclideanDistance(data, M.data, Mask.data);
   }
 }

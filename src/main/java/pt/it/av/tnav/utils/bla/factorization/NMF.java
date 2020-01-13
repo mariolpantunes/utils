@@ -117,13 +117,12 @@ public class NMF {
       if(mask[i] == 1) {
         z[i] = data[i];
       } else {
-        //z[i] = Math.min(wh[i], data[ArrayUtils.max(data)]);
         z[i] = wh[i];
       }
     }
 
-    System.out.println(PrintUtils.array(data));
-    System.out.println(PrintUtils.array(z));
+    //System.out.println(PrintUtils.array(data));
+    //System.out.println(PrintUtils.array(z));
     double cost = ArrayUtils.euclideanDistance(z, 0, wh, 0, z.length);
     for (int i = 0; i < n && cost > e; i++) {
       // update feature matrix.
@@ -151,16 +150,13 @@ public class NMF {
       // compute WH matrix
       Multiplication.mul(w, h, wh, rows, cols, k);
       for(int j = 0; j < mask.length; j++) {
-        if(mask[j] == 1) {
-          z[j] = data[j];
-        } else {
+        if(mask[j] == 0) {
           z[j] = wh[j];
         }
       }
       
-      cost = ArrayUtils.euclideanDistance(data, 0, z, 0, z.length);
-      System.out.println(PrintUtils.array(z)+" = "+cost);
-      //System.out.println("IT = "+i);
+      cost = ArrayUtils.euclideanDistance(z, 0, wh, 0, z.length);
+      //System.out.println(PrintUtils.array(z)+" = "+cost+" ("+i+")");
     }
     //System.out.println(PrintUtils.array(data));
     //System.out.println(PrintUtils.array(z));
