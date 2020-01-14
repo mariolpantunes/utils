@@ -13,8 +13,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 public class Vector implements Distance<Vector> {
-  private static int T = 256;
-  private static int B = 128;
   protected int bIdx, len;
   protected double data[];
 
@@ -405,6 +403,16 @@ public class Vector implements Distance<Vector> {
       rv = ArrayUtils.equals(data, bIdx, v.data, v.bIdx, len, eps);
     }
 
+    return rv;
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public double[] array() {
+    double rv[] = new double[this.len];
+    System.arraycopy(this.data, this.bIdx, rv, 0, this.len);
     return rv;
   }
 

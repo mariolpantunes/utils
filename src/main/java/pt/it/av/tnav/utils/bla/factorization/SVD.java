@@ -1,9 +1,18 @@
 package pt.it.av.tnav.utils.bla.factorization;
 
 public class SVD {
+  /**
+   * Utility class, lets make the constructor private.
+   */
   private SVD() {
   }
 
+  /**
+   * 
+   * @param a
+   * @param b
+   * @return
+   */
   private static double[] rot(double a, double b) {
     double csr[] = new double[3];
     if (b == 0) {

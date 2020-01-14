@@ -13,7 +13,9 @@ import java.util.concurrent.BlockingQueue;
  * @version 1.0
  */
 public class Multiplication {
-
+  /**
+   * Utility class, lets make the constructor private.
+   */
   private Multiplication() {
   }
 

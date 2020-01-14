@@ -6,11 +6,16 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Operations over arrays of doubles.
  * <p>
- * These operations are common to Matrix and Vector classes.
+ * These operations are common to {@link Matrix} and {@link Vector} classes.
+ * Ideally all the high-level functionality from the previous mentioned classes
+ * should depend on the methods develoed here.
+ * The code here must be lean in order to ease the automatic vectorization of the code,
+ * if speed becomes an issue, this library can be replaced with JNI compiled code.
  * </p>
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
+ * @see <a href="https://docs.oracle.com/en/java/javase/13/docs/specs/jni/intro.html">JNI</a>
  */
 public final class ArrayUtils {
   /**
@@ -23,15 +28,15 @@ public final class ArrayUtils {
    * Sum two arrays element-wise.
    * <p>
    * The elements from A are added with B and stored in C, acording to the
-   * following expression: $$c = \sum_{i = 0}^{len}$$
+   * following expression: $$c = \sum_{i = 0}^{len} A_i + B_i $$
    * </p>
    *
-   * @param a   first vector
-   * @param bA  index of the first vector
-   * @param b   second vector
-   * @param bB  index of the second vector
-   * @param c   resulting vector
-   * @param bC  index of the resulting vector
+   * @param a   first array
+   * @param bA  index of the first array
+   * @param b   second array
+   * @param bB  index of the second array
+   * @param c   resulting array
+   * @param bC  index of the resulting array
    * @param len array's len
    */
   public static void add(final double[] a, final int bA, final double[] b, final int bB, final double[] c, final int bC,
@@ -44,10 +49,11 @@ public final class ArrayUtils {
   /**
    * Sum a scalar with an array.
    * <p>
-   * The scalar B is added with A and stored in C.
+   * The elements from A are added with B and stored in C, acording to the
+   * following expression: $$c = \sum_{i = 0}^{len} A_i + B_i $$
    * </p>
    *
-   * @param a   first vector
+   * @param a   first array
    * @param bA  index of the first vector
    * @param b   scalar
    * @param c   resulting vector
@@ -98,6 +104,19 @@ public final class ArrayUtils {
     }
   }
 
+  /**
+   * Weighted
+   * 
+   * @param a
+   * @param bA
+   * @param b
+   * @param bB
+   * @param c
+   * @param bC
+   * @param w0
+   * @param w1
+   * @param len
+   */
   public static void wsub(final double[] a, final int bA, final double[] b, final int bB, final double[] c,
       final int bC, final double w0, final double w1, final int len) {
     for (int i = 0; i < len; i++) {
@@ -282,7 +301,7 @@ public final class ArrayUtils {
    * @param p   order (p = 0 reprenset infinity)
    * @return the Minkowski distance between two arrays
    */
-  public static double minkowskiDistance(final double[] a, final int bA, final double[] b, final int bB, 
+  public static double minkowskiDistance(final double[] a, final int bA, final double[] b, final int bB,
       final double[] m, final int bM, final int len, final int p) {
     double rv = 0.0, diff[] = new double[len], max = 0.0;
 
@@ -379,6 +398,17 @@ public final class ArrayUtils {
   public static double manhattanDistance(final double[] a, final int bA, final double[] b, final int bB,
       final int len) {
     return minkowskiDistance(a, bA, b, bB, len, 1);
+  }
+
+  /**
+   * Returns the Manhattan distance between two arrays.
+   * 
+   * @param a the first array
+   * @param b the second array
+   * @return the Manhattan distance between two arrays
+   */
+  public static double manhattanDistance(final double[] a, final double[] b) {
+    return minkowskiDistance(a, 0, b, 0, a.length, 1);
   }
 
   /**

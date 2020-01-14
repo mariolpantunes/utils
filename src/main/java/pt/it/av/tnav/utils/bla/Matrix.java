@@ -2,7 +2,7 @@ package pt.it.av.tnav.utils.bla;
 
 import pt.it.av.tnav.utils.ArrayUtils;
 import pt.it.av.tnav.utils.bla.factorization.Cholesky;
-import pt.it.av.tnav.utils.bla.factorization.LS;
+import pt.it.av.tnav.utils.bla.factorization.ALS;
 import pt.it.av.tnav.utils.bla.factorization.NMF;
 import pt.it.av.tnav.utils.bla.factorization.QR;
 import pt.it.av.tnav.utils.bla.multiplication.Multiplication;
@@ -578,14 +578,14 @@ public class Matrix implements Distance<Matrix> {
   public Matrix[] svd() {
     Matrix UDV[] = bidiagonal();
 
-    // TODO: bidiag to diag
+    /*// TODO: bidiag to diag
     double diag[] = UDV[1].diagArray(0);
     double lambda[] = new double[diag.length], mu[] = new double[diag.length];
     // PrintUtils.printArray(diag);
     lambda[diag.length - 1] = Math.abs(diag[diag.length - 1]);
 
     for (int i = diag.length - 1; i > 0; i--)
-      lambda[i] = Math.abs(diag[i]) * lambda[i + 1];
+      lambda[i] = Math.abs(diag[i]) * lambda[i + 1];*/
 
     return UDV;
   }
@@ -649,12 +649,12 @@ public class Matrix implements Distance<Matrix> {
    * @return
    */
   public Matrix[] nmf(final int k, Matrix M) {
-    double[][] wh = NMF.nmf_mu_imputation(data, M.data, rows, cols, k, 200, 0.1);
+    double[][] wh = NMF.nmf_mu_imputation(data, M.data, rows, cols, k, 200, 0.01);
     return new Matrix[] { new Matrix(rows, k, wh[0]), new Matrix(k, cols, wh[1]) };
   }
 
-  public Matrix[] ls(final int k) {
-    double[][] pq = LS.ls(data, rows, cols, k, 200);
+  public Matrix[] als(final int k) {
+    double[][] pq = ALS.als(data, rows, cols, k, 0.1, 0.01, 200);
     return new Matrix[] { new Matrix(rows, k, pq[0]), new Matrix(cols, k, pq[1]).transpose() };
   }
 
@@ -676,7 +676,7 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   *
+   * 
    * @return
    */
   public Vector vector() {
@@ -684,33 +684,37 @@ public class Matrix implements Distance<Matrix> {
   }
 
   /**
-   *
-   * @param b
-   * @param p
-   * @return
+   * Returns the Minkowski distance {@linl ArrayUtils#minkowskiDistance()} betweem
+   * this {@link Matrix} with {@link Matrix} B
+   * 
+   * @param b the second {@link Matrix}
+   * @param p order (p = 0 reprenset infinity)
+   * @return the Minkowski distance
    */
   public double minkowskiDistance(Matrix b, int p) {
-    return ArrayUtils.minkowskiDistance(data, 0, b.data, 0, data.length, p);
+    return ArrayUtils.minkowskiDistance(data, b.data, p);
   }
 
   /**
-   *
-   * @param b
-   * @return
+   * Returns the Euclidean distance {@linl ArrayUtils#euclideanDistance()} betweem
+   * this {@link Matrix} with {@link Matrix} B
+   * 
+   * @param b the second {@link Matrix}
+   * @return the Euclidean distance
    */
   public double euclideanDistance(Matrix b) {
-    return ArrayUtils.euclideanDistance(data, 0, b.data, 0, data.length);
+    return ArrayUtils.euclideanDistance(data, b.data);
   }
 
   /**
-   * Returns the Manhattan Distance betweem this {@link Matrix} with
-   * {@link Matrix} B
+   * Returns the Manhattan distance {@link ArrayUtils#manhattanDistance()} betweem
+   * this {@link Matrix} with {@link Matrix} B
    * 
-   * @param b
-   * @return
+   * @param b the second {@link Matrix}
+   * @return the Manhattan distance
    */
   public double manhattanDistance(Matrix b) {
-    return ArrayUtils.manhattanDistance(data, 0, b.data, 0, data.length);
+    return ArrayUtils.manhattanDistance(data, b.data);
   }
 
   @Override
@@ -744,6 +748,14 @@ public class Matrix implements Distance<Matrix> {
     return rv;
   }
 
+  /**
+   * Given a real {@link Matrix} it returns a mask.
+   * 
+   * The mask is defined as follows, any value diffent from zero is considered,
+   * otherwise is discarded from the mask.
+   * 
+   * @return a mask
+   */
   public Matrix mask() {
     Matrix RV = new Matrix(this.rows, this.cols);
     for (int i = 0; i < this.data.length; i++) {
@@ -770,7 +782,7 @@ public class Matrix implements Distance<Matrix> {
       for (int c = 0; c < cols; c++) {
         sb.append(String.format("%.5f ", data[r * cols + c]));
       }
-      if(rows-r > 1) {
+      if (rows - r > 1) {
         sb.append(System.lineSeparator());
       }
     }
@@ -782,6 +794,18 @@ public class Matrix implements Distance<Matrix> {
     return ArrayUtils.euclideanDistance(data, M.data);
   }
 
+  /**
+   * Re-implements the distanceTo method with the addition of a Mask
+   * {@link Matrix}.
+   * 
+   * Returns the euclidean distance between to matrixes, it excludes values when
+   * the mask matrix is zero.
+   * 
+   * @param M    the second {@link Matrix}
+   * @param Mask the mask {@link Matrix}
+   * @return the euclidean distance between to matrixes, it excludes values when
+   *         the mask matrix is zero
+   */
   public double distanceTo(Matrix M, Matrix Mask) {
     return ArrayUtils.euclideanDistance(data, M.data, Mask.data);
   }

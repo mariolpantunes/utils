@@ -3,6 +3,7 @@ package pt.it.av.tnav.utils.bla.factorization;
 import org.junit.Test;
 import pt.it.av.tnav.utils.bla.Matrix;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -11,33 +12,24 @@ import static org.junit.Assert.assertTrue;
  * @author Mário Antunes
  * @version 1.0
  */
-public class LSTest {
+public class ALSTest {
   @Test
-  public void test_ls() {
-    // 6x5
-    // double data[] = { 4, 5, 3, 3, 1, 0, 5, 0, 3, 2, 0, 5, 1, 2, 2, 0, 4, 2, 3, 4,
-    // 0, 2, 4, 1, 4, 2, 3, 5, 3, 0 };
-    // Matrix V = new Matrix(6, 5, data);
-    // double data[] = { 5, 3, 0, 1, 4, 0, 0, 1, 1, 1, 0, 5, 1, 0, 0, 4, 0, 1, 5, 4
-    // };
-    // Matrix V = new Matrix(5, 4, data);
-    double data[] = { 2, 5, 2, 5, 2, 5, 0, 5, 0 };
-    Matrix V = new Matrix(3, 3, data);
-
-    System.out.println(V);
-
-    Matrix PQ[] = V.ls(2);
+  public void test_als() {
+    double data[] = { 5, 3, 0, 1, 4, 0, 0, 1, 1, 1, 0, 5, 1, 0, 0, 4, 0, 1, 5, 4 };
+    Matrix V = new Matrix(5, 4, data);
+    int k = Math.min(V.rows(), V.columns()) - 1;
+    Matrix PQ[] = V.als(k);
     Matrix pq = PQ[0].mul(PQ[1]);
-
-    System.out.println(pq);
+    double cost = V.distanceTo(pq, V.mask());
+    assertTrue(cost <= 0.1);
   }
 
   @Test
-  public void test_ls_press() {
+  public void test_als_press() {
     // 6x5
-    double data[] = { 4, 5, 3, 3, 1, 0, 5, 0, 3, 2, 0, 5, 1, 2, 2, 0, 4, 2, 3, 4,
-    0, 2, 4, 1, 4, 2, 3, 5, 3, 0 };
-    //double data[] = { 5, 3, 0, 1, 4, 0, 0, 1, 1, 1, 0, 5, 1, 0, 0, 4, 0, 1, 5, 4 };
+    double data[] = { 4, 5, 3, 3, 1, 0, 5, 0, 3, 2, 0, 5, 1, 2, 2, 0, 4, 2, 3, 4, 0, 2, 4, 1, 4, 2, 3, 5, 3, 0 };
+
+    // double data[] =
     // double data[] = { 2,5,2, 5,2,5, 0,5,5 };
     Matrix V = new Matrix(6, 5, data);
     // Matrix V = Matrix.random(10,10, 0, 5);
@@ -53,7 +45,7 @@ public class LSTest {
         double v = V.get(j);
         if (v > 0) {
           V.set(j, 0);
-          Matrix WH[] = V.ls(i);
+          Matrix WH[] = V.als(i);
           Matrix wh = WH[0].mul(WH[1]);
           System.out.println(wh);
           // System.out.println("Original Value: "+V.get(j)+" Predicted one: "+wh.get(j)+"
