@@ -5,6 +5,7 @@ import pt.it.av.tnav.utils.bla.factorization.Cholesky;
 import pt.it.av.tnav.utils.bla.factorization.ALS;
 import pt.it.av.tnav.utils.bla.factorization.NMF;
 import pt.it.av.tnav.utils.bla.factorization.QR;
+import pt.it.av.tnav.utils.bla.factorization.SVD;
 import pt.it.av.tnav.utils.bla.multiplication.Multiplication;
 import pt.it.av.tnav.utils.bla.properties.Properties;
 import pt.it.av.tnav.utils.bla.transpose.Transpose;
@@ -577,16 +578,7 @@ public class Matrix implements Distance<Matrix> {
    */
   public Matrix[] svd() {
     Matrix UDV[] = bidiagonal();
-
-    /*// TODO: bidiag to diag
-    double diag[] = UDV[1].diagArray(0);
-    double lambda[] = new double[diag.length], mu[] = new double[diag.length];
-    // PrintUtils.printArray(diag);
-    lambda[diag.length - 1] = Math.abs(diag[diag.length - 1]);
-
-    for (int i = diag.length - 1; i > 0; i--)
-      lambda[i] = Math.abs(diag[i]) * lambda[i + 1];*/
-
+    SVD.svd(UDV[0].data, UDV[1].data, UDV[2].data, rows, cols);
     return UDV;
   }
 

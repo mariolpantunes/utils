@@ -9,6 +9,15 @@ public class SVD {
 
   /**
    * 
+   */
+  public static double[][] svd(final double[] u, final double[] v, final double[] d, final int rows, final int cols) {
+    int m = rows, n = cols;
+
+    return new double[][] { u, v, d };
+  }
+
+  /**
+   * 
    * @param a
    * @param b
    * @return
