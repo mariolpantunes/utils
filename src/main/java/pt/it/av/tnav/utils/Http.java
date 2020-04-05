@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -320,6 +321,67 @@ public class Http {
         conn.setRequestProperty("X-RapidAPI-Key", XRapidAPIKey);
         conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
         conn.setRequestProperty("User-Agent", "");
+        conn.connect();
+        switch (conn.getResponseCode()) {
+          case HttpURLConnection.HTTP_OK:
+            rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
+            done = true;
+            break;
+          case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
+            break;
+          case HttpURLConnection.HTTP_UNAVAILABLE:
+            break;
+          case (HttpURLConnection.HTTP_CLIENT_TIMEOUT):
+            break;
+          default:
+            done = true;
+            break;
+        }
+        if (rv == null) {
+          Thread.sleep(DEFAULT_RETRY_DELAY_MS);
+        }
+      } catch (IOException | InterruptedException e) {
+        rv = null;
+      } finally {
+        if (conn != null) {
+          conn.disconnect();
+        }
+      }
+    }
+    return rv;
+  }
+
+  public static JSONObject getJson(final String url, final Map<String, String> prop) {
+    return getJson(url, prop, DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
+  }
+
+  public static JSONObject getJson(final String url, final Map<String, String> prop, final int timeout,
+      final int retries) {
+    JSONObject rv = null;
+    HttpURLConnection conn = null;
+    boolean done = false;
+    for (int i = 0; i < retries && !done; i++) {
+      try {
+        conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.setInstanceFollowRedirects(true);
+        conn.setReadTimeout(timeout);
+        conn.setReadTimeout(timeout);
+        conn.setRequestMethod("GET");
+        prop.remove("Content-Type");
+        conn.setRequestProperty("Content-Type", "application/json");
+        prop.remove("Accept-Encoding");
+        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
+        if (prop.containsKey("User-Agent")) {
+          conn.setRequestProperty("User-Agent", prop.get("User-Agent"));
+        } else {
+          conn.setRequestProperty("User-Agent", "");
+        }
+        for (Map.Entry<String, String> e : prop.entrySet()) {
+          if (!e.getKey().equals("User-Agent")) {
+            conn.setRequestProperty(e.getKey(), e.getValue());
+          }
+        }
+
         conn.connect();
         switch (conn.getResponseCode()) {
           case HttpURLConnection.HTTP_OK:
