@@ -2,11 +2,7 @@ package pt.it.av.tnav.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>

@@ -14,6 +14,11 @@ import java.util.ArrayList;
 public class JSONArray extends ArrayList<JSONValue> implements JSONValue {
 
   /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+
+  /**
    * @param n
    * @return
    */

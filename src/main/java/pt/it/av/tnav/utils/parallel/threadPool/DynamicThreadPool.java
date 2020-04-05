@@ -12,16 +12,14 @@ import java.util.concurrent.TimeUnit;
 
 public class DynamicThreadPool<I, O> implements ThreadPool<I, O>, Runnable {
   private static final long MAX_IDLE_TIME = 60 * 1000;
-  private final Function<I, O> t;
+  //private final Function<I, O> t;
   private final int nWorkers;
   private final long maxIdleTime;
-  private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>(),
-      source = new LinkedBlockingQueue<>();
-  private final BlockingQueue<IdleWorker> freeWorkers = new LinkedBlockingQueue<>(),
+  private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>(), source = new LinkedBlockingQueue<>();
+  private final BlockingQueue<IdleWorker<I, O>> freeWorkers = new LinkedBlockingQueue<>(),
       idleWorkers = new LinkedBlockingQueue<>();
-  private final IdleWorker workers[];
+  private final List<IdleWorker<I, O>> workers = new ArrayList<>();
   private Thread thr;
-
 
   /**
    * @param t
@@ -44,14 +42,13 @@ public class DynamicThreadPool<I, O> implements ThreadPool<I, O>, Runnable {
    * @param maxIdleTime
    */
   public DynamicThreadPool(final Function<I, O> t, final int nWorkers, final long maxIdleTime) {
-    this.t = t;
+    //this.t = t;
     this.nWorkers = nWorkers;
-    workers = new IdleWorker[nWorkers];
     this.maxIdleTime = maxIdleTime;
     for (int i = 0; i < nWorkers; i++) {
-      IdleWorker iw = new IdleWorker<I, O>(t, source, freeWorkers);
+      IdleWorker<I, O> iw = new IdleWorker<>(t, source, freeWorkers);
       idleWorkers.add(iw);
-      workers[i] = iw;
+      workers.add(iw);
     }
   }
 
@@ -76,7 +73,7 @@ public class DynamicThreadPool<I, O> implements ThreadPool<I, O>, Runnable {
     sink.put(Worker.stop());
     thr.join();
 
-    for (IdleWorker worker : workers) {
+    for (IdleWorker<I, O> worker : workers) {
       worker.join();
     }
 
@@ -91,7 +88,7 @@ public class DynamicThreadPool<I, O> implements ThreadPool<I, O>, Runnable {
   @Override
   public int aWorkers() {
     int rv = 0;
-    for (IdleWorker worker : workers) {
+    for (final IdleWorker<I, O> worker : workers) {
       if (worker.isActive()) {
         rv++;
       }
@@ -108,7 +105,7 @@ public class DynamicThreadPool<I, O> implements ThreadPool<I, O>, Runnable {
         in = sink.poll(maxIdleTime / 2, TimeUnit.MILLISECONDS);
         if (in != null) {
           if (!in.equals(Worker.stop())) {
-            IdleWorker w = null;
+            IdleWorker<I, O> w = null;
             if (freeWorkers.isEmpty() && !idleWorkers.isEmpty()) {
               // Grab a idle worker
               w = idleWorkers.take();
@@ -117,7 +114,7 @@ public class DynamicThreadPool<I, O> implements ThreadPool<I, O>, Runnable {
               // Wait for a free worker
               try {
                 w = freeWorkers.take();
-              } catch (Exception e) {
+              } catch (final Exception e) {
                 e.printStackTrace();
               }
             }
@@ -127,21 +124,19 @@ public class DynamicThreadPool<I, O> implements ThreadPool<I, O>, Runnable {
           }
         }
         // Free idle workers
-        List<IdleWorker> freeWorkerList = new ArrayList<>(freeWorkers.size());
-        int i = 0;
+        final List<IdleWorker<I, O>> freeWorkerList = new ArrayList<>(freeWorkers.size());
         while (!freeWorkers.isEmpty()) {
-          IdleWorker iw = freeWorkers.take();
+          final IdleWorker<I, O> iw = freeWorkers.take();
           if (iw.idle() >= maxIdleTime) {
             iw.join();
             idleWorkers.add(iw);
           } else {
             freeWorkerList.add(iw);
           }
-          i++;
         }
         freeWorkers.addAll(freeWorkerList);
 
-      } catch (Exception e) {
+      } catch (final Exception e) {
         e.printStackTrace();
         done = true;
       }

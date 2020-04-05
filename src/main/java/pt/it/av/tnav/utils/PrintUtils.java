@@ -1,6 +1,9 @@
 package pt.it.av.tnav.utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Iterator;
@@ -15,7 +18,8 @@ public class PrintUtils {
   /**
    * Utility class, lets make the constructor private.
    */
-  private PrintUtils() {}
+  private PrintUtils() {
+  }
 
   public static String array(int[] a) {
     StringWriter w = new StringWriter();
@@ -55,14 +59,14 @@ public class PrintUtils {
 
   public static void matrix(double a[], int rows, int cols, Writer w) throws IOException {
     w.append('[');
-    for(int r = 0; r < rows; r++) {
+    for (int r = 0; r < rows; r++) {
       w.append('[');
-      for(int c = 0; c < cols - 1; c++) {
+      for (int c = 0; c < cols - 1; c++) {
         w.append(a[r * cols + c] + ", ");
       }
-      w.append(Double.toString(a[r * cols+(cols-1)]));
+      w.append(Double.toString(a[r * cols + (cols - 1)]));
       w.append(']');
-      w.append(System.getProperty( "line.separator" ));
+      w.append(System.getProperty("line.separator"));
     }
     w.append(']');
   }
@@ -105,14 +109,14 @@ public class PrintUtils {
   }
 
   public static void array(double[] a, int left, int right, Writer w) throws IOException {
-    //DecimalFormat format = new DecimalFormat("0.#");
+    // DecimalFormat format = new DecimalFormat("0.#");
     w.append('[');
     int i = left;
     for (; i < right; i++)
       w.append(a[i] + ", ");
     if (right >= left) {
       w.append(Double.toString(a[i]));
-      //w.append(format.format(a[i]));
+      // w.append(format.format(a[i]));
     }
     w.append(']');
   }
@@ -197,5 +201,22 @@ public class PrintUtils {
       e.printStackTrace();
     }
     return w.toString();
+  }
+
+  /**
+   * 
+   */
+  public static String reader(InputStream in) {
+    String line = null;
+    StringBuilder rslt = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+      while ((line = reader.readLine()) != null) {
+        rslt.append(line);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return rslt.toString();
   }
 }

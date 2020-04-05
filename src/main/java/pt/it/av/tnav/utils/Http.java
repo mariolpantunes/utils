@@ -25,9 +25,8 @@ import java.util.zip.InflaterInputStream;
  * @version 1.0
  */
 public class Http {
-  private static final int DEFAULT_TIMEOUT_MS = 5000,
-      DEFAULT_MAX_RETRIES = 3, DEFAULT_RETRY_DELAY_MS = 1000;
-  //private static final int MAX_REDIRECT = 10;
+  private static final int DEFAULT_TIMEOUT_MS = 5000, DEFAULT_MAX_RETRIES = 3, DEFAULT_RETRY_DELAY_MS = 1000;
+  // private static final int MAX_REDIRECT = 10;
 
   /**
    * Utility class, lets make the constructor private.
@@ -139,8 +138,8 @@ public class Http {
       conn.setReadTimeout(timeout);
       conn.setRequestMethod("GET");
       conn.setRequestProperty("Content-Type", "text/plain");
-      conn.setRequestProperty("Authorization", "Basic "
-          + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
+      conn.setRequestProperty("Authorization",
+          "Basic " + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
       conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
       conn.setRequestProperty("User-Agent", "");
       conn.connect();
@@ -240,8 +239,8 @@ public class Http {
    * @param retries
    * @return
    */
-  public static JSONObject getJson(final String url, final String user,
-                                   final String pass, final int timeout, final int retries) {
+  public static JSONObject getJson(final String url, final String user, final String pass, final int timeout,
+      final int retries) {
     JSONObject rv = null;
     HttpURLConnection conn = null;
     boolean done = false;
@@ -253,8 +252,8 @@ public class Http {
         conn.setReadTimeout(timeout);
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Authorization", "Basic "
-            + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
+        conn.setRequestProperty("Authorization",
+            "Basic " + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
         conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
         conn.setRequestProperty("User-Agent", "");
         conn.connect();
@@ -287,7 +286,6 @@ public class Http {
     return rv;
   }
 
-
   /**
    *
    * @param url
@@ -307,23 +305,22 @@ public class Http {
    * @return
    * @throws IOException
    */
-  public static JSONObject getJson(final String url, final String XRapidAPIKey,
-                                   final int timeout, final int retries) {
+  public static JSONObject getJson(final String url, final String XRapidAPIKey, final int timeout, final int retries) {
     JSONObject rv = null;
     HttpURLConnection conn = null;
     boolean done = false;
     for (int i = 0; i < retries && !done; i++) {
       try {
-      conn = (HttpURLConnection) new URL(url).openConnection();
-      conn.setInstanceFollowRedirects(true);
-      conn.setReadTimeout(timeout);
-      conn.setReadTimeout(timeout);
-      conn.setRequestMethod("GET");
-      conn.setRequestProperty("Content-Type", "application/json");
-      conn.setRequestProperty("X-RapidAPI-Key", XRapidAPIKey);
-      conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-      conn.setRequestProperty("User-Agent", "");
-      conn.connect();
+        conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.setInstanceFollowRedirects(true);
+        conn.setReadTimeout(timeout);
+        conn.setReadTimeout(timeout);
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("X-RapidAPI-Key", XRapidAPIKey);
+        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
+        conn.setRequestProperty("User-Agent", "");
+        conn.connect();
         switch (conn.getResponseCode()) {
           case HttpURLConnection.HTTP_OK:
             rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
@@ -353,7 +350,7 @@ public class Http {
     return rv;
   }
 
-  //TODO: this method needs some love, like all the persons in the world...
+  // TODO: this method needs some love, like all the persons in the world...
   public static void post(String url, JSONObject json) throws IOException {
     post(url, json, DEFAULT_TIMEOUT_MS);
   }
@@ -385,7 +382,8 @@ public class Http {
       if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
         JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(con))));
       } else {
-        throw new IOException("Error code: " + con.getResponseCode());
+        String error = PrintUtils.reader(errorStream(con));
+        throw new IOException("Error code: " + con.getResponseCode() + "Error : " + error);
       }
     } finally {
       if (con != null) {

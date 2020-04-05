@@ -17,10 +17,8 @@ public final class MathUtils {
       1.50563273514931155834e-7 };
 
   // log(2*PI)/2
-  private static final double LN_SQRT2PI = Math.log(2.0 * Math.PI) / 2.0;
-
+  private static final double doubleEpsilon, LN_SQRT2PI = Math.log(2.0 * Math.PI) / 2.0;
   private static final float floatEpsilon;
-  private static final double doubleEpsilon;
 
   static {
     float feps = 0.5f;
@@ -87,21 +85,21 @@ public final class MathUtils {
    * @return
    * @see
    */
-  private static long poisonDistLarge(final long lambda) {
-    double c = 0.767 - 3.36 / lambda, b = Math.PI / Math.sqrt(3.0 * lambda), a = b * lambda,
-        k = Math.log(c / b) - lambda, z = 0.0, y = 0.0;
-    long x = 0;
+  private static long poisonDistLarge(final long mean) {
+    double x, r, m, sqrt_mean = Math.sqrt(mean), log_mean = Math.log(mean), g_x, f_m;
 
     do {
       do {
         double u = ThreadLocalRandom.current().nextDouble();
-        y = (a - Math.log((1 - lambda) / lambda)) / b;
-      } while (y > -0.5);
-      x = (long) (y + 0.5);
-      z = k + x * Math.log(lambda) - MathUtils.lgamma(x + 1);
-    } while (Math.log(ThreadLocalRandom.current().nextDouble() * lambda * (1 - lambda)) < z);
+        x = mean + sqrt_mean * Math.tan(Math.PI * (u - 1 / 2.0));
+      } while (x < 0);
+      g_x = sqrt_mean / (Math.PI * ((x - mean) * (x - mean) + mean));
+      m = Math.floor(x);
+      f_m = Math.exp(m * log_mean - mean - lgamma(m + 1));
+      r = f_m / g_x / 2.4;
+    } while (ThreadLocalRandom.current().nextDouble() > r);
 
-    return x;
+    return (long) x;
   }
 
   /**
@@ -168,10 +166,11 @@ public final class MathUtils {
    * @param n1 first number
    * @param n2 second number
    * @return the greatest common divisor between {@code a} and {@code b}
-   * @see <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean algorithm</a>
+   * @see <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean
+   *      algorithm</a>
    */
   public static long gcd_euclidean(final long n1, final long n2) {
-    if(n1 < 0 || n2 < 0) {
+    if (n1 < 0 || n2 < 0) {
       throw new IllegalArgumentException();
     }
 
@@ -189,7 +188,7 @@ public final class MathUtils {
       a = b;
       b = r;
     }
-    
+
     return a;
   }
 
@@ -203,10 +202,11 @@ public final class MathUtils {
    * @param n1 first number
    * @param n2 second number
    * @return the greatest common divisor between {@code a} and {@code b}
-   * @see <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean algorithm</a>
+   * @see <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean
+   *      algorithm</a>
    */
   public static int gcd_euclidean(final int n1, final int n2) {
-    if(n1 < 0 || n2 < 0) {
+    if (n1 < 0 || n2 < 0) {
       throw new IllegalArgumentException();
     }
 
@@ -238,15 +238,16 @@ public final class MathUtils {
    * @param n1 first number
    * @param n2 second number
    * @return the greatest common divisor between {@code a} and {@code b}
-   * @see <a href="https://en.wikipedia.org/wiki/Binary_GCD_algorithm">Binary GCD algorithm</a>
+   * @see <a href="https://en.wikipedia.org/wiki/Binary_GCD_algorithm">Binary GCD
+   *      algorithm</a>
    */
   public static int gcd_binary(final int n1, final int n2) {
-    if(n1 < 0 || n2 < 0) {
+    if (n1 < 0 || n2 < 0) {
       throw new IllegalArgumentException();
     }
 
     int a = n1, b = n2;
-    
+
     // GCD(0, b) == b; GCD(a, 0) == a,
     // GCD(0, 0) == 0
     if (a == 0)
@@ -438,20 +439,20 @@ public final class MathUtils {
     int d = (int) Math.floor(a - b);
     double m = Math.floor(a / 2.0 + b / 2.0), rv = 0.0;
     switch (d) {
-    case 0:
-      rv = 1.0;
-      break;
-    case 1:
-      rv = a;
-      break;
-    case 2:
-      rv = a * (a - 1.0);
-      break;
-    case 3:
-      rv = a * (a - 1.0) * (a - 2.0);
-      break;
-    default:
-      rv = product(a, m) * product(m, b);
+      case 0:
+        rv = 1.0;
+        break;
+      case 1:
+        rv = a;
+        break;
+      case 2:
+        rv = a * (a - 1.0);
+        break;
+      case 3:
+        rv = a * (a - 1.0) * (a - 2.0);
+        break;
+      default:
+        rv = product(a, m) * product(m, b);
     }
     return rv;
   }

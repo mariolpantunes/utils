@@ -9,6 +9,11 @@ package pt.it.av.tnav.utils.structures.mutableNumber;
  * @version 1.0
  */
 public class ComplexNumber extends MutableNumber<ComplexNumber> {
+  
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
   protected double r, i;
 
   /**

@@ -1,8 +1,16 @@
 package pt.it.av.tnav.utils.structures.cache;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -30,28 +38,25 @@ public abstract class AbstractPCache<K, T> implements Cache<K, T> {
     synchronized (key.toString().intern()) {
 
       if (Files.isReadable(file)) {
-        try {
-          BufferedReader in = null;
-          in = new BufferedReader(new InputStreamReader(new GZIPInputStream(Files.newInputStream(file)), "UTF-8"));
-          try {
-            rv = load(in);
-          }  finally {
-            in.close();
-          }
+        try (BufferedReader in = new BufferedReader(
+            new InputStreamReader(new GZIPInputStream(Files.newInputStream(file)), "UTF-8"))) {
+          rv = load(in);
         } catch (IOException ex) {
-          System.err.println("Problem occured : " + ex.getMessage());
+          ex.printStackTrace();
           rv = null;
-          try {Files.delete(file);} catch(IOException e) {
-            System.err.println("Problem occured : " + e.getMessage());
+          try {
+            Files.delete(file);
+          } catch (IOException e) {
+            e.printStackTrace();
           }
         }
       }
 
       if (rv == null) {
-        rv = buid(key);
-        try {
-          BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(file)), "UTF-8"));
-          try{store(rv, out);}finally{out.close();}
+        rv = build(key);
+        try (BufferedWriter out = new BufferedWriter(
+            new OutputStreamWriter(new GZIPOutputStream(Files.newOutputStream(file)), "UTF-8"))) {
+          store(rv, out);
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -73,7 +78,7 @@ public abstract class AbstractPCache<K, T> implements Cache<K, T> {
    * @param key
    * @return
    */
-  protected abstract T buid(K key);
+  protected abstract T build(K key);
 
   /**
    *
@@ -81,4 +86,13 @@ public abstract class AbstractPCache<K, T> implements Cache<K, T> {
    * @param out
    */
   protected abstract void store(T o, Writer out) throws IOException;
+
+  @Override
+  public void clear() {
+    try (Stream<Path> walk = Files.walk(pCache)) {
+      walk.map(Path::toFile).forEach(File::delete);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

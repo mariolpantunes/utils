@@ -10,6 +10,11 @@ package pt.it.av.tnav.utils.structures.mutableNumber;
  */
 public abstract class MutableNumber<N> extends Number {
 
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+
   public abstract N add(N n);
 
   public abstract N sub(N n);

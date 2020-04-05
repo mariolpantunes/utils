@@ -20,6 +20,10 @@ import java.util.Set;
  * @version 1.0
  */
 public class JSONObject extends HashMap<String, JSONValue> implements JSONValue {
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
   private static final int LENGTH = 128;
 
   public static JSONObject read(String s) throws IOException {
@@ -39,16 +43,11 @@ public class JSONObject extends HashMap<String, JSONValue> implements JSONValue 
     Deque<JSONValue> store = new ArrayDeque<>();
     state.push(STATE.BEGIN);
     StringBuilder name = new StringBuilder(), value = new StringBuilder();
-    STATE previous = STATE.BEGIN;
     int t = 0, i = 0;
     boolean done = false;
     try {
       while ((t = r.read(buffer)) != -1 && !done) {
         for (i = 0; i < t && !done; i++) {
-                   /* if(state.peek() != previous) {
-                        previous = state.peek();
-                        System.err.println(previous.name()+" -> "+buffer[i]);
-                    }*/
           switch (state.peek()) {
             case BEGIN:
               switch (buffer[i]) {
@@ -211,8 +210,7 @@ public class JSONObject extends HashMap<String, JSONValue> implements JSONValue 
                   if (!isEscaped(value)) {
                     state.pop();
                     if (state.peek() == STATE.ROOT || state.peek() == STATE.OBJECT) {
-                      ((JSONObject) store.peek()).put(name.toString(),
-                          new JSONString(value.toString()));
+                      ((JSONObject) store.peek()).put(name.toString(), new JSONString(value.toString()));
                       name.setLength(0);
                     } else if (state.peek() == STATE.ARRAY)
                       ((JSONArray) store.peek()).add(new JSONString(value.toString()));
@@ -264,16 +262,16 @@ public class JSONObject extends HashMap<String, JSONValue> implements JSONValue 
         }
       }
     } catch (Exception e) {
-      //System.err.println("BUFFER: " + new String(buffer));
-      //System.err.println(root);
+      // System.err.println("BUFFER: " + new String(buffer));
+      // System.err.println(root);
       e.printStackTrace();
     }
 
     if (state.peek() != STATE.END) {
-      //System.err.println("BUFFER: " + new String(buffer));
-      //System.err.println(root);
+      // System.err.println("BUFFER: " + new String(buffer));
+      // System.err.println(root);
       while (!state.isEmpty()) {
-        //System.err.println("STATE -> " + state.peek().name());
+        // System.err.println("STATE -> " + state.peek().name());
         state.pop();
       }
       root.clear();
@@ -393,5 +391,7 @@ public class JSONObject extends HashMap<String, JSONValue> implements JSONValue 
     return w.toString();
   }
 
-  private enum STATE {BEGIN, ROOT, OBJECT, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, STRING, ARRAY, END, ERROR}
+  private enum STATE {
+    BEGIN, ROOT, OBJECT, PRE_KEY, KEY, COLON, COMMA, PRE_VALUE, VALUE, STRING, ARRAY, END, ERROR
+  }
 }

@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @version 1.0
  */
 public class StaticThreadPool<I, O> implements ThreadPool<I, O> {
-  private final Function<I, O> t;
+  //private final Function<I, O> t;
   private final int nWorkers;
   private final Worker<I, O> workers[];
   private final BlockingQueue<Object> sink = new LinkedBlockingQueue<>(),
@@ -30,7 +30,7 @@ public class StaticThreadPool<I, O> implements ThreadPool<I, O> {
    * @param nCores
    */
   public StaticThreadPool(final Function<I, O> t, int nWorkers) {
-    this.t = t;
+    //this.t = t;
     this.nWorkers = nWorkers;
     this.workers = Utils.cast(new Worker[nWorkers]);
     for (int i = 0; i < nWorkers; i++) {
@@ -73,7 +73,7 @@ public class StaticThreadPool<I, O> implements ThreadPool<I, O> {
       sink.put(stop);
     }
 
-    for (Worker worker : workers) {
+    for (Worker<I,O> worker : workers) {
       worker.join();
     }
 

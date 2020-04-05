@@ -103,7 +103,7 @@ public class Multiplication {
 
     try {
       for (int i = 0; i < m; i++)
-        sink.add(new Integer(i));
+        sink.add(Integer.valueOf(i));
       tp.join();
     } catch (Exception e) {
       e.printStackTrace();
@@ -130,7 +130,7 @@ public class Multiplication {
 
     try {
       for (int i = 0; i < m; i++)
-        sink.add(new Integer(i));
+        sink.add(Integer.valueOf(i));
       tp.join();
     } catch (Exception e) {
       e.printStackTrace();

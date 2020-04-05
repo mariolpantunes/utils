@@ -6,7 +6,7 @@ import pt.it.av.tnav.utils.json.JSONObject;
  * This interface allows to dump and load and object from a
  * {@link pt.it.av.tnav.utils.json.JSONObject}.
  * <p>
- * The resulting object can be written to a text file, or sent remotelly.
+ * The resulting object can be written to a text file, or sent remotely.
  * </p>
  *
  * @param <T> the type of objects that will be dumped and loaded

@@ -9,6 +9,11 @@ package pt.it.av.tnav.utils.structures.mutableNumber;
  * @version 1.0
  */
 public class MutableInteger extends MutableNumber<MutableInteger> implements Comparable<MutableInteger> {
+  
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
   protected int value;
 
   /**

@@ -11,7 +11,7 @@ import java.util.concurrent.Semaphore;
 public class IdleWorker<I, O> implements Runnable {
   private final Function<I, O> t;
   private final BlockingQueue<Object> source;
-  private final BlockingQueue<IdleWorker> freeWorkers;
+  private final BlockingQueue<IdleWorker<I,O>> freeWorkers;
   private final Semaphore mutex = new Semaphore(1), slots = new Semaphore(1),
       objs = new Semaphore(0), idle = new Semaphore(1);
   private long ts = 0;
@@ -23,7 +23,7 @@ public class IdleWorker<I, O> implements Runnable {
    * @param source
    * @param freeWorkers
    */
-  public IdleWorker(Function<I, O> t, BlockingQueue<Object> source, BlockingQueue<IdleWorker> freeWorkers) {
+  public IdleWorker(Function<I, O> t, BlockingQueue<Object> source, BlockingQueue<IdleWorker<I,O>> freeWorkers) {
     this.t = t;
     this.source = source;
     this.freeWorkers = freeWorkers;
