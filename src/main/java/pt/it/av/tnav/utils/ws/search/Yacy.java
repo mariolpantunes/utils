@@ -7,11 +7,7 @@ import pt.it.av.tnav.utils.json.JSONValue;
 
 import java.util.Iterator;
 
-//TODO: JSON parse fails some times
-//TODO: it appears some json are invalid
-//TODO: Ease the constrution of the iterator, move the code to hasNext function.
-//TODO: If snippet is empty, fill it with title
-//TODO: Fix URL usage.
+
 
 /**
  * Yacy search engine.

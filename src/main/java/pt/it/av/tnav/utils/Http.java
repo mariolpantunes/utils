@@ -7,18 +7,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Base64;
-import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
-
-//TODO: review the exception for error codes different from OK
-//TODO: test try-resource to minize the amount of code
-//TODO: review put method
 
 /**
  * HTTP/REST helper class.
@@ -34,6 +31,21 @@ public class Http {
    * Utility class, lets make the constructor private.
    */
   private Http() {
+  }
+
+  public static String paramsString(Map<String, String> params) throws UnsupportedEncodingException {
+    StringBuilder result = new StringBuilder();
+
+    for (Map.Entry<String, String> entry : params.entrySet()) {
+      result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+      result.append("=");
+      result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+      result.append("&");
+    }
+
+    String resultString = result.toString();
+    resultString = resultString.length() > 0 ? resultString.substring(0, resultString.length() - 1) : resultString;
+    return String.format("?%s", resultString);
   }
 
   /**
@@ -72,128 +84,42 @@ public class Http {
     return rv;
   }
 
-  /**
-   * @param url
-   * @return
-   * @throws Exception
-   */
-  public static String get(String url) throws Exception {
-    return get(url, DEFAULT_TIMEOUT_MS);
+  public static JSONObject getJson(final String baseUrl, final Map<String, String> prop,
+      final Map<String, String> params) {
+    return getJson(baseUrl, prop, params, DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
   }
 
-  /**
-   * @param url
-   * @param timeout
-   * @return
-   * @throws IOException
-   */
-  public static String get(String url, int timeout) throws IOException {
-    String rv = null;
-    HttpURLConnection conn = null;
-    try {
-      conn = (HttpURLConnection) new URL(url).openConnection();
-      conn.setInstanceFollowRedirects(true);
-      conn.setReadTimeout(timeout);
-      conn.setReadTimeout(timeout);
-      conn.setRequestMethod("GET");
-      conn.setRequestProperty("Content-Type", "text/plain");
-      conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-      conn.setRequestProperty("User-Agent", "");
-      conn.connect();
-      if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        StringBuilder response = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(inputStream(conn)))) {
-          String inputLine;
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-        }
-        rv = response.toString();
-      }
-    } finally {
-      if (conn != null) {
-        conn.disconnect();
-      }
-    }
-    return rv;
-  }
-
-  public static String get(String url, String user, String pass) throws IOException {
-    return get(url, user, pass, DEFAULT_TIMEOUT_MS);
-  }
-
-  /**
-   * @param url
-   * @param user
-   * @param pass
-   * @param timeout
-   * @return
-   * @throws IOException
-   */
-  public static String get(String url, String user, String pass, int timeout) throws IOException {
-    String rv = null;
-    HttpURLConnection conn = null;
-    try {
-      conn = (HttpURLConnection) new URL(url).openConnection();
-      conn.setInstanceFollowRedirects(true);
-      conn.setReadTimeout(timeout);
-      conn.setReadTimeout(timeout);
-      conn.setRequestMethod("GET");
-      conn.setRequestProperty("Content-Type", "text/plain");
-      conn.setRequestProperty("Authorization",
-          "Basic " + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
-      conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-      conn.setRequestProperty("User-Agent", "");
-      conn.connect();
-      if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        StringBuilder response = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(inputStream(conn)))) {
-          String inputLine;
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-        }
-        rv = response.toString();
-      }
-    } finally {
-      if (conn != null) {
-        conn.disconnect();
-      }
-    }
-    return rv;
-  }
-
-  /**
-   * @param url
-   * @return
-   * @throws IOException
-   */
-  public static JSONObject getJson(String url) throws IOException {
-    return getJson(url, DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
-  }
-
-  /**
-   * @param url
-   * @param timeout
-   * @return
-   * @throws IOException
-   */
-  public static JSONObject getJson(final String url, final int timeout, final int retries) {
+  public static JSONObject getJson(final String baseUrl, final Map<String, String> prop,
+      final Map<String, String> params, final int timeout, final int retries) {
     JSONObject rv = null;
     HttpURLConnection conn = null;
     boolean done = false;
     for (int i = 0; i < retries && !done; i++) {
       try {
+        String url = String.format("%s%s", baseUrl, paramsString(params));
         conn = (HttpURLConnection) new URL(url).openConnection();
-        conn.setConnectTimeout(timeout);
-        conn.setReadTimeout(timeout);
         conn.setInstanceFollowRedirects(true);
+        conn.setReadTimeout(timeout);
+        conn.setReadTimeout(timeout);
+        conn.setConnectTimeout(timeout);
         conn.setRequestMethod("GET");
+        prop.remove("Content-Type");
         conn.setRequestProperty("Content-Type", "application/json");
+        prop.remove("Accept-Encoding");
         conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-        conn.setRequestProperty("User-Agent", "");
-        conn.connect();
+        
+        if (prop.containsKey("User-Agent")) {
+          conn.setRequestProperty("User-Agent", prop.get("User-Agent"));
+        } else {
+          conn.setRequestProperty("User-Agent", "");
+        }
+        for (Map.Entry<String, String> e : prop.entrySet()) {
+          if (!e.getKey().equals("User-Agent")) {
+            conn.setRequestProperty(e.getKey(), e.getValue());
+          }
+        }
 
+        conn.connect();
         switch (conn.getResponseCode()) {
           case HttpURLConnection.HTTP_OK:
             rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
@@ -223,238 +149,5 @@ public class Http {
       }
     }
     return rv;
-  }
-
-  /**
-   * @param url
-   * @param user
-   * @param pass
-   * @return
-   * @throws Exception
-   */
-  public static JSONObject getJson(String url, String user, String pass) throws IOException {
-    return getJson(url, user, pass, DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
-  }
-
-  /**
-   * @param url
-   * @param user
-   * @param pass
-   * @param timeout
-   * @param retries
-   * @return
-   */
-  public static JSONObject getJson(final String url, final String user, final String pass, final int timeout,
-      final int retries) {
-    JSONObject rv = null;
-    HttpURLConnection conn = null;
-    boolean done = false;
-    for (int i = 0; i < retries && !done; i++) {
-      try {
-        conn = (HttpURLConnection) new URL(url).openConnection();
-        conn.setInstanceFollowRedirects(true);
-        conn.setReadTimeout(timeout);
-        conn.setReadTimeout(timeout);
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Authorization",
-            "Basic " + Base64.getEncoder().encodeToString((user + ":" + pass).getBytes()));
-        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-        conn.setRequestProperty("User-Agent", "");
-        conn.connect();
-        switch (conn.getResponseCode()) {
-          case HttpURLConnection.HTTP_OK:
-            rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
-            done = true;
-            break;
-          case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-            break;
-          case HttpURLConnection.HTTP_UNAVAILABLE:
-            break;
-          case (HttpURLConnection.HTTP_CLIENT_TIMEOUT):
-            break;
-          default:
-            done = true;
-            break;
-        }
-        if (rv == null) {
-          Thread.sleep(DEFAULT_RETRY_DELAY_MS);
-        }
-      } catch (IOException | InterruptedException e) {
-        rv = null;
-      } finally {
-        if (conn != null) {
-          conn.disconnect();
-        }
-      }
-    }
-    return rv;
-  }
-
-  /**
-   *
-   * @param url
-   * @param xMashapeKey
-   * @return
-   * @throws IOException
-   */
-  public static JSONObject getJson(String url, String XRapidAPIKey) throws IOException {
-    return getJson(url, XRapidAPIKey, DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
-  }
-
-  /**
-   * @param url
-   * @param xMashapeKey
-   * @param timeout
-   * @param retries
-   * @return
-   * @throws IOException
-   */
-  public static JSONObject getJson(final String url, final String XRapidAPIKey, final int timeout, final int retries) {
-    JSONObject rv = null;
-    HttpURLConnection conn = null;
-    boolean done = false;
-    for (int i = 0; i < retries && !done; i++) {
-      try {
-        conn = (HttpURLConnection) new URL(url).openConnection();
-        conn.setInstanceFollowRedirects(true);
-        conn.setReadTimeout(timeout);
-        conn.setReadTimeout(timeout);
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("X-RapidAPI-Key", XRapidAPIKey);
-        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-        conn.setRequestProperty("User-Agent", "");
-        conn.connect();
-        switch (conn.getResponseCode()) {
-          case HttpURLConnection.HTTP_OK:
-            rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
-            done = true;
-            break;
-          case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-            break;
-          case HttpURLConnection.HTTP_UNAVAILABLE:
-            break;
-          case (HttpURLConnection.HTTP_CLIENT_TIMEOUT):
-            break;
-          default:
-            done = true;
-            break;
-        }
-        if (rv == null) {
-          Thread.sleep(DEFAULT_RETRY_DELAY_MS);
-        }
-      } catch (IOException | InterruptedException e) {
-        rv = null;
-      } finally {
-        if (conn != null) {
-          conn.disconnect();
-        }
-      }
-    }
-    return rv;
-  }
-
-  public static JSONObject getJson(final String url, final Map<String, String> prop) {
-    return getJson(url, prop, DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
-  }
-
-  public static JSONObject getJson(final String url, final Map<String, String> prop, final int timeout,
-      final int retries) {
-    JSONObject rv = null;
-    HttpURLConnection conn = null;
-    boolean done = false;
-    for (int i = 0; i < retries && !done; i++) {
-      try {
-        conn = (HttpURLConnection) new URL(url).openConnection();
-        conn.setInstanceFollowRedirects(true);
-        conn.setReadTimeout(timeout);
-        conn.setReadTimeout(timeout);
-        conn.setRequestMethod("GET");
-        prop.remove("Content-Type");
-        conn.setRequestProperty("Content-Type", "application/json");
-        prop.remove("Accept-Encoding");
-        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-        if (prop.containsKey("User-Agent")) {
-          conn.setRequestProperty("User-Agent", prop.get("User-Agent"));
-        } else {
-          conn.setRequestProperty("User-Agent", "");
-        }
-        for (Map.Entry<String, String> e : prop.entrySet()) {
-          if (!e.getKey().equals("User-Agent")) {
-            conn.setRequestProperty(e.getKey(), e.getValue());
-          }
-        }
-
-        conn.connect();
-        switch (conn.getResponseCode()) {
-          case HttpURLConnection.HTTP_OK:
-            rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
-            done = true;
-            break;
-          case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-            break;
-          case HttpURLConnection.HTTP_UNAVAILABLE:
-            break;
-          case (HttpURLConnection.HTTP_CLIENT_TIMEOUT):
-            break;
-          default:
-            done = true;
-            break;
-        }
-        if (rv == null) {
-          Thread.sleep(DEFAULT_RETRY_DELAY_MS);
-        }
-      } catch (IOException | InterruptedException e) {
-        rv = null;
-      } finally {
-        if (conn != null) {
-          conn.disconnect();
-        }
-      }
-    }
-    return rv;
-  }
-
-  // TODO: this method needs some love, like all the persons in the world...
-  public static void post(String url, JSONObject json) throws IOException {
-    post(url, json, DEFAULT_TIMEOUT_MS);
-  }
-
-  /**
-   * @param url
-   * @param json
-   * @param timeout
-   * @throws IOException
-   */
-  public static void post(String url, JSONObject json, int timeout) throws IOException {
-    byte[] data = json.toString().getBytes("UTF-8");
-    HttpURLConnection con = null;
-    try {
-      con = (HttpURLConnection) new URL(url).openConnection();
-      con.setReadTimeout(timeout);
-      con.setReadTimeout(timeout);
-      con.setRequestMethod("POST");
-      con.setRequestProperty("Content-Type", "application/json");
-      con.setRequestProperty("charset", "utf-8");
-      con.setRequestProperty("Accept-Encoding", "gzip, deflate");
-      con.setRequestProperty("Content-Length", Integer.toString(data.length));
-      con.setRequestProperty("User-Agent", "");
-      con.setDoOutput(true);
-      try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
-        wr.write(data);
-        wr.flush();
-      }
-      if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(con))));
-      } else {
-        String error = PrintUtils.reader(errorStream(con));
-        throw new IOException("Error code: " + con.getResponseCode() + "Error : " + error);
-      }
-    } finally {
-      if (con != null) {
-        con.disconnect();
-      }
-    }
   }
 }

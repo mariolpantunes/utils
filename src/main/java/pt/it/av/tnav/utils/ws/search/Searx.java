@@ -5,7 +5,9 @@ import pt.it.av.tnav.utils.json.JSONArray;
 import pt.it.av.tnav.utils.json.JSONObject;
 import pt.it.av.tnav.utils.json.JSONValue;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Searx search engine.
@@ -61,6 +63,7 @@ public class Searx extends WebSearchEngine {
   private class SearxResultIterator implements Iterator<Result> {
     private final int pageno;
     private final String q;
+    private final Map<String, String> params = new HashMap<>();
     private Iterator<JSONValue> it = null;
     private boolean done = false;
 
@@ -74,14 +77,16 @@ public class Searx extends WebSearchEngine {
     public SearxResultIterator(final String q, final int skip, final int pageno) {
       this.q = q;
       this.pageno = pageno;
+      params.put("q", q);
+      params.put("format", "json");
+      params.put("pageno", Integer.toString(pageno));
     }
 
     @Override
     public boolean hasNext() {
       if (it == null) {
         try {
-          System.out.println(url + "search?format=json&pageno=" + pageno + "&q=" + q);
-          JSONObject json = Http.getJson(url + "search?format=json&pageno=" + pageno + "&q=" + q);
+          JSONObject json = Http.getJson(String.format("%s%s", url, "search"), new HashMap<>(), params);
           if (json != null) {
             System.out.println(json);
             JSONArray array = json.get("results").asArray();

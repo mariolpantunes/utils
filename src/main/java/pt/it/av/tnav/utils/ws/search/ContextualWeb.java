@@ -5,7 +5,9 @@ import pt.it.av.tnav.utils.json.JSONArray;
 import pt.it.av.tnav.utils.json.JSONObject;
 import pt.it.av.tnav.utils.json.JSONValue;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * ContextualWeb search engine.
@@ -15,7 +17,7 @@ import java.util.Iterator;
  */
 public class ContextualWeb extends WebSearchEngine {
   private static final String DEFAULT_URL = "https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/WebSearchAPI";
-  private final String rapidAPI_Key;
+  private final Map<String, String> prop = new HashMap<>();
 
   /**
    * Contextual Web constructor.
@@ -24,7 +26,7 @@ public class ContextualWeb extends WebSearchEngine {
    */
   public ContextualWeb(final String rapidAPI_Key) {
     super(DEFAULT_URL);
-    this.rapidAPI_Key = rapidAPI_Key;
+    prop.put("X-RapidAPI-Key", rapidAPI_Key);
   }
 
   /**
@@ -35,7 +37,7 @@ public class ContextualWeb extends WebSearchEngine {
    */
   public ContextualWeb(final String rapidAPI_Key, final String url) {
     super(url);
-    this.rapidAPI_Key = rapidAPI_Key;
+    prop.put("X-RapidAPI-Key", rapidAPI_Key);
   }
 
   /**
@@ -47,7 +49,7 @@ public class ContextualWeb extends WebSearchEngine {
    */
   public ContextualWeb(final String rapidAPI_Key, final String url, final int maxResults) {
     super(url, maxResults);
-    this.rapidAPI_Key = rapidAPI_Key;
+    prop.put("X-RapidAPI-Key", rapidAPI_Key);
   }
 
   @Override
@@ -89,9 +91,8 @@ public class ContextualWeb extends WebSearchEngine {
     public boolean hasNext() {
       if (it == null) {
         try {
-          JSONObject json = Http.getJson(
-              url + "?q=" + q + "&pageNumber=" + pageno + "&pageSize=50&autoCorrect=False&safeSearch=False",
-              rapidAPI_Key);
+          JSONObject json = null;
+          //Http.getJson(url + "?q=" + q + "&pageNumber=" + pageno + "&pageSize=50&autoCorrect=False&safeSearch=False", prop);
           if (json != null) {
             int totalCount = json.get("totalCount").asInt();
             if (skip >= totalCount) {
@@ -121,15 +122,15 @@ public class ContextualWeb extends WebSearchEngine {
       if (!done) {
         JSONObject json = it.next().asObject();
         try {
-          String name = json.get("title").asString(), uri="", description=null;
-          
-          if(json.contains("uri")) {
+          String name = json.get("title").asString(), uri = "", description = null;
+
+          if (json.contains("uri")) {
             uri = json.get("url").asString();
           }
-          
+
           if (json.contains("description")) {
             description = json.get("description").asString();
-          } 
+          }
 
           rv = new Result(name, description, uri);
         } catch (Exception e) {
