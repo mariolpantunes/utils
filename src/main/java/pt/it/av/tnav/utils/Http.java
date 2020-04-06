@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
@@ -26,7 +27,7 @@ import java.util.zip.InflaterInputStream;
  * @version 1.0
  */
 public class Http {
-  private static final int DEFAULT_TIMEOUT_MS = 5000, DEFAULT_MAX_RETRIES = 3, DEFAULT_RETRY_DELAY_MS = 1000;
+  private static final int DEFAULT_TIMEOUT_MS = 10000, DEFAULT_MAX_RETRIES = 5, DEFAULT_RETRY_DELAY_MS = 1000;
   // private static final int MAX_REDIRECT = 10;
 
   /**
@@ -192,6 +193,7 @@ public class Http {
         conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
         conn.setRequestProperty("User-Agent", "");
         conn.connect();
+
         switch (conn.getResponseCode()) {
           case HttpURLConnection.HTTP_OK:
             rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
@@ -202,6 +204,8 @@ public class Http {
           case HttpURLConnection.HTTP_UNAVAILABLE:
             break;
           case (HttpURLConnection.HTTP_CLIENT_TIMEOUT):
+            break;
+          case 429:
             break;
           default:
             done = true;

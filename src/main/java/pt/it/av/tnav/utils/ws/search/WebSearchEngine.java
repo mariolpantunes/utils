@@ -18,7 +18,7 @@ import java.util.List;
  * @version 1.0
  */
 public abstract class WebSearchEngine implements SearchEngine {
-  private static final int DEFAULT_MAX_RESULTS = 200;
+  private static final int DEFAULT_MAX_RESULTS = 1000;
   protected final String url;
   protected final int maxResults;
 

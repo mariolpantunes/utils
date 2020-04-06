@@ -1,11 +1,17 @@
 package pt.it.av.tnav.utils.ws.search;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Queue;
+
 import pt.it.av.tnav.utils.Http;
 import pt.it.av.tnav.utils.json.JSONArray;
 import pt.it.av.tnav.utils.json.JSONObject;
 import pt.it.av.tnav.utils.json.JSONValue;
 
-import java.util.*;
+
 
 /**
  * DuckDuckGo Instant Answers.

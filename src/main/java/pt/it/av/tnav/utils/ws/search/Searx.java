@@ -14,7 +14,7 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class Searx extends WebSearchEngine {
-  private static final String DEFAULT_URL = "https://searx.ro/";
+  private static final String DEFAULT_URL = "https://search.snopyta.org/";
 
   /**
    * Searx constructor.
@@ -35,7 +35,7 @@ public class Searx extends WebSearchEngine {
   /**
    * Searx constructor.
    *
-   * @param url web service address
+   * @param url        web service address
    * @param maxResults maximum number of results
    */
   public Searx(final String url, final int maxResults) {
@@ -50,9 +50,9 @@ public class Searx extends WebSearchEngine {
   /**
    * Fast Searx search iterator.
    * <p>
-   *   The result pages are consomed continuously.
-   *   Fetch one page of results and iterates over them, before fetching another result's page.
-   *   This way the network calls are spread throught time, improving latency to the user.
+   * The result pages are consomed continuously. Fetch one page of results and
+   * iterates over them, before fetching another result's page. This way the
+   * network calls are spread throught time, improving latency to the user.
    * </p>
    *
    * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
@@ -67,8 +67,8 @@ public class Searx extends WebSearchEngine {
     /**
      * Searx Iteratror constructor.
      *
-     * @param q web search query
-     * @param skip number of results to skip
+     * @param q      web search query
+     * @param skip   number of results to skip
      * @param pageno page number
      */
     public SearxResultIterator(final String q, final int skip, final int pageno) {
@@ -80,9 +80,10 @@ public class Searx extends WebSearchEngine {
     public boolean hasNext() {
       if (it == null) {
         try {
-          JSONObject json = Http.getJson(url + "?format=json&pageno="
-              + pageno + "&q=" + q);
+          System.out.println(url + "search?format=json&pageno=" + pageno + "&q=" + q);
+          JSONObject json = Http.getJson(url + "search?format=json&pageno=" + pageno + "&q=" + q);
           if (json != null) {
+            System.out.println(json);
             JSONArray array = json.get("results").asArray();
             it = array.iterator();
             if (!it.hasNext()) {
