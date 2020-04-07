@@ -11,7 +11,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Base64;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
@@ -20,11 +19,12 @@ import java.util.zip.InflaterInputStream;
 /**
  * HTTP/REST helper class.
  *
- * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @author Mário Antunes
  * @version 1.0
  */
 public class Http {
-  private static final int DEFAULT_TIMEOUT_MS = 10000, DEFAULT_MAX_RETRIES = 5, DEFAULT_RETRY_DELAY_MS = 1000;
+  private static final int DEFAULT_CONNECT_TIMEOUT_MS = 1000, DEFAULT_READ_TIMEOUT_MS = 3000, DEFAULT_MAX_RETRIES = 3,
+      DEFAULT_RETRY_DELAY_MS = 1000;
   // private static final int MAX_REDIRECT = 10;
 
   /**
@@ -84,42 +84,48 @@ public class Http {
     return rv;
   }
 
-  public static JSONObject getJson(final String baseUrl, final Map<String, String> prop,
-      final Map<String, String> params) {
-    return getJson(baseUrl, prop, params, DEFAULT_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
+  public static JSONObject getJson(final String baseUrl, final Map<String, String> props,
+      final Map<String, String> params) throws UnsupportedEncodingException {
+    return getJson(baseUrl, props, params, DEFAULT_CONNECT_TIMEOUT_MS, DEFAULT_READ_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
   }
 
-  public static JSONObject getJson(final String baseUrl, final Map<String, String> prop,
-      final Map<String, String> params, final int timeout, final int retries) {
+  public static JSONObject getJson(final String baseUrl, final Map<String, String> props,
+      final Map<String, String> params, final int cTimeout, final int rTimeout, final int retries)
+      throws UnsupportedEncodingException {
     JSONObject rv = null;
     HttpURLConnection conn = null;
     boolean done = false;
+    String url = null; 
+    
+    if(params != null) {
+      url = String.format("%s%s", baseUrl, paramsString(params));
+    } else {
+      url = baseUrl;
+    }
+    
+    System.err.printf("URL = %s%n", url);
     for (int i = 0; i < retries && !done; i++) {
+      System.err.printf("Retry = %d%n", i);
       try {
-        String url = String.format("%s%s", baseUrl, paramsString(params));
         conn = (HttpURLConnection) new URL(url).openConnection();
-        conn.setInstanceFollowRedirects(true);
-        conn.setReadTimeout(timeout);
-        conn.setReadTimeout(timeout);
-        conn.setConnectTimeout(timeout);
-        conn.setRequestMethod("GET");
-        prop.remove("Content-Type");
-        conn.setRequestProperty("Content-Type", "application/json");
-        prop.remove("Accept-Encoding");
-        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-        
-        if (prop.containsKey("User-Agent")) {
-          conn.setRequestProperty("User-Agent", prop.get("User-Agent"));
-        } else {
-          conn.setRequestProperty("User-Agent", "");
-        }
-        for (Map.Entry<String, String> e : prop.entrySet()) {
-          if (!e.getKey().equals("User-Agent")) {
+
+        if(props != null) {
+          props.remove("Accept-Encoding");
+          props.remove("Content-Type");
+          for (Map.Entry<String, String> e : props.entrySet()) {
             conn.setRequestProperty(e.getKey(), e.getValue());
           }
         }
 
+        conn.setInstanceFollowRedirects(true);
+        conn.setConnectTimeout(cTimeout);
+        conn.setReadTimeout(rTimeout);
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
+
         conn.connect();
+
         switch (conn.getResponseCode()) {
           case HttpURLConnection.HTTP_OK:
             rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
@@ -139,8 +145,10 @@ public class Http {
         }
         if (rv == null) {
           Thread.sleep(DEFAULT_RETRY_DELAY_MS);
+          System.err.printf("Sleep...%n");
         }
       } catch (IOException | InterruptedException e) {
+        e.printStackTrace();
         rv = null;
       } finally {
         if (conn != null) {

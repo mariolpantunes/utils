@@ -14,34 +14,35 @@ import java.util.Map;
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
+ * @deprecated
  */
 public class Searx extends WebSearchEngine {
-  private static final String DEFAULT_URL = "https://search.snopyta.org/";
+  private static final String DEFAULT_BASE_URL = "https://search.snopyta.org/search";
 
   /**
    * Searx constructor.
    */
   public Searx() {
-    super(DEFAULT_URL);
+    super(DEFAULT_BASE_URL);
   }
 
   /**
    * Searx constructor.
    *
-   * @param url web service address
+   * @param baseUrl web service address
    */
-  public Searx(final String url) {
-    super(url);
+  public Searx(final String baseUrl) {
+    super(baseUrl);
   }
 
   /**
    * Searx constructor.
    *
-   * @param url        web service address
+   * @param baseUrl    web service address
    * @param maxResults maximum number of results
    */
-  public Searx(final String url, final int maxResults) {
-    super(url, maxResults);
+  public Searx(final String baseUrl, final int maxResults) {
+    super(baseUrl, maxResults);
   }
 
   @Override
@@ -52,9 +53,9 @@ public class Searx extends WebSearchEngine {
   /**
    * Fast Searx search iterator.
    * <p>
-   * The result pages are consomed continuously. Fetch one page of results and
+   * The result pages are consumed continuously. Fetch one page of results and
    * iterates over them, before fetching another result's page. This way the
-   * network calls are spread throught time, improving latency to the user.
+   * network calls are spread through time, improving latency to the user.
    * </p>
    *
    * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
@@ -64,6 +65,7 @@ public class Searx extends WebSearchEngine {
     private final int pageno;
     private final String q;
     private final Map<String, String> params = new HashMap<>();
+    private final Map<String, String> props = new HashMap<>();
     private Iterator<JSONValue> it = null;
     private boolean done = false;
 
@@ -80,15 +82,15 @@ public class Searx extends WebSearchEngine {
       params.put("q", q);
       params.put("format", "json");
       params.put("pageno", Integer.toString(pageno));
+      props.put("User-Agent", "Mozilla/5.0 (X11; Linux i686; rv:75.0) Gecko/20100101 Firefox/75.0");
     }
 
     @Override
     public boolean hasNext() {
       if (it == null) {
         try {
-          JSONObject json = Http.getJson(String.format("%s%s", url, "search"), new HashMap<>(), params);
+          JSONObject json = Http.getJson(baseUrl, props, params);
           if (json != null) {
-            System.out.println(json);
             JSONArray array = json.get("results").asArray();
             it = array.iterator();
             if (!it.hasNext()) {

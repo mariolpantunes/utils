@@ -4,14 +4,15 @@ import pt.it.av.tnav.utils.CollectionsUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * Abstract class that represents a web search engine service.
  * <p>
- * Provides methods to search a specific query.
- * It was designed to provide a efficient iterator mechanism, ideal for pipeline processing.
+ * Provides methods to search a specific query. It was designed to provide a
+ * efficient iterator mechanism, ideal for pipeline processing.
  * </p>
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public abstract class WebSearchEngine implements SearchEngine {
   private static final int DEFAULT_MAX_RESULTS = 1000;
-  protected final String url;
+  protected final String baseUrl;
   protected final int maxResults;
 
   /**
@@ -34,21 +35,23 @@ public abstract class WebSearchEngine implements SearchEngine {
   /**
    * Web Search Engine constructor.
    *
-   * @param url web search engine address
+   * @param baseUrl    web search engine address
    * @param maxResults maximum number of results
    */
-  public WebSearchEngine(final String url, final int maxResults) {
-    this.url = url;
+  public WebSearchEngine(final String baseUrl, final int maxResults) {
+    this.baseUrl = baseUrl;
     this.maxResults = maxResults;
   }
 
   /**
-   * Returns an {@link Iterator} that iterates through the results of the web search engine.
+   * Returns an {@link Iterator} that iterates through the results of the web
+   * search engine.
    *
-   * @param q web search query
-   * @param skip number of results to skip
+   * @param q      web search query
+   * @param skip   number of results to skip
    * @param pageno page number
-   * @return an {@link Iterator} that iterates through the results of the web search engine.
+   * @return an {@link Iterator} that iterates through the results of the web
+   *         search engine.
    */
   protected abstract Iterator<Result> resultsIterator(final String q, final int skip, final int pageno);
 
@@ -65,9 +68,9 @@ public abstract class WebSearchEngine implements SearchEngine {
   /**
    * Web Search Engine Iterator.
    * <p>
-   *   The result pages are consomed continuously.
-   *   Fetch one page of results and iterates over them, before fetching another result's page.
-   *   This way the network calls are spread throught time, improving latency to the user.
+   * The result pages are consomed continuously. Fetch one page of results and
+   * iterates over them, before fetching another result's page. This way the
+   * network calls are spread throught time, improving latency to the user.
    * </p>
    *
    * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>

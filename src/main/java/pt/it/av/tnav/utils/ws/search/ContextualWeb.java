@@ -50,6 +50,7 @@ public class ContextualWeb extends WebSearchEngine {
   public ContextualWeb(final String rapidAPI_Key, final String url, final int maxResults) {
     super(url, maxResults);
     prop.put("X-RapidAPI-Key", rapidAPI_Key);
+    
   }
 
   @Override

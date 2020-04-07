@@ -18,6 +18,7 @@ import pt.it.av.tnav.utils.json.JSONValue;
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
+ * @deprecated
  */
 public class DuckDuckGo extends WebSearchEngine {
   private static final String DEFAULT_URL = "https://api.duckduckgo.com/";
@@ -75,7 +76,7 @@ public class DuckDuckGo extends WebSearchEngine {
     public boolean hasNext() {
       if (it == null) {
         try {
-          JSONObject json = Http.getJson(url + "?format=json&q=" + q);
+          JSONObject json = null;//;Http.getJson(baseUrl.get(0) + "?format=json&q=" + q);
           if (json != null) {
             // due to the strucuture of the DuckDuckGo reply it is necessary to load all the values
             List<JSONValue> topics = new ArrayList<>();

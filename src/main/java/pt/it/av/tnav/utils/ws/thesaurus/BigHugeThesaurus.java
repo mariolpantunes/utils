@@ -23,7 +23,7 @@ public class BigHugeThesaurus implements Thesaurus {
     public List<String> synonyms(String s) {
         List<String> rv = new ArrayList<>();
         try {
-            JSONObject json = Http.getJson("http://words.bighugelabs.com/api/" + VERSION + "/" + key + "/" + s + "/json");
+            JSONObject json = null;//Http.getJson("http://words.bighugelabs.com/api/" + VERSION + "/" + key + "/" + s + "/json");
 
             if (json.contains("noun")) {
                 JSONObject noun = json.get("noun").asObject();
@@ -52,7 +52,7 @@ public class BigHugeThesaurus implements Thesaurus {
     public List<String> antonyms(String s) {
         List<String> rv = new ArrayList<>();
         try {
-            JSONObject json = Http.getJson("http://words.bighugelabs.com/api/" + VERSION + "/" + key + "/" + s + "/json");
+            JSONObject json = null;//Http.getJson("http://words.bighugelabs.com/api/" + VERSION + "/" + key + "/" + s + "/json");
 
             if (json.contains("noun")) {
                 JSONObject noun = json.get("noun").asObject();
