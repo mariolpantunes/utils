@@ -22,7 +22,7 @@ import java.util.zip.InflaterInputStream;
  * @version 1.0
  */
 public class Http {
-  private static final int DEFAULT_CONNECT_TIMEOUT_MS = 10000, DEFAULT_READ_TIMEOUT_MS = 10000, DEFAULT_MAX_RETRIES = 3,
+  private static final int DEFAULT_CONNECT_TIMEOUT_MS = 60000, DEFAULT_READ_TIMEOUT_MS = 60000, DEFAULT_MAX_RETRIES = 3,
       DEFAULT_RETRY_DELAY_MS = 1000;
 
   /**
@@ -103,8 +103,6 @@ public class Http {
 
         conn.connect();
 
-        System.err.println(conn.getResponseCode());
-
         switch (conn.getResponseCode()) {
           case HttpURLConnection.HTTP_OK:
             InputStream is = conn.getInputStream();
@@ -128,7 +126,7 @@ public class Http {
           Thread.sleep(DEFAULT_RETRY_DELAY_MS);
         }
       } catch (IOException | InterruptedException e) {
-        e.printStackTrace();
+        //e.printStackTrace();
         rv = null;
       } finally {
         if (conn != null) {
