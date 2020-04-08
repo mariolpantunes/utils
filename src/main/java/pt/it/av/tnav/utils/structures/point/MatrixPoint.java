@@ -10,9 +10,8 @@ import java.util.List;
 /**
  * Helper class used to cluster points.
  * <p>
- * The distance and similarities are store in a matrix.
- * This way latent models ({@link NMF}) can be used to improve
- * performance.
+ * The distance and similarities are store in a matrix. This way latent models
+ * ({@link NMF}) can be used to improve performance.
  * </p>
  *
  * @param <E> the type of elements in this point
@@ -54,7 +53,7 @@ public class MatrixPoint<E> implements Distance<MatrixPoint<E>>, Similarity<Matr
   @Override
   public double similarityTo(MatrixPoint<E> point) {
     double rv = 1.0;
-    if(!point.e.equals(e)) {
+    if (!point.e.equals(e)) {
       int p2 = map.indexOf(point.e);
       rv = matrix.get(selfIdx, p2);
     }

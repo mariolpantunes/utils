@@ -54,10 +54,10 @@ public final class MathUtils {
   /**
    * Generator of Poisson-distributed random variables (Junhao, based on Knuth).
    * This algorithm is not optimal, if performance is an issue an alternative
-   * should be used. Returns number from a possion distribution with mean lambda.
+   * should be used. Returns number from a poisson distribution with mean lambda.
    *
    * @param lambda mean of the poisson distribution
-   * @return number from a possion distribution with mean lambda
+   * @return number from a poisson distribution with mean lambda
    * @see <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson
    *      distribution</a>
    */

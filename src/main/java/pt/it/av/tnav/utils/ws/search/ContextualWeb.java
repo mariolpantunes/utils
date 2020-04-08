@@ -12,12 +12,12 @@ import java.util.Map;
 /**
  * ContextualWeb search engine.
  *
- * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @author Mário Antunes
  * @version 1.0
  */
 public class ContextualWeb extends WebSearchEngine {
   private static final String DEFAULT_URL = "https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/WebSearchAPI";
-  private final Map<String, String> prop = new HashMap<>();
+  private final Map<String, String> props = new HashMap<>();
 
   /**
    * Contextual Web constructor.
@@ -25,8 +25,7 @@ public class ContextualWeb extends WebSearchEngine {
    * @param rapidAPI_Key web service key
    */
   public ContextualWeb(final String rapidAPI_Key) {
-    super(DEFAULT_URL);
-    prop.put("X-RapidAPI-Key", rapidAPI_Key);
+    this(rapidAPI_Key, DEFAULT_URL);
   }
 
   /**
@@ -37,7 +36,8 @@ public class ContextualWeb extends WebSearchEngine {
    */
   public ContextualWeb(final String rapidAPI_Key, final String url) {
     super(url);
-    prop.put("X-RapidAPI-Key", rapidAPI_Key);
+    props.put("X-RapidAPI-Key", rapidAPI_Key);
+    //props.put("User-Agent", "Mozilla/5.0 (X11; Linux i686; rv:75.0) Gecko/20100101 Firefox/75.0");
   }
 
   /**
@@ -49,8 +49,8 @@ public class ContextualWeb extends WebSearchEngine {
    */
   public ContextualWeb(final String rapidAPI_Key, final String url, final int maxResults) {
     super(url, maxResults);
-    prop.put("X-RapidAPI-Key", rapidAPI_Key);
-    
+    props.put("X-RapidAPI-Key", rapidAPI_Key);
+    props.put("User-Agent", "Mozilla/5.0 (X11; Linux i686; rv:75.0) Gecko/20100101 Firefox/75.0");
   }
 
   @Override
@@ -70,8 +70,8 @@ public class ContextualWeb extends WebSearchEngine {
    * @version 1.0
    */
   private class CWResultIterator implements Iterator<Result> {
-    private final int pageno, skip;
-    private final String q;
+    private final int skip;
+    private final Map<String, String> params = new HashMap<>();
     private Iterator<JSONValue> it = null;
     private boolean done = false;
 
@@ -83,17 +83,20 @@ public class ContextualWeb extends WebSearchEngine {
      * @param pageno page number
      */
     public CWResultIterator(final String q, final int skip, final int pageno) {
-      this.q = q;
       this.skip = skip;
-      this.pageno = pageno;
+      params.put("q", q);
+      params.put("format", "json");
+      params.put("pageNumber", Integer.toString(pageno));
+      params.put("pageSize", Integer.toString(50));
+      params.put("autoCorrect", "False");
+      params.put("safeSearch", "False");
     }
 
     @Override
     public boolean hasNext() {
       if (it == null) {
         try {
-          JSONObject json = null;
-          //Http.getJson(url + "?q=" + q + "&pageNumber=" + pageno + "&pageSize=50&autoCorrect=False&safeSearch=False", prop);
+          JSONObject json = Http.getJson(baseUrl, props, params);
           if (json != null) {
             int totalCount = json.get("totalCount").asInt();
             if (skip >= totalCount) {
@@ -136,7 +139,6 @@ public class ContextualWeb extends WebSearchEngine {
           rv = new Result(name, description, uri);
         } catch (Exception e) {
           System.err.println(e);
-          System.err.println(json);
         }
       }
       return rv;

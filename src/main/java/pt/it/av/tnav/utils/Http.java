@@ -3,7 +3,6 @@ package pt.it.av.tnav.utils;
 import pt.it.av.tnav.utils.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,9 +22,8 @@ import java.util.zip.InflaterInputStream;
  * @version 1.0
  */
 public class Http {
-  private static final int DEFAULT_CONNECT_TIMEOUT_MS = 1000, DEFAULT_READ_TIMEOUT_MS = 3000, DEFAULT_MAX_RETRIES = 3,
+  private static final int DEFAULT_CONNECT_TIMEOUT_MS = 10000, DEFAULT_READ_TIMEOUT_MS = 10000, DEFAULT_MAX_RETRIES = 3,
       DEFAULT_RETRY_DELAY_MS = 1000;
-  // private static final int MAX_REDIRECT = 10;
 
   /**
    * Utility class, lets make the constructor private.
@@ -53,33 +51,14 @@ public class Http {
    * @return
    * @throws IOException
    */
-  private static InputStream inputStream(HttpURLConnection con) throws IOException {
+  private static InputStream inputStream(final InputStream is, final String encoding) throws IOException {
     InputStream rv;
-    String encoding = con.getContentEncoding();
     if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
-      rv = new GZIPInputStream(con.getInputStream());
+      rv = new GZIPInputStream(is);
     } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
-      rv = new InflaterInputStream(con.getInputStream(), new Inflater(true));
+      rv = new InflaterInputStream(is, new Inflater(true));
     } else {
-      rv = con.getInputStream();
-    }
-    return rv;
-  }
-
-  /**
-   * @param con
-   * @return
-   * @throws IOException
-   */
-  private static InputStream errorStream(HttpURLConnection con) throws IOException {
-    InputStream rv;
-    String encoding = con.getContentEncoding();
-    if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
-      rv = new GZIPInputStream(con.getErrorStream());
-    } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
-      rv = new InflaterInputStream(con.getErrorStream(), new Inflater(true));
-    } else {
-      rv = con.getErrorStream();
+      rv = is;
     }
     return rv;
   }
@@ -95,21 +74,19 @@ public class Http {
     JSONObject rv = null;
     HttpURLConnection conn = null;
     boolean done = false;
-    String url = null; 
-    
-    if(params != null) {
+    String url = null;
+
+    if (params != null) {
       url = String.format("%s%s", baseUrl, paramsString(params));
     } else {
       url = baseUrl;
     }
-    
-    System.err.printf("URL = %s%n", url);
+
     for (int i = 0; i < retries && !done; i++) {
-      System.err.printf("Retry = %d%n", i);
       try {
         conn = (HttpURLConnection) new URL(url).openConnection();
 
-        if(props != null) {
+        if (props != null) {
           props.remove("Accept-Encoding");
           props.remove("Content-Type");
           for (Map.Entry<String, String> e : props.entrySet()) {
@@ -126,9 +103,13 @@ public class Http {
 
         conn.connect();
 
+        System.err.println(conn.getResponseCode());
+
         switch (conn.getResponseCode()) {
           case HttpURLConnection.HTTP_OK:
-            rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(conn))));
+            InputStream is = conn.getInputStream();
+            String encoding = conn.getContentEncoding();
+            rv = JSONObject.read(new BufferedReader(new InputStreamReader(inputStream(is, encoding))));
             done = true;
             break;
           case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
@@ -145,7 +126,6 @@ public class Http {
         }
         if (rv == null) {
           Thread.sleep(DEFAULT_RETRY_DELAY_MS);
-          System.err.printf("Sleep...%n");
         }
       } catch (IOException | InterruptedException e) {
         e.printStackTrace();
