@@ -63,6 +63,10 @@ public class Http {
     return rv;
   }
 
+  public static JSONObject getJson(final String baseUrl) throws UnsupportedEncodingException {
+    return getJson(baseUrl, null, null);
+  }
+
   public static JSONObject getJson(final String baseUrl, final Map<String, String> props,
       final Map<String, String> params) throws UnsupportedEncodingException {
     return getJson(baseUrl, props, params, DEFAULT_CONNECT_TIMEOUT_MS, DEFAULT_READ_TIMEOUT_MS, DEFAULT_MAX_RETRIES);
@@ -126,7 +130,7 @@ public class Http {
           Thread.sleep(DEFAULT_RETRY_DELAY_MS);
         }
       } catch (IOException | InterruptedException e) {
-        //e.printStackTrace();
+        // e.printStackTrace();
         rv = null;
       } finally {
         if (conn != null) {
