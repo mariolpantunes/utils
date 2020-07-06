@@ -1,11 +1,37 @@
 package pt.it.av.tnav.utils.bla.determinant;
 
+/**
+ * Algorithms for computing Matrix's determinant.
+ * 
+ * <p>
+ * For a square matrix one can capture important information about the matrix in a just single
+ * number, called the determinant.
+ * The determinant is useful for solving linear equations, capturing how linear transformation
+ * change area or volume, and changing variables in integrals. 
+ * </p>
+ *
+ * @author Mário Antunes
+ * @version 1.0
+ */
 public class Determinant {
+  /**
+   * Utility class, lets make the constructor private.
+   */
   private Determinant() {
   }
 
+  /**
+   * Naive method to compute a matrix determinant.
+   * 
+   * 
+   * @param m
+   * @param rows
+   * @param cols
+   * @return
+   */
   public static double naive_det(final double m[], final int rows, final int cols) {
     double rv = 0.0;
+    
     if (cols == 1 && rows == 1) {
       rv = m[0];
     } else if (cols == 2 && rows == 2) {

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * CSV parser based on RFC 4180
  *
- * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @author Mário Antunes
  */
 public class CSV {
     private List<String> header;
