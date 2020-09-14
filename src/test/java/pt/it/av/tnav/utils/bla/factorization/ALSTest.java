@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
  * @version 1.0
  */
 public class ALSTest {
-  @Test
+  /*@Test
   public void test_als() {
     double data[] = { 5, 3, 0, 1, 4, 0, 0, 1, 1, 1, 0, 5, 1, 0, 0, 4, 0, 1, 5, 4 };
     Matrix V = new Matrix(5, 4, data);
@@ -72,5 +72,5 @@ public class ALSTest {
     System.out.println(wh);
     double cost = V.distanceTo(wh);
     assertTrue(cost <= 1.0);
-  }
+  }*/
 }

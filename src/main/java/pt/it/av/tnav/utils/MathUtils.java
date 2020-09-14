@@ -619,4 +619,34 @@ public final class MathUtils {
   public static double gaussian(final double mean, final double std) {
     return ThreadLocalRandom.current().nextGaussian() * std + mean;
   }
+
+  // Calculate the area of the trapezoid with corner coordinates (x2, 0), (x2,
+  // y2), (x3, 0), (x3, y3),
+  // where y2 is obtained by linear interpolation of (x1, y1) and (x3, y3)
+  // evaluated at x2.
+  public static double trapezoid_left(double x1, double x2, double x3, double y1, double y3) {
+    // Degenerate cases
+    if ((x2 == x3) || (x2 < x1))
+      return (x3 - x2) * y1;
+
+    // Find y2 using linear interpolation and calculate the trapezoid area
+    double w = (x3 - x2) / (x3 - x1);
+    double y2 = y1 * w + y3 * (1 - w);
+    return (x3 - x2) * (y2 + y3) / 2;
+  }
+
+  // Calculate the area of the trapezoid with corner coordinates (x1, 0), (x1,
+  // y1), (x2, 0), (x2, y2),
+  // where y2 is obtained by linear interpolation of (x1, y1) and (x3, y3)
+  // evaluated at x2.
+  public static double trapezoid_right(double x1, double x2, double x3, double y1, double y3) {
+    // Degenerate cases
+    if ((x2 == x1) || (x2 > x3))
+      return (x2 - x1) * y1;
+
+    // Find y2 using linear interpolation and calculate the trapezoid area
+    double w = (x3 - x2) / (x3 - x1);
+    double y2 = y1 * w + y3 * (1 - w);
+    return (x2 - x1) * (y1 + y2) / 2;
+  }
 }

@@ -8,14 +8,15 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>
  * These operations are common to {@link Matrix} and {@link Vector} classes.
  * Ideally all the high-level functionality from the previous mentioned classes
- * should depend on the methods develoed here.
- * The code here must be lean in order to ease the automatic vectorization of the code,
- * if speed becomes an issue, this library can be replaced with JNI compiled code.
+ * should depend on the methods develoed here. The code here must be lean in
+ * order to ease the automatic vectorization of the code, if speed becomes an
+ * issue, this library can be replaced with JNI compiled code.
  * </p>
  *
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
- * @see <a href="https://docs.oracle.com/en/java/javase/13/docs/specs/jni/intro.html">JNI</a>
+ * @see <a href=
+ *      "https://docs.oracle.com/en/java/javase/13/docs/specs/jni/intro.html">JNI</a>
  */
 public final class ArrayUtils {
   /**
@@ -1268,46 +1269,6 @@ public final class ArrayUtils {
   }
 
   /**
-   * Moving average. Compute the K centered moving average of a row vector. When
-   * there are fewer than K elements in the window at the endpoints, take the
-   * average over the elements that are available.
-   *
-   * @param a   the original data array (input).
-   * @param bA  the index where the data starts.
-   * @param r   the array that will store the results (output).
-   * @param bR  the index where the data can be stored.
-   * @param len the number of elements to be processed.
-   * @param k   moving average windows size.
-   */
-  public static void mm(final double a[], final int bA, final double r[], final int bR, final int len, final int k) {
-    // Main loop
-    for (int i = k; i < len - k; i++) {
-      r[i + bR] = mean(a, i + bA - k, k * 2 + 1);
-    }
-    // Left Extremity
-    for (int i = 0; i < k; i++) {
-      r[i + bR] = mean(a, bA, k + 1 + i);
-    }
-    // Right Extremity
-    for (int i = len - k; i < len; i++) {
-      r[i + bR] = mean(a, bA + i - k, len - i + k);
-    }
-  }
-
-  /**
-   * Moving average. Compute the K centered moving average of a row vector. When
-   * there are fewer than K elements in the window at the endpoints, take the
-   * average over the elements that are available.
-   *
-   * @param a the original data array (input).
-   * @param r the array that will store the results (output).
-   * @param k moving average windows size.
-   */
-  public static void mm(final double a[], final double r[], final int k) {
-    mm(a, 0, r, 0, a.length, k);
-  }
-
-  /**
    * Coefficient of determination (\(R^2\)).
    *
    * @param y
@@ -1751,5 +1712,115 @@ public final class ArrayUtils {
 
   public static int idx2c(final int idx, final int cols) {
     return idx % cols;
+  }
+
+  public static void sma_last(final double[] values, final double[] times, final int width, final double out[]) {
+    int left = 0, right = 0;
+    double t_left_new, t_right_new, roll_area, left_area, right_area = 0;
+
+    // Initialize output
+    roll_area = left_area = values[0] * width;
+    out[0] = values[0];
+
+    for (int i = 1; i < values.length; i++) {
+      // Remove truncated area on left and right end
+      roll_area -= (left_area + right_area);
+
+      // Expand interval on right end
+      t_right_new = times[i] + (width / 2.0);
+      while ((right < values.length - 1) && (times[right + 1] <= t_right_new)) {
+        right++;
+        roll_area += values[right - 1] * (times[right] - times[right - 1]);
+      }
+
+      // Shrink interval on left end
+      t_left_new = times[i] - (width / 2.0);
+      while (times[left] < t_left_new) {
+        roll_area -= values[left] * (times[left + 1] - times[left]);
+        left++;
+      }
+
+      // Add truncated area on left and right end
+      left_area = values[Math.max(0, left - 1)] * (times[left] - t_left_new);
+      right_area = values[right] * (t_right_new - times[right]);
+      roll_area += left_area + right_area;
+
+      // Save SMA value for current time window
+      out[i] = roll_area / width;
+    }
+  }
+
+  public static void sma_next(final double[] values, final double[] times, final int width, final double out[]) {
+    int left = 0, right = 0;
+    double t_left_new, t_right_new, roll_area, left_area, right_area = 0;
+
+    // Initialize output
+    roll_area = left_area = values[0] * width;
+    out[0] = values[0];
+
+    for (int i = 1; i < values.length; i++) {
+      // Remove truncated area on left and right end
+      roll_area -= (left_area + right_area);
+
+      // Expand interval on right end
+      t_right_new = times[i] + (width / 2.0);
+      while ((right < values.length - 1) && (times[right + 1] <= t_right_new)) {
+        right++;
+        roll_area += values[right] * (times[right] - times[right - 1]);
+      }
+
+      // Shrink interval on left end
+      t_left_new = times[i] - (width / 2.0);
+      while (times[left] < t_left_new) {
+        roll_area -= values[left + 1] * (times[left + 1] - times[left]);
+        left++;
+      }
+
+      // Add truncated area on left and rigth end
+      left_area = values[left] * (times[left] - t_left_new);
+      right_area = values[right] * (t_right_new - times[right]);
+      roll_area += left_area + right_area;
+
+      // Save SMA value for current time window
+      out[i] = roll_area / width;
+    }
+  }
+
+  public static void sma_linear(final double[] values, final double[] times, final int width, final double out[]) {
+    int left = 0, right = 0;
+    double t_left_new, t_right_new, roll_area, left_area, right_area = 0;
+
+    // Initialize output
+    roll_area = left_area = values[0] * width;
+    out[0] = values[0];
+
+    for (int i = 1; i < values.length; i++) {
+      // Remove truncated area on left and right end
+      roll_area -= (left_area + right_area);
+
+      // Expand interval on right end
+      t_right_new = times[i] + (width / 2.0);
+      while ((right < values.length - 1) && (times[right + 1] <= t_right_new)) {
+        right++;
+        roll_area += (values[right] + values[right - 1]) / 2 * (times[right] - times[right - 1]);
+      }
+
+      // Shrink interval on left end
+      t_left_new = times[i] - (width / 2.0);
+      while (times[left] < t_left_new) {
+        roll_area -= (values[left] + values[left + 1]) / 2 * (times[left + 1] - times[left]);
+        left++;
+      }
+
+      // Add truncated area on left and right end
+      left_area = MathUtils.trapezoid_left(times[Math.max(0, left - 1)], t_left_new, times[left], values[Math.max(0, left - 1)],
+          values[left]);
+      right_area = MathUtils.trapezoid_right(times[right], t_right_new, times[Math.min(right + 1, values.length - 1)],
+          values[right], values[Math.min(right + 1, values.length - 1)]);
+      roll_area += left_area + right_area;
+
+      // Save SMA value for current time window
+      out[i] = roll_area / width;
+    }
   }
 }
