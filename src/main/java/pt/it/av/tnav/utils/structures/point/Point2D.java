@@ -12,7 +12,7 @@ import pt.it.av.tnav.utils.structures.Distance;
  * @version 1.0
  */
 public class Point2D implements Distance<Point2D> {
-  private final double x, y;
+  protected final double x, y;
 
   /**
    * 2D Point constructor.
@@ -85,5 +85,28 @@ public class Point2D implements Distance<Point2D> {
   @Override
   public double distanceTo(Point2D d) {
     return Math.sqrt(Math.pow(d.x - x, 2) + Math.pow(d.y - y, 2));
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    // self check
+    if (this == o) {
+      return true;
+    }
+
+    // null check
+    if (o == null) {
+      return false;
+    }
+
+    // type check and cast
+    if (getClass() != o.getClass()) {
+      return false;
+    }
+
+    // field comparison
+    Point2D point = (Point2D) o;
+
+    return Double.compare(x, point.x) == 0 && Double.compare(y, point.y) == 0;
   }
 }

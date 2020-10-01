@@ -13,6 +13,7 @@ import pt.it.av.tnav.utils.structures.Distance;
  */
 public class Point4D implements Distance<Point4D> {
   private final double x, y, z, w;
+
   /**
    * 2D Point constructor.
    *
@@ -72,7 +73,7 @@ public class Point4D implements Distance<Point4D> {
    */
   public boolean isZero() {
     boolean rv = false;
-    if (x == 0 && y == 0 && z == 0 && w == 0) {
+    if (x == 0.0 && y == 0.0 && z == 0.0 && w == 0.0) {
       rv = true;
     }
     return rv;
@@ -81,5 +82,29 @@ public class Point4D implements Distance<Point4D> {
   @Override
   public double distanceTo(Point4D d) {
     return Math.sqrt(Math.pow(d.x - x, 2) + Math.pow(d.y - y, 2) + Math.pow(d.z - z, 2) + Math.pow(d.w - w, 2));
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    // self check
+    if (this == o) {
+      return true;
+    }
+
+    // null check
+    if (o == null) {
+      return false;
+    }
+
+    // type check and cast
+    if (getClass() != o.getClass()) {
+      return false;
+    }
+
+    // field comparison
+    Point4D point = (Point4D) o;
+
+    return Double.compare(x, point.x) == 0 && Double.compare(y, point.y) == 0 && Double.compare(z, point.z) == 0
+        && Double.compare(w, point.w) == 0;
   }
 }

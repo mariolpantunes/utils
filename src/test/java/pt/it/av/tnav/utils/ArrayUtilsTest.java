@@ -183,33 +183,6 @@ public class ArrayUtilsTest {
   }
 
   @Test
-  public void test_sma_last() {
-    double values[] = { 0, 2, 4, 6, 8, 10 }, times[] = { 0, 1, 1.2, 2.3, 2.9, 5 };
-    double correct[] = { 0.00, 1.80, 2.20, 5.40, 6.6, 9.0 };
-    double out[] = new double[values.length];
-    ArrayUtils.sma_last(values, times, 2, out);
-    assertArrayEquals(correct, out, 0.1);
-  }
-
-  @Test
-  public void test_sma_next() {
-    double values[] = { 0, 2, 4, 6, 8, 10 }, times[] = { 0, 1, 1.2, 2.3, 2.9, 5 };
-    double correct[] = { 0.00, 3.00, 3.20, 7.00, 7.60, 10.00 };
-    double out[] = new double[values.length];
-    ArrayUtils.sma_next(values, times, 2, out);
-    assertArrayEquals(correct, out, 0.1);
-  }
-
-  @Test
-  public void test_sma_linear() {
-    double values[] = { 0, 2, 4, 6, 8, 10 }, times[] = { 0, 1, 1.2, 2.3, 2.9, 5 };
-    double correct[] = { 0.00, 2.69, 3.23, 6.28, 7.47, 9.76 };
-    double out[] = new double[values.length];
-    ArrayUtils.sma_linear(values, times, 2, out);
-    assertArrayEquals(correct, out, 0.1);
-  }
-
-  @Test
   public void test_reverse_sequential() {
     double in[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, out[] = new double[10], r[] = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
     ArrayUtils.reverse(in, 0, out, 0, in.length);

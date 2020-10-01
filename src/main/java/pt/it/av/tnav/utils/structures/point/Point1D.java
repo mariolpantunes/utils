@@ -51,4 +51,27 @@ public class Point1D implements Distance<Point1D> {
   public double distanceTo(Point1D d) {
     return Math.abs(d.x - x);
   }
+
+  @Override
+  public boolean equals(Object o) {
+    // self check
+    if (this == o) {
+      return true;
+    }
+
+    // null check
+    if (o == null) {
+      return false;
+    }
+
+    // type check and cast
+    if (getClass() != o.getClass()) {
+      return false;
+    }
+
+    // field comparison
+    Point1D point = (Point1D) o;
+
+    return Double.compare(x, point.x) == 0;
+  }
 }
