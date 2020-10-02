@@ -6,10 +6,11 @@ import java.io.Writer;
 /**
  * JSON Number.
  *
- * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @author Mário Antunes
  * @version 1.0
  */
-public class JSONNumber implements JSONValue {
+public class JSONNumber extends Number implements JSONValue, Comparable<JSONNumber> {
+  private static final long serialVersionUID = 1L;
   protected final double n;
 
   public JSONNumber(double n) {
@@ -52,5 +53,30 @@ public class JSONNumber implements JSONValue {
       rv = String.valueOf(n);
 
     return rv;
+  }
+
+  @Override
+  public int compareTo(JSONNumber o) {
+    return Double.compare(n, o.n);
+  }
+
+  @Override
+  public int intValue() {
+    return (int) Math.round(n);
+  }
+
+  @Override
+  public long longValue() {
+    return (long) Math.round(n);
+  }
+
+  @Override
+  public float floatValue() {
+    return (float) n;
+  }
+
+  @Override
+  public double doubleValue() {
+    return n;
   }
 }

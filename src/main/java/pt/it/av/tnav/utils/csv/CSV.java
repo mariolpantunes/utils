@@ -16,13 +16,24 @@ import java.util.List;
  */
 public class CSV {
     public static final char CR = 0x000D, LF = 0x000A, COMMA = 0x002C, DQUOTE = 0x0022;
-
     private boolean hasHeader = false;
     private List<CSVRecord> records;
 
     public CSV(final List<CSVRecord> records, final boolean hasHeader) {
         this.records = records;
         this.hasHeader = hasHeader;
+    }
+
+    public boolean hasHeader() {
+        return hasHeader;
+    }
+
+    public CSVRecord getHeader() {
+        if(hasHeader && records.size() > 0) {
+            return records.get(0);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -180,7 +191,7 @@ public class CSV {
     }
 
     private enum STATE {
-        BEGIN, END, RECORD, DQUOTE, TEXTDATA, TWODQUOTE, COMMA, CR, LF, ERROR
+        END, RECORD, DQUOTE, TEXTDATA, TWODQUOTE, COMMA, CR, LF, ERROR
     }
 
     public static class CSVField implements CharSequence {
@@ -212,6 +223,8 @@ public class CSV {
     }
 
     public static class CSVRecord extends ArrayList<CSVField> {
+        private static final long serialVersionUID = 1L;
+
         public void write(Writer w) throws IOException {
             int size = this.size();
             for(int i = 0; i < size - 1; i++) {

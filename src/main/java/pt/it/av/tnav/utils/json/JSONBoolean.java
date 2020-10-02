@@ -6,7 +6,7 @@ import java.io.Writer;
 /**
  * JSON Boolean
  *
- * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @author Mário Antunes
  * @version 1.0
  */
 public class JSONBoolean implements JSONValue {

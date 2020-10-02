@@ -16,13 +16,10 @@ import java.util.Set;
 /**
  * JSON Object.
  *
- * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @author Mário Antunes
  * @version 1.0
  */
 public class JSONObject extends HashMap<String, JSONValue> implements JSONValue {
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
   private static final int LENGTH = 128;
 
