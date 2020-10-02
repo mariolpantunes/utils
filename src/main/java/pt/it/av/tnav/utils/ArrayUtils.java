@@ -1,5 +1,6 @@
 package pt.it.av.tnav.utils;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -1714,5 +1715,35 @@ public final class ArrayUtils {
     return idx % cols;
   }
 
-  
+  /**
+   * Concatenates two arrays
+   * @param first first array
+   * @param second second array
+   * @param <T> array element type
+   * @return returns T[] of length (first.length + second.length)
+   */
+  public static <T> T[] concatenate(final T[] first, final T[] second) {
+    //noinspection unchecked
+    T[] result = (T[]) Array.newInstance(first.getClass().getComponentType(), first.length + second.length);
+    System.arraycopy(first, 0, result, 0, first.length);
+    System.arraycopy(second, 0, result, first.length, second.length);
+    return result;
+  }
+
+  /**
+   * Concatenates multiple arrays
+   * @param arrays arrays
+   * @param <T> array element type
+   * @return returns T[] of length (first.length + second.length)
+   */
+  public static <T> T[] concatenate(final T[]... arrays) {
+    if (arrays.length == 1) {
+      return arrays[0];
+    }
+    T[] result = arrays[0];
+    for (int i = 1; i < arrays.length; i++) {
+      result = ArrayUtils.concatenate(result, arrays[i]);
+    }
+    return result;
+  }
 }

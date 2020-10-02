@@ -238,4 +238,21 @@ public class ArrayUtilsTest {
     double a[] = { 25.0, 15.0, -5.0, 15.0, 18.0, 0.0, -5.0, 0.0, 11.0 }, d = ArrayUtils.euclideanDistance(a, a);
     assertEquals(0.0, d, 0.001);
   }
+
+  @Test
+  public void test_concatenate_two_arrays() {
+    Integer[] first = {1, 2, 3, 4};
+    Integer[] second = {5, 6, 7, 8};
+    Integer[] result = ArrayUtils.concatenate(first, second);
+    assertArrayEquals(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8}, result);
+  }
+
+  @Test
+  public void test_concatenate_multiple_arrays() {
+    Integer[] first = {1, 2, 3, 4};
+    Integer[] second = {5, 6, 7, 8};
+    Integer[] third = {9, 10, 11, 12};
+    Integer[] result = ArrayUtils.concatenate(first, second, third);
+    assertArrayEquals(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, result);
+  }
 }
