@@ -2,6 +2,7 @@ package pt.it.av.tnav.utils;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -71,4 +72,11 @@ public class StringUtilsTest {
         assertTrue(clauses3.get(0).equals("I am very nervous about this."));
         assertTrue(clauses3.get(1).equals("by the way"));
     }*/
+
+    @Test
+    public void test_repeatString() {
+        String s = "123";
+
+        assertEquals("123123123", StringUtils.repeatString(s, 3));
+    }
 }

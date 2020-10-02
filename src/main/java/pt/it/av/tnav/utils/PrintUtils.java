@@ -1,11 +1,9 @@
 package pt.it.av.tnav.utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -204,7 +202,7 @@ public class PrintUtils {
   }
 
   /**
-   * 
+   *
    */
   public static String reader(InputStream in) {
     String line = null;
@@ -218,5 +216,70 @@ public class PrintUtils {
     }
 
     return rslt.toString();
+  }
+
+  public static String object(final Object object) {
+    return PrintUtils.object(object, 0);
+  }
+
+  private static String object(final Object object, final int indent) {
+    StringBuilder sb;
+    if (object instanceof String || object instanceof Number) {
+      return object.toString();
+    }
+
+    if (object instanceof List) {
+      sb = new StringBuilder("[\n");
+      List list = (List) object;
+      for (int i = 0; i < list.size(); i++) {
+        Object element = list.get(i);
+        sb.append(StringUtils.repeatString(" ", indent)).append(i).append(":").append(PrintUtils.object(element, indent + 1))
+        .append("\n");
+      }
+      sb.append(StringUtils.repeatString(" ", indent)).append("]");
+      return sb.toString();
+    }
+
+    if (object.getClass().isArray()) {
+      sb = new StringBuilder("[\n");
+      for (int i = 0; i < Array.getLength(object); i++) {
+        Object element = Array.get(object, i);
+        sb.append(StringUtils.repeatString(" ", indent)).append(i).append(":").append(PrintUtils.object(element, indent + 1))
+          .append("\n");
+      }
+      sb.append(StringUtils.repeatString(" ", indent)).append("]");
+      return sb.toString();
+    }
+
+    if (object instanceof Map) {
+      sb = new StringBuilder("{\n");
+      Map map = (Map) object;
+      for (Object key : map.keySet()) {
+        sb.append(StringUtils.repeatString(" ", indent)).append(key.toString()).append(":")
+          .append(PrintUtils.object(map.get(key), indent + 1)).append("\n");
+      }
+      sb.append(StringUtils.repeatString(" ", indent)).append("}");
+      return sb.toString();
+    }
+
+    Field[] fields = object.getClass().getDeclaredFields();
+    sb = new StringBuilder(object.getClass().getSimpleName() + ":\n" + StringUtils.repeatString(" ", indent) + "{\n");
+    for (Field field : fields) {
+      field.setAccessible(true);
+      if (Modifier.isStatic(field.getModifiers())) {
+        continue;
+      }
+      String fieldName = field.getName();
+      String value = "";
+      try {
+        value = PrintUtils.object(field.get(object), indent + 1);
+      }
+      catch (IllegalAccessException e) {
+        e.printStackTrace();
+      }
+      sb.append(StringUtils.repeatString(" ", indent)).append(fieldName).append(":").append(value).append("\n");
+    }
+    sb.append(StringUtils.repeatString(" ", indent)).append("}");
+    return sb.toString();
   }
 }
