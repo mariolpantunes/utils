@@ -16,6 +16,23 @@ public final class StringUtils {
   }
 
   /**
+   * Repeats String n times
+   * @param s string
+   * @param n times
+   * @return result string
+   */
+  public static String repeatString(final String s, final int n) {
+    if (n < 1) {
+      return "";
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < n; i++) {
+      sb.append(s);
+    }
+    return sb.toString();
+  }
+
+  /**
    * @param s
    * @return
    */
