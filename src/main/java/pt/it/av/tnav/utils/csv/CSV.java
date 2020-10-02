@@ -44,29 +44,101 @@ public class CSV {
      */
     public static CSV read(final Reader r, final boolean hasHeader) throws IOException {
         List<CSVRecord> records = new ArrayList<>();
-
         Deque<STATE> state = new ArrayDeque<>();
         state.push(STATE.END);
-        STATE previous = STATE.END;
-        StringBuilder name = new StringBuilder();
-        boolean done = false;
+        StringBuilder data = new StringBuilder();
+        CSVRecord record = null;
+        
         int i = 0;
         char c = ' ';
 
         try {
             while ((i = r.read()) != -1) {
+                System.err.println("STATE = "+state.peek().name());
                 c = (char) i;
                 System.err.println("C = " + c);
                 switch (state.peek()) {
                     case END:
-                        state.push(STATE.RECORD);
+                    {
+                        switch(c) {
+                            case CR:
+                            case LF:
+                            case COMMA:
+                            state.push(STATE.ERROR);
+                            break;
+                            default:
+                            record = new CSVRecord();
+                            state.push(STATE.TEXTDATA);
+                            data.setLength(0);
+                            data.append(c);
+                        }
                         break;
+                    }
+                    case TEXTDATA:{
+                        switch(c) {
+                            case CR:
+                            state.pop();
+                            state.push(STATE.CR);
+                            record.add(new CSVField(data.toString()));
+                            data.setLength(0);
+                            break;
+
+                            case LF:
+                            state.push(STATE.ERROR);
+                            break;
+
+                            case COMMA:
+                            state.pop();
+                            state.push(STATE.COMMA);
+                            record.add(new CSVField(data.toString()));
+                            data.setLength(0);
+                            break;
+
+                            default:
+                            data.append(c);
+                            break;
+                        
+                        }
+                        break;
+                    }
+                    case CR: {
+                        switch(c) {
+                            case LF:
+                            state.pop();
+                            state.add(STATE.LF);
+                            records.add(record);
+                            record = new CSVRecord();
+                        }
+                        break;
+                    }
+
+                    case COMMA: {
+                        switch(c) {
+                            case CR:
+                            case LF:
+                            case COMMA:
+                            state.push(STATE.ERROR);
+                            break;
+                            default:
+                            state.pop();
+                            state.push(STATE.TEXTDATA);
+                            data.append(c);
+                        }
+                        break;
+                    }
                 }
 
             }
         } catch (Exception e) {
             System.err.println("BUFFER: " + c);
             e.printStackTrace();
+        }
+
+        if(state.peek() == STATE.TEXTDATA) {
+            state.pop();
+            record.add(new CSVField(data.toString()));
+            data.setLength(0);
+            records.add(record);
         }
 
         if (state.peek() != STATE.END) {
@@ -82,6 +154,7 @@ public class CSV {
 
     public void write(Writer w) throws IOException {
         int size = records.size();
+        System.err.println("Size = "+size);
         for (int i = 0; i < size - 1; i++) {
             CSVRecord r = records.get(i);
             r.write(w);
@@ -110,14 +183,45 @@ public class CSV {
         BEGIN, END, RECORD, DQUOTE, TEXTDATA, TWODQUOTE, COMMA, CR, LF, ERROR
     }
 
-    public class CSVField {
+    public static class CSVField implements CharSequence {
+        private final String textData;
+        
+        public CSVField(final String textData) {
+            this.textData = textData;
+        }
 
+        @Override
+        public int length() {
+            return textData.length();
+        }
+
+        @Override
+        public char charAt(int index) {
+            return textData.charAt(index);
+        }
+
+        @Override
+        public CharSequence subSequence(int start, int end) {
+            return textData.subSequence(start, end);
+        }
+
+        @Override
+        public String toString() {
+            return textData;
+        }
     }
 
-    public class CSVRecord {
-        private List<CSVField> fields;
-
+    public static class CSVRecord extends ArrayList<CSVField> {
         public void write(Writer w) throws IOException {
+            int size = this.size();
+            for(int i = 0; i < size - 1; i++) {
+                w.append(get(i).toString());
+                w.append(COMMA);
+            }
+
+            if(size > 0) {
+                w.append(get(size - 1));
+            }
         }
     }
 }

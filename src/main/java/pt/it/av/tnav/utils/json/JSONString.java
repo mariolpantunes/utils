@@ -8,10 +8,10 @@ import java.io.Writer;
 /**
  * JSON String.
  *
- * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @author Mário Antunes
  * @version 1.0
  */
-public class JSONString implements JSONValue {
+public class JSONString implements JSONValue, CharSequence {
   protected final String s;
 
   public JSONString(final String s) {
@@ -44,5 +44,20 @@ public class JSONString implements JSONValue {
   @Override
   public String toString() {
     return "\"" + StringUtils.escape(s) + "\"";
+  }
+
+  @Override
+  public int length() {
+    return s.length();
+  }
+
+  @Override
+  public char charAt(int index) {
+    return s.charAt(index);
+  }
+
+  @Override
+  public CharSequence subSequence(int start, int end) {
+    return s.subSequence(start, end);
   }
 }
