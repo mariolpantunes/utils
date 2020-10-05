@@ -11,45 +11,66 @@ import static org.junit.Assert.assertEquals;
 public class CSVTest {
     @Test
     public void test_empty() throws IOException {
-        CSV c = CSV.read(new StringReader(""));
+        String csv = "";
+        CSV c = CSV.read(new StringReader(csv));
         StringWriter w = new StringWriter();
         c.write(w);
-        assertEquals("", w.toString());
+        assertEquals(csv, w.toString());
     }
 
     @Test
     public void test_single_field() throws IOException {
-        CSV c = CSV.read(new StringReader("field"));
+        String csv = "field";
+        CSV c = CSV.read(new StringReader(csv));
         StringWriter w = new StringWriter();
         c.write(w);
-        System.err.println(w.toString());
-        assertEquals("field", w.toString());
+        assertEquals(csv, w.toString());
     }
 
     @Test
     public void test_two_line_single_field() throws IOException {
-        CSV c = CSV.read(new StringReader("field1\r\nfield2"));
+        String csv = "field1\r\nfield2";
+        CSV c = CSV.read(new StringReader(csv));
         StringWriter w = new StringWriter();
         c.write(w);
-        System.err.println(w.toString());
-        assertEquals("field1\r\nfield2", w.toString());
+        assertEquals(csv, w.toString());
     }
 
     @Test
     public void test_two_fields() throws IOException {
-        CSV c = CSV.read(new StringReader("field1,field2"));
+        String csv = "field1,field2";
+        CSV c = CSV.read(new StringReader(csv));
         StringWriter w = new StringWriter();
         c.write(w);
-        System.err.println(w.toString());
-        assertEquals("field1,field2", w.toString());
+        assertEquals(csv, w.toString());
     }
 
     @Test
     public void test_two_lines_two_fields() throws IOException {
-        CSV c = CSV.read(new StringReader("field1,field2\r\nfield1,field2"));
+        String csv = "field1,field2\r\nfield1,field2";
+        CSV c = CSV.read(new StringReader(csv));
         StringWriter w = new StringWriter();
         c.write(w);
-        System.err.println(w.toString());
-        assertEquals("field1,field2\r\nfield1,field2", w.toString());
+        assertEquals(csv, w.toString());
+    }
+
+    @Test
+    public void test_quoted_single_field() throws IOException {
+        String csv = "\"field\"";
+        CSV c = CSV.read(new StringReader(csv));
+        StringWriter w = new StringWriter();
+        c.write(w);
+        assertEquals("field", w.toString());
+    }
+
+    @Test
+    public void test_two_quoted_single_field() throws IOException {
+        String csv = "\"b\"\"bb\"";
+        CSV c = CSV.read(new StringReader(csv));
+        StringWriter w = new StringWriter();
+        c.write(w);
+        assertEquals(csv, w.toString());
     }
 }
+
+

@@ -29,7 +29,7 @@ public class CSV {
     }
 
     public CSVRecord getHeader() {
-        if(hasHeader && records.size() > 0) {
+        if (hasHeader && records.size() > 0) {
             return records.get(0);
         } else {
             return null;
@@ -59,93 +59,147 @@ public class CSV {
         state.push(STATE.END);
         StringBuilder data = new StringBuilder();
         CSVRecord record = null;
-        
+
         int i = 0;
         char c = ' ';
 
         try {
             while ((i = r.read()) != -1) {
-                System.err.println("STATE = "+state.peek().name());
+
                 c = (char) i;
                 System.err.println("C = " + c);
                 switch (state.peek()) {
-                    case END:
-                    {
-                        switch(c) {
+                    case END: {
+                        switch (c) {
                             case CR:
                             case LF:
                             case COMMA:
-                            state.push(STATE.ERROR);
-                            break;
+                                state.push(STATE.ERROR);
+                                break;
+                            case DQUOTE:
+                                state.push(STATE.DQUOTE);
+                                record = new CSVRecord();
+                                data.setLength(0);
+                                break;
                             default:
-                            record = new CSVRecord();
-                            state.push(STATE.TEXTDATA);
-                            data.setLength(0);
-                            data.append(c);
+                                state.push(STATE.TEXTDATA);
+                                record = new CSVRecord();
+                                data.setLength(0);
+                                data.append(c);
                         }
                         break;
                     }
-                    case TEXTDATA:{
-                        switch(c) {
+                    case TEXTDATA: {
+                        switch (c) {
                             case CR:
-                            state.pop();
-                            state.push(STATE.CR);
-                            record.add(new CSVField(data.toString()));
-                            data.setLength(0);
-                            break;
+                                state.pop();
+                                state.push(STATE.CR);
+                                record.add(new CSVField(data.toString()));
+                                data.setLength(0);
+                                break;
 
                             case LF:
-                            state.push(STATE.ERROR);
-                            break;
+                                state.push(STATE.ERROR);
+                                break;
 
                             case COMMA:
-                            state.pop();
-                            state.push(STATE.COMMA);
-                            record.add(new CSVField(data.toString()));
-                            data.setLength(0);
-                            break;
+                                state.pop();
+                                state.push(STATE.COMMA);
+                                record.add(new CSVField(data.toString()));
+                                data.setLength(0);
+                                break;
 
                             default:
-                            data.append(c);
-                            break;
-                        
+                                data.append(c);
+                                break;
                         }
                         break;
                     }
                     case CR: {
-                        switch(c) {
+                        switch (c) {
                             case LF:
-                            state.pop();
-                            state.add(STATE.LF);
-                            records.add(record);
-                            record = new CSVRecord();
+                                state.pop();
+                                state.add(STATE.LF);
+                                records.add(record);
+                                record = new CSVRecord();
                         }
                         break;
                     }
 
                     case COMMA: {
-                        switch(c) {
+                        switch (c) {
                             case CR:
                             case LF:
                             case COMMA:
-                            state.push(STATE.ERROR);
-                            break;
+                                state.push(STATE.ERROR);
+                                break;
                             default:
-                            state.pop();
-                            state.push(STATE.TEXTDATA);
-                            data.append(c);
+                                state.pop();
+                                state.push(STATE.TEXTDATA);
+                                data.append(c);
                         }
                         break;
                     }
-                }
 
+                    case DQUOTE: {
+                        switch (c) {
+                            case DQUOTE:
+                                state.pop();
+                                state.push(STATE.TWODQUOTE);
+                                break;
+
+                            default:
+                                data.append(c);
+                                break;
+                        }
+                        break;
+                    }
+
+                    case TWODQUOTE: {
+                        switch (c) {
+                            case DQUOTE:
+                                state.pop();
+                                state.push(STATE.DQUOTE);
+                                data.append(c);
+                                break;
+
+                            case CR:
+                                state.pop();
+                                state.push(STATE.CR);
+                                record.add(new CSVField(data.toString()));
+                                data.setLength(0);
+                                break;
+
+                            case LF:
+                                state.push(STATE.ERROR);
+                                break;
+
+                            case COMMA:
+                                state.pop();
+                                state.push(STATE.COMMA);
+                                record.add(new CSVField(data.toString()));
+                                data.setLength(0);
+                                break;
+
+                            default:
+                                data.append(c);
+                                break;
+                        }
+                        break;
+                    }
+
+                    default:
+                        state.push(STATE.ERROR);
+                        break;
+                }
+                System.err.println("STATE = " + state.peek().name());
             }
         } catch (Exception e) {
             System.err.println("BUFFER: " + c);
             e.printStackTrace();
         }
 
-        if(state.peek() == STATE.TEXTDATA) {
+        if (state.peek() == STATE.TEXTDATA || state.peek() == STATE.TWODQUOTE) {
             state.pop();
             record.add(new CSVField(data.toString()));
             data.setLength(0);
@@ -165,7 +219,7 @@ public class CSV {
 
     public void write(Writer w) throws IOException {
         int size = records.size();
-        System.err.println("Size = "+size);
+        System.err.println("Size = " + size);
         for (int i = 0; i < size - 1; i++) {
             CSVRecord r = records.get(i);
             r.write(w);
@@ -181,13 +235,40 @@ public class CSV {
 
     @Override
     public String toString() {
-        StringWriter w = new StringWriter();
-        try {
-            write(w);
-        } catch (IOException e) {
-            // should not occur...
+        StringBuilder sb = new StringBuilder();
+        int size = records.size();
+        
+        for (int i = 0; i < size - 1; i++) {
+            sb.append(records.get(i).toString());
+            sb.append(CR);
+            sb.append(LF);
         }
-        return w.toString();
+
+        if (size > 0) {
+            sb.append(records.get(size - 1).toString());
+        }
+
+        return sb.toString();
+    }
+
+    public static String escape(final String textData) {
+        int pidx = -1, idx = textData.indexOf(DQUOTE);
+        if (idx > 0) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(DQUOTE);
+            while (idx > 0) {
+                sb.append(textData.substring(pidx+1, idx));
+                sb.append(DQUOTE);
+                sb.append(DQUOTE);
+                pidx = idx;
+                idx = textData.indexOf(DQUOTE, pidx + 1);
+            }
+            sb.append(textData.substring(pidx + 1));
+            sb.append(DQUOTE);
+            return sb.toString();
+        } else {
+            return textData;
+        }
     }
 
     private enum STATE {
@@ -196,7 +277,7 @@ public class CSV {
 
     public static class CSVField implements CharSequence {
         private final String textData;
-        
+
         public CSVField(final String textData) {
             this.textData = textData;
         }
@@ -220,6 +301,10 @@ public class CSV {
         public String toString() {
             return textData;
         }
+
+        public void write(Writer w) throws IOException {
+            w.append(CSV.escape(textData));
+        }
     }
 
     public static class CSVRecord extends ArrayList<CSVField> {
@@ -227,14 +312,31 @@ public class CSV {
 
         public void write(Writer w) throws IOException {
             int size = this.size();
-            for(int i = 0; i < size - 1; i++) {
-                w.append(get(i).toString());
+            for (int i = 0; i < size - 1; i++) {
+                get(i).write(w);
                 w.append(COMMA);
             }
 
-            if(size > 0) {
-                w.append(get(size - 1));
+            if (size > 0) {
+                get(size - 1).write(w);
             }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+
+            int size = this.size();
+            for (int i = 0; i < size - 1; i++) {
+                sb.append(get(i).toString());
+                sb.append(COMMA);
+            }
+
+            if (size > 0) {
+                sb.append(get(size - 1));
+            }
+
+            return sb.toString();
         }
     }
 }
