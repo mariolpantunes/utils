@@ -9,6 +9,27 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class CSVTest {
+
+    @Test
+    public void escape_textdata() {
+        String input = "aaa", out = CSV.escape(input);
+        assertEquals(input, out);
+    }
+
+    @Test
+    public void escape_dqoute() {
+        String input = "a\"a\"a", out = CSV.escape(input);
+        System.err.println(out);
+        assertEquals("\"a\"\"a\"\"a\"", out);
+    }
+
+    @Test
+    public void escaped_comma() {
+        String input = "a,a,a", out = CSV.escape(input);
+        System.err.println(out);
+        assertEquals("\"a,a,a\"", out);
+    }
+
     @Test
     public void test_empty() throws IOException {
         String csv = "";
@@ -64,11 +85,12 @@ public class CSVTest {
     }
 
     @Test
-    public void test_two_quoted_single_field() throws IOException {
-        String csv = "\"b\"\"bb\"";
+    public void test_rfc() throws IOException {
+        String csv = "\"aaa\",\"b \r\n bb\",\"ccc\"\r\nzzz,yyy,xxx";
         CSV c = CSV.read(new StringReader(csv));
         StringWriter w = new StringWriter();
         c.write(w);
+        System.out.println(w.toString());
         assertEquals(csv, w.toString());
     }
 }

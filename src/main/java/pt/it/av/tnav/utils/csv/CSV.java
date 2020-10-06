@@ -262,6 +262,7 @@ public class CSV {
             sb.append(textData.substring(pidx + 1));
             sb.append(DQUOTE);
             return sb.toString();
+        
         } else {
             return textData;
         }
