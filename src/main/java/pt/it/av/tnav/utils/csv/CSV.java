@@ -2,7 +2,6 @@ package pt.it.av.tnav.utils.csv;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -65,9 +64,7 @@ public class CSV {
 
         try {
             while ((i = r.read()) != -1) {
-
                 c = (char) i;
-                System.err.println("C = " + c);
                 switch (state.peek()) {
                     case END: {
                         switch (c) {
@@ -192,7 +189,6 @@ public class CSV {
                         state.push(STATE.ERROR);
                         break;
                 }
-                System.err.println("STATE = " + state.peek().name());
             }
         } catch (Exception e) {
             System.err.println("BUFFER: " + c);
@@ -219,7 +215,7 @@ public class CSV {
 
     public void write(Writer w) throws IOException {
         int size = records.size();
-        System.err.println("Size = " + size);
+        
         for (int i = 0; i < size - 1; i++) {
             CSVRecord r = records.get(i);
             r.write(w);

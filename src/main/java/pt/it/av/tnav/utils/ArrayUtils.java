@@ -9,12 +9,12 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>
  * These operations are common to {@link Matrix} and {@link Vector} classes.
  * Ideally all the high-level functionality from the previous mentioned classes
- * should depend on the methods develoed here. The code here must be lean in
+ * should depend on the methods developed here. The code here must be lean in
  * order to ease the automatic vectorization of the code, if speed becomes an
  * issue, this library can be replaced with JNI compiled code.
  * </p>
  *
- * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @author Mário Antunes
  * @version 1.0
  * @see <a href=
  *      "https://docs.oracle.com/en/java/javase/13/docs/specs/jni/intro.html">JNI</a>
@@ -29,7 +29,7 @@ public final class ArrayUtils {
   /**
    * Sum two arrays element-wise.
    * <p>
-   * The elements from A are added with B and stored in C, acording to the
+   * The elements from A are added with B and stored in C, according to the
    * following expression: $$c = \sum_{i = 0}^{len} A_i + B_i $$
    * </p>
    *
@@ -51,7 +51,7 @@ public final class ArrayUtils {
   /**
    * Sum a scalar with an array.
    * <p>
-   * The elements from A are added with B and stored in C, acording to the
+   * The elements from A are added with B and stored in C, according to the
    * following expression: $$c = \sum_{i = 0}^{len} A_i + B_i $$
    * </p>
    *
@@ -70,7 +70,7 @@ public final class ArrayUtils {
   }
 
   /**
-   * Substratc two arrays element-wise. The elements from B are subtracted from A
+   * Subtract two arrays element-wise. The elements from B are subtracted from A
    * and stored in C.
    *
    * @param a   first vector
@@ -89,7 +89,7 @@ public final class ArrayUtils {
   }
 
   /**
-   * Substratc a scalar from an array. The scalar B are subtracted from A and
+   * Subtract a scalar from an array. The scalar B are subtracted from A and
    * stored in C.
    *
    * @param a   first vector
@@ -257,7 +257,7 @@ public final class ArrayUtils {
    * @param b   the second array
    * @param bB  index of the second array
    * @param len array's length
-   * @param p   order (p = 0 reprenset infinity)
+   * @param p   order (p = 0 represents infinity)
    * @return the Minkowski distance between two arrays
    */
   public static double minkowskiDistance(final double[] a, final int bA, final double[] b, final int bB, final int len,
@@ -300,7 +300,7 @@ public final class ArrayUtils {
    * @param len array's length
    * @param m   mask array
    * @param bM  begin index of the mask array
-   * @param p   order (p = 0 reprenset infinity)
+   * @param p   order (p = 0 represents infinity)
    * @return the Minkowski distance between two arrays
    */
   public static double minkowskiDistance(final double[] a, final int bA, final double[] b, final int bB,
@@ -340,7 +340,7 @@ public final class ArrayUtils {
    *
    * @param a the first array
    * @param b the second array
-   * @param p order (p = 0 reprenset infinity)
+   * @param p order (p = 0 represents infinity)
    * @return the Minkowski distance between two arrays
    */
   public static double minkowskiDistance(final double[] a, final double[] b, final int p) {
@@ -502,12 +502,12 @@ public final class ArrayUtils {
   }
 
   /**
-   * Returns the index of the minimium number in the array.
+   * Returns the index of the minimum number in the array.
    *
    * @param array an array of doubles
    * @param b     start index of the array
    * @param l     array's length
-   * @return the index of the minimium number in the array.
+   * @return the index of the minimum number in the array.
    */
   public static int min(final double array[], final int b, final int l) {
     int rv = 0;
@@ -518,10 +518,10 @@ public final class ArrayUtils {
   }
 
   /**
-   * Returns the index of the minimium number in the array.
+   * Returns the index of the minimum number in the array.
    *
    * @param array an array of doubles.
-   * @return the index of the minimium number in the array.
+   * @return the index of the minimum number in the array.
    */
   public static int min(final double array[]) {
     return min(array, 0, array.length);
@@ -594,7 +594,7 @@ public final class ArrayUtils {
    *
    * @param array an array of doubles.
    * @param bA    the index that starts the array values.
-   * @param len   the lenght of the data.
+   * @param len   the length of the data.
    * @return the index of the minimum and maximum elements in the array.
    */
   public static int[] minMax(final double array[], final int bA, final int len) {
@@ -763,7 +763,7 @@ public final class ArrayUtils {
    *
    * @param array an array of values (scores).
    * @param bIdx  the index where the values start.
-   * @param len   the lenght of array of values.
+   * @param len   the length of array of values.
    * @return The ideal threshold to divide the values into two classes.
    */
   public static double isoData(final double array[], final int bIdx, final int len) {
@@ -1243,7 +1243,7 @@ public final class ArrayUtils {
   }
 
   /**
-   * Returns the standard deviantion from the data.
+   * Returns the standard deviation from the data.
    *
    * @param a
    * @param bA
