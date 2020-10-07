@@ -196,4 +196,18 @@ public final class StringUtils {
       return rv;
     }
   }
+
+  /**
+   * 
+   * @param input
+   * @param sequence
+   * @return
+   */
+  public static boolean containsAny(final String input, final String sequence) {
+    boolean rv = false;
+    if(input.matches(".*["+sequence+"].*")) {
+        rv = true;
+    }
+    return rv;
+  }
 }

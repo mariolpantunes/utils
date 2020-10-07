@@ -247,6 +247,11 @@ public class CSV {
         return sb.toString();
     }
 
+    /**
+     * 
+     * @param textData
+     * @return
+     */
     public static String escape(final String textData) {
         int pidx = -1, idx = textData.indexOf(DQUOTE);
         if (idx > 0) {
@@ -272,6 +277,9 @@ public class CSV {
         END, RECORD, DQUOTE, TEXTDATA, TWODQUOTE, COMMA, CR, LF, ERROR
     }
 
+    /**
+     * 
+     */
     public static class CSVField implements CharSequence {
         private final String textData;
 
@@ -299,14 +307,27 @@ public class CSV {
             return textData;
         }
 
+        /**
+         * 
+         * @param w
+         * @throws IOException
+         */
         public void write(Writer w) throws IOException {
             w.append(CSV.escape(textData));
         }
     }
 
+    /**
+     * 
+     */
     public static class CSVRecord extends ArrayList<CSVField> {
         private static final long serialVersionUID = 1L;
 
+        /**
+         * 
+         * @param w
+         * @throws IOException
+         */
         public void write(Writer w) throws IOException {
             int size = this.size();
             for (int i = 0; i < size - 1; i++) {
