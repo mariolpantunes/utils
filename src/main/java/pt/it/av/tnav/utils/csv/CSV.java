@@ -5,10 +5,12 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 
 import pt.it.av.tnav.utils.StringUtils;
+import pt.it.av.tnav.utils.structures.CSVify;
 
 /**
  * CSV parser based on RFC 4180
@@ -19,8 +21,14 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
     private static final long serialVersionUID = 1L;
     public static final char CR = 0x000D, LF = 0x000A, COMMA = 0x002C, DQUOTE = 0x0022;
     private boolean hasHeader = false;
-    //private List<CSVRecord> records;
 
+    public CSV() {
+        this.hasHeader = false;
+    }
+
+    public CSV(final boolean hasHeader) {
+        this.hasHeader = hasHeader;
+    }
 
     public CSV(final List<CSVRecord> records, final boolean hasHeader) {
         super(records);
@@ -36,6 +44,12 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
             return this.get(0);
         } else {
             return null;
+        }
+    }
+
+    public void addLines(Collection<? extends CSVify> c) {
+        for (CSVify e : c) {
+            this.add(e.csvDump());
         }
     }
 
@@ -224,7 +238,7 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
 
     public void write(Writer w) throws IOException {
         int size = this.size();
-        
+
         for (int i = 0; i < size - 1; i++) {
             CSVRecord r = this.get(i);
             r.write(w);
@@ -242,7 +256,7 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         int size = this.size();
-        
+
         for (int i = 0; i < size - 1; i++) {
             sb.append(this.get(i).toString());
             sb.append(CR);
@@ -266,21 +280,21 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
         if (idx >= 0) {
             StringBuilder sb = new StringBuilder();
             sb.append(DQUOTE);
-            System.err.println("SB = "+sb.toString());
+            System.err.println("SB = " + sb.toString());
             while (idx > 0) {
-                sb.append(textData.substring(pidx+1, idx));
+                sb.append(textData.substring(pidx + 1, idx));
                 sb.append(DQUOTE);
                 sb.append(DQUOTE);
                 pidx = idx;
                 idx = textData.indexOf(DQUOTE, pidx + 1);
-                System.err.println("IDX = "+idx);
+                System.err.println("IDX = " + idx);
             }
             sb.append(textData.substring(pidx + 1));
             sb.append(DQUOTE);
             return sb.toString();
         } else {
-            if(StringUtils.containsAny(textData, LF, CR, COMMA)) {
-                return "\""+textData+"\"";
+            if (StringUtils.containsAny(textData, LF, CR, COMMA)) {
+                return "\"" + textData + "\"";
             } else {
                 return textData;
             }
@@ -296,6 +310,10 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
      */
     public static class CSVField implements CharSequence {
         private final String textData;
+
+        public CSVField(final double number) {
+            this.textData = Double.toString(number);
+        }
 
         public CSVField(final String textData) {
             this.textData = textData;

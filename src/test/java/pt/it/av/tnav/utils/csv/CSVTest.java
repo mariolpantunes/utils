@@ -6,8 +6,6 @@ import java.io.StringWriter;
 
 import org.junit.Test;
 
-import pt.it.av.tnav.utils.PrintUtils;
-
 import static org.junit.Assert.assertEquals;
 
 public class CSVTest {

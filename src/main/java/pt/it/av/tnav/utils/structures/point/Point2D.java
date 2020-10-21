@@ -118,15 +118,19 @@ public class Point2D implements Distance<Point2D>, CSVify<Point2D> {
 
   @Override
   public CSVRecord csvDump() {
-    // TODO Auto-generated method stub
-    return null;
+    CSVRecord record = new CSVRecord();
+    record.add(new CSV.CSVField(x));
+    record.add(new CSV.CSVField(y));
+    return record;
   }
 
-  @Override
-  public List<Point2D> csvLoad(CSV csv) {
+  public static List<Point2D> csvLoad(CSV csv) {
     List<Point2D> rv = new ArrayList<>();
-    for (CSVRecord record : csv) {
-
+    double x = 0, y = 0;
+    for (CSV.CSVRecord record : csv) {
+      x = Double.parseDouble(record.get(0).toString());
+      y = Double.parseDouble(record.get(1).toString());
+      rv.add(new Point2D(x, y));
     }
     return rv;
   }

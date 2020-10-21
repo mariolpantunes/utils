@@ -1,7 +1,5 @@
 package pt.it.av.tnav.utils.structures;
 
-import java.util.List;
-
 import pt.it.av.tnav.utils.csv.CSV;
 
 /**
@@ -30,6 +28,5 @@ public interface CSVify<T> {
    * @param json object {@link T} encoded into a {@link JSONObject}
    * @return the object {@link T} represented by the {@link json} {@link JSONObject}
    */
-  List<T> csvLoad(CSV csv);
-    
+  //List<T> csvLoad(CSV csv);
 }
