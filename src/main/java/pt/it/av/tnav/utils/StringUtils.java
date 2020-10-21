@@ -203,11 +203,43 @@ public final class StringUtils {
    * @param sequence
    * @return
    */
-  public static boolean containsAny(final String input, final String sequence) {
-    boolean rv = false;
-    if(input.matches(".*["+sequence+"].*")) {
-        rv = true;
+  public static boolean containsAny(final String input, final CharSequence sequence) {
+    for (int i = 0; i < sequence.length(); i++) {
+      char c = sequence.charAt(i);
+      if(input.indexOf(c) >= 0) {
+        return true;
+      }
     }
-    return rv;
+    return false;
+  }
+
+  /**
+   * 
+   * @param input
+   * @param sequence
+   * @return
+   */
+  public static boolean containsAny(final String input, final CharSequence ... sequence) {
+    for (CharSequence s : sequence) {
+      if(input.contains(s)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 
+   * @param input
+   * @param sequence
+   * @return
+   */
+  public static boolean containsAny(final String input, final char ... sequence) {
+    for (char c : sequence) {
+      if(input.indexOf(c) >= 0) {
+        return true;
+      }
+    }
+    return false;
   }
 }

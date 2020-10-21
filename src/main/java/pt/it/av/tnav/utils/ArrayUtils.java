@@ -1724,7 +1724,7 @@ public final class ArrayUtils {
    */
   public static <T> T[] concatenate(final T[] first, final T[] second) {
     //noinspection unchecked
-    T[] result = (T[]) Array.newInstance(first.getClass().getComponentType(), first.length + second.length);
+    T[] result = Utils.cast(Array.newInstance(first.getClass().getComponentType(), first.length + second.length));
     System.arraycopy(first, 0, result, 0, first.length);
     System.arraycopy(second, 0, result, first.length, second.length);
     return result;

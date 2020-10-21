@@ -6,6 +6,8 @@ import java.io.StringWriter;
 
 import org.junit.Test;
 
+import pt.it.av.tnav.utils.PrintUtils;
+
 import static org.junit.Assert.assertEquals;
 
 public class CSVTest {
@@ -26,7 +28,6 @@ public class CSVTest {
     @Test
     public void escaped_comma() {
         String input = "a,a,a", out = CSV.escape(input);
-        System.err.println(out);
         assertEquals("\"a,a,a\"", out);
     }
 
@@ -88,10 +89,11 @@ public class CSVTest {
     public void test_rfc() throws IOException {
         String csv = "\"aaa\",\"b \r\n bb\",\"ccc\"\r\nzzz,yyy,xxx";
         CSV c = CSV.read(new StringReader(csv));
+        
         StringWriter w = new StringWriter();
         c.write(w);
-        System.out.println(w.toString());
-        assertEquals(csv, w.toString());
+        
+        assertEquals("aaa,\"b \r\n bb\",ccc\r\nzzz,yyy,xxx", w.toString());
     }
 }
 

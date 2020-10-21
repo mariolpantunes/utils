@@ -8,18 +8,22 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import pt.it.av.tnav.utils.StringUtils;
+
 /**
  * CSV parser based on RFC 4180
  *
  * @author Mário Antunes
  */
-public class CSV {
+public class CSV extends ArrayList<CSV.CSVRecord> {
+    private static final long serialVersionUID = 1L;
     public static final char CR = 0x000D, LF = 0x000A, COMMA = 0x002C, DQUOTE = 0x0022;
     private boolean hasHeader = false;
-    private List<CSVRecord> records;
+    //private List<CSVRecord> records;
+
 
     public CSV(final List<CSVRecord> records, final boolean hasHeader) {
-        this.records = records;
+        super(records);
         this.hasHeader = hasHeader;
     }
 
@@ -28,8 +32,8 @@ public class CSV {
     }
 
     public CSVRecord getHeader() {
-        if (hasHeader && records.size() > 0) {
-            return records.get(0);
+        if (hasHeader && this.size() > 0) {
+            return this.get(0);
         } else {
             return null;
         }
@@ -130,6 +134,11 @@ public class CSV {
                             case COMMA:
                                 state.push(STATE.ERROR);
                                 break;
+                            case DQUOTE:
+                                state.pop();
+                                state.push(STATE.DQUOTE);
+                                data.setLength(0);
+                                break;
                             default:
                                 state.pop();
                                 state.push(STATE.TEXTDATA);
@@ -214,17 +223,17 @@ public class CSV {
     }
 
     public void write(Writer w) throws IOException {
-        int size = records.size();
+        int size = this.size();
         
         for (int i = 0; i < size - 1; i++) {
-            CSVRecord r = records.get(i);
+            CSVRecord r = this.get(i);
             r.write(w);
             w.append(CR);
             w.append(LF);
         }
 
         if (size > 0) {
-            CSVRecord r = records.get(size - 1);
+            CSVRecord r = this.get(size - 1);
             r.write(w);
         }
     }
@@ -232,16 +241,16 @@ public class CSV {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        int size = records.size();
+        int size = this.size();
         
         for (int i = 0; i < size - 1; i++) {
-            sb.append(records.get(i).toString());
+            sb.append(this.get(i).toString());
             sb.append(CR);
             sb.append(LF);
         }
 
         if (size > 0) {
-            sb.append(records.get(size - 1).toString());
+            sb.append(this.get(size - 1).toString());
         }
 
         return sb.toString();
@@ -254,22 +263,27 @@ public class CSV {
      */
     public static String escape(final String textData) {
         int pidx = -1, idx = textData.indexOf(DQUOTE);
-        if (idx > 0) {
+        if (idx >= 0) {
             StringBuilder sb = new StringBuilder();
             sb.append(DQUOTE);
+            System.err.println("SB = "+sb.toString());
             while (idx > 0) {
                 sb.append(textData.substring(pidx+1, idx));
                 sb.append(DQUOTE);
                 sb.append(DQUOTE);
                 pidx = idx;
                 idx = textData.indexOf(DQUOTE, pidx + 1);
+                System.err.println("IDX = "+idx);
             }
             sb.append(textData.substring(pidx + 1));
             sb.append(DQUOTE);
             return sb.toString();
-        
         } else {
-            return textData;
+            if(StringUtils.containsAny(textData, LF, CR, COMMA)) {
+                return "\""+textData+"\"";
+            } else {
+                return textData;
+            }
         }
     }
 

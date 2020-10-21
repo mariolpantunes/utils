@@ -68,9 +68,7 @@ public class StringUtilsTest {
 
     @Test
     public void test_repeatString() {
-        String s = "123";
-
-        assertEquals("123123123", StringUtils.repeatString(s, 3));
+        assertEquals("123123123", StringUtils.repeatString("123", 3));
     }
 
     @Test
@@ -81,5 +79,6 @@ public class StringUtilsTest {
         assertTrue(StringUtils.containsAny("AB", "ABCDEFGH"));
         assertFalse(StringUtils.containsAny("39823839983923", "ABCDEFGH"));
         assertFalse(StringUtils.containsAny("", "ABCDEFGH"));
+        assertTrue(StringUtils.containsAny("b \r\nbb", "\n", "\r", ","));
     }
 }

@@ -1,5 +1,11 @@
 package pt.it.av.tnav.utils.structures.point;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import pt.it.av.tnav.utils.csv.CSV;
+import pt.it.av.tnav.utils.csv.CSV.CSVRecord;
+import pt.it.av.tnav.utils.structures.CSVify;
 import pt.it.av.tnav.utils.structures.Distance;
 
 /**
@@ -11,7 +17,7 @@ import pt.it.av.tnav.utils.structures.Distance;
  * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
  * @version 1.0
  */
-public class Point2D implements Distance<Point2D> {
+public class Point2D implements Distance<Point2D>, CSVify<Point2D> {
   protected final double x, y;
 
   /**
@@ -108,5 +114,20 @@ public class Point2D implements Distance<Point2D> {
     Point2D point = (Point2D) o;
 
     return Double.compare(x, point.x) == 0 && Double.compare(y, point.y) == 0;
+  }
+
+  @Override
+  public CSVRecord csvDump() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public List<Point2D> csvLoad(CSV csv) {
+    List<Point2D> rv = new ArrayList<>();
+    for (CSVRecord record : csv) {
+
+    }
+    return rv;
   }
 }
