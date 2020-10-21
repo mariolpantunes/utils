@@ -57,14 +57,6 @@
             </plugin>
 
             <plugin>
-                <artifactId> maven-compiler-plugin </artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <release>8</release>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.0</version>
