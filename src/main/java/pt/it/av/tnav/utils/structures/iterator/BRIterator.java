@@ -10,7 +10,7 @@ import java.util.Iterator;
  * Consumes lines from a {@link java.io.BufferedReader}.
  * </p>
  *
- * @author <a href="mailto:mariolpantunes@gmail.com">Mário Antunes</a>
+ * @author Mário Antunes
  * @version 1.0
  */
 public class BRIterator implements Iterator<String>, AutoCloseable {

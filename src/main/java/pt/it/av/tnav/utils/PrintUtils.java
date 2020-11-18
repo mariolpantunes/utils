@@ -230,7 +230,7 @@ public class PrintUtils {
 
     if (object instanceof List) {
       sb = new StringBuilder("[\n");
-      List list = (List) object;
+      List<?> list = (List<?>) object;
       for (int i = 0; i < list.size(); i++) {
         Object element = list.get(i);
         sb.append(StringUtils.repeatString(" ", indent)).append(i).append(":").append(PrintUtils.object(element, indent + 1))
@@ -253,7 +253,7 @@ public class PrintUtils {
 
     if (object instanceof Map) {
       sb = new StringBuilder("{\n");
-      Map map = (Map) object;
+      Map<?,?> map = (Map<?,?>) object;
       for (Object key : map.keySet()) {
         sb.append(StringUtils.repeatString(" ", indent)).append(key.toString()).append(":")
           .append(PrintUtils.object(map.get(key), indent + 1)).append("\n");

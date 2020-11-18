@@ -3,7 +3,6 @@ package pt.it.av.tnav.utils.structures.iterator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pt.it.av.tnav.utils.CollectionsUtils;
-import pt.it.av.tnav.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,6 +11,8 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * Unit tests for {@link CollectionIterator}
+ * 
  * @author Mário Antunes
  * @version 1.0
  */
