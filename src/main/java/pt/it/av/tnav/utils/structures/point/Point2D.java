@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.it.av.tnav.utils.csv.CSV;
-import pt.it.av.tnav.utils.csv.CSV.CSVRecord;
+import pt.it.av.tnav.utils.csv.CSVField;
+import pt.it.av.tnav.utils.csv.CSVRecord;
 import pt.it.av.tnav.utils.structures.CSVify;
 import pt.it.av.tnav.utils.structures.Distance;
 
@@ -119,15 +120,15 @@ public class Point2D implements Distance<Point2D>, CSVify<Point2D> {
   @Override
   public CSVRecord csvDump() {
     CSVRecord record = new CSVRecord();
-    record.add(new CSV.CSVField(x));
-    record.add(new CSV.CSVField(y));
+    record.add(new CSVField(x));
+    record.add(new CSVField(y));
     return record;
   }
 
   public static List<Point2D> csvLoad(CSV csv) {
     List<Point2D> rv = new ArrayList<>();
     double x = 0, y = 0;
-    for (CSV.CSVRecord record : csv) {
+    for (CSVRecord record : csv) {
       x = Double.parseDouble(record.get(0).toString());
       y = Double.parseDouble(record.get(1).toString());
       rv.add(new Point2D(x, y));

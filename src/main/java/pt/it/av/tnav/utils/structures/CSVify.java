@@ -1,6 +1,7 @@
 package pt.it.av.tnav.utils.structures;
 
 import pt.it.av.tnav.utils.csv.CSV;
+import pt.it.av.tnav.utils.csv.CSVRecord;
 
 /**
  * This interface allows to dump and load and object from a
@@ -20,7 +21,7 @@ public interface CSVify<T> {
    *
    * @return a {@link CSV.CSVRecord} that represents the object {@link T}.
    */
-  CSV.CSVRecord csvDump();
+  CSVRecord csvDump();
 
   /**
    * Loads a {@link json} {@link JSONObject} into a object {@link T}.

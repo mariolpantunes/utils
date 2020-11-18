@@ -24,13 +24,12 @@ public class HttpTest {
         data.put("first_name", "George");
         data.put("last_name", "Bluth");
         data.put("avatar", "https://s3.amazonaws.com/uifaces/faces/twitter/calebogden/128.jpg");
-        JSONObject ad = new JSONObject();
-        ad.put("company", "StatusCode Weekly");
-        ad.put("url", "http://statuscode.org/");
-        ad.put("text",
-                "A weekly newsletter focusing on software development, infrastructure, the server, performance, and the stack end of things.");
+        JSONObject support = new JSONObject();
+        support.put("url", "https://reqres.in/#support-heading");
+        support.put("text",
+                "To keep ReqRes free, contributions towards server costs are appreciated!");
         REPLY.put("data", data);
-        REPLY.put("ad", ad);
+        REPLY.put("support", support);
     }
 
     @Test
@@ -38,6 +37,7 @@ public class HttpTest {
         JSONObject reply = null;
         try {
             reply = Http.getJson("https://reqres.in/api/users/1");
+            System.out.println(reply);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

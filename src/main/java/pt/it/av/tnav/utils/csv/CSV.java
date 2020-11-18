@@ -13,32 +13,67 @@ import pt.it.av.tnav.utils.StringUtils;
 import pt.it.av.tnav.utils.structures.CSVify;
 
 /**
- * CSV parser based on RFC 4180
+ * CSV parser based on RFC4180
  *
+ * @see <a href="https://tools.ietf.org/html/rfc4180">RFC4180</a>
  * @author Mário Antunes
  */
-public class CSV extends ArrayList<CSV.CSVRecord> {
+public class CSV extends ArrayList<CSVRecord> {
     private static final long serialVersionUID = 1L;
     public static final char CR = 0x000D, LF = 0x000A, COMMA = 0x002C, DQUOTE = 0x0022;
     private boolean hasHeader = false;
 
+    /**
+     * Default Constructor
+     * 
+     * It create an empty CSV structure without a header.
+     */
     public CSV() {
         this.hasHeader = false;
     }
 
+    /**
+     * CSV constructor
+     * 
+     * It create an empty CSV structure that may or may not have a header.
+     * 
+     * @param hasHeader boolean that indicates if the CSV structure should consider
+     *                  the first line as a header
+     */
     public CSV(final boolean hasHeader) {
         this.hasHeader = hasHeader;
     }
 
+    /**
+     * CSV constructor
+     * 
+     * It creates a CSV structure and fills it a {@link List} of {@link CSVRecord}
+     * 
+     * @param records   a {@link List} of {@link CSVRecord}
+     * @param hasHeader boolean that indicates if the CSV structure should consider
+     *                  the first line as a header
+     */
     public CSV(final List<CSVRecord> records, final boolean hasHeader) {
         super(records);
         this.hasHeader = hasHeader;
     }
 
+    /**
+     * Returns true if the CSV structure has a header, false otherwise.
+     * 
+     * @return true if the CSV structure has a header, false otherwise
+     */
     public boolean hasHeader() {
         return hasHeader;
     }
 
+    /**
+     * Return a {@link CSVRecord} with the {@link CSVField} from the first line if
+     * it has a header, null otherwise.
+     * 
+     * @return a {@link CSVRecord} with the {@link CSVField} from the first line if
+     *         it has a header, null otherwise
+     */
     public CSVRecord getHeader() {
         if (hasHeader && this.size() > 0) {
             return this.get(0);
@@ -47,16 +82,23 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
         }
     }
 
-    public void addLines(Collection<? extends CSVify> c) {
-        for (CSVify e : c) {
+    /**
+     * Inserts a {@link Collection} of objects that implement {@link CSVify}.
+     * 
+     * @param c a {@link Collection} of objects that implement {@link CSVify}
+     */
+    public void addLines(Collection<? extends CSVify<?>> c) {
+        for (CSVify<?> e : c) {
             this.add(e.csvDump());
         }
     }
 
     /**
+     * Parses the content of a {@link Reader} and creates a {@link CSV} structure.
+     * This method assumes that the CSV does not have a header.
      * 
-     * @param r
-     * @return
+     * @param r {@link Reader} to be parsed
+     * @return {@link CSV} structure
      * @throws IOException
      */
     public static CSV read(final Reader r) throws IOException {
@@ -64,10 +106,12 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
     }
 
     /**
+     * Parses the content of a {@link Reader} and creates a {@link CSV} structure.
      * 
-     * @param r
-     * @param hasHeader
-     * @return
+     * @param r         {@link Reader} to be parsed
+     * @param hasHeader boolean that indicates if the CSV structure should consider
+     *                  the first line as a header
+     * @return {@link CSV} structure
      * @throws IOException
      */
     public static CSV read(final Reader r, final boolean hasHeader) throws IOException {
@@ -83,6 +127,7 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
         try {
             while ((i = r.read()) != -1) {
                 c = (char) i;
+
                 switch (state.peek()) {
                     case END: {
                         switch (c) {
@@ -110,11 +155,14 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
                                 state.pop();
                                 state.push(STATE.CR);
                                 record.add(new CSVField(data.toString()));
-                                data.setLength(0);
                                 break;
 
                             case LF:
-                                state.push(STATE.ERROR);
+                                // state.push(STATE.ERROR);
+                                state.pop();
+                                state.push(STATE.LF);
+                                record.add(new CSVField(data.toString()));
+                                records.add(record);
                                 break;
 
                             case COMMA:
@@ -134,9 +182,31 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
                         switch (c) {
                             case LF:
                                 state.pop();
-                                state.add(STATE.LF);
+                                state.push(STATE.LF);
                                 records.add(record);
+                        }
+                        break;
+                    }
+
+                    case LF: {
+                        switch (c) {
+                            case CR:
+                            case LF:
+                            case COMMA:
+                                state.push(STATE.ERROR);
+                                break;
+                            case DQUOTE:
+                                state.pop();
+                                state.push(STATE.DQUOTE);
                                 record = new CSVRecord();
+                                data.setLength(0);
+                                break;
+                            default:
+                                state.pop();
+                                state.push(STATE.TEXTDATA);
+                                record = new CSVRecord();
+                                data.setLength(0);
+                                data.append(c);
                         }
                         break;
                     }
@@ -191,7 +261,11 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
                                 break;
 
                             case LF:
-                                state.push(STATE.ERROR);
+                                // state.push(STATE.ERROR);
+                                state.pop();
+                                state.push(STATE.LF);
+                                record.add(new CSVField(data.toString()));
+                                records.add(record);
                                 break;
 
                             case COMMA:
@@ -221,13 +295,13 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
         if (state.peek() == STATE.TEXTDATA || state.peek() == STATE.TWODQUOTE) {
             state.pop();
             record.add(new CSVField(data.toString()));
-            data.setLength(0);
             records.add(record);
+        } else if (state.peek() == STATE.LF) {
+            state.pop();
         }
 
         if (state.peek() != STATE.END) {
             while (!state.isEmpty()) {
-                System.err.println("STATE -> " + state.peek().name());
                 state.pop();
             }
             throw new IOException();
@@ -280,14 +354,12 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
         if (idx >= 0) {
             StringBuilder sb = new StringBuilder();
             sb.append(DQUOTE);
-            System.err.println("SB = " + sb.toString());
             while (idx > 0) {
                 sb.append(textData.substring(pidx + 1, idx));
                 sb.append(DQUOTE);
                 sb.append(DQUOTE);
                 pidx = idx;
                 idx = textData.indexOf(DQUOTE, pidx + 1);
-                System.err.println("IDX = " + idx);
             }
             sb.append(textData.substring(pidx + 1));
             sb.append(DQUOTE);
@@ -303,90 +375,5 @@ public class CSV extends ArrayList<CSV.CSVRecord> {
 
     private enum STATE {
         END, RECORD, DQUOTE, TEXTDATA, TWODQUOTE, COMMA, CR, LF, ERROR
-    }
-
-    /**
-     * 
-     */
-    public static class CSVField implements CharSequence {
-        private final String textData;
-
-        public CSVField(final double number) {
-            this.textData = Double.toString(number);
-        }
-
-        public CSVField(final String textData) {
-            this.textData = textData;
-        }
-
-        @Override
-        public int length() {
-            return textData.length();
-        }
-
-        @Override
-        public char charAt(int index) {
-            return textData.charAt(index);
-        }
-
-        @Override
-        public CharSequence subSequence(int start, int end) {
-            return textData.subSequence(start, end);
-        }
-
-        @Override
-        public String toString() {
-            return textData;
-        }
-
-        /**
-         * 
-         * @param w
-         * @throws IOException
-         */
-        public void write(Writer w) throws IOException {
-            w.append(CSV.escape(textData));
-        }
-    }
-
-    /**
-     * 
-     */
-    public static class CSVRecord extends ArrayList<CSVField> {
-        private static final long serialVersionUID = 1L;
-
-        /**
-         * 
-         * @param w
-         * @throws IOException
-         */
-        public void write(Writer w) throws IOException {
-            int size = this.size();
-            for (int i = 0; i < size - 1; i++) {
-                get(i).write(w);
-                w.append(COMMA);
-            }
-
-            if (size > 0) {
-                get(size - 1).write(w);
-            }
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-
-            int size = this.size();
-            for (int i = 0; i < size - 1; i++) {
-                sb.append(get(i).toString());
-                sb.append(COMMA);
-            }
-
-            if (size > 0) {
-                sb.append(get(size - 1));
-            }
-
-            return sb.toString();
-        }
     }
 }

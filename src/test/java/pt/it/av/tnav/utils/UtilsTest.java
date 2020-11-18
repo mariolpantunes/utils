@@ -18,8 +18,8 @@ public class UtilsTest {
 
   @BeforeClass
   public static void setup() {
-    z = new Integer(0);
-    o = new Integer(1);
+    z = Integer.valueOf(0);
+    o = Integer.valueOf(1);
   }
 
   @Test

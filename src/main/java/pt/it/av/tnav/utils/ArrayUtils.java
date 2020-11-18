@@ -1717,13 +1717,14 @@ public final class ArrayUtils {
 
   /**
    * Concatenates two arrays
-   * @param first first array
+   * 
+   * @param first  first array
    * @param second second array
-   * @param <T> array element type
+   * @param <T>    array element type
    * @return returns T[] of length (first.length + second.length)
    */
   public static <T> T[] concatenate(final T[] first, final T[] second) {
-    //noinspection unchecked
+    // noinspection unchecked
     T[] result = Utils.cast(Array.newInstance(first.getClass().getComponentType(), first.length + second.length));
     System.arraycopy(first, 0, result, 0, first.length);
     System.arraycopy(second, 0, result, first.length, second.length);
@@ -1732,10 +1733,12 @@ public final class ArrayUtils {
 
   /**
    * Concatenates multiple arrays
+   * 
    * @param arrays arrays
-   * @param <T> array element type
+   * @param <T>    array element type
    * @return returns T[] of length (first.length + second.length)
    */
+  @SafeVarargs
   public static <T> T[] concatenate(final T[]... arrays) {
     if (arrays.length == 1) {
       return arrays[0];
